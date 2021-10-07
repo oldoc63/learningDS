@@ -4,13 +4,26 @@ import codecademylib3
 import pandas as pd
 
 # Import dataset as a Pandas Dataframe
-cereal = pd.read_csv('cereal.csv', index_col=0)
+auto = pd.read_csv('autos.csv', index_col=0)
 
-# Show the first five rows of the `cereal` dataframe
-print(cereal.head())
+# Print the first 10 rows of the auto dataset
+print(auto.head(10))
 
-# Create a new dataframe with the `mfr` variable One-Hot Encoded
-cereal = pd.get_dummies(data=cereal, columns=['mfr'])
+# Print the data types of the auto dataframe
+print(auto.dtypes)
 
-# Show first five rows of new dataframe
-print(cereal.head())
+# Change the data type of price to float
+auto['price'] = auto['price'].astype('float')
+print(auto.dtypes)
+# Set the engine_size data type to category
+auto['engine_size'] = pd.Categorical(auto['engine_size'], ['small', 'medium', 'large'], ordered=True)
+print(auto['engine_size'].unique())
+
+# Create the engine_codes variable by encoding engine_size
+auto['engine_codes'] = auto['engine_size'].cat.codes
+print(auto.head())
+
+# One-Hot Encode the body-style variable
+auto = pd.get_dummies(data=auto, columns=['body-style'])
+print(auto.head())
+
