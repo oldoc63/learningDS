@@ -4,14 +4,13 @@ import codecademylib3
 import pandas as pd
 
 # Import dataset as a Pandas dataframe
-movies = pd.read_csv("movie_show.csv", index_col=0)
+movies = pd.read_csv("movie_show.csv")
 
 # View the first five rows of the dataframe
 print(movies.head())
 
-# Print the unique values in the country column
-print(movies.country.unique())
+release_year_variable_type = 'discrete'
+print(release_year_variable_type)
 
-# Set the correct value for country_variable_type
-country_variable_type = 'nominal'
-print(country_variable_type)
+duration_variable_type = 'continuous'
+print(duration_variable_type)
