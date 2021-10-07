@@ -4,22 +4,16 @@ import codecademylib3
 import pandas as pd
 
 # Import dataset as a Pandas Dataframe
-movies = pd.read_csv("movie_show.csv", index_col=0)
+clothes = pd.read_csv('clothing.csv', index_col=0)
 
-# Print the first five rows of the dataframe
-print(movies.head())
+# View the first five rows of the dataframe
+print(clothes.head())
 
-# Print the data types of the dataframe
-print(movies.dtypes)
+# Print the unique values of the `Rating` column
+print(clothes['Rating'].unique())
 
-# Replace any missing values in release_year with 2019
-movies['release_year'] = movies['release_year'].replace(['missing'], 2019)
+# Change the data type of `Rating` to category
+clothes['Rating'] = pd.Categorical(clothes['Rating'], ['very unsatisfied', 'unsatisfied', 'neutral', 'satisfied', 'very satisfied'], ordered=True)
 
-# Change the data type of release_year to int
-movies['release_year'] = movies['release_year'].astype('int')
-
-# Recheck the data types with .dtypes.
-print(movies.dtypes)
-
-# Calculate the mean of release_year
-print(movies.release_year.mean())
+# Recheck the values of `Rating` with .unique()
+print(clothes['Rating'].unique())
