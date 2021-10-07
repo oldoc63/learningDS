@@ -4,13 +4,11 @@ import codecademylib3
 import pandas as pd
 
 # Import dataset as a Pandas dataframe
-movies = pd.read_csv("movie_show.csv")
+movies = pd.read_csv("movie_show.csv", index_col=0)
 
 # View the first five rows of the dataframe
 print(movies.head())
 
-release_year_variable_type = 'discrete'
-print(release_year_variable_type)
+# Print the data types of the dataframe with dtypes
+print(movies.dtypes)
 
-duration_variable_type = 'continuous'
-print(duration_variable_type)
