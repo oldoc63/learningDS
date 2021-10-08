@@ -1,9 +1,14 @@
-# Set total equal to the sum
-total = 29 + 49 + 42 + 43
+# Import packages
+import numpy as np
+import pandas as pd
 
-# Set mean_value equal to the mean
-mean_value = total / 4
+# Read author data
+greatest_books = pd.read_csv("top-hundred-books.csv")
 
-# The following code prints the total and mean
-print("The sum total is equal to: " + str(total))
-print("The mean value is equal to: " + str(mean_value))
+# Set author ages to a NumPy array
+author_ages = greatest_books['Ages']
+
+# Use numpy to calculate the average age of the top 100 authors
+average_age = greatest_books['Ages'].mean()
+
+print("The average age of the 100 greatest authors, according to a survey by Le Monde, is: " + str(average_age))
