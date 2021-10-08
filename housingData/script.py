@@ -24,7 +24,9 @@ queens_median = np.median(queens_price)
 
 
 # Add mode calculations below
-
+brooklyn_mode = stats.mode(brooklyn_price)
+manhattan_mode = stats.mode(manhattan_price)
+queens_mode = stats.mode(queens_price)
 
 
 
