@@ -18,7 +18,9 @@ brooklyn_mean = np.mean(brooklyn_price)
 manhattan_mean = np.mean(manhattan_price)
 queens_mean = np.mean(queens_price)
 # Add median calculations below
-
+brooklyn_median = np.median(brooklyn_price)
+manhattan_median = np.median(manhattan_price)
+queens_median = np.median(queens_price)
 
 
 # Add mode calculations below
