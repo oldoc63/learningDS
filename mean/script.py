@@ -1,21 +1,9 @@
-# Import packages
-import codecademylib
-import numpy as np
-import pandas as pd
+# Set total equal to the sum
+total = 29 + 49 + 42 + 43
 
-# Import matplotlib pyplot
-from matplotlib import pyplot as plt
+# Set mean_value equal to the mean
+mean_value = total / 4
 
-# Read in transactions data
-greatest_books = pd.read_csv("top-hundred-books.csv")
-
-# Save transaction times to a separate numpy array
-author_ages = greatest_books['Ages']
-
-# Use plt.hist() below
-plt.hist(author_ages, range=(10, 80), bins=14,  edgecolor='black')
-plt.title("Age of Top 100 Authors at Publication")
-plt.xlabel("Age")
-plt.ylabel("Count")
-
-plt.show()
+# The following code prints the total and mean
+print("The sum total is equal to: " + str(total))
+print("The mean value is equal to: " + str(mean_value))
