@@ -14,9 +14,9 @@ queens_one_bed = pd.read_csv('queens-one-bed.csv')
 queens_price = queens_one_bed['rent']
 
 # Add mean calculations below 
-
-
-
+brooklyn_mean = np.mean(brooklyn_price)
+manhattan_mean = np.mean(manhattan_price)
+queens_mean = np.mean(queens_price)
 # Add median calculations below
 
 
