@@ -1,12 +1,9 @@
 import numpy as np
 from data import nba_data, okcupid_data
 
-nba_variance = np.var(nba_data)
-okcupid_variance = np.var(okcupid_data)
-
-#Change these variables to be the standard deviation of each dataset.
-nba_standard_deviation = nba_variance ** 0.5
-okcupid_standard_deviation = okcupid_variance  ** 0.5
+#Change these variables to be the standard deviation of each dataset. Use NumPy's function!
+nba_standard_deviation = np.std(nba_data)
+okcupid_standard_deviation = np.std(okcupid_data)
 
 #IGNORE CODE BELOW HERE
 print("The standard deviation of the NBA dataset is " +str(nba_standard_deviation))
