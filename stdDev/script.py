@@ -1,22 +1,65 @@
+import codecademylib3_seaborn
+import matplotlib.pyplot as plt
 import numpy as np
 from data import nba_data, okcupid_data
 
 nba_mean = np.mean(nba_data)
 okcupid_mean = np.mean(okcupid_data)
 
+#Change this variable to your height (in inches)!
+your_height = 66.14173
+
 nba_standard_deviation = np.std(nba_data)
 okcupid_standard_deviation = np.std(okcupid_data)
 
-#Step 1: Calculate the difference between the player's height and the means
-nba_difference = 80 - nba_mean
-okcupid_difference = 80 - okcupid_mean
+plt.subplot(211)
+plt.title("NBA Player Heights")
+plt.xlabel("Height (inches)")
 
-#Step 2: Use the difference between the point and the mean to find how many standard deviations the player is away from the mean.
+plt.hist(nba_data)
 
-num_nba_deviations = nba_difference / nba_standard_deviation
-num_okcupid_deviations = okcupid_difference / okcupid_standard_deviation
+plt.axvline(nba_mean, color='#FD4E40', linestyle='solid', linewidth=2, label = "Mean")
+
+plt.axvline(nba_mean + nba_standard_deviation, color='#FFB908', linestyle='solid', linewidth=2, label = "Standard Deviations")
+plt.axvline(nba_mean - nba_standard_deviation, color='#FFB908', linestyle='solid', linewidth=2)
+
+plt.axvline(nba_mean + nba_standard_deviation * 2, color='#FFB908', linestyle='solid', linewidth=2)
+plt.axvline(nba_mean - nba_standard_deviation * 2, color='#FFB908', linestyle='solid', linewidth=2)
+
+plt.axvline(nba_mean + nba_standard_deviation * 3, color='#FFB908', linestyle='solid', linewidth=2)
+plt.axvline(nba_mean - nba_standard_deviation * 3, color='#FFB908', linestyle='solid', linewidth=2)
+
+plt.axvline(your_height, color='#62EDBF', linestyle='solid', linewidth=2, label = "You")
+
+plt.xlim(55, 90)
+plt.legend()
 
 
-#IGNORE CODE BELOW HERE
-print("Your basketball player is " + str(num_nba_deviations) + " standard deviations away from the mean of NBA player heights\n")
-print("Your basketball player is " + str(num_okcupid_deviations) + " standard deviations away from the mean of OkCupid profile heights")
+plt.subplot(212)
+plt.title("OkCupid Profile Heights")
+plt.xlabel("Height (inches)")
+
+plt.hist(okcupid_data)
+
+plt.axvline(okcupid_mean, color='#FD4E40', linestyle='solid', linewidth=2, label = "Mean")
+
+plt.axvline(okcupid_mean + okcupid_standard_deviation, color='#FFB908', linestyle='solid', linewidth=2, label = "Standard Deviations")
+plt.axvline(okcupid_mean - okcupid_standard_deviation, color='#FFB908', linestyle='solid', linewidth=2)
+
+plt.axvline(okcupid_mean + okcupid_standard_deviation * 2, color='#FFB908', linestyle='solid', linewidth=2)
+plt.axvline(okcupid_mean - okcupid_standard_deviation * 2, color='#FFB908', linestyle='solid', linewidth=2)
+
+plt.axvline(okcupid_mean + okcupid_standard_deviation * 3, color='#FFB908', linestyle='solid', linewidth=2)
+plt.axvline(okcupid_mean - okcupid_standard_deviation * 3, color='#FFB908', linestyle='solid', linewidth=2)
+
+plt.axvline(your_height, color='#62EDBF', linestyle='solid', linewidth=2, label = "You")
+
+plt.xlim(55, 90)
+plt.legend()
+
+
+
+
+plt.tight_layout()
+plt.show()
+
