@@ -6,7 +6,7 @@ okcupid_variance = np.var(okcupid_data)
 
 #Change these variables to be the standard deviation of each dataset.
 nba_standard_deviation = nba_variance ** 0.5
-okcupid_standard_deviation =  ** 0.5
+okcupid_standard_deviation = okcupid_variance  ** 0.5
 
 #IGNORE CODE BELOW HERE
 print("The standard deviation of the NBA dataset is " +str(nba_standard_deviation))
