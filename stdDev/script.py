@@ -1,15 +1,13 @@
-import codecademylib3_seaborn
-import matplotlib.pyplot as plt
 import numpy as np
 from data import nba_data, okcupid_data
 
-plt.hist(nba_data, alpha = 0.75, label = "NBA Data", bins = 20)
-plt.hist(okcupid_data, alpha = 0.5, label = "OkCupid Data", bins = 20)
-plt.xlabel("Height (inches)")
-plt.legend()
-plt.show()
+nba_variance = np.var(nba_data)
+okcupid_variance = np.var(okcupid_data)
 
-print("The variance of the NBA dataset is " +str(np.var(nba_data)))
-print("The variance of the OkCupid dataset is " +str(np.var(okcupid_data)) + "\n")
-print("The mean of the NBA dataset is " +str(np.mean(nba_data)) + " inches")
-print("The mean of the OkCupid dataset is " +str(np.mean(okcupid_data)) + " inches")
+#Change these variables to be the standard deviation of each dataset.
+nba_standard_deviation = nba_variance ** 0.5
+okcupid_standard_deviation =  ** 0.5
+
+#IGNORE CODE BELOW HERE
+print("The standard deviation of the NBA dataset is " +str(nba_standard_deviation))
+print("The standard deviation of the OkCupid dataset is " + str(okcupid_standard_deviation))
