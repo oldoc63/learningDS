@@ -9,11 +9,12 @@ difference_three = 85 - mean
 difference_four = 84 - mean
 difference_five = 90 - mean
 
+#Part 1: Sum the differences
+difference_sum = 0
 
-# IGNORE CODE BELOW HERE
-print("The mean of the data set is " + str(mean) + "\n")
-print("The first student is " +str(round(difference_one, 2)) + " percentage points away from the mean.")
-print("The second student is " +str(round(difference_two, 2)) + " percentage points away from the mean.")
-print("The third student is " +str(round(difference_three, 2)) + " percentage points away from the mean.")
-print("The fourth student is " +str(round(difference_four, 2)) + " percentage points away from the mean.")
-print("The fifth student is " +str(round(difference_five, 2)) + " percentage points away from the mean.")
+#Part 2: Average the differences
+average_difference = 0
+
+#IGNORE CODE BELOW HERE
+print("The sum of the differences is " + str(format(difference_sum, "f")))
+print("The average difference is " + str(format(average_difference, "f")))
