@@ -15,3 +15,14 @@ print(temperature_var)
 temperature_standard_deviation = np.std(temp)
 print(temperature_standard_deviation)
 
+june = london_data.loc[london_data["month"] == 6]["TemperatureC"]
+july = london_data.loc[london_data["month"] == 7]["TemperatureC"]
+print(np.mean(june))
+print(np.std(june))
+print(np.mean(july))
+print(np.std(july))
+
+
+
+
+
