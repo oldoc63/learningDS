@@ -1,24 +1,17 @@
+import codecademylib3_seaborn
 from song_data import songs
+import matplotlib.pyplot as plt
 import numpy as np
 
-#Create the variables songs_q1, songs_q2, and songs_q3 here:
-songs_q1 = np.quantile(songs, 0.25)
-songs_q2 = np.quantile(songs, 0.50)
-songs_q3 = np.quantile(songs, 0.75)
+q1 = np.quantile(songs, 0.25)
+q2 = np.quantile(songs, 0.5)
+q3 = np.quantile(songs, 0.75)
 
-favorite_song = 300
-quarter = 4
-
-#Ignore the code below here:
-try:
-  print("The first quartile of dataset one is " + str(songs_q1) + " seconds")
-except NameError:
-  print("You haven't defined songs_q1")
-try:
-  print("The second quartile of dataset one is " + str(songs_q2)+ " seconds")
-except NameError:
-  print("You haven't defined songs_q2")
-try:
-  print("The third quartile of dataset one is " + str(songs_q3)+ " seconds")
-except NameError:
-  print("You haven't defined songs_q3\n")
+plt.hist(songs, bins = 200)
+plt.axvline(x=q1, label="Q1", c = '#6400e4')
+plt.axvline(x=q2, label="Q2", c = '#fd4d3f')
+plt.axvline(x=q3, label="Q3", c = '#4fe0b0')
+plt.xlabel("Song Length (Seconds)")
+plt.ylabel("Count")
+plt.legend()
+plt.show()
