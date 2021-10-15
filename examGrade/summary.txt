@@ -1,62 +1,28 @@
-import pandas as pd 
-import numpy as np
-from matplotlib import pyplot as plt
-import codecademylib3_seaborn
+On exam 1, the average and median scores were 80.5 and 80.5, respectively. The distribution is symmetric, with a similar distribution of scores to the left and right of the center.
+
+The range is close to 35, with the lowest grade close to 55 and the largest grade close to 90. There is one student, who scored close to 55, who is considered an outlier.
+
+#####################
+#####################
+
+On exam 2, the average and median scores were 82 and 84, respectively. The distribution has a left skew, which agrees with our finding that the average of our dataset is smaller than the median.
+
+The range is close to 38, with the lowest grade close to 60 and the largest grade close to 98.
+
+#####################
+#####################
+
+On exam 3, the average and median scores were 77 and 80, respectively. The distribution is bi-modal, and both modes have a similar tail on both sides of their peak, indicating that each is symmetric.
+
+The range is close to 42, with the lowest grade close to 56 and the largest grade close to 98.
 
 
-np.random.seed(1)
-
-fig, axes = plt.subplots(nrows=4, ncols=1)
-
-plt.subplot(4,1,1)
-mu, sigma = 80,5
-exam_1 = np.random.normal(mu, sigma, 120)
-exam_1[50] = 55
-exam_1[51] = 55
-count, bins, ignored = plt.hist(exam_1, 25, range=[50, 100])
-plt.ylabel("Count", fontsize=12)
-plt.title("Exam 1", fontsize=14)
+#####################
+#####################
 
 
+On the final exam, the average and median scores were 80 and 80, respectively. The distribution is symmetric, with a similar distribution of scores to the left and right of the center.
+
+The range is close to 30, with the lowest grade close to 68 and the largest grade close to 98. There is one student, who scored close to 98, that is considered an outlier.
 
 
-plt.subplot(4,1,2)
-mu, sigma = 85,5
-exam_2_norm = np.random.normal(mu, sigma, 85)
-exam_2_u = np.random.uniform(60, 80, 35)
-exam_2 = np.concatenate((exam_2_norm, exam_2_u))
-
-count, bins, ignored = plt.hist(exam_2, 25, range=[50, 100])
-plt.ylabel("Count", fontsize=12)
-plt.title("Exam 2", fontsize=14)
-
-
-
-plt.subplot(4,1,3)
-mu, sigma = 85,5
-exam_2_norm = np.random.normal(mu, sigma, 70)
-exam_2_u = np.random.normal(65, 3.5, 50)
-exam_2 = np.concatenate((exam_2_norm, exam_2_u))
-
-count, bins, ignored = plt.hist(exam_2, 25, range=[50, 100])
-plt.ylabel("Count", fontsize=12)
-plt.title("Exam 3", fontsize=14)
-
-
-
-plt.subplot(4,1,4)
-mu, sigma = 80,6
-exam_2_norm = np.random.normal(mu, sigma, 120)
-exam_2 = np.concatenate((exam_2_norm, np.array([96,96])))
-print(np.average(exam_2))
-print(np.median(exam_2))
-
-
-count, bins, ignored = plt.hist(exam_2, 25, range=[50, 100])
-plt.xlabel("Score (%)", fontsize=12)
-plt.ylabel("Count", fontsize=12)
-plt.title("Final Exam", fontsize=14)
-
-fig.tight_layout()
-
-plt.show()
