@@ -1,11 +1,9 @@
-from song_data import songs
 from scipy.stats import iqr
 
-#Create the variables interquartile_range here:
-interquartile_range = iqr(songs)
+dataset = [-50, -24, -13, -2, 0, 12, 15, 18, 73, 90, 100]
 
-# Ignore the code below here
-try:
-  print("The IQR of the dataset is " + str(interquartile_range) + "\n")
-except NameError:
-  print("You haven't defined interquartile_range yet\n")
+dataset_range = max(dataset) - min(dataset)
+dataset_iqr = iqr(dataset)
+
+print("The range of the dataset is "+str(dataset_range))
+print("The IQR of the dataset is "+str(dataset_iqr))
