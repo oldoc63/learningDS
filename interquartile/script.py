@@ -1,19 +1,24 @@
-import codecademylib3_seaborn
 from song_data import songs
-import matplotlib.pyplot as plt
+import numpy as np
 
-maximum = max(songs)
-minimum = min(songs)
-#Create the variable song_range here:
-song_range = maximum - minimum
+q1 = np.quantile(songs, 0.25)
+#Create the variables q3 and interquartile_range here:
+q3 = np.quantile(songs, 0.75)
+
+interquartile_range = q3 - q1
 
 # Ignore the code below here
-plt.hist(songs, bins = 200)
-plt.xlabel("Song Length (Seconds)")
-plt.ylabel("Count")
-plt.show()
-
 try:
-  print("The range of the dataset is " + str(song_range) + " seconds")
+  print("The first quartile of the dataset is " + str(q1) + "\n")
 except NameError:
-  print("You haven't defined the variable song_range yet")
+  print("You haven't defined q1 yet\n")
+  
+try:
+  print("The third quartile of the dataset is " + str(q3) + "\n")
+except NameError:
+  print("You haven't defined q3 yet\n")
+  
+try:
+  print("The IQR of the dataset is " + str(interquartile_range) + "\n")
+except NameError:
+  print("You haven't defined interquartile_range yet\n")
