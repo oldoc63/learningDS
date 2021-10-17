@@ -9,4 +9,10 @@ print(data.head())
 
 life_expectancy = data["Life Expectancy"]
 
+life_expectancy_quartiles = np.quantile(life_expectancy, [0.25, 0.50, 0.75])
+
+print(life_expectancy_quartiles)
+
+plt.hist(life_expectancy)
+plt.show()
 
