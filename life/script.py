@@ -23,6 +23,9 @@ print(life_expectancy_quartiles)
 print(low_gdp_quartiles)
 print(high_gdp_quartiles)
 
-plt.hist(life_expectancy)
+plt.hist(high_gdp["Life Expectancy"], alpha = 0.5, label = "High GDP")
+plt.hist(low_gdp["Life Expectancy"], alpha = 0.5, label = "Low GDP")
+plt.legend()
 plt.show()
+
 
