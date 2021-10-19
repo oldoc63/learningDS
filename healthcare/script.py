@@ -4,3 +4,5 @@ from matplotlib import pyplot as plt
 
 healthcare = pd.read_csv("healthcare.csv")
 
+print(healthcare.head())
+
