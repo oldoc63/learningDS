@@ -1,13 +1,31 @@
 import pandas as pd
 
-#Pandas comes with a few built-in conditional selectors, two of which we will highlight here.
+#You can assign either a constant value:
 
-#The first is isin. isin is lets you select data whose value "is in" a list of values. For example, here's how we can use it to select wines only from Italy or France:
+reviews['critic'] = 'everyone'
+reviews['critic']
 
-reviews.loc[reviews.country.isin(['Italy', 'France'])]
+out:
 
-#The second is isnull (and its companion notnull). These methods let you highlight values which are (or are not) empty (NaN). For example, to filter out wines lacking a price tag in the dataset, here's what we would do:
+0         everyone
+1         everyone
+            ...   
+129969    everyone
+129970    everyone
+Name: critic, Length: 129971, dtype: object
 
-reviews.loc[reviews.price.notnull()]
+#Or with an iterable of values:
+
+reviews['index_backwards'] = range(len(reviews), 0, -1)
+reviews['index_backwards']
+
+out:
+
+0         129971
+1         129970
+           ...  
+129969         2
+129970         1
+Name: index_backwards, Length: 129971, dtype: int64
 
 
