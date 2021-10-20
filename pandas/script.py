@@ -120,7 +120,11 @@ reviews.loc[:, ['taster_name', 'taster_twitter_handle', 'points']]
 
 #This is particularly confusing when the DataFrame index is a simple numerical list, e.g. 0,...,1000. In this case df.iloc[0:1000] will return 1000 entries, while df.loc[0:1000] return 1001 of them! To get 1000 elements using loc, you will need to go one lower and ask for df.loc[0:999].
 
+#Label-based selection derives its power from the labels in the index. Critically, the index we use is not immutable. We can manipulate the index in any way we see fit.
 
+#The set_index() method can be used to do the job. Here is what happens when we set_index to the title field:
+
+reviews.set_index('title')
 
 
 
