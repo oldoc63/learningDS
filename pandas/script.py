@@ -40,3 +40,68 @@ reviews = pd.read_csv("../input/wine-reviews/winemag-data_first150k.csv")
 
 animals.to_csv("cows_and_goats.csv")
 
+#Native Python objects provide good ways of indexing data. Pandas carries all of these over, which helps make it easy to start with.
+
+#In Python, we can access the property of an object by accessing it as an attribute. A book object, for example, might have a title property, which we can access by calling book.title. Columns in a pandas DataFrame work in much the same way.
+
+reviews.country #access the country property of reviews
+
+#If we have a Python dictionary, we can access its values using the indexing ([]) operator. We can do the same with columns in a DataFrame:
+
+reviews['country']
+
+#These are the two ways of selecting a specific Series out of a DataFrame. Neither of them is more or less syntactically valid than the other, but the indexing operator [] does have the advantage that it can handle column names with reserved characters in them (e.g. if we had a country providence column, reviews.country providence wouldn't work).
+
+reviews['country'][0]
+out: Italy
+
+#However, pandas has its own accessor operators, loc and iloc. For more advanced operations, these are the ones you're supposed to be using.
+
+#Pandas indexing works in one of two paradigms. The first is index-based selection: selecting data based on its numerical position in the data. iloc follows this paradigm. To select the first row of data in a DataFrame, we may use the following:
+
+reviews.iloc[0]
+out: country                                                    Italy
+description    Aromas include tropical fruit, broom, brimston...
+                                     ...                        
+variety                                              White Blend
+winery                                                   Nicosia
+Name: 0, Length: 13, dtype: object
+
+#Both loc and iloc are row-first, column-second. This is the opposite of what we do in native Python, which is column-first, row-second.
+
+#This means that it's marginally easier to retrieve rows, and marginally harder to get retrieve columns. To get a column with iloc, we can do the following:
+
+reviews.iloc[:, 0]
+
+#On its own, the : operator, which also comes from native Python, means "everything". When combined with other selectors, however, it can be used to indicate a range of values. For example, to select the country column from just the first, second, and third row, we would do:
+
+reviews.iloc[:3, 0]
+
+out:
+0       Italy
+1    Portugal
+2          US
+Name: country, dtype: object
+
+#Or, to select just the second and third entries, we would do:
+
+out:
+1    Portugal
+2          US
+Name: country, dtype: object
+
+
+#It's also possible to pass a list:
+
+reviews.iloc[[0, 1, 2], 0]
+out:
+0       Italy
+1    Portugal
+2          US
+Name: country, dtype: object
+
+#Finally, it's worth knowing that negative numbers can be used in selection. This will start counting forwards from the end of the values. So for example here are the last five elements of the dataset.
+
+reviews.iloc[-5:]
+
+
