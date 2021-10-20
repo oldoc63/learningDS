@@ -126,36 +126,24 @@ reviews.loc[:, ['taster_name', 'taster_twitter_handle', 'points']]
 
 reviews.set_index('title')
 
+#We often need to ask questions based on conditions. Suppose that we're interested specifically in better-than-average wines produced in Italy. We can start by checking if each wine is Italian or not:
+
+reviews.country == 'Italy'
+
+#Just booleans, wright? Now use it inside loc:
+
+reviews.loc[reviews.country == 'Italy']
+
+#Show all the rows with Italy
+
+#We also wanted to know which ones are better than average. Wines are reviewed on a 80-to-100 point scale, so this could mean wines that accrued at least 90 points. We can use the ampersand (&) to bring the two questions together:
+
+reviews.loc[(reviews.country == 'Italy') & (reviews.points >= 90)]
+
+#Suppose we'll buy any wine that's made in Italy or which is rated above average. For this we use a pipe (|):
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+reviews.loc[(reviews.country == 'Italy') | (reviews.points >= 90)]
 
 
 
