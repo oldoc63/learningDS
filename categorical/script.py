@@ -1,12 +1,12 @@
-import codecademylib3
 import pandas as pd
 
+# Read NYC Trees Data
 nyc_trees = pd.read_csv("./nyc_tree_census.csv")
 
-# Show the first few rows of nyc_trees
-print(nyc_trees.head())
+# Get tree counts by neighborhood
+tree_counts = nyc_trees.neighborhood.value_counts()
+print(tree_counts)
 
-# Which columns are categorical vars?
-categorical_vars = ['status', 'health', 'spc_common', 'neighborhood']
-
-
+# Get neighborhoods with most trees
+greenest_neighborhood = tree_counts.index[0]
+print(greenest_neighborhood)
