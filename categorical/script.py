@@ -1,24 +1,19 @@
 import pandas as pd
 import numpy as np
 
-# Read NYC trees data
-nyc_trees = pd.read_csv("./nyc_tree_census.csv")
+# Read NYC Trees Data
+nyc_trees = pd.read_csv("nyc_tree_census2.csv")
 
-# Find the unique values in the column health
-tree_health_statuses = nyc_trees.health.unique()
-print(tree_health_statuses)
+correct_order = ['Small (0-3in)', 'Medium (3-10in)', 'Medium-Large (10-18in)', 'Large (18-24in)','Very large (>24in)']
 
-#Create a list named health_categories which lists the categories from worst to best. Exclude NaN.
-health_categories = ['Poor', 'Fair', 'Good']
+nyc_trees.tree_diam_category = pd.Categorical(nyc_trees.tree_diam_category, ['Small (0-3in)', 'Medium (3-10in)', 'Medium-Large (10-18in)', 'Large (18-24in)','Very large (>24in)'], ordered=True)
 
-#convert health to 'category'
-nyc_trees['health'] = pd.Categorical(nyc_trees['health'], health_categories, ordered=True)
+# Get Mean Diam of diameter variable, `trunk_diam`
+mean_diam = nyc_trees.trunk_diam.mean()
+print(mean_diam)
 
-#calculate the median value of health
-median_index = np.median(nyc_trees['health'].cat.codes)
-print(median_index)
-median_health_status = health_categories[int(median_index)]
-print(median_health_status)
-
-
-
+# Get Mean Category of `tree_diam_category`
+mean_diam_cat = np.mean(nyc_trees['tree_diam_category'].cat.codes)
+print(mean_diam_cat)
+median_category = correct_order[int(mean_diam_cat)]
+print(median_category)
