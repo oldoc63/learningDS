@@ -1,0 +1,12 @@
+Summary
+
+    For nominal categorical variables, there is no ordering to the categories. Because of this, we’re limited to using the mode to describe central tendency and there is no way to summarize the spread.
+
+    For ordinal categorical variables, there is an implied ordering to the categories. In Python, we can use pd.Categorical() to transform a variable to a categorical type. The Categorical type allows us to access a numeric value for each category by using .cat.codes. From there, we may perform operations on this variable as if it were a regular, numeric variable.
+
+    However, when calculating statistics for an ordinal categorical variable we should be mindful that some numeric statistics rely on the assumption of equal spacing between categories.
+
+    For ordinal categorical variables, median and mode can be used to summarize the central tendency, and the IQR (or any difference between percentiles) can be used to summarize the spread.
+
+    Certain summary statistics (e.g. frequencies and proportions), can be used for all categorical variables. You can create true/false columns and np.sum() and np.mean() to quickly summarize what proportion of your data meets certain criteria.
+
