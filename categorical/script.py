@@ -4,16 +4,21 @@ import numpy as np
 # Read NYC Trees Data
 nyc_trees = pd.read_csv("nyc_tree_census2.csv")
 
-correct_order = ['Small (0-3in)', 'Medium (3-10in)', 'Medium-Large (10-18in)', 'Large (18-24in)','Very large (>24in)']
+size_labels_ordered = ['Small (0-3in)', 'Medium (3-10in)', 'Medium-Large (10-18in)', 'Large (18-24in)','Very large (>24in)']
 
-nyc_trees.tree_diam_category = pd.Categorical(nyc_trees.tree_diam_category, ['Small (0-3in)', 'Medium (3-10in)', 'Medium-Large (10-18in)', 'Large (18-24in)','Very large (>24in)'], ordered=True)
+nyc_trees.tree_diam_category = pd.Categorical(nyc_trees.tree_diam_category, size_labels_ordered, ordered=True)
 
-# Get Mean Diam of diameter variable, `trunk_diam`
-mean_diam = nyc_trees.trunk_diam.mean()
-print(mean_diam)
+# Calculate 25th Percentile Category
+p25_tree_diam_index = np.percentile(nyc_trees.tree_diam_category.cat.codes, 25)
+print(p25_tree_diam_index)
 
-# Get Mean Category of `tree_diam_category`
-mean_diam_cat = np.mean(nyc_trees['tree_diam_category'].cat.codes)
-print(mean_diam_cat)
-median_category = correct_order[int(mean_diam_cat)]
-print(median_category)
+p25_tree_diam_category = size_labels_ordered[int(p25_tree_diam_index)]
+print(p25_tree_diam_category)
+
+# Calculate 75th Percentile Category
+p75_tree_diam_index = np.percentile(nyc_trees.tree_diam_category.cat.codes, 75)
+print(p75_tree_diam_index)
+
+p75_tree_diam_category = size_labels_ordered[int(p75_tree_diam_index)]
+print(p75_tree_diam_category)
+
