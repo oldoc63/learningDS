@@ -1,8 +1,11 @@
 import pandas as pd
 
-# Read NYC Trees data
-nyc_trees = pd.read_csv("./nyc_tree_census.csv")
+# Get NYC Trees Data
+nyc_trees = pd.read_csv("nyc_tree_census.csv")
 
-# Table of proportions for status
-tree_status_proportions = nyc_trees.status.value_counts()/len(nyc_trees['status'])
+# Proportions for each category in the health variable
+health_proportions = nyc_trees.health.value_counts(normalize=True)
+
+health_proportions_2 = nyc_trees.health.value_counts(normalize=True, dropna=False)
+
 
