@@ -23,4 +23,9 @@ buying_cost_median = np.median(car_eval['buying_cost'].cat.codes)
 
 print(buying_cost_median)
 
+luggage_proportions = car_eval.luggage.value_counts(dropna=False, normalize=True)
+
+print(luggage_proportions)
+
+
 
