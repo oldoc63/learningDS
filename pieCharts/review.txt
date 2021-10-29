@@ -1,0 +1,14 @@
+Bar Charts
+
+    Bar charts are useful for visualizing counts of categorical data.
+    In a bar chart, the height and area are proportional to the value represented. This makes it easy to compare different variables in the bar graph.
+    Seaborn is a library that makes it easy to create bar charts with the .countplot() method.
+    Bar charts have the broadest appeal and are the most common go-to when plotting categorical data.
+
+Pie Charts
+
+    A pie chart is another way to represent categorical data. Instead of displaying counts of categorical data through bars, a pie chart shows a part-to-whole relationship by displaying each variable as a sector on a circle.
+    In a pie chart, the arc length and area of each sector are proportional to the value they represent.
+    You can plot pie charts in Python using the .pie() method in Matplotlib.
+    Pie chart sectors often harder to compare than simple bars, and having too many sectors causes clutter in the visual quickly. This makes use cases for pie charts more limited.
+
