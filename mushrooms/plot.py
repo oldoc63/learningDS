@@ -12,7 +12,7 @@ columns = df.columns.tolist()
 
 for column in columns:
   #print(column)
-  sns.countplot(df[column])
+  sns.countplot(df[column], order=df[column].value_counts().index)
   plt.title(column + " Value Counts")
   # rotates value labels slightly inc font size
   plt.xticks(rotation=30, fontsize=10)
