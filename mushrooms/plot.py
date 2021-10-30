@@ -13,6 +13,11 @@ columns = df.columns.tolist()
 for column in columns:
   #print(column)
   sns.countplot(df[column])
+  plt.title(column + " Value Counts")
+  # rotates value labels slightly inc font size
+  plt.xticks(rotation=30, fontsize=10)
+  # increases variable label font size slightly
+  plt.xlabel(column, fontsize=12)
   plt.show()
   plt.clf()
 
