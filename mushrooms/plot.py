@@ -10,6 +10,11 @@ print(df.head())
 # list of all column headers
 columns = df.columns.tolist()
 
+for column in columns:
+  #print(column)
+  sns.countplot(df[column])
+  plt.show()
+  plt.clf()
 
 
 
