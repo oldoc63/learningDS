@@ -11,3 +11,5 @@ FROM hacker_news
 GROUP BY user
 HAVING SUM(score) > 200
 ORDER BY 2 DESC;
+
+SELECT (517 + 309 + 304 + 282) / 6366.0;
