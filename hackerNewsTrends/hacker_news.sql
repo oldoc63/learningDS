@@ -17,3 +17,8 @@ SELECT (517 + 309 + 304 + 282) / 6366.0;
 SELECT user, url
   FROM hacker_news
   WHERE url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+
+SELECT user, url, COUNT(url)
+  FROM hacker_news
+  WHERE url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+  GROUP BY user
