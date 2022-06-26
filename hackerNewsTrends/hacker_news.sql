@@ -28,5 +28,7 @@ SELECT CASE
   WHEN url LIKE 'medium.com' THEN 'Medium'
   WHEN url LIKE 'nytimes.com' THEN 'New York Times'
   ELSE 'Other'
- END AS 'Source'
-FROM hacker_news;
+ END AS 'Source',
+ COUNT(*)
+FROM hacker_news
+GROUP BY 1;
