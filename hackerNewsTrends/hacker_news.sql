@@ -32,3 +32,7 @@ SELECT CASE
  COUNT(*)
 FROM hacker_news
 GROUP BY 1;
+
+SELECT timestamp
+FROM hacker_news
+LIMIT 10;
