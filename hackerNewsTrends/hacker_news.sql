@@ -36,3 +36,9 @@ GROUP BY 1;
 SELECT timestamp
 FROM hacker_news
 LIMIT 10;
+
+SELECT timestamp,
+  strftime('%H', timestamp)
+FROM hacker_news
+GROUP BY 1
+LIMIT 20;
