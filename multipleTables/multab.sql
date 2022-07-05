@@ -16,3 +16,7 @@ FROM orders
 JOIN subscriptions
   ON orders.subscription_id = subscriptions.subscription_id
 WHERE subscriptions.description = 'Fashion Magazine';
+
+-- Use COUNT to count all the rows of a table
+SELECT COUNT(*)
+FROM newspaper;
