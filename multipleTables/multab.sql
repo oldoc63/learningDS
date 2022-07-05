@@ -23,3 +23,9 @@ FROM newspaper;
 
 SELECT COUNT(*)
 FROM online;
+
+-- JOIN newspaper and online tables on id
+SELECT COUNT(*)
+FROM newspaper
+JOIN online
+ON newspaper.id = online.id;
