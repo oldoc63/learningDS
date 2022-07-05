@@ -35,3 +35,10 @@ SELECT *
 FROM table1
 LEFT JOIN table2
 ON table1.c2 = table2.c2;
+
+-- How many users subscribe to the print newspaper, but not to the online.
+SELECT *
+FROM newspaper
+LEFT JOIN online
+ON newspaper.id = online.id
+WHERE online.id IS NULL;
