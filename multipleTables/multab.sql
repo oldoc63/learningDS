@@ -20,3 +20,6 @@ WHERE subscriptions.description = 'Fashion Magazine';
 -- Use COUNT to count all the rows of a table
 SELECT COUNT(*)
 FROM newspaper;
+
+SELECT COUNT(*)
+FROM online;
