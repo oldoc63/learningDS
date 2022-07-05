@@ -29,3 +29,9 @@ SELECT COUNT(*)
 FROM newspaper
 JOIN online
 ON newspaper.id = online.id;
+
+-- LEFT JOIN keep all rows of the first table but will omit the un-matched row from the second table
+SELECT *
+FROM table1
+LEFT JOIN table2
+ON table1.c2 = table2.c2;
