@@ -48,3 +48,8 @@ SELECT *
 FROM classes
 JOIN students
 ON classes.id = students.class_id;
+
+-- CROSS JOIN don't require an ON statement
+SELECT shirts.shirt_color, pants.pant_color
+FROM shirts
+CROSS JOIN pants;
