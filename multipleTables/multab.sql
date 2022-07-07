@@ -53,3 +53,9 @@ ON classes.id = students.class_id;
 SELECT shirts.shirt_color, pants.pant_color
 FROM shirts
 CROSS JOIN pants;
+
+--Count the number of customers who were subscribed to the newspaper during March.
+SELECT COUNT(*)
+FROM newspaper
+WHERE start_month <= 3
+AND end_month >= 3
