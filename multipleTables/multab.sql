@@ -64,3 +64,10 @@ AND end_month >= 3
 SELECT *
 FROM newspaper
 CROSS JOIN months;
+
+-- Create a third query where you add a WHERE statement to your cross join to restrict to two conditions
+SELECT *
+FROM newspaper
+CROSS JOIN months
+WHERE start_month <= month
+AND end_month >= month
