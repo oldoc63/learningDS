@@ -42,3 +42,9 @@ FROM newspaper
 LEFT JOIN online
 ON newspaper.id = online.id
 WHERE online.id IS NULL;
+
+--Perform an inner join of classes and students using the primary and foreign keys described above, and select all the colums
+SELECT *
+FROM classes
+JOIN students
+ON classes.id = students.class_id;
