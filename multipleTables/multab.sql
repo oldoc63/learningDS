@@ -88,3 +88,9 @@ FROM newspaper
 UNION
 SELECT *
 FROM online;
+
+-- How many magazines each customer subscribe to
+SELECT customer_id,
+COUNT(subscription_id) AS 'subscriptions'
+FROM orders
+GROUP BY customer_id;
