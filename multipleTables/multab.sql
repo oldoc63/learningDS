@@ -79,3 +79,12 @@ FROM table1
 UNION
 SELECT *
 FROM table2;
+
+-- Tables must have the same number of columns
+-- Tables must have the same data types in the same order
+
+SELECT *
+FROM newspaper
+UNION
+SELECT *
+FROM online;
