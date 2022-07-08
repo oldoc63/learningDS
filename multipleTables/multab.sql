@@ -71,3 +71,11 @@ FROM newspaper
 CROSS JOIN months
 WHERE start_month <= month
 AND end_month >= month
+GROUP BY month;
+
+-- Combine two tables using UNION
+SELECT *
+FROM table1
+UNION
+SELECT *
+FROM table2;
