@@ -73,3 +73,5 @@ WHERE total_trips < 500;
 SELECT COUNT(*)
 FROM cars
 WHERE status = active;
+
+-- Cars that have the highest trips_completed
