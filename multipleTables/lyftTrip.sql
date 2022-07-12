@@ -33,7 +33,15 @@ LEFT JOIN riders
 ON trips.rider_id = riders.id;
 
 -- For inner join (The JOIN keyword can also be INNER JOIN)
+-- The inner join keyword selects records that have matching values in both tables
 SELECT *
 FROM trips
 JOIN cars
   ON trips.car_id = cars.id;
+
+-- Stack the riders table on top of the new table named riders2
+SELECT *
+FROM riders
+UNION
+SELECT *
+FROM riders2;
