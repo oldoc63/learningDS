@@ -33,6 +33,7 @@ LEFT JOIN riders
 ON trips.rider_id = riders.id;
 
 -- For inner join (The JOIN keyword can also be INNER JOIN)
+-- The inner join keyword selects records that have matching values in both tables
 SELECT *
 FROM trips
 JOIN cars
