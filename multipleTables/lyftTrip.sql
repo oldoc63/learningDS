@@ -68,3 +68,8 @@ UNION
 SELECT *
 FROM riders2
 WHERE total_trips < 500;
+
+-- calculate the number of active cars
+SELECT COUNT(*)
+FROM cars
+WHERE status = active;
