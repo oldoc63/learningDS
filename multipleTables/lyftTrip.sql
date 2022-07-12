@@ -19,3 +19,15 @@ FROM trips
 LEFT JOIN riders
 ON trips.rider_id = riders.id;
 
+-- Suppose we only want certain columns:
+SELECT trips.date, 
+   trips.pickup, 
+   trips.dropoff, 
+   trips.type, 
+   trips.cost,
+   riders.first, 
+   riders.last,
+   riders.username 
+FROM trips
+LEFT JOIN riders
+ON trips.rider_id = riders.id;
