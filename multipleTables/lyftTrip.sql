@@ -75,3 +75,7 @@ FROM cars
 WHERE status = active;
 
 -- Cars that have the highest trips_completed
+SELECT *
+FROM cars
+ORDER BY trips_completed DESC
+LIMIT 2;
