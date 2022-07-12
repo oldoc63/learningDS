@@ -38,3 +38,10 @@ SELECT *
 FROM trips
 JOIN cars
   ON trips.car_id = cars.id;
+
+-- Stack the riders table on top of the new table named riders2
+SELECT *
+FROM riders
+UNION
+SELECT *
+FROM riders2;
