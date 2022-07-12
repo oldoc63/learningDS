@@ -53,3 +53,18 @@ FROM trips;
 -- If we use the ROUND() function to round the result to 2 decimals
 SELECT ROUND(AVG(cost), 2)
 FROM trips;
+
+-- Non frequent users (less than 500 times)
+-- If we are only searching within the riders table
+SELECT *
+FROM riders
+WHERE total_trips < 500;
+
+-- if we want to search riders and riders2
+SELECT *
+FROM riders
+WHERE total_trips < 500
+UNION
+SELECT *
+FROM riders2
+WHERE total_trips < 500;
