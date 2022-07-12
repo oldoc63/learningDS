@@ -31,3 +31,9 @@ SELECT trips.date,
 FROM trips
 LEFT JOIN riders
 ON trips.rider_id = riders.id;
+
+-- For inner join (The JOIN keyword can also be INNER JOIN)
+SELECT *
+FROM trips
+JOIN cars
+  ON trips.car_id = cars.id;
