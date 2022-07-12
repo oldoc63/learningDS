@@ -45,3 +45,11 @@ FROM riders
 UNION
 SELECT *
 FROM riders2;
+
+-- What is the average cost of a trip?
+SELECT AVG(cost)
+FROM trips;
+
+-- If we use the ROUND() function to round the result to 2 decimals
+SELECT ROUND(AVG(cost), 2)
+FROM trips;
