@@ -13,5 +13,9 @@ SELECT * FROM cars;
 SELECT riders.first, riders.last, cars.model, cars.status
 FROM riders, cars;
 
-
+-- If we LEFT JOIN on trips.rider_id and riders.id;
+SELECT *
+FROM trips
+LEFT JOIN riders
+ON trips.rider_id = riders.id;
 
