@@ -4,4 +4,7 @@ r = requests.get('https://api.census.gov/data/2020/acs/acs5?get=NAME,B08303_001E
 
 r_text = r.text
 
-print(r_text)
+# print(r_text)
+
+# Access decoded JSON data as Python object
+print(r.json())
