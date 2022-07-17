@@ -1,9 +1,3 @@
-import pandas
+import numpy as np
 
-commute_df = pandas.read_csv('commute_data.csv')
-
-#print(commute_df.head())
-
-commute_df.columns = ['name', 'total_comm', 'more_than_90', 'state', 'county' ]
-
-print(commute_df.head())
+print(np.random.binomial(n=1, p=0.8, size=500))
