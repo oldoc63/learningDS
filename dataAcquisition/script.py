@@ -1,9 +1,9 @@
 import pandas
 
-census_df = pandas.read_csv('census.csv')
+commute_df = pandas.read_csv('commute_data.csv')
 
-#Preview DataFrame
-print(census_df.head())
+#print(commute_df.head())
 
-#Rename DataFrame columns
-census_df.columns = ['name', 'total_commuters', 'state']
+commute_df.columns = ['name', 'total_comm', 'more_than_90', 'state', 'county' ]
+
+print(commute_df.head())
