@@ -41,3 +41,7 @@ print(man_its_a_hot_one.split())
 line_one = 'The sky has given over'
 line_one_words = line_one.split()
 print(line_one_words)
+
+#The argument for .split() should be provided as a string itself
+greatest_guitarist = 'santana'
+print(greatest_guitarist.split('n'))
