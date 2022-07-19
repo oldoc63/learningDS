@@ -13,3 +13,7 @@ print('Hello world'.replace('H', 'J'))
 print('   Hello World   '.strip())
 
 print('{} {}'.format('Hello', 'World'))
+
+favorite_song = 'SmOoTH'
+favorite_song_lowercase = favorite_song.lower()
+print(favorite_song_lowercase)
