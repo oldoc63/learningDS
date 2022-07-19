@@ -17,3 +17,6 @@ print('{} {}'.format('Hello', 'World'))
 favorite_song = 'SmOoTH'
 favorite_song_lowercase = favorite_song.lower()
 print(favorite_song_lowercase)
+
+#String methods can only create new strings, they do not change the original string
+print(favorite_song)
