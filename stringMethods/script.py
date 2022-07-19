@@ -45,3 +45,4 @@ print(line_one_words)
 #The argument for .split() should be provided as a string itself
 greatest_guitarist = 'santana'
 print(greatest_guitarist.split('n'))
+print(greatest_guitarist.split('a'))
