@@ -33,3 +33,7 @@ poem_author_fixed = poem_author.upper()
 
 print(poem_author_fixed)
 print(poem_author)
+
+#.split() returns a list of substrings found between the given argument
+man_its_a_hot_one = 'Like seven inches from the midday sun'
+print(man_its_a_hot_one.split())
