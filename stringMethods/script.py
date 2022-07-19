@@ -46,3 +46,8 @@ print(line_one_words)
 greatest_guitarist = 'santana'
 print(greatest_guitarist.split('n'))
 print(greatest_guitarist.split('a'))
+
+#Create a comma separated list of author names
+authors = "Audre Lorde,Gabriela Mistral,Jean Toomer,An Qi,Walt Whitman,Shel Silverstein,Carmen Boullosa,Kamala Suraiyya,Langston Hughes,Adrienne Rich,Nikki Giovanni"
+author_names = authors.split(',')
+print(author_names)
