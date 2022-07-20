@@ -57,3 +57,14 @@ author_last_names = []
 for name in author_names:
     author_last_names.append(name.split()[-1])
 print(author_last_names)
+
+#Splitting by an escape sequence
+smooth_chorus = \
+    """And if you said, "This life ain't good enough."
+    I would give my world to lift you up
+    I could change my life to better suit your mood
+    Because you're so smooth"""
+
+chorus_lines = smooth_chorus.split('\n')
+
+print(chorus_lines)
