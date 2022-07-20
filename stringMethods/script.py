@@ -96,3 +96,8 @@ print(spring_storm_lines)
 my_munequita = ['My', 'Spanish', 'Harlem', 'Mona', 'Lisa']
 print(' '.join(my_munequita))
 print(''.join(my_munequita))
+
+#Join the words in the list to make the first line of the poem
+reapers_line_one_word = ["Black", "reapers", "with", "the", "sound", "of", "steel", "on", "stones"]
+reapers_line_one = ' '.join(reapers_line_one_word)
+print(reapers_line_one)
