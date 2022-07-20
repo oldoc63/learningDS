@@ -95,3 +95,4 @@ print(spring_storm_lines)
 #The string .join() acts on is the delimiter you want to join with
 my_munequita = ['My', 'Spanish', 'Harlem', 'Mona', 'Lisa']
 print(' '.join(my_munequita))
+print(''.join(my_munequita))
