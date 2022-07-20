@@ -97,7 +97,12 @@ my_munequita = ['My', 'Spanish', 'Harlem', 'Mona', 'Lisa']
 print(' '.join(my_munequita))
 print(''.join(my_munequita))
 
-#Join the words in the list to make the first line of the poem
+#Join the words in the list with a space to make the first line of the poem
 reapers_line_one_word = ["Black", "reapers", "with", "the", "sound", "of", "steel", "on", "stones"]
 reapers_line_one = ' '.join(reapers_line_one_word)
 print(reapers_line_one)
+
+#Join the words in the list with a comma
+santana_songs = ['Oye Como Va', 'Smooth', 'Black Magic Woman', 'Samba Pa Ti', 'Maria Maria']
+santana_songs_csv = ','.join(santana_songs)
+print(santana_songs_csv)
