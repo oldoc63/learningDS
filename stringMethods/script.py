@@ -106,3 +106,8 @@ print(reapers_line_one)
 santana_songs = ['Oye Como Va', 'Smooth', 'Black Magic Woman', 'Samba Pa Ti', 'Maria Maria']
 santana_songs_csv = ','.join(santana_songs)
 print(santana_songs_csv)
+
+#Join using escape sequences as the delimiter
+smooth_fifth_verse_lines = ['Well I\'m from the barrio', 'You hear my rhythm on your radio', 'You feel the turning of the world so soft and slow', 'Turning you \'round and \'round']
+smooth_fifth_verse = '\n'.join(smooth_fifth_verse_lines)
+print(smooth_fifth_verse)
