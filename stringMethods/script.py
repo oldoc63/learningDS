@@ -160,3 +160,7 @@ print('smooth'.find('oo'))
 god_wills_it_line_one = "The very earth will disown you"
 disown_placement = god_wills_it_line_one.find('disown')
 print(disown_placement)
+
+#.format() is a handy method for including variables in strings
+def favorite_song_statement(song, artist):
+    return "My favorite song is {} by {}.".format(song, artist)
