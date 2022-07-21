@@ -155,3 +155,8 @@ print('smooth'.find('t'))
 
 #.find() can search for larger strings and return the index value of the first character
 print('smooth'.find('oo'))
+
+#Find 'disown' in the first line of Gabriela Mistral's poem
+god_wills_it_line_one = "The very earth will disown you"
+disown_placement = god_wills_it_line_one.find('disown')
+print(disown_placement)
