@@ -152,3 +152,6 @@ print(toomer_bio_fixed)
 
 #.find(): takes a string as an argument and search the string it was running on for that string
 print('smooth'.find('t'))
+
+#.find() can search for larger strings and return the index value of the first character
+print('smooth'.find('oo'))
