@@ -164,3 +164,6 @@ print(disown_placement)
 #.format() is a handy method for including variables in strings
 def favorite_song_statement(song, artist):
     return "My favorite song is {} by {}.".format(song, artist)
+
+print(favorite_song_statement('Smooth', 'Santana'))
+# => "My favorite song is Smooth by Santana."
