@@ -149,3 +149,6 @@ toomer_bio = \
     """
 toomer_bio_fixed = toomer_bio.replace('Tomer', 'Toomer')
 print(toomer_bio_fixed)
+
+#.find(): takes a string as an argument and search the string it was running on for that string
+print('smooth'.find('t'))
