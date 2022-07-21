@@ -135,3 +135,9 @@ for line in love_maybe_lines:
 love_maybe_full = '\n'.join(love_maybe_lines_stripped)
 
 print(love_maybe_full)
+
+#Replace takes two arguments and replaces all instances of the first argument with the second.
+#string_name.replace(substring_being_replaced, new_substring)
+with_spaces = 'You got the kind of loving that can be so smooth'
+with_underscores = with_spaces.replace(' ', '_')
+print(with_underscores)
