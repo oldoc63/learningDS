@@ -120,3 +120,7 @@ print(winter_trees_full)
 #Python provides a great method for cleaning strings: .strip()
 featuring = "          rob thomas         "
 print(featuring.strip())
+
+#.strip() with a character argument, will strip that character
+featuring = '!!!rob thomas       !!!'
+print(featuring.strip('!'))
