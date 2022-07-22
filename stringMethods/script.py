@@ -239,4 +239,6 @@ for poem in highlighted_poems_details:
 # print(poets)
 # print(dates)
 
-
+#Write a for loop that using format generates: The poem TITLE was published by POET in DATE.
+for i in range(0,len(highlighted_poems_details)):
+    print('The poem {} was published by {} in {}'.format(titles[i], poets[i], dates[i]))
