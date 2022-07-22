@@ -176,7 +176,13 @@ def poem_title_card(title, poet):
 print(poem_title_card("I Hear America Singing", "Walt Whitman"))
 
 #Including keywords in the string and the arguments to remove ambiguity
-def favorite_song_statement(song, artist):
-    return "My favorite song is {song} by {artist}.".format(song=song, artist=artist)
+# def favorite_song_statement(song, artist):
+#     return "My favorite song is {song} by {artist}.".format(song=song, artist=artist)
 
-print(favorite_song_statement('Maria, Maria', 'Santana'))
+# print(favorite_song_statement('Maria, Maria', 'Santana'))
+
+def favorite_song_statement(song, artist):
+    return "My favorite song is {song} by {artist}.".format(artist=artist, song=song)
+
+print(favorite_song_statement('Smooth', 'Santana'))
+# => "My favorite song is Smooth by Santana."
