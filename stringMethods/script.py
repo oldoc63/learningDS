@@ -217,3 +217,9 @@ print(highlighted_poems_stripped)
 
 #Create a new list called highlighted_poems_details
 highlighted_poems_details = []
+
+#Iterate through highlighted_poems_stripped, split around : and append to highlighted_poems_details
+for poem in highlighted_poems_stripped:
+    highlighted_poems_details.append(poem.split(':'))
+
+print(highlighted_poems_details)
