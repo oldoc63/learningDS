@@ -205,3 +205,6 @@ highlighted_poems_list = highlighted_poems.split(',')
 
 #Print highlighted_poems_list
 print(highlighted_poems_list)
+
+#Create a new empty list highlighted_poems_stripped
+highlighted_poems_stripped = []
