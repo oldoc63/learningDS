@@ -208,3 +208,9 @@ print(highlighted_poems_list)
 
 #Create a new empty list highlighted_poems_stripped
 highlighted_poems_stripped = []
+
+#Iterate through highlighted_poems_list using a for loop to strip away the whitespace
+for poem in highlighted_poems_list:
+    highlighted_poems_stripped.append(poem.strip())
+
+print(highlighted_poems_stripped)
