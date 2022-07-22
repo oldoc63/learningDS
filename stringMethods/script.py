@@ -223,3 +223,9 @@ for poem in highlighted_poems_stripped:
     highlighted_poems_details.append(poem.split(':'))
 
 print(highlighted_poems_details)
+
+#Create three new empty lists: titles, poets, and dates.
+titles = []
+poets = []
+dates = []
+
