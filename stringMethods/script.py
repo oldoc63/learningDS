@@ -162,10 +162,10 @@ disown_placement = god_wills_it_line_one.find('disown')
 print(disown_placement)
 
 #.format() is a handy method for including variables in strings
-def favorite_song_statement(song, artist):
-    return "My favorite song is {} by {}.".format(song, artist)
+# def favorite_song_statement(song, artist):
+#     return "My favorite song is {} by {}.".format(song, artist)
 
-print(favorite_song_statement('Smooth', 'Santana'))
+# print(favorite_song_statement('Smooth', 'Santana'))
 # => "My favorite song is Smooth by Santana."
 
 #Write a function called poem_title_card
@@ -174,3 +174,9 @@ def poem_title_card(title, poet):
     return poem_desc
 
 print(poem_title_card("I Hear America Singing", "Walt Whitman"))
+
+#Including keywords in the string and the arguments to remove ambiguity
+def favorite_song_statement(song, artist):
+    return "My favorite song is {song} by {artist}.".format(song=song, artist=artist)
+
+print(favorite_song_statement('Maria, Maria', 'Santana'))
