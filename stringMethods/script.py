@@ -214,3 +214,6 @@ for poem in highlighted_poems_list:
     highlighted_poems_stripped.append(poem.strip())
 
 print(highlighted_poems_stripped)
+
+#Create a new list called highlighted_poems_details
+highlighted_poems_details = []
