@@ -229,3 +229,14 @@ titles = []
 poets = []
 dates = []
 
+#For each list in the list append the appropriate elements
+for poem in highlighted_poems_details:
+    titles.append(poem[0])
+    poets.append(poem[1])
+    dates.append(poem[2])
+
+# print(titles)
+# print(poets)
+# print(dates)
+
+
