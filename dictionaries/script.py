@@ -70,3 +70,10 @@ print(building_heights.get("My House"))
 print(building_heights.get("Shanghai Tower", 0))
 
 print(building_heights.get('Mt Olympus', 0))
+
+#Delete a key
+raffle = {223842: "Teddy Bear", 872921: "Concert Tickets", 320291: "Gift Basket", 412123: "Necklace", 298787: "Pasta Maker"}
+
+print(raffle.pop(320291, "No Prize"))
+
+print(raffle)
