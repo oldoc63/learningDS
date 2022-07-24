@@ -77,3 +77,9 @@ raffle = {223842: "Teddy Bear", 872921: "Concert Tickets", 320291: "Gift Basket"
 print(raffle.pop(320291, "No Prize"))
 
 print(raffle)
+
+#Get all keys
+test_scores = {"Grace":[80, 72, 90], "Jeffrey":[88, 68, 81], "Sylvia":[80, 82, 84], "Pedro":[98, 96, 95], "Martin":[78, 80, 78], "Dina":[64, 60, 75]}
+
+#list()
+print(list(test_scores))
