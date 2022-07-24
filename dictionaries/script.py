@@ -94,3 +94,6 @@ test_scores = {"Grace":[80, 72, 90], "Jeffrey":[88, 68, 81], "Sylvia":[80, 82, 8
 
 for score in test_scores.values():
     print(score)
+
+#If you really want to have a list
+list(test_scores.values())
