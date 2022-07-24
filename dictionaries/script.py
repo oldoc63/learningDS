@@ -56,3 +56,12 @@ try:
     print(building_heights['Landmark 81'])
 except KeyError:
     print("That key doesn't exist!")
+
+#Safely Get a Key
+building_heights = {"Burj Khalifa": 828, "Shanghai Tower": 632, "Abraj Al Bait": 601, "Ping An": 599, "Lotte World Tower": 554.5, "One World Trade": 541.3}
+
+#this line will return 632:
+print(building_heights.get("Shanghai Tower"))
+
+#this line will return None:
+print(building_heights.get("My House"))
