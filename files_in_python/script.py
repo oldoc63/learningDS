@@ -13,3 +13,7 @@ with open('files_in_python/millay_sonnet.txt') as sonnet_doc:
     first_line = sonnet_doc.readline()
     second_line = sonnet_doc.readline()
     print(second_line)
+
+#Writing a File
+with open('files_in_python/generated_file.txt', 'w') as gen_file:
+    gen_file.write("What an incredible file!")
