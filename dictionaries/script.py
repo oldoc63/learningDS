@@ -65,3 +65,8 @@ print(building_heights.get("Shanghai Tower"))
 
 #this line will return None:
 print(building_heights.get("My House"))
+
+#Specify a value if the key doesn't exist
+print(building_heights.get("Shanghai Tower", 0))
+
+print(building_heights.get('Mt Olympus', 0))
