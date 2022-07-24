@@ -49,3 +49,10 @@ key_to_check = "Landmark 81"
 
 if key_to_check in building_heights:
     print(building_heights['Landmark 81'])
+
+#Try/Except to get a key
+key_to_check = "Landmark 81"
+try:
+    print(building_heights['Landmark 81'])
+except KeyError:
+    print("That key doesn't exist!")
