@@ -26,3 +26,11 @@ menu = {"oatmeal": 3, "avocado toast": 6, "carrot juice": 5, "blueberry muffin":
 menu["oatmeal"] = 5
 
 print(menu)
+
+#Dictionary Comprehensions
+names = ['Jenny', 'Alexus', 'Sam', 'Grace']
+heights = [61, 70, 67, 64]
+
+students = {key:value for key, value in zip(names, heights)}
+
+print(students)
