@@ -83,3 +83,7 @@ test_scores = {"Grace":[80, 72, 90], "Jeffrey":[88, 68, 81], "Sylvia":[80, 82, 8
 
 #list()
 print(list(test_scores))
+
+#.keys() method
+for student in test_scores.keys():
+    print(student)
