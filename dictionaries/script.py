@@ -12,3 +12,10 @@ empty_dict = {}
 menu = {"oatmeal": 3, "avocado toast": 6, "carrot juice": 5, "blueberry muffin": 2}
 
 menu["cheesecake"] = 8
+
+#Add Multiple Keys
+sensors = {"living room": 21, "kitchen": 23, "bedroom": 20}
+
+sensors.update({"pantry": 22, "guess room": 25, "patio": 34})
+
+print(sensors)
