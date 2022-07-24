@@ -7,3 +7,8 @@ menu = {"avocado toast": 6, "carrot juice": 5, "blueberry muffin": 2}
 
 #Empty Dictionary
 empty_dict = {}
+
+#Add A Key
+menu = {"oatmeal": 3, "avocado toast": 6, "carrot juice": 5, "blueberry muffin": 2}
+
+menu["cheesecake"] = 8
