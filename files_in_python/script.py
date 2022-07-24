@@ -4,6 +4,12 @@ with open('files_in_python/real_cool_document.txt') as cool_doc:
 print(cool_contents)
 
 #Open a file and read it line by line
-with open('keats_sonnet.txt') as keats_sonnet:
+with open('files_in_python/keats_sonnet.txt') as keats_sonnet:
     for line in keats_sonnet.readlines():
         print(line)
+
+#Reading a Line
+with open('files_in_python/millay_sonnet.txt') as sonnet_doc:
+    first_line = sonnet_doc.readline()
+    second_line = sonnet_doc.readline()
+    print(second_line)
