@@ -38,3 +38,8 @@ print(students)
 #Get a key
 zodiac_elements = {"water": ["Cancer", "Scorpio", "Pisces"], "fire": ["Aries", "Leo", "Sagittarius"], "earth": ["Taurus", "Virgo", "Capricorn"], "air":["Gemini", "Libra", "Aquarius"]}
 print(zodiac_elements['water'])
+
+#Get an invalid key
+building_heights = {"Burj Khalifa": 828, "Shanghai Tower": 632, "Abraj Al Bait": 601, "Ping An": 599, "Lotte World Tower": 554.5, "One World Trade": 541.3}
+print(building_heights['Landmark 81'])
+#KeyError: 'Landmark 81'
