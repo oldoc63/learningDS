@@ -41,5 +41,11 @@ print(zodiac_elements['water'])
 
 #Get an invalid key
 building_heights = {"Burj Khalifa": 828, "Shanghai Tower": 632, "Abraj Al Bait": 601, "Ping An": 599, "Lotte World Tower": 554.5, "One World Trade": 541.3}
-print(building_heights['Landmark 81'])
+#print(building_heights['Landmark 81'])
 #KeyError: 'Landmark 81'
+
+#To avoid the KeyError first check
+key_to_check = "Landmark 81"
+
+if key_to_check in building_heights:
+    print(building_heights['Landmark 81'])
