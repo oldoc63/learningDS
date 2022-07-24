@@ -97,3 +97,9 @@ for score in test_scores.values():
 
 #If you really want to have a list
 list(test_scores.values())
+
+#Get all items
+biggest_brands = {"Apple": 184, "Google": 141.7, "Microsoft": 80, "Coca-Cola": 69.7, "Amazon": 64.8}
+
+for company, value in biggest_brands.items():
+    print(company + " has a value of " + str(value) + " billion dollars. ")
