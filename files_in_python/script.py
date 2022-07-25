@@ -30,3 +30,5 @@ fun_cities_file.write("Montréal")
 
 #But we need to remember to close the file
 fun_cities_file.close()
+
+#.csv
