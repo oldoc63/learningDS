@@ -34,7 +34,6 @@ fun_cities_file.close()
 #.csv
 
 #Reading a .csv file
-
 import csv
 
 list_of_email_addresses = []
@@ -46,3 +45,9 @@ with open('files_in_python/users.csv', newline='') as users_csv:
 print(list_of_email_addresses)
 
 #Reading different types of CSV files
+import csv
+
+with open('addresses.csv', newline='') as addresses_csv:
+    address_reader = csv.DictReader(addresses_csv, delimiter=';')
+    for row in address_reader:
+        print(row['Address'])
