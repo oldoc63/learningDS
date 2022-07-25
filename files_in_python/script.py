@@ -44,3 +44,5 @@ with open('files_in_python/users.csv', newline='') as users_csv:
         list_of_email_addresses.append(row['Email'])
 
 print(list_of_email_addresses)
+
+#Reading different types of CSV files
