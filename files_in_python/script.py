@@ -21,3 +21,12 @@ with open('files_in_python/generated_file.txt', 'w') as gen_file:
 #Appending a File
 with open('files_in_python/generated_file.txt', 'a') as gen_file:
     gen_file.write("... and it still is")
+
+#Access files with .close()
+fun_cities_file = open(files_in_python/fun_cities.txt, 'a')
+
+#We can now append a line to "fun_cities"
+fun_cities_file.write("Montréal")
+
+#But we need to remember to close the file
+fun_cities_file.close()
