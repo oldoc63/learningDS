@@ -17,3 +17,7 @@ with open('files_in_python/millay_sonnet.txt') as sonnet_doc:
 #Writing a File
 with open('files_in_python/generated_file.txt', 'w') as gen_file:
     gen_file.write("What an incredible file!")
+
+#Appending a File
+with open('files_in_python/generated_file.txt', 'a') as gen_file:
+    gen_file.write("... and it still is")
