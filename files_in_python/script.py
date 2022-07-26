@@ -64,3 +64,10 @@ with open('files_in_python/output.csv', 'w') as output_csv:
     for item in big_list:
         output_writer.writerow(item)
 
+#Reading a JSON File
+import json
+
+with open('files_in_python/purchase_14781239.json') as purchase_json:
+    purchase_data = json.load(purchase_json)
+
+print(purchase_data['user'])
