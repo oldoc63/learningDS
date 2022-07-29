@@ -12,3 +12,6 @@ print(is_substring('I'))
 print(is_substring('am'))
 print(is_substring('the'))
 print(is_substring('master'))
+
+# Check if A grade
+check_if_A_Grade = lambda grade: 'Got an A!' if grade >= 90 else 'Did not got an A ...'
