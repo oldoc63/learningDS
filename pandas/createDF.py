@@ -37,3 +37,11 @@ customers = pd.DataFrame([
 columns= ['name','age'])
 
 print(customers)
+
+customers_name = customers.name
+
+print(customers_name)
+
+customers_age = customers.age
+
+print(customers_age)
