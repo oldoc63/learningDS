@@ -22,3 +22,8 @@ print(df2)
 #Convert a CSV to a DataFrame using .read_csv()
 df = pd.read_csv('pandas/sample.csv')
 print(df)
+
+#load the CSV below:
+df = pd.read_csv('imdb.csv')
+print(df.head())
+print(df.info())
