@@ -19,11 +19,21 @@ columns=['name', 'address', 'age'])
 
 print(df2)
 
-#Convert a CSV to a DataFrame using .read_csv()
+# Convert a CSV to a DataFrame using .read_csv()
 df = pd.read_csv('pandas/sample.csv')
 print(df)
 
-#load the CSV below:
-df = pd.read_csv('imdb.csv')
-print(df.head())
-print(df.info())
+# Load the CSV below:
+# df = pd.read_csv('imdb.csv')
+# print(df.head())
+# print(df.info())
+
+# Select Columns
+customers = pd.DataFrame([
+    ["Rebecca Erikson", 35],
+    ["Thomas Roberson", 28],
+    ["Diane Ochoa", 42]
+],
+columns= ['name','age'])
+
+print(customers)
