@@ -20,8 +20,8 @@ columns=['name', 'address', 'age'])
 print(df2)
 
 # Convert a CSV to a DataFrame using .read_csv()
-df = pd.read_csv('pandas/sample.csv')
-print(df)
+# df = pd.read_csv('pandas/sample.csv')
+# print(df)
 
 # Load the CSV below:
 # df = pd.read_csv('imdb.csv')
@@ -68,3 +68,7 @@ print(clinic_north_south)
 # Select Rows
 march = df.iloc[2]
 print(march)
+
+# Select Multiple Rows
+april_may_june = df.iloc[-3:]
+print(april_may_june)
