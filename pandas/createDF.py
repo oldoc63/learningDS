@@ -89,3 +89,6 @@ print(df2)
 
 df3 = df2.reset_index()
 print(df3)
+
+df2.reset_index(inplace=True, drop=True)
+print(df2)
