@@ -82,3 +82,7 @@ print(march_april)
 
 january_february_march = df[df.month.isin(['January', 'February', 'March'])]
 print(january_february_march)
+
+#Setting indices
+df2 = df.loc[[1, 3, 5]]
+print(df2)
