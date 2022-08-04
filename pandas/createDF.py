@@ -86,3 +86,6 @@ print(january_february_march)
 #Setting indices
 df2 = df.loc[[1, 3, 5]]
 print(df2)
+
+df3 = df2.reset_index()
+print(df3)
