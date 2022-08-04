@@ -72,3 +72,13 @@ print(march)
 # Select Multiple Rows
 april_may_june = df.iloc[-3:]
 print(april_may_june)
+
+#Select Rows with logic
+january = df[df.month == 'January']
+print(january)
+
+march_april = df[(df.month == 'March') | (df.month == 'April')]
+print(march_april)
+
+january_february_march = df[df.month.isin(['January', 'February', 'March'])]
+print(january_february_march)
