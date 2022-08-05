@@ -92,3 +92,21 @@ print(df3)
 
 df2.reset_index(inplace=True, drop=True)
 print(df2)
+
+# Reading de CSV
+orders = pd.read_csv('pandas/shoefly.csv')
+
+# Inspecting the forst five lines of data
+print(orders.head())
+
+# Selecting the column 'email'
+email = orders.email
+print(email)
+
+# Frances Palmer Incident
+frances_palmer = orders[(orders.first_name == 'Frances') & (orders.last_name == 'Palmer')]
+print(frances_palmer)
+
+# Confy feet means more time on the street
+confy_shoes = orders[orders.shoe_type.isin(['clogs', 'boots', 'ballet flats'])]
+print(confy_shoes)
