@@ -31,3 +31,11 @@ print(df)
 # Add a column to df called 'Margin'
 df['Margin'] = df.Price - df['Cost to Manufacture']
 print(df)
+
+# Change the capitalization for name in each row using apply
+f = pd.DataFrame([
+  ['JOHN SMITH', 'john.smith@gmail.com'],
+  ['Jane Doe', 'jdoe@yahoo.com'],
+  ['joe schmo', 'joeschmo@hotmail.com']
+],
+columns=['Name', 'Email'])
