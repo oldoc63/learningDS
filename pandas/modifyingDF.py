@@ -8,3 +8,7 @@ df = pd.DataFrame([
 ],
   columns=['Product ID', 'Description', 'Cost to Manufacture', 'Price']
   )
+
+# Adding a column by giving a list of the same length as the existing DataFrame
+df['Quantity'] = [100, 150, 50, 35]
+print(df)
