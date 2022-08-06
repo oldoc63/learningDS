@@ -19,3 +19,7 @@ print(df)
 # Add a new column that is the same in all rows
 df['In Stock?'] = True
 print(df)
+
+# Add a column 'Is taxed?'
+df['Is taxed'] = 'Yes'
+print(df)
