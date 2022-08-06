@@ -33,9 +33,12 @@ df['Margin'] = df.Price - df['Cost to Manufacture']
 print(df)
 
 # Change the capitalization for name in each row using apply
-f = pd.DataFrame([
+df = pd.DataFrame([
   ['JOHN SMITH', 'john.smith@gmail.com'],
   ['Jane Doe', 'jdoe@yahoo.com'],
   ['joe schmo', 'joeschmo@hotmail.com']
 ],
 columns=['Name', 'Email'])
+
+# Apply the function upper to every row in Name
+df['Name'] = df.Name.apply(str.upper)
