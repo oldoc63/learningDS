@@ -27,3 +27,7 @@ print(df)
 # Add a column by performing a function on the existing columns
 df['Sales Tax'] = df.Price * 0.075
 print(df)
+
+# Add a column to df called 'Margin'
+df['Margin'] = df.Price - df['Cost to Manufacture']
+print(df)
