@@ -12,3 +12,6 @@ df = pd.DataFrame([
 # Adding a column by giving a list of the same length as the existing DataFrame
 df['Quantity'] = [100, 150, 50, 35]
 print(df)
+
+df['Sold in Bulk?'] = ['Yes', 'Yes', 'No', 'No']
+print(df)
