@@ -42,3 +42,10 @@ columns=['Name', 'Email'])
 
 # Apply the function upper to every row in Name
 df['Name'] = df.Name.apply(str.upper)
+print(df)
+
+# Apply the function lower to every row in 'Name'.
+# Assign these new names to a new column called 'Lowercase Name'.
+
+df['Lowercase Name'] = df.Name.apply(str.lower)
+print(df)
