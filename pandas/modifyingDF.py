@@ -23,3 +23,7 @@ print(df)
 # Add a column 'Is taxed?'
 df['Is taxed'] = 'Yes'
 print(df)
+
+# Add a column by performing a function on the existing columns
+df['Sales Tax'] = df.Price * 0.075
+print(df)
