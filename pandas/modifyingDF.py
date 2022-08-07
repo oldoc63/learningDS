@@ -1,3 +1,4 @@
+from pyclbr import Function
 import pandas as pd
 
 df = pd.DataFrame([
@@ -49,3 +50,7 @@ print(df)
 
 df['Lowercase Name'] = df.Name.apply(str.lower)
 print(df)
+
+# Lambda Function
+mylambda = lambda x: (x * 2) + 3
+print(mylambda(5))
