@@ -58,3 +58,7 @@ print(mylambda(5))
 # Converts a string into lowercase
 stringlambda = lambda x: x.lower()
 print(stringlambda("Oh Hi Mark!"))
+
+# Return first and last letters of a string
+mylambda = lambda s: s[0] + s[-1]
+print(mylambda('This is a string'))
