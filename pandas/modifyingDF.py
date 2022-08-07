@@ -71,3 +71,14 @@ def myfunction(x):
     return x
 
 myfunction = lambda x: 40 + (x - 40) * 1.50 if x > 40 else x
+
+# Applying a Lambda to a Column
+df = pd.DataFrame([
+  ['JOHN SMITH', 'john.smith@gmail.com'],
+  ['Jane Doe', 'jdoe@yahoo.com'],
+  ['joe schmo', 'joeschmo@hotmail.com']
+],
+columns=['Name', 'Email'])
+
+df['Email Provider'] = df.Email.apply(lambda x: x.split('@')[-1])
+print(df)
