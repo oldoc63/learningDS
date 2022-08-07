@@ -54,3 +54,7 @@ print(df)
 # Lambda Function
 mylambda = lambda x: (x * 2) + 3
 print(mylambda(5))
+
+# Converts a string into lowercase
+stringlambda = lambda x: x.lower()
+print(stringlambda("Oh Hi Mark!"))
