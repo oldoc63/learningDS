@@ -69,3 +69,5 @@ def myfunction(x):
     return 40 + (x - 40) * 1.50
   else:
     return x
+
+myfunction = lambda x: 40 + (x - 40) * 1.50 if x > 40 else x
