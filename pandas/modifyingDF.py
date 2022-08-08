@@ -102,3 +102,10 @@ df['Price with Tax'] = df.apply(lambda row:
 )
 
 print(df)
+
+# Renaming Columns: change all the columns names at once
+df = pd.DataFrame({
+  'name': ['John', 'Jane', 'Sue', 'Fred'],
+  'age': [23, 29, 21, 18]
+})
+df.columns = ['First Name', 'Age']
