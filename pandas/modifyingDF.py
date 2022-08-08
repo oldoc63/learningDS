@@ -109,3 +109,12 @@ df = pd.DataFrame({
   'age': [23, 29, 21, 18]
 })
 df.columns = ['First Name', 'Age']
+
+# Using .rename method
+df.rename(columns={
+  'name': 'First Name',
+  'age': 'Age'
+},
+inplace=True)
+
+print(df)
