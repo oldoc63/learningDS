@@ -93,3 +93,12 @@ df = pd.DataFrame([
   columns=['Item', 'Price', 'Is taxed?'])
 
 print(df)
+
+df['Price with Tax'] = df.apply(lambda row:
+  row['Price'] * 1.075
+  if row['Is taxed?'] == 'Yes'
+  else row['Price'],
+  axis=1
+)
+
+print(df)
