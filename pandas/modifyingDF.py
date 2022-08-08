@@ -88,5 +88,8 @@ df = pd.DataFrame([
   ['Apple', 1.00, 'No'],
   ['Milk', 4.20, 'No'],
   ['Paper Towels', 5.00, 'Yes'],
-  ['Light Bulbs', 3.75, 'Yes'],
-  columns=['Item', 'Price', 'Is taxed?']])
+  ['Light Bulbs', 3.75, 'Yes']
+  ],
+  columns=['Item', 'Price', 'Is taxed?'])
+
+print(df)
