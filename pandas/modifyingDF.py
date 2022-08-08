@@ -82,3 +82,11 @@ columns=['Name', 'Email'])
 
 df['Email Provider'] = df.Email.apply(lambda x: x.split('@')[-1])
 print(df)
+
+# Applying a Lambda to a Row
+df = pd.DataFrame([
+  ['Apple', 1.00, 'No'],
+  ['Milk', 4.20, 'No'],
+  ['Paper Towels', 5.00, 'Yes'],
+  ['Light Bulbs', 3.75, 'Yes'],
+  columns=['Item', 'Price', 'Is taxed?']])
