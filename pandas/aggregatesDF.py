@@ -86,3 +86,12 @@ pivoted = unpivoted.pivot(
     values='Total Sales').reset_index()
 
 print(pivoted)
+
+# shoe_color/shoe_type pivot table from shoe_counts
+shoe_counts_pivot = shoe_counts.pivot(
+    columns='shoe_color',
+    index='shoe_type',
+    values='id'
+).reset_index()
+
+print(shoe_counts_pivot)
