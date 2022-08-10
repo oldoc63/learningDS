@@ -44,3 +44,7 @@ print(teas_counts)
 
 # Change pricey_shoes into a DataFrame
 pricey_shoes = orders.groupby('shoe_type').price.max().reset_index()
+
+print(pricey_shoes)
+
+print(type(pricey_shoes))
