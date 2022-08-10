@@ -62,5 +62,10 @@ df = pd.DataFrame([
     ['Chelsea', 'February 1', 'W', 375],
     ['Chelsea', 'February 2', 'Th', 390]
     ],
-    columns=['Location', 'Date', 'Day of the week', 'Total Sales']
+    columns=['Location', 'Date', 'Day of the Week', 'Total Sales']
 )
+
+# Test that sales are different at different locations on different days of the week
+sales_location_day = df.groupby(['Location', 'Day of the Week'])['Total Sales'].mean().reset_index()
+
+print(sales_location_day)
