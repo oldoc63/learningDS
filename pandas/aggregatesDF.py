@@ -69,3 +69,8 @@ df = pd.DataFrame([
 sales_location_day = df.groupby(['Location', 'Day of the Week'])['Total Sales'].mean().reset_index()
 
 print(sales_location_day)
+
+# shoe_type/shoe_color combinations counts
+shoe_counts = orders.groupby(['shoe_type', 'shoe_color'])['id'].count().reset_index()
+
+print(shoe_counts)
