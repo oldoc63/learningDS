@@ -36,3 +36,8 @@ teas = pd.DataFrame([
 teas_counts = teas.groupby('category').id.count().reset_index()
 
 print(teas_counts)
+
+# Rename the id column to counts
+teas_counts = teas_counts.rename(columns={'id': 'counts'})
+
+print(teas_counts)
