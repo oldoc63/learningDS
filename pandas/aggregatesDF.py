@@ -74,3 +74,15 @@ print(sales_location_day)
 shoe_counts = orders.groupby(['shoe_type', 'shoe_color'])['id'].count().reset_index()
 
 print(shoe_counts)
+
+# Pivot Tables
+# First use the groupby statement:
+unpivoted = teas
+unpivoted = df.groupby(['Location', 'Day of the Week'])['Total Sales'].mean().reset_index()
+# Now pivot the table
+pivoted = unpivoted.pivot(
+    columns='Day of the Week',
+    index='Location',
+    values='Total Sales').reset_index()
+
+print(pivoted)
