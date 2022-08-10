@@ -54,3 +54,13 @@ print(type(pricey_shoes))
 cheap_shoes = orders.groupby('shoe_color').price.apply(lambda x: np.percentile(x, 25)).reset_index()
 
 print(cheap_shoes)
+
+# Chain of stores data
+df = pd.DataFrame([
+    ['West Village', 'February 1', 'W', 400],
+    ['West Village', 'February 2', 'Th', 450],
+    ['Chelsea', 'February 1', 'W', 375],
+    ['Chelsea', 'February 2', 'Th', 390]
+    ],
+    columns=['Location', 'Date', 'Day of the week', 'Total Sales']
+)
