@@ -35,3 +35,13 @@ new_df = orders.merge(customers)
 
 # We can chain the commands
 big_df = orders.merge(customers).merge(products)
+
+print(big_df)
+
+# men_women_sales.csv
+men_women = pd.read_csv('learningDS/pandas/multiple/men_women_sales.csv')
+
+# Merge all three DataFrames (sales, targets and men_women)
+all_data = sales.merge(targets).merge(men_women)
+
+print(all_data)
