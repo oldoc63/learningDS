@@ -11,3 +11,8 @@ print(orders)
 print(products)
 
 print(customers)
+
+# Inner Merge
+new_df = pd.merge(orders, customers)
+
+print(new_df)
