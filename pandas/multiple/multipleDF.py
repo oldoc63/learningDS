@@ -32,3 +32,6 @@ print(crushing_it)
 
 # Each DataFrame has its own .merge() method
 new_df = orders.merge(customers)
+
+# We can chain the commands
+big_df = orders.merge(customers).merge(products)
