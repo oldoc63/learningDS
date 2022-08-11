@@ -45,3 +45,8 @@ men_women = pd.read_csv('learningDS/pandas/multiple/men_women_sales.csv')
 all_data = sales.merge(targets).merge(men_women)
 
 print(all_data)
+
+# Do they have more revenue in months where they sell more women t-shirts
+results = all_data[(all_data.revenue > all_data.target) & (all_data.women > all_data.men)]
+
+print(results)
