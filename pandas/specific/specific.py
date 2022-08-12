@@ -1,5 +1,6 @@
 import pandas as pd
 
+# Using rename for our merges 
 orders = pd.read_csv('learningDS/pandas/specific/orders.csv')
 print(orders)
 
@@ -14,3 +15,10 @@ orders_vs_customers = pd.merge(
     customers.rename(columns={'id':'customer_id'})
 )
 print(orders_vs_customers)
+
+# Merge orders and products using .rename()
+orders_products = pd.merge(
+    orders,
+    products.rename(columns={'id': 'product_id'})
+)
+print(orders_products)
