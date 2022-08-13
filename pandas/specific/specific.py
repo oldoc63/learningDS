@@ -22,3 +22,11 @@ orders_products = pd.merge(
     products.rename(columns={'id': 'product_id'})
 )
 print(orders_products)
+
+# Merge orders and customers using left_on and rigth_on
+pd.merge(
+    orders,
+    customers,
+    left_on='customer_id',
+    right_on='id'
+)
