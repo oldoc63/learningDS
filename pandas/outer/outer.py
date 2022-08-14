@@ -17,3 +17,6 @@ company_b = pd.DataFrame([
 print(company_a)
 
 print(company_b)
+
+# Outer Join
+outer_merge = pd.merge(company_a, company_b, how='outer')
