@@ -23,10 +23,12 @@ orders_products = pd.merge(
 )
 print(orders_products)
 
-# Merge orders and customers using left_on and rigth_on
-pd.merge(
+# Merge orders and customers using left_on and rigth_on and suffixes
+rightON_leftON = pd.merge(
     orders,
     customers,
     left_on='customer_id',
-    right_on='id'
+    right_on='id',
+    suffixes=['_order', '_customer']
 )
+print(rightON_leftON)
