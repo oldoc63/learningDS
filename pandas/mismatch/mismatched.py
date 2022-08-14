@@ -5,3 +5,7 @@ print(orders)
 
 products = pd.read_csv('learningDS/pandas/mismatch/products.csv')
 print(products)
+
+merge_df = orders.merge(products)
+
+print(merge_df)
