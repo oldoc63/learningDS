@@ -20,3 +20,5 @@ print(company_b)
 
 # Outer Join
 outer_merge = pd.merge(company_a, company_b, how='outer')
+
+print(outer_merge)
