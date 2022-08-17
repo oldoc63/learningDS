@@ -33,7 +33,7 @@ print(store_b)
 store_a_b_outer = pd.merge(store_a, store_b, how='outer')
 print(store_a_b_outer)
 
-# Left and Right Merge
+# Left and Right Merge: The order matters
 
 store_a_b_left = pd.merge(store_a, store_b, how='left')
 print(store_a_b_left)
