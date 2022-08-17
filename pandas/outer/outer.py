@@ -22,3 +22,13 @@ print(company_b)
 outer_merge = pd.merge(company_a, company_b, how='outer')
 
 print(outer_merge)
+
+# Big Super Store
+store_a = pd.read_csv('pandas/outer/store_a.csv')
+print(store_a)
+
+store_b = pd.read_csv('pandas/outer/store_b.csv')
+print(store_b)
+
+store_a_b_outer = pd.merge(store_a, store_b, how='outer')
+print(store_a_b_outer)
