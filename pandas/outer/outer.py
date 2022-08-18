@@ -40,3 +40,14 @@ print(store_a_b_left)
 
 store_b_a_left = pd.merge(store_b, store_a, how='left')
 print(store_b_a_left)
+
+# Concatenate DataFrames
+bakery = pd.read_csv('pandas/outer/bakery.csv')
+print(bakery)
+
+ice_cream = pd.read_csv('pandas/outer/ice_cream.csv')
+print(ice_cream)
+
+menu = pd.concat([bakery, ice_cream])
+
+print(menu)
