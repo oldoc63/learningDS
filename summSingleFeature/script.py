@@ -31,3 +31,20 @@ rentals_subset.rent.mode()
 # Trimmed mean (trim extreme 10%)
 from scipy.stats import trim_mean
 print(trim_mean(rentals.rent, proportiontocut=0.1))
+
+# Calculate the central tendency statistics of movies dataset
+
+# Save the mean to mean_budget
+mean_budget = movies.production_budget.mean()
+print(mean_budget)
+
+# Save the median to med_budget
+med_budget = movies.production_budget.median()
+print(med_budget)
+
+# Save the mode to mode_budget
+mode_budget = movies.production_budget.mode()
+
+# Save the trimmed mean to trmean_budget
+trmean_budget = trim_mean(movies.production_budget, proportiontocut=0.2)
+print(trmean_budget)
