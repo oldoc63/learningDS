@@ -9,3 +9,7 @@ print(rentals_subset)
 
 # Display summary statistics for all columns
 print(rentals_subset.describe(include='all'))
+
+# Import movies dataset and inspect it using .head()
+movies = pd.read_csv('summSingleFeature/movies.csv')
+print(movies.head())
