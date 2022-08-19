@@ -16,3 +16,18 @@ print(movies.head())
 
 # Use the .describe() method to display the summary statistics
 print(movies.describe(include='all'))
+
+# Calculate the central tendency statistics of rent in rentals_subset
+
+# Mean
+rentals_subset.rent.mean()
+
+# Median
+rentals_subset.rent.median()
+
+# Mode
+rentals_subset.rent.mode()
+
+# Trimmed mean (trim extreme 10%)
+from scipy.stats import trim_mean
+print(trim_mean(rentals.rent, proportiontocut=0.1))
