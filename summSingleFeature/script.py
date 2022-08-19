@@ -13,3 +13,6 @@ print(rentals_subset.describe(include='all'))
 # Import movies dataset and inspect it using .head()
 movies = pd.read_csv('summSingleFeature/movies.csv')
 print(movies.head())
+
+# Use the .describe() method to display the summary statistics
+print(movies.describe(include='all'))
