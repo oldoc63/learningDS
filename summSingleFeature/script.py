@@ -74,3 +74,7 @@ rentals.rent.mad()
 # Save the range to range budget
 range_budget = movies.production_budget.max() - movies.production_budget.min()
 print(range_budget)
+
+# Save the interquartile budget to iqr_budget
+iqr_budget = movies.production_budget.quantile(.75) - movies.production_budget.quantile(.25)
+print(iqr_budget)
