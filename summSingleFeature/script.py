@@ -100,3 +100,8 @@ import seaborn as sns
 sns.boxplot(x='rent', data=rentals)
 plt.show()
 plt.close()
+
+# Histogram for rent
+sns.histplot(x='rent', data=rentals)
+plt.show()
+plt.close()
