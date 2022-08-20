@@ -115,3 +115,8 @@ plt.close()
 sns.histplot(x='production_budget', data=movies)
 plt.show()
 plt.close()
+
+# Value Counts for Categorical Data
+
+# Counts of rental listings in each borough
+print(rentals.borough.value_counts())
