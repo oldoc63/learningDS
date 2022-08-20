@@ -90,3 +90,13 @@ print(std_budget)
 # Save the mean absolute deviation to mad_budget
 mad_budget = movies.production_budget.mad()
 print(mad_budget)
+
+# Visualizing Quantitative Variables
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Boxplot for rent
+sns.boxplot(x='rent', data=rentals)
+plt.show()
+plt.close()
