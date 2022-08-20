@@ -1,3 +1,4 @@
+from locale import normalize
 import pandas as pd
 
 # Import dataset
@@ -129,3 +130,6 @@ print(genre_counts)
 
 # Proportions of rental listings in each borough
 print(rentals.borough.value_counts() / len(rentals.borough))
+
+# Proportions by specifying .value_counts(normalize=True)
+print(rentals.borough.value_counts(normalize=True))
