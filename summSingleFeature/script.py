@@ -82,3 +82,7 @@ print(iqr_budget)
 # Save the variance to var_budget
 var_budget = movies.production_budget.var()
 print(var_budget)
+
+# Save the standard deviation to std_budget
+std_budget = movies.production_budget.std()
+print(std_budget)
