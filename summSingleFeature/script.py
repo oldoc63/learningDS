@@ -105,3 +105,8 @@ plt.close()
 sns.histplot(x='rent', data=rentals)
 plt.show()
 plt.close()
+
+# Create a boxplot for movie budget
+sns.boxplot(x='production_budget', data=movies)
+plt.show()
+plt.close()
