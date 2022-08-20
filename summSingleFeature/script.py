@@ -86,3 +86,7 @@ print(var_budget)
 # Save the standard deviation to std_budget
 std_budget = movies.production_budget.std()
 print(std_budget)
+
+# Save the mean absolute deviation to mad_budget
+mad_budget = movies.production_budget.mad()
+print(mad_budget)
