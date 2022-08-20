@@ -133,3 +133,6 @@ print(rentals.borough.value_counts() / len(rentals.borough))
 
 # Proportions by specifying .value_counts(normalize=True)
 print(rentals.borough.value_counts(normalize=True))
+
+# Save the proportions to genre_props
+genre_props = movies.genre.value_counts(normalize=True)
