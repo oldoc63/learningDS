@@ -78,3 +78,7 @@ print(range_budget)
 # Save the interquartile budget to iqr_budget
 iqr_budget = movies.production_budget.quantile(.75) - movies.production_budget.quantile(.25)
 print(iqr_budget)
+
+# Save the variance to var_budget
+var_budget = movies.production_budget.var()
+print(var_budget)
