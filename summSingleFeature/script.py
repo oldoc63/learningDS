@@ -124,3 +124,8 @@ print(rentals.borough.value_counts())
 # Save the counts to genre counts
 genre_counts = movies.genre.value_counts()
 print(genre_counts)
+
+# Value Proportions for Categorical Data
+
+# Proportions of rental listings in each borough
+print(rentals.borough.value_counts() / len(rentals.borough))
