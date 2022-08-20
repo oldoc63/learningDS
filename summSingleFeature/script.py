@@ -48,3 +48,23 @@ mode_budget = movies.production_budget.mode()
 # Save the trimmed mean to trmean_budget
 trmean_budget = trim_mean(movies.production_budget, proportiontocut=0.2)
 print(trmean_budget)
+
+# Spread for quantitative data for rentals dataset
+
+# Range
+rentals.rent.max() - rentals.rent.min()
+
+# Interquartile Range
+rentals.rent.quantile(0.75) - rentals.rent.quantile(0.25)
+
+from scipy.stats import iqr
+iqr(rentals.rent) #alternative way
+
+# Variance
+rentals.rent.var()
+
+# Standard deviation
+rentals.rent.std()
+
+#Mean absolute deviation
+rentals.rent.mad()
