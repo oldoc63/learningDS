@@ -136,3 +136,10 @@ print(rentals.borough.value_counts(normalize=True))
 
 # Save the proportions to genre_props
 genre_props = movies.genre.value_counts(normalize=True)
+
+# Visualizing Categorical Variables
+
+# Bar chart for borough
+sns.countplot(x='borough', data=rentals)
+plt.show()
+plt.close()
