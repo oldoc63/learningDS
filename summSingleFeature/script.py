@@ -68,3 +68,9 @@ rentals.rent.std()
 
 #Mean absolute deviation
 rentals.rent.mad()
+
+# Spread for quantitiative data for movies dataset
+
+# Save the range to range budget
+range_budget = movies.production_budget.max() - movies.production_budget.min()
+print(range_budget)
