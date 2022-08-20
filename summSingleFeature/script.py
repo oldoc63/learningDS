@@ -143,3 +143,8 @@ genre_props = movies.genre.value_counts(normalize=True)
 sns.countplot(x='borough', data=rentals)
 plt.show()
 plt.close()
+
+# Pie chart for borough
+rentals.borough.value_counts().plot.pie()
+plt.show()
+plt.close()
