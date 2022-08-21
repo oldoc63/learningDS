@@ -153,3 +153,8 @@ plt.close()
 sns.countplot(x='genre', data=movies)
 plt.show()
 plt.close()
+
+# Create a pie chart from genre using the .pie() method from pandas
+movies.genre.value_counts().plot.pie()
+plt.show()
+plt.close()
