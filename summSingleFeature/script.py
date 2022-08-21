@@ -148,3 +148,8 @@ plt.close()
 rentals.borough.value_counts().plot.pie()
 plt.show()
 plt.close()
+
+# Create a bar chart for genre using the countplot() function
+sns.countplot(x='genre', data=movies)
+plt.show()
+plt.close()
