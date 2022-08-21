@@ -27,3 +27,6 @@ print(heart.thal.unique())
 heart['thal'] = heart['thal'].replace({'?': np.nan})
 
 print(heart['thal'].unique())
+
+# Inspecting Missing Data
+print(heart[heart.isnull().any(axis=1)])
