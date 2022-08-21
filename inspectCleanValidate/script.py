@@ -12,3 +12,10 @@ print(heart.info())
 
 # Investigate the output at the ca column
 print(heart.ca.unique())
+
+# Replace any instance of '?' with np.NaN
+import numpy as np
+
+heart['ca'] = heart['ca'].replace({'?': np.nan})
+
+print(heart.ca.unique())
