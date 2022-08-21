@@ -9,3 +9,6 @@ print(heart.num.value_counts())
 
 # Data Information
 print(heart.info())
+
+# Investigate the output at the ca column
+print(heart.ca.unique())
