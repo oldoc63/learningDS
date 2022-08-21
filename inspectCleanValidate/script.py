@@ -19,3 +19,11 @@ import numpy as np
 heart['ca'] = heart['ca'].replace({'?': np.nan})
 
 print(heart.ca.unique())
+
+# Investigate the output of the thal column
+print(heart.thal.unique())
+
+# Replace any instance of '?' with np.NaN
+heart['thal'] = heart['thal'].replace({'?': np.nan})
+
+print(heart['thal'].unique())
