@@ -6,3 +6,6 @@ students = pd.read_csv('assQuantCatego/students.csv')
 # Save scores from each school in two separate lists
 scores_GP = students.G3[students.school == 'GP']
 scores_MS = students.G3[students.school == 'MS']
+
+# Print the first five rows of students
+print(students.head())
