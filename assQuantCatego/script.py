@@ -28,3 +28,6 @@ median_GP = np.median(scores_GP)
 print(median_GP)
 median_MS = np.median(scores_MS)
 print(median_MS)
+
+# Calculate the difference in medians G3 score
+print(median_GP - median_MS)
