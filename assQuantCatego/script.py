@@ -9,3 +9,7 @@ scores_MS = students.G3[students.school == 'MS']
 
 # Print the first five rows of students
 print(students.head())
+
+# Separate out scores for students who live in urban and rural locations
+scores_urban = students.G3[students.address == 'U']
+scores_rural = students.G3[students.address == 'R']
