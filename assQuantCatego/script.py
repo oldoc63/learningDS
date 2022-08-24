@@ -13,3 +13,12 @@ print(students.head())
 # Separate out scores for students who live in urban and rural locations
 scores_urban = students.G3[students.address == 'U']
 scores_rural = students.G3[students.address == 'R']
+
+# Calculate the means
+mean_GP = np.mean(scores_GP)
+print(mean_GP)
+mean_MS = np.mean(scores_MS)
+print(mean_MS)
+
+# Calculate the difference in means G3 score
+print(mean_GP - mean_MS)
