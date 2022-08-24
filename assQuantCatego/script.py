@@ -75,4 +75,7 @@ print(median_diff)
 # Math scores at each school
 sns.boxplot(data=students, x='school', y='G3')
 plt.show()
-plt.close()
+
+# Math scores by address
+sns.boxplot(data=students, x='address', y='G3')
+plt.show()
