@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 students = pd.read_csv('assQuantCatego/students.csv')
 
@@ -33,12 +35,6 @@ print(median_MS)
 print(median_GP - median_MS)
 
 # Same process for scores urban and rural
-import numpy as np
-import pandas as pd
-students = pd.read_csv('students.csv')
-
-scores_urban = students.G3[students.address == 'U']
-scores_rural = students.G3[students.address == 'R']
 
 #calculate means for each group:
 scores_urban_mean = np.mean(scores_urban)
@@ -73,3 +69,10 @@ median_diff = scores_urban_median - scores_rural_median
 #print median difference
 print('Median difference:')
 print(median_diff)
+
+# Side by Side Box Plots
+
+# Math scores at each school
+sns.boxplot(data=students, x='school', y='G3')
+plt.show()
+plt.close()
