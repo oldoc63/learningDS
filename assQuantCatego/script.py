@@ -79,3 +79,9 @@ plt.show()
 # Math scores by address
 sns.boxplot(data=students, x='address', y='G3')
 plt.show()
+
+# Inspecting Overlapping Histograms
+plt.hist(scores_GP, color="blue", label="GP", density=True, alpha=0.5)
+plt.hist(scores_MS, color="red", label="MS", density=True, alpha=0.5)
+plt.legend()
+plt.show()
