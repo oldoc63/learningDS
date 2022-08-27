@@ -93,3 +93,9 @@ plt.hist(scores_urban, color='blue', label='Urban', density=True, alpha=0.5)
 plt.hist(scores_rural, color='red', label='Rural', density=True, alpha=0.5)
 plt.legend()
 plt.show()
+
+# Exploring Non-Binary Categorical Variables
+
+# Investigate association between Mjob and scores
+sns.boxplot(data=students, x='Mjob', y='G3')
+plt.show()
