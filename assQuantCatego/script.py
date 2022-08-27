@@ -99,3 +99,7 @@ plt.show()
 # Investigate association between Mjob and scores
 sns.boxplot(data=students, x='Mjob', y='G3')
 plt.show()
+
+# Investigate association between Fjob and scores
+sns.boxplot(data=students, x='Fjob', y='G3')
+plt.show()
