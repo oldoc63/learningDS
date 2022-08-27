@@ -81,7 +81,15 @@ sns.boxplot(data=students, x='address', y='G3')
 plt.show()
 
 # Inspecting Overlapping Histograms
+
+# Investigate association between scores and scholl
 plt.hist(scores_GP, color="blue", label="GP", density=True, alpha=0.5)
 plt.hist(scores_MS, color="red", label="MS", density=True, alpha=0.5)
+plt.legend()
+plt.show()
+
+# Investigate association between scores and address
+plt.hist(scores_urban, color='blue', label='Urban', density=True, alpha=0.5)
+plt.hist(scores_rural, color='red', label='Rural', density=True, alpha=0.5)
 plt.legend()
 plt.show()
