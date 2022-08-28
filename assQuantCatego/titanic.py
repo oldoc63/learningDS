@@ -14,3 +14,6 @@ fares_survived = titanic.Fare[titanic.Survived == 1]
 # Mean difference
 mean_fares_died = np.mean(fares_died)
 mean_fares_survived = np.mean(fares_survived)
+mean_diff = mean_fares_survived - mean_fares_died
+print('mean difference: ')
+print(mean_diff)
