@@ -18,3 +18,6 @@ print(students.describe())
 # Calculate and print the mean value of math_grade with numpy
 mean_math_grade = np.mean(students.math_grade)
 print(mean_math_grade)
+
+# Calculate and print the mean value of math_grade with pandas
+print('mean math_grade', students.math_grade.mean())
