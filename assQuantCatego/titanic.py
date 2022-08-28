@@ -8,5 +8,9 @@ titanic = pd.read_csv('assQuantCatego/titanic.csv')
 print(titanic.head())
 
 # Separate out fares by survival
-fares_died = titanic.Fare['survived' == 0]
-fares_surviced = titanic.Fare['survived' == 1]
+fares_died = titanic.Fare[titanic.Survived == 0]
+fares_survived = titanic.Fare[titanic.Survived == 1]
+
+# Mean difference
+mean_fares_died = np.mean(fares_died)
+mean_fares_survived = np.mean(fares_survived)
