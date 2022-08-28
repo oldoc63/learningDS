@@ -24,3 +24,6 @@ print('mean math_grade', students.math_grade.mean())
 
 # Calculate and print the median of math_grade with pandas
 print('median of math_grade: ', students.math_grade.median())
+
+# Calculate and print the mode of math_grade with pandas
+print('mode of math_grade: ', students.math_grade.mode()[0])
