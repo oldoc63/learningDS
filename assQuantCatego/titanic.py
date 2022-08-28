@@ -24,3 +24,10 @@ median_fares_survived = np.median(fares_survived)
 med_diff = median_fares_survived - median_fares_died
 print('median difference: ')
 print(med_diff)
+
+# sns.boxplot(data=titanic, x='Survived', y='Fare')
+# plt.show()
+
+plt.hist(fares_died, color='blue', label='Died', density=True, alpha=0.5)
+plt.hist(fares_survived, color='red', label='Survived', density=True, alpha=0.5)
+plt.show()
