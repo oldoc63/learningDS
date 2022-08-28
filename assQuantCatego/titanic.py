@@ -7,3 +7,6 @@ titanic = pd.read_csv('assQuantCatego/titanic.csv')
 
 print(titanic.head())
 
+# Separate out fares by survival
+fares_died = titanic.Fare['survived' == 0]
+fares_surviced = titanic.Fare['survived' == 1]
