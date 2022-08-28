@@ -1,7 +1,7 @@
 import pandas as pd 
 import numpy as np
 from matplotlib import pyplot as plt
-import codecademylib3_seaborn
+#import codecademylib3_seaborn
 
 
 np.random.seed(1)

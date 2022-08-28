@@ -1,9 +1,9 @@
 import pandas as pd 
 import numpy as np
 from matplotlib import pyplot as plt
-import codecademylib3_seaborn
+#import codecademylib3_seaborn
 
-cp_data = pd.read_csv("cp.csv") 
+cp_data = pd.read_csv("describeH/cp.csv") 
 
 cp_average = cp_data[' Average Covered Charges '].mean()
 

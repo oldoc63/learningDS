@@ -1,9 +1,9 @@
-import codecademylib3
+#import codecademylib3
 import pandas as pd 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df = pd.read_csv("school_data.csv")
+df = pd.read_csv("barCharts/school_data.csv")
 print(df.head())
 
 value_order = ["NOT ENOUGH DATA", "VERY WEAK", "WEAK", "NEUTRAL", "STRONG", "VERY STRONG"]
