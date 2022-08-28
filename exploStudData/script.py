@@ -27,3 +27,16 @@ print('median of math_grade: ', students.math_grade.median())
 
 # Calculate and print the mode of math_grade with pandas
 print('mode of math_grade: ', students.math_grade.mode()[0])
+
+# Summarize the spread of student grades
+
+# Calculate max and min math_grades
+min_math_grade = students.math_grade.min()
+print('minimum math grade: ', min_math_grade)
+
+max_math_grade = students.math_grade.max()
+print('maximum math_grade: ', max_math_grade)
+
+# Calculate and print the range of the math_grade column
+range_math_grade = max_math_grade - min_math_grade
+print('The range of the math_grade column is:', range_math_grade)
