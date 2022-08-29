@@ -40,3 +40,7 @@ print('maximum math_grade: ', max_math_grade)
 # Calculate and print the range of the math_grade column
 range_math_grade = max_math_grade - min_math_grade
 print('The range of the math_grade column is:', range_math_grade)
+
+# Calculate and print the standard deviation of the math_grade
+std_math_grade = students.math_grade.std()
+print('The standard deviation of the math_grade is:', std_math_grade)
