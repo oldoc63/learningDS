@@ -44,3 +44,7 @@ print('The range of the math_grade column is:', range_math_grade)
 # Calculate and print the standard deviation of the math_grade
 std_math_grade = students.math_grade.std()
 print('The standard deviation of the math_grade is:', std_math_grade)
+
+# Calculate the mean absolute deviation of the math_grade
+mad_math_grade = students.math_grade.mad()
+print('The mean absolute deviation of the math_grade is:', mad_math_grade)
