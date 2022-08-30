@@ -55,3 +55,8 @@ print('The mean absolute deviation of the math_grade is:', mad_math_grade)
 sns.histplot(x='math_grade', data=students)
 plt.show()
 plt.clf()
+
+# Create a box plot of math grades
+sns.boxplot(x='math_grade', data=students)
+plt.show()
+plt.clf()
