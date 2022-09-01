@@ -1,4 +1,5 @@
 # Load Libraries
+from locale import normalize
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -63,3 +64,6 @@ plt.clf()
 
 # Calculate number of students with mothers in each job category
 print(students.Mjob.value_counts())
+
+# Calculate proportion of students with mothers in each job category
+print(students.Mjob.value_counts(normalize=True))
