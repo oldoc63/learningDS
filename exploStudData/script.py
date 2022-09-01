@@ -72,3 +72,7 @@ print(students.Mjob.value_counts(normalize=True))
 sns.countplot(x='Mjob', data=students)
 plt.show()
 plt.clf()
+
+# Create pie chart of Mjob
+students.Mjob.value_counts().plot.pie()
+plt.show()
