@@ -67,3 +67,8 @@ print(students.Mjob.value_counts())
 
 # Calculate proportion of students with mothers in each job category
 print(students.Mjob.value_counts(normalize=True))
+
+# Create bar chart of Mjob
+sns.countplot(x='Mjob', data=students)
+plt.show()
+plt.clf()
