@@ -60,3 +60,6 @@ plt.clf()
 sns.boxplot(x='math_grade', data=students)
 plt.show()
 plt.clf()
+
+# Calculate number of students with mothers in each job category
+print(students.Mjob.value_counts())
