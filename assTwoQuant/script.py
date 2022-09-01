@@ -11,3 +11,9 @@ plt.scatter(x=housing.price, y=housing.sqfeet)
 plt.xlabel('Rental Price (USD)')
 plt.ylabel('Area (Square Feet')
 plt.show()
+
+# Plot the area of a rental against the number of bedrooms
+plt.scatter(x=housing.beds, y=housing.sqfeet)
+plt.xlabel('Number of Bedrooms')
+plt.ylabel('Area (Square Feet')
+plt.show()
