@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 housing = pd.read_csv('assTwoQuant/housing_sample.csv')
 
@@ -17,3 +18,7 @@ plt.scatter(x=housing.beds, y=housing.sqfeet)
 plt.xlabel('Number of Bedrooms')
 plt.ylabel('Area (Square Feet')
 plt.show()
+
+# Calculate the covariance matrix price sqfeet
+cov_mat_price_sqfeet = np.cov(housing.price, housing.sqfeet)
+print(cov_mat_price_sqfeet)
