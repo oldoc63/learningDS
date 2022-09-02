@@ -57,3 +57,6 @@ print(corr_sleep_performance)
 np.set_printoptions(suppress=True, precision=1)
 
 penguins = pd.read_csv('assTwoQuant/penguins.csv')
+
+# Print the first few rows of penguins dataset
+print(penguins.head())
