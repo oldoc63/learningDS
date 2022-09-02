@@ -60,3 +60,9 @@ penguins = pd.read_csv('assTwoQuant/penguins.csv')
 
 # Print the first few rows of penguins dataset
 print(penguins.head())
+
+# Create scatter plot of flipper_length against body_mass
+plt.scatter(x=penguins.flipper_length_mm, y=penguins.body_mass_g)
+plt.xlabel('flipper_length_mm')
+plt.ylabel('body_mass_g')
+plt.show()
