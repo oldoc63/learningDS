@@ -52,3 +52,8 @@ plt.show()
 # Calculate the correlation for hours_sleep and performance
 corr_sleep_performance, p = pearsonr(sleep.hours_sleep, sleep.performance)
 print(corr_sleep_performance)
+
+# Create penguins dataset from penguins.csv
+np.set_printoptions(suppress=True, precision=1)
+
+penguins = pd.read_csv('assTwoQuant/penguins.csv')
