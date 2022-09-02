@@ -38,3 +38,7 @@ print(corr_price_sqfeet)
 # Calculate the correlation between sqfeet and beds
 corr_sqfeet_beds, p = pearsonr(housing.sqfeet, housing.beds)
 print(corr_sqfeet_beds)
+
+# Create sleep dataset from sleep_performance.csv
+sleep = pd.read_csv('assTwoQuant/sleep_performance.csv')
+print(sleep.head())
