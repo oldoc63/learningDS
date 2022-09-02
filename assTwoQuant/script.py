@@ -34,3 +34,7 @@ cov_sqfeet_beds = 2.28223306e+02
 from scipy.stats import pearsonr
 corr_price_sqfeet, p = pearsonr(housing.price, housing.sqfeet)
 print(corr_price_sqfeet)
+
+# Calculate the correlation between sqfeet and beds
+corr_sqfeet_beds, p = pearsonr(housing.sqfeet, housing.beds)
+print(corr_sqfeet_beds)
