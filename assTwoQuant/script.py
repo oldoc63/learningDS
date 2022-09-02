@@ -22,3 +22,10 @@ plt.show()
 # Calculate the covariance matrix price sqfeet
 cov_mat_price_sqfeet = np.cov(housing.price, housing.sqfeet)
 print(cov_mat_price_sqfeet)
+
+# Calculate the covariance matrix sqfeet beds
+cov_mat_sqfeet_beds = np.cov(housing.sqfeet, housing.beds)
+print(cov_mat_sqfeet_beds)
+
+# Save the covariance as a variable named cov_sqfeet_beds
+cov_sqfeet_beds = 2.28223306e+02
