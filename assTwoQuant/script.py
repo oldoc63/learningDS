@@ -48,3 +48,7 @@ plt.scatter(x=sleep.hours_sleep, y=sleep.performance)
 plt.xlabel('hours_sleep')
 plt.ylabel('performance')
 plt.show()
+
+# Calculate the correlation for hours_sleep and performance
+corr_sleep_performance, p = pearsonr(sleep.hours_sleep, sleep.performance)
+print(corr_sleep_performance)
