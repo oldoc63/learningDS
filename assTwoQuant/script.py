@@ -42,3 +42,9 @@ print(corr_sqfeet_beds)
 # Create sleep dataset from sleep_performance.csv
 sleep = pd.read_csv('assTwoQuant/sleep_performance.csv')
 print(sleep.head())
+
+# Create a scatter plot with hours_sleep (x axis) and performance (y axis)
+plt.scatter(x=sleep.hours_sleep, y=sleep.performance)
+plt.xlabel('hours_sleep')
+plt.ylabel('performance')
+plt.show()
