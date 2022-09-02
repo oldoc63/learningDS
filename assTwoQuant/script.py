@@ -29,3 +29,8 @@ print(cov_mat_sqfeet_beds)
 
 # Save the covariance as a variable named cov_sqfeet_beds
 cov_sqfeet_beds = 2.28223306e+02
+
+# pearsonr() function from scipy.stats
+from scipy.stats import pearsonr
+corr_price_sqfeet, p = pearsonr(housing.price, housing.sqfeet)
+print(corr_price_sqfeet)
