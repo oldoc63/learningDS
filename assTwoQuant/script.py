@@ -66,3 +66,9 @@ plt.scatter(x=penguins.flipper_length_mm, y=penguins.body_mass_g)
 plt.xlabel('flipper_length_mm')
 plt.ylabel('body_mass_g')
 plt.show()
+
+# Calculate the covariance matrix flipper_length body_mass
+cov_mat_flipper_body = np.cov(penguins.flipper_length_mm, penguins.body_mass_g)
+print('Covariance Matrix: ')
+print(cov_mat_flipper_body)
+print('covariance: ', cov_mat_flipper_body[1][0])
