@@ -11,3 +11,7 @@ print(influence_leader_freq)
 # Investigate association between special and authority
 special_authority_freq = pd.crosstab(npi.special, npi.authority)
 print(special_authority_freq)
+
+# Contingency Tables: Proportions
+influence_leader_prop = influence_leader_freq/len(npi)
+print(influence_leader_prop)
