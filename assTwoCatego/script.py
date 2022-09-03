@@ -15,3 +15,7 @@ print(special_authority_freq)
 # Contingency Tables: Proportions
 influence_leader_prop = influence_leader_freq/len(npi)
 print(influence_leader_prop)
+
+# Convert special_authority_freq to proportions
+special_authority_prop = special_authority_freq/len(npi)
+print(special_authority_prop)
