@@ -72,3 +72,7 @@ cov_mat_flipper_body = np.cov(penguins.flipper_length_mm, penguins.body_mass_g)
 print('Covariance Matrix: ')
 print(cov_mat_flipper_body)
 print('covariance: ', cov_mat_flipper_body[1][0])
+
+# Calculate the correlation between flipper_lenth and body_mass
+corr_flipper_body, p = pearsonr(penguins.flipper_length_mm, penguins.body_mass_g)
+print('Correlation: ', corr_flipper_body) 
