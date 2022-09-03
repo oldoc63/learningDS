@@ -23,3 +23,6 @@ print(special_authority_prop)
 # Calculate all the marginal proportions from the table influence_leader_prop
 leader_marginals = influence_leader_prop.sum(axis=0)
 print(leader_marginals)
+
+influence_marginals = influence_leader_prop.sum(axis=1)
+print(influence_marginals)
