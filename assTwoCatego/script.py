@@ -19,3 +19,7 @@ print(influence_leader_prop)
 # Convert special_authority_freq to proportions
 special_authority_prop = special_authority_freq/len(npi)
 print(special_authority_prop)
+
+# Calculate all the marginal proportions from the table influence_leader_prop
+leader_marginals = influence_leader_prop.sum(axis=0)
+print(leader_marginals)
