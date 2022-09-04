@@ -40,3 +40,6 @@ from scipy.stats import chi2_contingency
 
 chi2, pval, dof, expected = chi2_contingency(influence_leader_freq)
 print(np.round(expected))
+
+influence_leader_freq = pd.crosstab(npi.influence, npi.leader)
+print(influence_leader_freq)
