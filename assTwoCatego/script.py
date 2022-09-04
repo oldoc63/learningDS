@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 npi = pd.read_csv('assTwoCatego/npi_sample.csv')
 
@@ -33,3 +34,9 @@ print(authority_marginals)
 
 special_marginals = special_authority_prop.sum(axis=1)
 print(special_marginals)
+
+# Use the chi2_contingency() function from SciPy
+from scipy.stats import chi2_contingency
+
+chi2, pval, dof, expected = chi2_contingency(influence_leader_freq)
+print(np.round(expected))
