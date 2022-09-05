@@ -50,3 +50,7 @@ print(np.round(expected))
 
 special_authority_freq = pd.crosstab(npi.special, npi.authority)
 print(special_authority_freq)
+
+# Calculate the Chi-Square statistic for the influence_leader_freq
+chi2, pval, dof, expected = chi2_contingency(influence_leader_freq)
+print(chi2)
