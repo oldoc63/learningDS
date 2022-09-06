@@ -54,3 +54,7 @@ print(special_authority_freq)
 # Calculate the Chi-Square statistic for the influence_leader_freq
 chi2, pval, dof, expected = chi2_contingency(influence_leader_freq)
 print(chi2)
+
+# Calculate the Chi-Square statistic for the special_authority_freq
+chi2, pval, dof, expected = chi2_contingency(special_authority_freq)
+print(chi2)
