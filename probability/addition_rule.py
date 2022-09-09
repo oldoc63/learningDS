@@ -16,3 +16,11 @@ def prob_a_or_b(a, b, all_posible_outcomes):
 
     # add return statement here
     return add_rule_formula
+
+# rolling a die once and getting an even number or an odd number
+evens = {2, 4, 6}
+odds = {1, 3, 5}
+all_possible_rolls = {1, 2, 3, 4, 5, 6}
+
+# call function here first
+print(prob_a_or_b(evens, odds, all_possible_rolls))
