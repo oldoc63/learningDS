@@ -24,3 +24,11 @@ all_possible_rolls = {1, 2, 3, 4, 5, 6}
 
 # call function here first
 print(prob_a_or_b(evens, odds, all_possible_rolls))
+
+# rolling a die once and getting an odd number or a number greater than 2
+odds = {1, 3, 5}
+greater_than_two = {3, 4, 5, 6}
+all_possible_rolls = {1, 2, 3, 4, 5, 6}
+
+# call function here second 
+print(prob_a_or_b(odds, greater_than_two, all_possible_rolls))
