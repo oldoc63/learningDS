@@ -12,3 +12,9 @@ results_1 = np.random.choice(die_6, size = num_rolls, replace = True)
 results_1 = np.random.choice(die_6, size = num_rolls, replace = True)
 print(results_1)
 
+# create 12-sided "die"
+die_12 = range(1, 13)
+
+# roll the 12-sided "die" 10 times
+results_2 = np.random.choice(die_12, num_rolls, replace=True)
+print(results_2)
