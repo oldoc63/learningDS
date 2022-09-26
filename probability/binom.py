@@ -38,3 +38,7 @@ stats.binom.pmf(0, n=10, p=0.5)
 + stats.binom.pmf(6, n=10, p=0.5)
 + stats.binom.pmf(7, n=10, p=0.5)
 + stats.binom.pmf(8, n=10, p=0.5))
+
+# probability of less than or equal to 8
+print('The probability of less than or equal to 8 is', 
+1 - (stats.binom.pmf(9, n=10, p=.5) + stats.binom.pmf(10, n=10, p=.5)))
