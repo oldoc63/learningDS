@@ -45,4 +45,8 @@ print('The probability of less than or equal to 8 is',
 
 # prob_1 equal to the probability of observing between 4 to 6 heads from 10 coin flips
 prob_1 = stats.binom.pmf(4, 10, 0.5) + stats.binom.pmf(5, 10, 0.5) + stats.binom.pmf(6, 10, 0.5)
-print(prob_1)
+print('The probability of 4 to 6 heads from 10 coin flips is', prob_1)
+
+# prob_2 equal to observing more than two heads from 10 coin flips
+prob_2 = 1 - (stats.binom.pmf(0, 10, 0.5) + stats.binom.pmf(1, 10, 0.5) + stats.binom.pmf(2, 10, 0.5))
+print('The probability of more than two heads from 10 coin flips is', prob_2)
