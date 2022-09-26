@@ -42,3 +42,7 @@ stats.binom.pmf(0, n=10, p=0.5)
 # probability of less than or equal to 8
 print('The probability of less than or equal to 8 is', 
 1 - (stats.binom.pmf(9, n=10, p=.5) + stats.binom.pmf(10, n=10, p=.5)))
+
+# prob_1 equal to the probability of observing between 4 to 6 heads from 10 coin flips
+prob_1 = stats.binom.pmf(4, 10, 0.5) + stats.binom.pmf(5, 10, 0.5) + stats.binom.pmf(6, 10, 0.5)
+print(prob_1)
