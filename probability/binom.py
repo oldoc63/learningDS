@@ -56,3 +56,6 @@ print('The probability of six or fewer heads is', stats.binom.cdf(6, 10, 0.5))
 
 # prob of observing between 4 and 8 heads
 print('The probability between 4 and 8 heads is', stats.binom.cdf(8, 10, 0.5) - stats.binom.cdf(3, 10, 0.5))
+
+# prob of observinb more than 6 heads
+print('The probability of observing more than 6 heads is', 1 - stats.binom.cdf(6, 10, 0.5))
