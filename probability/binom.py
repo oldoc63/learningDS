@@ -69,4 +69,11 @@ print('Probability of three or fewer heads using pmf', stats.binom.pmf(0, n=10, 
 
 ## Checkpoint 2
 prob_2 = 1 - stats.binom.cdf(5, 10, 0.5)
-print('Probability of five or more heads is', prob_2)
+print('Probability of more than five heads is', prob_2)
+
+## probability of observing between two and five heads
+prob_3 = stats.binom.cdf(5, 10, 0.5) - stats.binom.cdf(1, 10, 0.5)
+print('Probability between two and five heads using cdf is', prob_3)
+
+# compare to pmf code
+print('Probability between two and five heads using pmf is', stats.binom.pmf(2, n=10, p=.5) + stats.binom.pmf(3, n=10, p=.5) + stats.binom.pmf(4, n=10, p=.5) + stats.binom.pmf(5, n=10, p=.5))
