@@ -53,3 +53,6 @@ print('The probability of more than two heads from 10 coin flips is', prob_2)
 
 # prob of observing 6 or fewer heads
 print('The probability of six or fewer heads is', stats.binom.cdf(6, 10, 0.5))
+
+# prob of observing between 4 and 8 heads
+print('The probability between 4 and 8 heads is', stats.binom.cdf(8, 10, 0.5) - stats.binom.cdf(3, 10, 0.5))
