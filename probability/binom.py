@@ -63,3 +63,6 @@ print('The probability of observing more than 6 heads is', 1 - stats.binom.cdf(6
 # Checkpoint 1
 prob_1 = stats.binom.cdf(3, 10, 0.5)
 print('Probability of three or fewer heads', prob_1)
+
+# compare to pmf code
+print(stats.binom.pmf(0, n=10, p=.5) + stats.binom.pmf(1, n=10, p=.5) + stats.binom.pmf(2, n=10, p=.5) + stats.binom.pmf(3, n=10, p=.5))
