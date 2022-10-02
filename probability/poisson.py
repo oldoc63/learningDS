@@ -43,6 +43,10 @@ def histogram_function(rand_vars):
   plt.xticks(list(range(rand_vars.max())))
   plt.show()
 
-histogram_function(rvs)
+# histogram_function(rvs)
 
-print(rvs.mean())
+print('The mean of the Poisson generated random variable is', rvs.mean())
+
+# Variance of a Poisson generated random varible using numpy.var()
+rand_vars = stats.poisson.rvs(4, size=1000)
+print('The variance of the Poisson generated randon variable calculated using numpy.var() is', np.var(rand_vars))
