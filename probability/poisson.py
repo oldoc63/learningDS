@@ -17,4 +17,7 @@ print('Probability of 7-9 calls Poisson(15) is', stats.poisson.pmf(7, 15) + stat
 ## Cumulative Density Function
 
 # Probability of raining 6 or fewer times Poisson(10)
-print('Probability of raining 6 or fewer times Poisson(10) is', stats.poisson.cdf(6, 10) )
+print('Probability of raining 6 or fewer times Poisson(10) is', stats.poisson.cdf(6, 10))
+
+# Probability of raining 12 or more times Poisson(10)
+print('Probability of raining 12 or more times Poisson(10) is', 1 - stats.poisson.cdf(11, 10))
