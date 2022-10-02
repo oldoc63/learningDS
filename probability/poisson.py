@@ -24,3 +24,6 @@ print('Probability of raining 12 or more times Poisson(10) is', 1 - stats.poisso
 
 # Probability of raining between 12 and 18 times Poisson(10)
 print('Probability of raining between 12 and 18 times Poisson(10) is', stats.poisson.cdf(18, 10) - stats.poisson.cdf(11, 10))
+
+# Probability of more than 20 calls Poisson(15)
+print('Probability of more than 20 calls Poisson(15) is', 1 - stats.poisson.cdf(20, 10))
