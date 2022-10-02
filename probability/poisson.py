@@ -50,3 +50,10 @@ print('The mean of the Poisson generated random variable is', rvs.mean())
 # Variance of a Poisson generated random varible using numpy.var()
 rand_vars = stats.poisson.rvs(4, size=1000)
 print('The variance of the Poisson generated randon variable calculated using numpy.var() is', np.var(rand_vars))
+
+# Take the range of a sample using Python .min() and .max()
+print('The range of a random Poisson(4)', min(rand_vars), max(rand_vars))
+
+# Increase lambda to 10 to see the increase in range
+rand_vars = stats.poisson.rvs(10, size=1000)
+print('The range of a random Poisson(10)', min(rand_vars), max(rand_vars))
