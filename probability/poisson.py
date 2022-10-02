@@ -30,3 +30,19 @@ print('Probability of more than 20 calls Poisson(15) is', 1 - stats.poisson.cdf(
 
 # Probability of observing between 17 and 21 calls Poisson(15)
 print('Probability of observing between 17 and 21 calls Poisson(15) is', stats.poisson.cdf(21, 15) - stats.poisson.cdf(16, 15))
+
+## Generate random variable using Poisson Distribution
+# stats.poisson.rvs(lamda, size=num_values)
+rvs = stats.poisson.rvs(10, size=1000)
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+def histogram_function(rand_vars):
+  plt.hist(rand_vars, bins = np.arange(len(set(rand_vars)))-0.5, edgecolor = "black")
+  plt.xticks(list(range(rand_vars.max())))
+  plt.show()
+
+histogram_function(rvs)
+
+print(rvs.mean())
