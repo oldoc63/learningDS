@@ -77,3 +77,7 @@ print('Probability between two and five heads using cdf is', prob_3)
 
 # compare to pmf code
 print('Probability between two and five heads using pmf is', stats.binom.pmf(2, n=10, p=.5) + stats.binom.pmf(3, n=10, p=.5) + stats.binom.pmf(4, n=10, p=.5) + stats.binom.pmf(5, n=10, p=.5))
+
+# A certain basketball player has an 85% chance of making a given free throw and takes 20 free throws
+expected_baskets = 20 * 0.85
+print('The expected baskets on 20 free throws are', expected_baskets)
