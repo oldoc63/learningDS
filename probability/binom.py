@@ -81,3 +81,7 @@ print('Probability between two and five heads using pmf is', stats.binom.pmf(2, 
 # A certain basketball player has an 85% chance of making a given free throw and takes 20 free throws
 expected_baskets = 20 * 0.85
 print('The expected baskets on 20 free throws are', expected_baskets)
+
+# Let's say a student has a 98% chance of arriving early or on time to class
+expected_late = 180 * (1-0.98)
+print('The expected late arrivals are', expected_late)
