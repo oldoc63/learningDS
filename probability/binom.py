@@ -88,3 +88,6 @@ print('Variance of free throws made from 20 shots is', variance_baskets)
 # Let's say a student has a 98% chance of arriving early or on time to class
 expected_late = 180 * (1-0.98)
 print('The expected late arrivals are', expected_late)
+
+variance_late = 180 * 0.02 * 0.98
+print('Variance of days the student will arrive late is', variance_late)
