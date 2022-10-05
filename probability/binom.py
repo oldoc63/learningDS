@@ -91,3 +91,7 @@ print('The expected late arrivals are', expected_late)
 
 variance_late = 180 * 0.02 * 0.98
 print('Variance of days the student will arrive late is', variance_late)
+
+# At the end of the year, your company's boss decides a bonus of 8% (Average salary $75000)
+expected_bonus = 0.08 * 75000
+print('The expected end of the year bonus is', expected_bonus)
