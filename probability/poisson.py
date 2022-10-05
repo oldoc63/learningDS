@@ -84,3 +84,8 @@ print(np.var(rand_vars_17))
 # Checkpoint 4
 # print minimum and maximum of rand_vars_17
 print(min(rand_vars_17), max(rand_vars_17))
+
+#The number of goals a soccer team scores follows Poisson(4).
+num_goals = stats.poisson.rvs(4, size=100)
+print('The expected num of goals the team will score on 100 games is', num_goals)
+print('The variance of num_goals is', np.var(num_goals))
