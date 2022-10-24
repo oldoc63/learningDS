@@ -14,3 +14,26 @@ elif 30 <= age < 40:
     print('Are you married?')
 else:
     print("Wow, you're old!")
+
+# Factors.py function
+def factors(num):
+    '''returns a list of the factors of num'''
+    factorList = []
+    for i in range(1, num+1):
+        if num % i == 0:
+            factorList.append(i)
+    return factorList
+
+print(factors(120))
+
+# Greatest common factor (GCF)
+def gcf(num1, num2):
+    list1 = factors(num1)
+    list2 = factors(num2)
+    gcfList = []
+    for i in list1:
+        if i in list2:
+            gcfList.append(i)
+    return max(gcfList) 
+
+print(gcf(150,138))
