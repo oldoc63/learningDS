@@ -65,3 +65,7 @@ def greet():
     print("Hello, ", name)
 
 greet()
+
+# Converting user input to integers
+print("I'm thinking of a number between 1 and 100.")
+guess = int(input("What's your guess?"))
