@@ -39,16 +39,16 @@ def gcf(num1, num2):
 #print(gcf(150,138))
 
 ## wander.py
-from turtle import *
+# from turtle import *
 from random import randint
 
-speed(0)
+# speed(0)
 
-def wander():
-    while True:
-        forward(3)
-        if xcor() >= 200 or xcor() <= -200 or ycor() <= -200 or ycor() >= 200:
-            left(randint(90, 180))
+# def wander():
+#     while True:
+#         forward(3)
+#         if xcor() >= 200 or xcor() <= -200 or ycor() <= -200 or ycor() >= 200:
+#             left(randint(90, 180))
 
 #wander()
 
@@ -58,3 +58,10 @@ def wander():
 def numberGame():
     #choose a random number between 1 and 100
     number = randint(1,100)
+
+# Taking user input and greet
+def greet():
+    name = input("What's your name?")
+    print("Hello, ", name)
+
+greet()
