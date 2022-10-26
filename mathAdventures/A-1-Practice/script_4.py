@@ -23,7 +23,7 @@ def equation(a,b,c,d):
 # print((1/2),(2/3),(1/5),(7/8))
 # print(equation(.5, .66667, 0.2, 0.875))
 
-#quad.py
+#quad.py: solve 2x²+7x-15 = 0
 from math import sqrt
 
 def quad(a,b,c):
@@ -31,3 +31,5 @@ def quad(a,b,c):
     x1 = (-b + sqrt(b**2 - 4*a*c))/(2*a)
     x2 = (-b - sqrt(b**2 - 4*a*c))/(2*a)
     return x1, x2
+
+print(quad(2, 7, -15))
