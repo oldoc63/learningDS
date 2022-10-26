@@ -33,3 +33,6 @@ def quad(a,b,c):
     return x1, x2
 
 print(quad(2, 7, -15))
+
+print(2*1.5**2 + 7*1.5 - 15)
+print(2*(-5)**2 + 7*(-5) - 15)
