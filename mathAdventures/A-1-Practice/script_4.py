@@ -50,3 +50,12 @@ def plug2():
     print("done.")
 
 plug2()
+
+def f(x):
+    return 6*x**3 + 31*x**2 + 3*x - 10
+
+print(f(0.5))
+
+#grid.pyde (Math-Adventures)
+
+#guess method
