@@ -32,7 +32,21 @@ def quad(a,b,c):
     x2 = (-b - sqrt(b**2 - 4*a*c))/(2*a)
     return x1, x2
 
-print(quad(2, 7, -15))
+# print(quad(2, 7, -15))
 
-print(2*1.5**2 + 7*1.5 - 15)
-print(2*(-5)**2 + 7*(-5) - 15)
+# print(2*1.5**2 + 7*1.5 - 15)
+# print(2*(-5)**2 + 7*(-5) - 15)
+
+# Solving a cubic equation using brute force
+def g(x):
+    return 6*x**3+31*x**2+3*x-10
+
+def plug2():
+    x=-100
+    while x < 100:
+        if g(x)==0:
+            print("x =",x)
+        x+=1
+    print("done.")
+
+plug2()
