@@ -54,18 +54,26 @@ from random import randint
 
 ## Creating a number-guessing game
 
-# Create numberGame.py
+# Taking a user input and greet
 def numberGame():
+    
+    name = input("What's your name?")
+    
+    print("Hello, ", name)
+    
     #choose a random number between 1 and 100
     number = randint(1,100)
+    
+    # Converting user input to integers
+    print("I'm thinking of a number between 1 and 100.")
+    guess = int(input("What's your guess?"))
 
-# Taking user input and greet
-def greet():
-    name = input("What's your name?")
-    print("Hello, ", name)
+    # Use conditionals to check for a correct guess
+    if number == guess:
+        print("That's correct! The number was", number)
+    elif number > guess:
+        print("Nope. Higher.")
+    else:
+        print("Nope. Lower.")
 
-greet()
-
-# Converting user input to integers
-print("I'm thinking of a number between 1 and 100.")
-guess = int(input("What's your guess?"))
+numberGame()
