@@ -28,3 +28,7 @@ nets_mean_score = np.mean(nets_pts_10)
 
 print(knicks_mean_score)
 print(nets_mean_score)
+
+# Save the results as diff_means_2010
+diff_means = knicks_mean_score - nets_mean_score
+print(diff_means)
