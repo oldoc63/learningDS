@@ -21,3 +21,10 @@ nets_pts_10 = nba_2010.pts[nba.fran_id=='Nets']
 
 print(knicks_pts_10.head())
 print(nets_pts_10.head())
+
+# Use the np.mean() function to calculate the mean points scored for each team.
+knicks_mean_score = np.mean(knicks_pts_10) # Mean of Knicks Scores
+nets_mean_score = np.mean(nets_pts_10)
+
+print(knicks_mean_score)
+print(nets_mean_score)
