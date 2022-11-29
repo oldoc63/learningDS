@@ -66,3 +66,9 @@ plt.hist(knicks_pts_14, alpha=0.8, label='knicks')
 plt.hist(nets_pts_14, alpha=0.8, label='nets')
 plt.legend()
 plt.show()
+
+# Generate side by side boxplots
+plt.clf()
+plt.title('Boxplot of Atlantic Division Teams Points Scored - 2010')
+sns.boxplot(data=nba_2010, x='fran_id', y='pts')
+plt.show()
