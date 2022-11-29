@@ -76,3 +76,7 @@ plt.show()
 # Calculate a table of frequencies (games_result and game_location)
 location_result_frequency = pd.crosstab(nba_2010.game_result, nba_2010.game_location)
 print(location_result_frequency)
+
+# Convert this table of frequencies to a table of proportions
+location_result_proportions = location_result_frequency/len(nba_2010)
+print(location_result_proportions)
