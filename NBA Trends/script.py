@@ -80,3 +80,8 @@ print(location_result_frequency)
 # Convert this table of frequencies to a table of proportions
 location_result_proportions = location_result_frequency/len(nba_2010)
 print(location_result_proportions)
+
+# Use the chi2_contingency() function
+chi2, pval, dof, expected = chi2_contingency(location_result_frequency)
+print(expected)
+print(chi2)
