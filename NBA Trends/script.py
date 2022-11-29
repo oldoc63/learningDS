@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, chi2_contingency
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 np.set_printoptions(suppress=True, precision=2)
 
@@ -30,5 +31,12 @@ print(knicks_mean_score)
 print(nets_mean_score)
 
 # Save the results as diff_means_2010
-diff_means = knicks_mean_score - nets_mean_score
-print(diff_means)
+diff_means_2010 = knicks_mean_score - nets_mean_score
+print(diff_means_2010)
+
+# Create a set of overlapping histograms
+plt.title('Histogram of Mets and Knicks Points Scored - 2010')
+plt.hist(knicks_pts_10, alpha=0.8, label='knicks')
+plt.hist(nets_pts_10, alpha=0.8, label='nets')
+plt.legend()
+plt.show()
