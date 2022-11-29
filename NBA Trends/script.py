@@ -72,3 +72,7 @@ plt.clf()
 plt.title('Boxplot of Atlantic Division Teams Points Scored - 2010')
 sns.boxplot(data=nba_2010, x='fran_id', y='pts')
 plt.show()
+
+# Calculate a table of frequencies (games_result and game_location)
+location_result_frequency = pd.crosstab(nba_2010.game_result, nba_2010.game_location)
+print(location_result_frequency)
