@@ -40,3 +40,29 @@ plt.hist(knicks_pts_10, alpha=0.8, label='knicks')
 plt.hist(nets_pts_10, alpha=0.8, label='nets')
 plt.legend()
 plt.show()
+
+# Filter the values in the DataFrame using the team names and selecting only the pts column
+knicks_pts_14 = nba_2014.pts[nba.fran_id=='Knicks']
+nets_pts_14 = nba_2014.pts[nba.fran_id=='Nets']
+
+print(knicks_pts_14.head())
+print(nets_pts_14.head())
+
+# Use the np.mean() function to calculate the mean points scored for each team.
+knicks_mean_score = np.mean(knicks_pts_14) # Mean of Knicks Scores
+nets_mean_score = np.mean(nets_pts_14)
+
+print(knicks_mean_score)
+print(nets_mean_score)
+
+# Save the results as diff_means_2010
+diff_means_2014 = knicks_mean_score - nets_mean_score
+print(diff_means_2014)
+
+# Create a set of overlapping histograms
+plt.clf()
+plt.title('Histogram of Mets and Knicks Points Scored - 2014')
+plt.hist(knicks_pts_14, alpha=0.8, label='knicks')
+plt.hist(nets_pts_14, alpha=0.8, label='nets')
+plt.legend()
+plt.show()
