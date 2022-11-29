@@ -2,11 +2,10 @@ import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, chi2_contingency
 import seaborn as sns
-import matplotlib.pyplot as plt
 
 np.set_printoptions(suppress=True, precision=2)
 
-notas4toB = pd.read_csv('promedios4toB/notas4toB1eraComp.csv')
+notas4toB = pd.read_csv('promedios4toB/notas4toC1eraComp.csv')
 
 # print(notas4toB.head())
 
@@ -16,19 +15,13 @@ notas4toB = pd.read_csv('promedios4toB/notas4toB1eraComp.csv')
 
 # print(notas4toB['student'].unique())
 
-todas = notas4toB.definitiva
+print('La nota promedio de Todas las Materias de 4to C es:', round(notas4toB.definitiva.mean(), 2))
 
-todas_avg = notas4toB.definitiva.mean()
+nanny = notas4toB[notas4toB.student == 14]
 
-print('La nota promedio de Todas las Materias de 4to B es:', round(notas4toB.definitiva.mean(), 2))
-
-nanny = notas4toB[notas4toB.student == 21]
-
-print('La nota promedio de Todas las Materias de Nanny es:', round(nanny.definitiva.mean(), 2))
+# print('La nota promedio de Todas las Materias de Victor es:', round(nanny.definitiva.mean(), 2))
 
 quim = notas4toB[notas4toB.materia == 'quimica']
-
-quim_avg = quim.definitiva.mean()
 
 print('La nota definitiva de Química es:', round(quim.definitiva.mean(), 2))
 
@@ -61,17 +54,3 @@ print('La nota definitiva de Lengua es:', round(leng.definitiva.mean(), 2))
 mat = notas4toB[notas4toB.materia == 'mates']
 
 print('La nota definitiva de Matemáticas es:', round(mat.definitiva.mean(), 2))
-
-diferencia_todas_quimica = todas_avg - quim_avg
-
-print('Diferencia entre Todas y Química:', diferencia_todas_quimica)
-
-plt.title("Distribución de las notas de Quimica en 4to B")
-
-plt.hist(todas, alpha=0.8, label='Todas', density=True)
-
-plt.hist(quim.definitiva, alpha=0.8, label='Química', density=True)
-
-plt.legend()
-
-plt.show()
