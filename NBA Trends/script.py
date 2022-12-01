@@ -90,3 +90,7 @@ print(chi2)
 point_diff_forecast_cov = np.cov(nba_2010.point_diff, nba_2010.forecast)
 print(point_diff_forecast_cov)
 print(point_diff_forecast_cov[0][1])
+
+# Use the pearsonr from the scipy.stats to calculate correlation
+point_diff_forecast_corr = pearsonr(nba_2010.point_diff, nba_2010.forecast)
+print(point_diff_forecast_corr)
