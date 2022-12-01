@@ -94,3 +94,11 @@ print(point_diff_forecast_cov[0][1])
 # Use the pearsonr from the scipy.stats to calculate correlation
 point_diff_forecast_corr = pearsonr(nba_2010.point_diff, nba_2010.forecast)
 print(point_diff_forecast_corr)
+
+# Generate a scatter plot of forecast (on the x-axis) and point_diff (on the y-axis)
+plt.clf()
+plt.title("538 Forecasted Win Prob. and Game Point Diff")
+plt.scatter('forecast', 'point_diff', data=nba_2010)
+plt.xlabel('Forecasted Win Prob')
+plt.ylabel('Point Differential')
+plt.show()
