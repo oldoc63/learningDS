@@ -85,3 +85,8 @@ print(location_result_proportions)
 chi2, pval, dof, expected = chi2_contingency(location_result_frequency)
 print(expected)
 print(chi2)
+
+# Use nba_2010 to calculate covariance between forecast and point_diff
+point_diff_forecast_cov = np.cov(nba_2010.point_diff, nba_2010.forecast)
+print(point_diff_forecast_cov)
+print(point_diff_forecast_cov[0][1])
