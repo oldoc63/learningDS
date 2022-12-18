@@ -108,3 +108,7 @@ print('Probability of minimum than 10 calls but no more than 12')
 # Expected value of serves from a tennis star
 expected_serves = 80*0.62
 print('Expected number of serves', expected_serves)
+
+# Variance of this player first-serves
+variance_serves = 80*0.62*(1-0.62)
+print('The variance of this player first-serves is', variance_serves)
