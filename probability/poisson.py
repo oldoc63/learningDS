@@ -96,3 +96,7 @@ print(num_goals_2)
 
 num_goals_2_var = np.var(num_goals) * 2**2
 print('The variance of num_goals_2 is', num_goals_2_var)
+
+# How often an emergency team can receive more than 12 calls a day (lambda 9)
+calls = 1 - stats.poisson.cdf(12, 9)
+print('Probability of observing more than 12 calls', calls)
