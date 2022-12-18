@@ -104,3 +104,7 @@ print('Probability of observing more than 12 calls', calls)
 # Probability of observing a minimum than 10 calls but no more than 12
 false_backup = stats.poisson.cdf(12, 9) - stats.poisson.cdf(9, 9)
 print('Probability of minimum than 10 calls but no more than 12')
+
+# Expected value of serves from a tennis star
+expected_serves = 80*0.62
+print('Expected number of serves', expected_serves)
