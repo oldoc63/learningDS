@@ -100,3 +100,7 @@ print('The variance of num_goals_2 is', num_goals_2_var)
 # How often an emergency team can receive more than 12 calls a day (lambda 9)
 calls = 1 - stats.poisson.cdf(12, 9)
 print('Probability of observing more than 12 calls', calls)
+
+# Probability of observing a minimum than 10 calls but no more than 12
+false_backup = stats.poisson.cdf(12, 9) - stats.poisson.cdf(9, 9)
+print('Probability of minimum than 10 calls but no more than 12')
