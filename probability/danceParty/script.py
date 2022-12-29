@@ -15,3 +15,6 @@ song_tempos = spotify_data['tempo']
 
 # Plot the population distribution with the mean labeled
 population_distribution(song_tempos)
+
+# Sampling distribution of the sample mean
+sampling_distribution(song_tempos, 30, "Mean")
