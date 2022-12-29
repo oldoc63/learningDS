@@ -7,3 +7,5 @@ import seaborn as sns
 spotify_data = pd.read_csv(r'C:\Users\varic\Documents\learningDS\probability\danceParty\spotify_data.csv')
 
 print(spotify_data.head())
+
+song_tempos = spotify_data['tempo'] 
