@@ -18,3 +18,6 @@ population_distribution(song_tempos)
 
 # Sampling distribution of the sample mean
 sampling_distribution(song_tempos, 30, "Mean")
+
+# Sampling distribution of the sample minimum
+sampling_distribution(song_tempos, 30, "Minimum")
