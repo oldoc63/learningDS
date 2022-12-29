@@ -21,3 +21,6 @@ sampling_distribution(song_tempos, 30, "Mean")
 
 # Sampling distribution of the sample minimum
 sampling_distribution(song_tempos, 30, "Minimum")
+
+# Sampling distribution of the sample variance
+sampling_distribution(song_tempos, 30, "Variance")
