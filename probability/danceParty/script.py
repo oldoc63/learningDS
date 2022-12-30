@@ -37,3 +37,7 @@ standard_error = population_std/(30**.05)
 # Calculate the probability of observing an average tempo of 140 bpm or 
 # lower from a sample of 30 songs
 print(stats.norm.cdf(140, population_mean, standard_error))
+
+# Calculate the probability of observing an average tempo of 150 bpm or 
+# higher from a sample of 30 songs
+print(1 - stats.norm.cdf(150, population_mean, standard_error))
