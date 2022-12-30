@@ -24,3 +24,8 @@ sampling_distribution(song_tempos, 30, "Minimum")
 
 # Sampling distribution of the sample variance
 sampling_distribution(song_tempos, 30, "Variance")
+
+## Calculating Probabilities
+population_mean = np.mean(song_tempos)
+
+population_std = np.std(song_tempos)
