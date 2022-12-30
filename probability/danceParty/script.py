@@ -29,3 +29,6 @@ sampling_distribution(song_tempos, 30, "Variance")
 population_mean = np.mean(song_tempos)
 
 population_std = np.std(song_tempos)
+
+# Calculate the standard error
+standard_error = population_std/(30**.05)
