@@ -12,3 +12,6 @@ print(prices_mean)
 
 # use ttest_1samp() to calculate pval
 tstat, pval = ttest_1samp(prices, 1000)
+
+# print pval
+print(pval)
