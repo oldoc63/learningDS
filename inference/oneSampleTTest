@@ -1,6 +1,10 @@
 import numpy as np
 
-prices = np.genfromtxt("prices.csv")
+prices = np.genfromtxt(r"inference\prices.csv")
 
 # print out prices
 print(prices)
+
+# calculate the mean of prices using np.mean(). Store it in a variable called prices_mean and print it out.
+prices_mean = prices.mean()
+print(prices_mean)
