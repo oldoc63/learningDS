@@ -1,0 +1,6 @@
+import numpy as np
+
+prices = np.genfromtxt("prices.csv")
+
+# print out prices
+print(prices)
