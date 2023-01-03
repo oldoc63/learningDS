@@ -1,3 +1,4 @@
+from scipy.stats import ttest_1samp
 import numpy as np
 
 prices = np.genfromtxt(r"inference\prices.csv")
@@ -8,3 +9,6 @@ print(prices)
 # calculate the mean of prices using np.mean(). Store it in a variable called prices_mean and print it out.
 prices_mean = prices.mean()
 print(prices_mean)
+
+# use ttest_1samp() to calculate pval
+tstat, pval = ttest_1samp(prices, 1000)
