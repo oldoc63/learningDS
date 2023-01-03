@@ -1,5 +1,6 @@
 from scipy.stats import ttest_1samp
 import numpy as np
+import matplotlib.pyplot as plt
 
 prices = np.genfromtxt(r"inference\prices.csv")
 
@@ -15,3 +16,7 @@ tstat, pval = ttest_1samp(prices, 1000)
 
 # print pval
 print(pval)
+
+# plot your histogram here
+plt.hist(prices)
+plt.show()
