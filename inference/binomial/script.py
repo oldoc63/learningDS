@@ -21,3 +21,8 @@ print(one_visitor)
 # simulate 500 visitors:
 simulated_monthly_visitors = np.random.choice(['y','n'], size=500, p=[0.1,0.9])
 print(simulated_monthly_visitors)
+
+# simulate 10 coin flips and print out the number of heads
+flips = np.random.choice(['heads', 'tails'], size=10, p=[0.5,0.5])
+number_heads = np.sum(flips == 'heads')
+print(number_heads)
