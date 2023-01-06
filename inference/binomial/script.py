@@ -26,3 +26,7 @@ print(simulated_monthly_visitors)
 flips = np.random.choice(['heads', 'tails'], size=10, p=[0.5,0.5])
 number_heads = np.sum(flips == 'heads')
 print(number_heads)
+
+# simulate 500 monthly visitors who purchased
+num_purchased = np.sum(simulated_monthly_visitors == 'y')
+print(num_purchased)
