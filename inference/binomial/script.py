@@ -86,3 +86,8 @@ print(null_90CI)
 outcomes = np.array(outcomes)
 p_value = np.sum(outcomes <= 2)/len(outcomes)
 print(p_value)
+
+# proportion of values in null_outcomes that are less than or equal to 41
+null_outcomes = np.array(null_outcomes)
+p_value = np.sum(null_outcomes <= 41.0)/len(null_outcomes)
+print(p_value)
