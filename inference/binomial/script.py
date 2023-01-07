@@ -70,4 +70,6 @@ plt.show()
 
 # inspect the distribution of randomly sampling 500 visitors with 10% chance of making a purchase using matplotlib.pyplot.hist()
 plt.hist(null_outcomes)
+# add a vertical line to your histogram at 41
+plt.axvline(41, color='r')
 plt.show()
