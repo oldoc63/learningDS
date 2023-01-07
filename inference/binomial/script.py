@@ -67,3 +67,7 @@ print(null_min, null_max)
 plt.hist(outcomes)
 plt.axvline(2, color='r')
 plt.show()
+
+# inspect the distribution of randomly sampling 500 visitors with 10% chance of making a purchase using matplotlib.pyplot.hist()
+plt.hist(null_outcomes)
+plt.show()
