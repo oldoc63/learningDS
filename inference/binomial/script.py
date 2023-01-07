@@ -30,3 +30,15 @@ print(number_heads)
 # simulate 500 monthly visitors who purchased
 num_purchased = np.sum(simulated_monthly_visitors == 'y')
 print(num_purchased)
+
+# initialize an empty list named outcomes to store the number of heads
+outcomes = []
+# set up a for loop to repeat the steps below 10000 times
+for i in range(10000):
+    # flip a fair coin 10 times
+    flips = np.random.choice(['heads', 'tails'], size=10, p=[0.5,0.5])
+    # calculate the number of those 10 flips that came up heads
+    num_heads = np.sum(flips == 'heads')
+    # append num_heads onto outcomes
+    outcomes.append(num_heads)
+print(outcomes)
