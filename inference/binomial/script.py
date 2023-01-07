@@ -77,3 +77,7 @@ plt.show()
 # report an interval covering 95% of the values of the 500 visitors distribution
 interval_95 = np.percentile(null_outcomes, [2.5, 97.5])
 print(interval_95)
+
+# report an interval covering 90% of the values of the 500 visitors distribution
+null_90CI = np.percentile(null_outcomes, [5, 95])
+print(null_90CI)
