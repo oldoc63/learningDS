@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 monthly_report = pd.read_csv('inference/binomial/monthly_report.csv')
 
@@ -61,3 +62,8 @@ print(null_outcomes)
 null_min = np.min(null_outcomes)
 null_max = np.max(null_outcomes)
 print(null_min, null_max)
+
+# inspect the distribution of the number of heads with matplotlib.pyplot.hist()
+plt.hist(outcomes)
+plt.axvline(2, color='r')
+plt.show()
