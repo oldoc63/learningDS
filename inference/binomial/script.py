@@ -42,3 +42,9 @@ for i in range(10000):
     # append num_heads onto outcomes
     outcomes.append(num_heads)
 print(outcomes)
+
+min_heads = np.min(outcomes)
+print(min_heads)
+
+max_heads = np.max(outcomes)
+print(max_heads)
