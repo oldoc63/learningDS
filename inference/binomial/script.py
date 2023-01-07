@@ -73,3 +73,7 @@ plt.hist(null_outcomes)
 # add a vertical line to your histogram at 41
 plt.axvline(41, color='r')
 plt.show()
+
+# report an interval covering 95% of the values of the 500 visitors distribution
+interval_95 = np.percentile(null_outcomes, [2.5, 97.5])
+print(interval_95)
