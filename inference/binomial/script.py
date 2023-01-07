@@ -81,3 +81,8 @@ print(interval_95)
 # report an interval covering 90% of the values of the 500 visitors distribution
 null_90CI = np.percentile(null_outcomes, [5, 95])
 print(null_90CI)
+
+# proportion of 0, 1 or 2 heads in 10000 experiments of 10 coin flips
+outcomes = np.array(outcomes)
+p_value = np.sum(outcomes <= 2)/len(outcomes)
+print(p_value)
