@@ -127,3 +127,8 @@ print("simulation p-value: ", p_value1)
 
 p_value2 = binom_test(45, 500, .1, alternative = 'less')
 print("binom_test p-value: ", p_value2)
+
+#binom_test() to evaluate if a coin flipped 10 times (trials) and given 
+# 2 heads (expected 5) is weighted
+p_value = binom_test(2, n=10, p=0.5)
+print('Probability of 2 or fewer heads is:', p_value)
