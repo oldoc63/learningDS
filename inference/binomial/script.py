@@ -132,3 +132,16 @@ print("binom_test p-value: ", p_value2)
 # 2 heads (expected 5) is weighted
 p_value = binom_test(2, n=10, p=0.5)
 print('Probability of 2 or fewer heads is:', p_value)
+
+#Run binom_test() to see whether the observed 41 purchases among 500 
+# visitors to Live-it-LIVE.com is far enough from the expected 10%
+
+print('\nObserved 41 purchases among 500 visitors to Live-it-LIVE.com is far enough from the expected 10%?')
+
+# calculate p_value_2sided here:
+p_value_2sided = binom_test(41, 500, 0.1)
+print('p_value_2sided:', p_value_2sided)
+
+# calculate p_value_1sided here:
+p_value_1sided = binom_test(41, 500, 0.1, alternative='less')
+print('p_value_1sided:', p_value_1sided)
