@@ -76,18 +76,23 @@ plt.show()
 
 # report an interval covering 95% of the values of the 500 visitors distribution
 interval_95 = np.percentile(null_outcomes, [2.5, 97.5])
-print(interval_95)
+print('The 95 percent confident limit is:', interval_95)
 
 # report an interval covering 90% of the values of the 500 visitors distribution
 null_90CI = np.percentile(null_outcomes, [5, 95])
-print(null_90CI)
+print('The 90 percent confident limit is:', null_90CI)
 
-# proportion of 0, 1 or 2 heads in 10000 experiments of 10 coin flips
+# One sided P Value: proportion of 0, 1 or 2 heads in 10000 experiments of 10 coin flips
 outcomes = np.array(outcomes)
 p_value = np.sum(outcomes <= 2)/len(outcomes)
-print(p_value)
+print('The one-sided p-value for less than or equal 2 heads is:', p_value)
 
-# proportion of values in null_outcomes that are less than or equal to 41
+# One sided P value: proportion of values in null_outcomes that are less than or equal to 41
 null_outcomes = np.array(null_outcomes)
 p_value = np.sum(null_outcomes <= 41.0)/len(null_outcomes)
-print(p_value)
+print('The one-sided p-value for less than or equal 41 purchases is:', p_value)
+
+# Two sided P value: proportion of values in outcomes that are less than or equal 2 or more than or equal 8
+outcomes = np.array(outcomes)
+p_value = np.sum((outcomes <=2) | (outcomes >= 8)) / len(outcomes)
+print('The two-sided p-value for 2 <= heads >=8 is:', p_value)
