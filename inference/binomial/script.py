@@ -96,3 +96,8 @@ print('The one-sided p-value for less than or equal 41 purchases is:', p_value)
 outcomes = np.array(outcomes)
 p_value = np.sum((outcomes <=2) | (outcomes >= 8)) / len(outcomes)
 print('The two-sided p-value for 2 <= heads >=8 is:', p_value)
+
+# Two sided P value: proportion of values in null_outcomes that are 41 <= purchases >= 59
+null_outcomes = np.array(null_outcomes)
+p_value = np.sum((null_outcomes <= 41) | (null_outcomes >= 59)) / len(null_outcomes)
+print('The two sided p-value for 41 <= purchases >= 59 is:', p_value)
