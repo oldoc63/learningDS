@@ -118,3 +118,12 @@ def simulation_binomial_test(observed_successes, n, p):
 
     #return the p-value
     return p_value
+
+#Test your function. You should see that your simulation function gives you a 
+# very similar answer to the binom_test function from scipy:
+
+p_value1 = simulation_binomial_test(45, 500, .1)
+print("simulation p-value: ", p_value1)
+
+p_value2 = binom_test(45, 500, .1, alternative = 'less')
+print("binom_test p-value: ", p_value2)
