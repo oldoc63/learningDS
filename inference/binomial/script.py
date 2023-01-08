@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.stats import binom_test
 
 monthly_report = pd.read_csv('inference/binomial/monthly_report.csv')
 
@@ -101,3 +102,19 @@ print('The two-sided p-value for 2 <= heads >=8 is:', p_value)
 null_outcomes = np.array(null_outcomes)
 p_value = np.sum((null_outcomes <= 41) | (null_outcomes >= 59)) / len(null_outcomes)
 print('The two sided p-value for 41 <= purchases >= 59 is:', p_value)
+
+# Binomial Test Function
+def simulation_binomial_test(observed_successes, n, p):
+    #initialize null_outcomes
+    null_outcomes = []
+    #generate the simulated null_distribution
+    for i in range(10000):
+        simulated_monthly_visitors = np.random.choice(['y','n'], size=500, p=[0.1, 0.9])
+        num_purchased = np.sum(simulated_monthly_visitors == 'y')
+        null_outcomes.append(num_purchased)
+    #calculate a 1-sided p-value
+    null_outcomes = np.array(null_outcomes)
+    p_value = np.sum(null_outcomes <= 41) / len(null_outcomes)
+
+    #return the p-value
+    return p_value
