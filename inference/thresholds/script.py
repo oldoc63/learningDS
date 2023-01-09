@@ -17,3 +17,6 @@ remove_question_1 = 'no'
 p_value2 = 0.013
 # Set the correct value for remove_question_2
 remove_question_2 = 'yes'
+
+# Set the correct value for outcome
+outcome = 'type two'
