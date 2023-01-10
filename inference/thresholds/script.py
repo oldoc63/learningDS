@@ -62,7 +62,7 @@ print(false_positives/1000)
 num_tests_50percent = 15
 
 # Create the plot
-sig_threshold = 0.05
+sig_threshold = 0.01
 num_test = np.array(range(50))
 probabilities = 1-((1-sig_threshold)**num_test)
 plt.plot(num_test, probabilities)
