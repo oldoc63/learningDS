@@ -44,7 +44,7 @@ from scipy.stats import binom_test
 # Initialize num_errors
 false_positives = 0
 # Set significance threshold value
-sig_threshold = 0.05
+sig_threshold = 0.01
 
 # Run binomial tests & record errors
 for i in range(1000):
