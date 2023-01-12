@@ -26,3 +26,7 @@ print(np.mean(chol_hd))
 # compare to cut-off for high cholesterol
 tstat, pval = ttest_1samp(chol_hd, 240)
 print(pval/2)
+
+# calculate the total number of patients
+num_patients = len(heart)
+print('Number of patients:', num_patients)
