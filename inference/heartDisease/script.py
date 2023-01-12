@@ -33,4 +33,7 @@ print('Number of patients:', num_patients)
 
 # calculate the number of patients with fbs>120
 num_highfbs_patients = np.sum(heart.fbs)
-print(num_highfbs_patients)
+print('Number of patients with fasting blood sugar greater than 120:', num_highfbs_patients)
+
+# calculate 8% of the sample size
+print('The 8 percent of the sample size is:', round(0.08*num_patients, 2))
