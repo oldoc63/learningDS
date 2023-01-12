@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import ttest_1samp
+from scipy.stats import ttest_1samp, binom_test
 
 # load data
 heart = pd.read_csv('inference/heartDisease/heart_disease.csv')
@@ -37,3 +37,7 @@ print('Number of patients with fasting blood sugar greater than 120:', num_highf
 
 # calculate 8% of the sample size
 print('The 8 percent of the sample size is:', round(0.08*num_patients, 2))
+
+# run binomial test
+pval = binom_test(num_highfbs_patients, num_patients, .08, alternative='greater')
+print('The probability of the null hypothesis is:', pval, 'so we can reject it, an accept the alternative')
