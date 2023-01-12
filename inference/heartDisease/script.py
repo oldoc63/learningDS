@@ -30,3 +30,7 @@ print(pval/2)
 # calculate the total number of patients
 num_patients = len(heart)
 print('Number of patients:', num_patients)
+
+# calculate the number of patients with fbs>120
+num_highfbs_patients = np.sum(heart.fbs)
+print(num_highfbs_patients)
