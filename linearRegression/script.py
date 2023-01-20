@@ -15,5 +15,5 @@ plt.scatter(students.hours_studied, students.score)
 plt.xlabel('Hours Studied')
 plt.ylabel('Score')
 
-# plt.plot(students.hours_studied, y)
+plt.plot(students.hours_studied, y)
 plt.show()
