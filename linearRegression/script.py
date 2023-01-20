@@ -8,12 +8,9 @@ students = pd.read_csv(r'linearRegression\test_data.csv')
 print(students.head())
 
 # Write equation for a line
-y = 9.85 * students.hours_studied + 43
+predicted_score = 10 * students.hours_studied + 20
 
 # Create the plot here:
 plt.scatter(students.hours_studied, students.score)
-plt.xlabel('Hours Studied')
-plt.ylabel('Score')
-
-plt.plot(students.hours_studied, y)
+plt.plot(students.hours_studied, predicted_score)
 plt.show()
