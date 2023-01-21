@@ -32,3 +32,10 @@ print(pred_3hr)
 # Calculate and print pred_5hr here:
 pred_5hr = {'hours_studied':[5]}
 print(results.predict(pred_5hr))
+
+# Interpretation of the intercept:
+# A student who studied for 0 hours is expected to score 43 on the test.
+
+# Interpretation of the slope:
+# For every additional 1 hour of studying, students are expected to score
+# 9.8 points higher on the test. 
