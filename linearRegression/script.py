@@ -42,3 +42,6 @@ print(results.predict(pred_5hr))
 
 # Calculate `fitted_values` here:
 fitted_values = results.predict(students) 
+
+# Calculate `residuals` here:
+residuals = students.score - fitted_values
