@@ -38,4 +38,7 @@ print(results.predict(pred_5hr))
 
 # Interpretation of the slope:
 # For every additional 1 hour of studying, students are expected to score
-# 9.8 points higher on the test. 
+# 9.8 points higher on the test.
+
+# Calculate `fitted_values` here:
+fitted_values = results.predict(students) 
