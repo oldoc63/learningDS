@@ -24,3 +24,7 @@ results = model.fit()
 
 # Print the coefficients here:
 print(results.params)
+
+# Calculate and print pred_3hr here:
+pred_3hr = 9.848 * 3 + 43.016
+print(pred_3hr)
