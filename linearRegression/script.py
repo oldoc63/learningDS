@@ -28,3 +28,7 @@ print(results.params)
 # Calculate and print pred_3hr here:
 pred_3hr = 9.848 * 3 + 43.016
 print(pred_3hr)
+
+# Calculate and print pred_5hr here:
+pred_5hr = {'hours_studied':[5]}
+print(results.predict(pred_5hr))
