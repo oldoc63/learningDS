@@ -74,3 +74,9 @@ plt.show()
 
 # Create a regression model of score predicted by breakfast
 model = sm.OLS.from_formula('score ~ breakfast', students)
+
+# Fit a regression model of score predicted by breakfast
+results = model.fit()
+
+# Print the coefficients
+print(results.params)
