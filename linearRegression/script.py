@@ -59,6 +59,9 @@ plt.scatter(fitted_values, residuals)
 plt.show()
 plt.clf()
 
+## Create and fit a regression model of score predicted by breakfast
+## using sm.OLS.from_formula()
+
 # Calculate and print group means
 print(students.groupby('breakfast').mean().score)
 
@@ -68,3 +71,6 @@ plt.scatter(students.breakfast, students.score)
 # Add the additional line using calculated group means
 plt.plot([0,1], [61.664151,73.721277])
 plt.show()
+
+# Create a regression model of score predicted by breakfast
+model = sm.OLS.from_formula('score ~ breakfast', students)
