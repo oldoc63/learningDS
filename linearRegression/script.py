@@ -57,3 +57,11 @@ plt.clf()
 # Plot the residuals against the fitted values here:
 plt.scatter(fitted_values, residuals)
 plt.show()
+plt.clf()
+
+# Create the scatter plot of score against breakfast here:
+plt.scatter(students.breakfast, students.score)
+plt.show()
+
+# Calculate and print group means
+print(students.groupby('breakfast').mean().score)
