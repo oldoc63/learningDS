@@ -48,3 +48,8 @@ residuals = students.score - fitted_values
 
 # Print the first 5 residuals here:
 print(residuals.head())
+
+# Plot a histogram of the residuals here:
+plt.hist(residuals)
+plt.show()
+plt.clf()
