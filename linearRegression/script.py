@@ -59,9 +59,12 @@ plt.scatter(fitted_values, residuals)
 plt.show()
 plt.clf()
 
-# Create the scatter plot of score against breakfast here:
-plt.scatter(students.breakfast, students.score)
-plt.show()
-
 # Calculate and print group means
 print(students.groupby('breakfast').mean().score)
+
+# Create the scatter plot of score against breakfast here:
+plt.scatter(students.breakfast, students.score)
+
+# Add the additional line using calculated group means
+plt.plot([0,1], [61.664151,73.721277])
+plt.show()
