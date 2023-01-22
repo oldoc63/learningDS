@@ -45,3 +45,6 @@ fitted_values = results.predict(students)
 
 # Calculate `residuals` here:
 residuals = students.score - fitted_values
+
+# Print the first 5 residuals here:
+print(residuals.head())
