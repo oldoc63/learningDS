@@ -80,3 +80,9 @@ results = model.fit()
 
 # Print the coefficients
 print(results.params)
+
+# Calculate and print group means
+mean_score_no_breakfast = np.mean(students.score[students.breakfast == 0])
+mean_score_breakfast = np.mean(students.score[students.breakfast == 1])
+print('Mean score (no breakfast):', mean_score_no_breakfast)
+pritn('Mean score (breakfast):', mean_score_breakfast)
