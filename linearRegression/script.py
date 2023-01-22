@@ -53,3 +53,7 @@ print(residuals.head())
 plt.hist(residuals)
 plt.show()
 plt.clf()
+
+# Plot the residuals against the fitted values here:
+plt.scatter(fitted_values, residuals)
+plt.show()
