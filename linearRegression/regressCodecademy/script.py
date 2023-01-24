@@ -21,3 +21,7 @@ plt.clf()
 model = sm.OLS.from_formula('score ~ completed', data=codecademy)
 results = model.fit()
 print(results.params)
+
+# The score is 13.214113 when the prior lessons completed are 0
+
+# The score increase 1.306826 for each lesson completed
