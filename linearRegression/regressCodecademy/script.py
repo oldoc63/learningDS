@@ -16,3 +16,8 @@ plt.scatter(codecademy.completed, codecademy.score)
 # Show then clear the plot
 plt.show()
 plt.clf()
+
+# Fit a linear regression to predict score based on prior lessons completed
+model = sm.OLS.from_formula('score ~ completed', data=codecademy)
+results = model.fit()
+print(results.params)
