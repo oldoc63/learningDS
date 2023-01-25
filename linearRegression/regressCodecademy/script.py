@@ -25,3 +25,9 @@ print(results.params)
 # The score is 13.214113 when the prior lessons completed are 0
 
 # The score increase 1.306826 for each lesson completed
+
+# Plot the scatter plot with the line on top
+plt.scatter(codecademy.completed, codecademy.score)
+plt.plot(codecademy.completed, results.predict(codecademy))
+plt.show()
+plt.clf()
