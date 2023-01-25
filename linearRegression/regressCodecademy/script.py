@@ -5,7 +5,7 @@ import seaborn as sns
 import statsmodels.api as sm
 
 # Read in the data
-codecademy = pd.read_csv(r'linearRegression\regressCodecademy\codecademy.csv')
+codecademy = pd.read_csv('linearRegression/regressCodecademy/codecademy.csv')
 
 # Print the first five rows
 print(codecademy.head())
@@ -45,5 +45,10 @@ residuals = codecademy.score - fitted_values
 
 # Check normality assumption by plotting a histogram of the residuals with plt
 plt.hist(residuals)
+plt.show()
+plt.clf()
+
+# Check homoscedasticity assumption
+plt.scatter(fitted_values, residuals)
 plt.show()
 plt.clf()
