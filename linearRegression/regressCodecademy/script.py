@@ -59,3 +59,8 @@ plt.clf()
 sns.boxplot(x='lesson', y='score', data=codecademy)
 plt.show()
 plt.clf()
+
+# Fit a linear regression to predict score based on which lesson they took
+model = sm.OLS.from_formula('score ~ lesson', data=codecademy)
+results = model.fit()
+print(results.params) 
