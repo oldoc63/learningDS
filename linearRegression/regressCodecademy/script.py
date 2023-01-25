@@ -42,3 +42,8 @@ fitted_values = results.predict(codecademy)
 
 # Calculate residuals
 residuals = codecademy.score - fitted_values
+
+# Check normality assumption by plotting a histogram of the residuals with plt
+plt.hist(residuals)
+plt.show()
+plt.clf()
