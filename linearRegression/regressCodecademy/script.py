@@ -52,3 +52,10 @@ plt.clf()
 plt.scatter(fitted_values, residuals)
 plt.show()
 plt.clf()
+
+## Do learners who take lesson A or B perform better on the quiz?
+
+# Create a boxplot of score vs lesson
+sns.boxplot(x='lesson', y='score', data=codecademy)
+plt.show()
+plt.clf()
