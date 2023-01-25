@@ -31,3 +31,8 @@ plt.scatter(codecademy.completed, codecademy.score)
 plt.plot(codecademy.completed, results.predict(codecademy))
 plt.show()
 plt.clf()
+
+# Predict score for learner who has completed 20 prior lessons
+prior_20 = {'completed':[20]}
+prior_20_score = results.predict(prior_20)
+print('The predicted score for a learner who has previosly completed 20 prior lessons is:', prior_20_score)
