@@ -39,3 +39,6 @@ print('The predicted score for a learner who has previosly completed 20 prior le
 
 # Calculated the fitted values for your model and save them as `fitted_values`
 fitted_values = results.predict(codecademy)
+
+# Calculate residuals
+residuals = codecademy.score - fitted_values
