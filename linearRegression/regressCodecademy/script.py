@@ -63,4 +63,13 @@ plt.clf()
 # Fit a linear regression to predict score based on which lesson they took
 model = sm.OLS.from_formula('score ~ lesson', data=codecademy)
 results = model.fit()
-print(results.params) 
+print(results.params)
+
+# Calculate and print the group means and mean difference (for comparison)
+lessonAMean = np.mean(codecademy.score[codecademy.lesson == 'Lesson A'])
+lessonBMean = np.mean(codecademy.score[codecademy.lesson == 'Lesson B'])
+differenceAB = lessonAMean - lessonBMean
+
+print('Mean Score [A]:', lessonAMean)
+print('Mean Score [B]:', lessonBMean)
+print('Mean Score Difference:', differenceAB)
