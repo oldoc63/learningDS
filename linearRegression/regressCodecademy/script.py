@@ -73,3 +73,7 @@ differenceAB = lessonAMean - lessonBMean
 print('Mean Score [A]:', lessonAMean)
 print('Mean Score [B]:', lessonBMean)
 print('Mean Score Difference:', differenceAB)
+
+# Or alternatively
+
+print(codecademy.groupby('lesson').mean().score)
