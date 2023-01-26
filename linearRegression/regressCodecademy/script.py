@@ -77,3 +77,7 @@ print('Mean Score Difference:', differenceAB)
 # Or alternatively
 
 print(codecademy.groupby('lesson').mean().score)
+
+# Use sns.lmplot() to plot score vs. completed colored by lesson
+sns.lmplot(x = 'completed', y = 'score', hue = 'lesson', data = codecademy)
+plt.show()
