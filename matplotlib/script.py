@@ -1,5 +1,11 @@
 from matplotlib import pyplot as plt
 
+x_values = [0, 1, 2, 3, 4]
+y_values = [0, 1, 4, 9, 16]
+plt.plot(x_values, y_values)
+plt.show()
+plt.clf()
+
 days = [0,1,2,3,4,5,6]
 money_spent = [10,12,12,10,14,22,24]
 
@@ -37,3 +43,17 @@ plt.clf()
 plt.plot(days, money_spent, color='green')
 plt.plot(days, money_spent_2, color='#AAAAAA')
 plt.show()
+
+# Make a line dotted or dashed using the keyword linestyle
+# Dashed:
+plt.plot(x_values, y_values, linestyle='--')
+plt.show()
+plt.clf()
+# Dotted:
+plt.plot(x_values, y_values, linestyle=':')
+plt.show()
+plt.clf()
+# No line:
+plt.plot(x_values, y_values, linestyle='')
+plt.show()
+plt.clf()
