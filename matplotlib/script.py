@@ -87,3 +87,9 @@ plt.clf()
 plt.plot(time, costs, color='#82edc9', marker='s')
 plt.show()
 plt.clf()
+
+# Plot together cost and revenue vs time
+plt.plot(time, revenue, color='purple', linestyle='--')
+plt.plot(time, costs, color='#82edc9', marker='s')
+plt.show()
+plt.clf()
