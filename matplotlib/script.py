@@ -57,3 +57,17 @@ plt.clf()
 plt.plot(x_values, y_values, linestyle='')
 plt.show()
 plt.clf()
+
+# Add a marker using the keyword marker
+# A circle:
+plt.plot(x_values, y_values, marker='o')
+plt.show()
+plt.clf()
+# A square:
+plt.plot(x_values, y_values, marker='s')
+plt.show()
+plt.clf()
+# A star:
+plt.plot(x_values, y_values, marker='*')
+plt.show()
+plt.clf()
