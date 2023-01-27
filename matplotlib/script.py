@@ -77,3 +77,8 @@ plt.plot(days, money_spent, color='green', linestyle='--')
 plt.plot(days, money_spent_2, color='#AAAAAA', marker='o')
 plt.show()
 plt.clf()
+
+# Plot revenue vs. time as a purple dashed line
+plt.plot(revenue, time, color='purple', linestyle='--')
+plt.show()
+plt.clf()
