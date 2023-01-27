@@ -32,3 +32,8 @@ plt.plot(time, revenue)
 plt.plot(time, costs)
 plt.show()
 plt.clf()
+
+# Especify a different color for a line by using the keyword color
+plt.plot(days, money_spent, color='green')
+plt.plot(days, money_spent_2, color='#AAAAAA')
+plt.show()
