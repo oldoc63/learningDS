@@ -79,6 +79,11 @@ plt.show()
 plt.clf()
 
 # Plot revenue vs. time as a purple dashed line
-plt.plot(revenue, time, color='purple', linestyle='--')
+plt.plot(time, revenue, color='purple', linestyle='--')
+plt.show()
+plt.clf()
+
+# Plot cost vs. time as a line with the HEX color #82edc9 and square markers
+plt.plot(time, costs, color='#82edc9', marker='s')
 plt.show()
 plt.clf()
