@@ -20,3 +20,15 @@ plt.plot(days, money_spent)
 plt.plot(days, money_spent_2)
 # Display the result:
 plt.show()
+plt.clf()
+
+# Plotting revenue and cost vs time
+# Define lists
+time = [0,1,2,3,4]
+revenue = [200,400,651,800,850]
+costs = [150,500,550,550,560]
+
+plt.plot(time, revenue)
+plt.plot(time, costs)
+plt.show()
+plt.clf()
