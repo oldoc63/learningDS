@@ -93,3 +93,10 @@ plt.plot(time, revenue, color='purple', linestyle='--')
 plt.plot(time, costs, color='#82edc9', marker='s')
 plt.show()
 plt.clf()
+
+# Zoom in or out the plot using plt.axis()
+x = [0,1,2,3,4]
+y = [0,1,4,9,16]
+plt.plot(x,y)
+plt.axis([0,3,2,5])
+plt.show()
