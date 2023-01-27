@@ -71,3 +71,9 @@ plt.clf()
 plt.plot(x_values, y_values, marker='*')
 plt.show()
 plt.clf()
+
+## Customize lines in the same plot
+plt.plot(days, money_spent, color='green', linestyle='--')
+plt.plot(days, money_spent_2, color='#AAAAAA', marker='o')
+plt.show()
+plt.clf()
