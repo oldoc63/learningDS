@@ -100,3 +100,11 @@ y = [0,1,4,9,16]
 plt.plot(x,y)
 plt.axis([0,3,2,5])
 plt.show()
+plt.clf()
+
+# A line representing someone's spending on coffee over the past 12 years
+x = range(12)
+y = [3000, 3005, 3010, 2900, 2950, 3050, 3000, 3100, 2980, 2980, 2920, 3010]
+
+plt.plot(x, y)
+plt.show()
