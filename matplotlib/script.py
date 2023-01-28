@@ -191,3 +191,10 @@ plt.plot(x, cubic)
 plt.subplots_adjust(wspace=0.35, bottom=0.2)
 
 plt.show()
+
+## Legends
+plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64])
+
+plt.legend(['parabola', 'cubic'])
+plt.show()
