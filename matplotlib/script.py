@@ -197,4 +197,8 @@ plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
 plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64])
 
 plt.legend(['parabola', 'cubic'])
+
+# Call plt.legend() and set loc to 6
+plt.legend(['parabola', 'cubic'], loc=6)
+
 plt.show()
