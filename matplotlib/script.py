@@ -188,4 +188,6 @@ plt.plot(x, parabola)
 plt.subplot(2,2,4)
 plt.plot(x, cubic)
 
+plt.subplots_adjust(wspace=0.35, bottom=0.2)
+
 plt.show()
