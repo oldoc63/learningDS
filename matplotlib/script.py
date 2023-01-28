@@ -181,6 +181,8 @@ plt.subplot(2,1,1)
 plt.plot(x, straight_line)
 
 # Subplot 2
+plt.subplot(2,2,3)
+plt.plot(x, parabola)
 
 # Subplot 3
 
