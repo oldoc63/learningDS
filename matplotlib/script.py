@@ -125,3 +125,20 @@ plt.ylabel('Happiness Rating (out of 10)')
 plt.title('My Self-Reported Happiness While Awake')
 plt.show()
 plt.clf()
+
+## Subplots
+x = [1,2,3,4]
+y = [1,2,3,4]
+
+# First Subplot
+plt.subplot(1,2,1)
+plt.plot(x,y,color='green')
+plt.title('First Subplot')
+
+# Second Subplot
+plt.subplot(1,2,2)
+plt.plot(x,y,color='steelblue')
+plt.title('Second Subplot')
+
+# Display both subplots
+plt.show()
