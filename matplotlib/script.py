@@ -191,6 +191,7 @@ plt.plot(x, cubic)
 plt.subplots_adjust(wspace=0.35, bottom=0.2)
 
 plt.show()
+plt.clf()
 
 ## Legends
 plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
@@ -201,4 +202,11 @@ plt.legend(['parabola', 'cubic'])
 # Call plt.legend() and set loc to 6
 plt.legend(['parabola', 'cubic'], loc=6)
 
+plt.show()
+plt.clf()
+
+# Using the keyword label inside plt.plot instead
+plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16], label='parabola')
+plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64], label='cubic')
+plt.legend() # Still needed!
 plt.show()
