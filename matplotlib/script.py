@@ -185,5 +185,7 @@ plt.subplot(2,2,3)
 plt.plot(x, parabola)
 
 # Subplot 3
+plt.subplot(2,2,4)
+plt.plot(x, cubic)
 
 plt.show()
