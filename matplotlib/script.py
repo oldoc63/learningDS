@@ -169,3 +169,19 @@ plt.plot([-2, -1, 0, 1, 2], [4, 1, 0, 1, 4])
 #Subplot Adjust
 plt.subplots_adjust(wspace=0.35)
 plt.show()
+
+# Create a figure with one subplot in the top row and two subplots in the bottom
+x = range(7)
+straight_line = [0, 1, 2, 3, 4, 5, 6]
+parabola = [0, 1, 4, 9, 16, 25, 36]
+cubic = [0, 1, 8, 27, 64, 125, 216]
+
+# Subplot 1
+plt.subplot(2,1,1)
+plt.plot(x, straight_line)
+
+# Subplot 2
+
+# Subplot 3
+
+plt.show()
