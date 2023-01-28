@@ -153,6 +153,6 @@ plt.subplot(1,2,1)
 plt.plot(months, temperature, color='green')
 
 plt.subplot(1,2,2)
-plt.plot(months, flights_to_hawaii, color='red')
+plt.plot(months, flights_to_hawaii,'o')
 
 plt.show()
