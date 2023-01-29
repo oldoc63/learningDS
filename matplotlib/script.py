@@ -261,8 +261,10 @@ ax = plt.subplot()
 # Set the x-ticks to be the months list
 ax.set_xticks(months)
 # Set the x-ticks labels to be the month_names list
-ax.set_tickslabels(month_names)
-# Set the y-ticks labels to be [0.10, 0.25, 0.5, 0.75]
+ax.set_xticklabels(month_names)
+# Set the y-ticks to be [0.10, 0.25, 0.5, 0.75]
 ax.set_yticks([0.10, 0.25, 0.5, 0.75])
+# Label the y-ticks in percentages instead of decimals
+ax.set_yticklabels(['10%','25%','50%','75%'])
 
 plt.show()
