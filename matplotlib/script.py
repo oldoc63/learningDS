@@ -262,5 +262,7 @@ ax = plt.subplot()
 ax.set_xticks(months)
 # Set the x-ticks labels to be the month_names list
 ax.set_tickslabels(month_names)
+# Set the y-ticks labels to be [0.10, 0.25, 0.5, 0.75]
+ax.set_yticks([0.10, 0.25, 0.5, 0.75])
 
 plt.show()
