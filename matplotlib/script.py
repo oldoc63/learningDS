@@ -268,3 +268,13 @@ ax.set_yticks([0.10, 0.25, 0.5, 0.75])
 ax.set_yticklabels(['10%','25%','50%','75%'])
 
 plt.show()
+
+## Figures: plt.close('all'), plt.figure(), plt.savefig()
+word_length = [8, 11, 12, 11, 13, 12, 9, 9, 7, 9]
+power_generated = [753.9, 768.8, 780.1, 763.7, 788.5, 782, 787.2, 806.4, 806.2, 798.9]
+years = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]
+
+plt.close('all')
+plt.figure()
+plt.plot(years, word_length)
+plt.savefig('winning_word_lenghts.png')
