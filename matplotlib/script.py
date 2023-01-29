@@ -225,3 +225,12 @@ plt.plot(months, gerudo)
 legend_labels = ["Hyrule", "Kakariko", "Gerudo Valley"]
 plt.legend(legend_labels, loc=8)
 plt.show()
+plt.clf()
+
+## Ticks and modifying subplots
+# Set our x-ticks to be at 1, 2 and 4
+ax = plt.subplot()
+plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
+plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64])
+ax.set_xticks([1,2,4])
+plt.show()
