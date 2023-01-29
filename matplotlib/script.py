@@ -234,10 +234,28 @@ plt.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16])
 plt.plot([0, 1, 2, 3, 4], [0, 1, 8, 27, 64])
 ax.set_xticks([1,2,4])
 plt.show()
+plt.clf()
 
 # Special labels (strings)
 ax = plt.subplot()
 plt.plot([1, 3, 3.5], [0.1, 0.6, 0.8], 'o')
 ax.set_yticks([0.1, 0.6, 0.8])
 ax.set_yticklabels(['10%', '60%', '80%'])
+plt.show()
+plt.clf()
+
+# Dinnersaur subscription service
+month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep","Oct", "Nov", "Dec"]
+
+months = range(12)
+conversion = [0.05, 0.08, 0.18, 0.28, 0.4, 0.66, 0.74, 0.78, 0.8, 0.81, 0.85, 0.85]
+
+plt.xlabel('Months')
+plt.ylabel('Converson Rate')
+
+plt.plot(months, conversion)
+
+# Set the set of axes in a variable called ax
+ax = plt.subplot()
+
 plt.show()
