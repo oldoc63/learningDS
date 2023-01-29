@@ -278,3 +278,7 @@ plt.close('all')
 plt.figure()
 plt.plot(years, word_length)
 plt.savefig('winning_word_lenghts.png')
+
+plt.figure(figsize=(7,3))
+plt.plot(years, power_generated)
+plt.savefig('power_generated.png')
