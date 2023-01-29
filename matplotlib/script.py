@@ -258,4 +258,9 @@ plt.plot(months, conversion)
 # Set the set of axes in a variable called ax
 ax = plt.subplot()
 
+# Set the x-ticks to be the months list
+ax.set_xticks(months)
+# Set the x-ticks labels to be the month_names list
+ax.set_tickslabels(month_names)
+
 plt.show()
