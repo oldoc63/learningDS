@@ -282,3 +282,8 @@ plt.savefig('winning_word_lenghts.png')
 plt.figure(figsize=(7,3))
 plt.plot(years, power_generated)
 plt.savefig('power_generated.png')
+
+# Review
+x = range(6)
+y1 = [1, 2, 3, 4, 5, 6]
+y2 = [-1, 1, 3, 4, 4, 4]
