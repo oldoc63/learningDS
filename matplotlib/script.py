@@ -295,4 +295,9 @@ y2 = [-1, 1, 3, 4, 4, 4]
 plt.plot(x, y1, color='pink', marker='o')
 plt.plot(x, y2, color='gray', marker='o')
 
+plt.title('Two Lines on One Graph')
+
+plt.xlabel('Amazing X-axis')
+plt.ylabel('Incredible Y-axis')
+
 plt.show()
