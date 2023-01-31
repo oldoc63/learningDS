@@ -300,4 +300,6 @@ plt.title('Two Lines on One Graph')
 plt.xlabel('Amazing X-axis')
 plt.ylabel('Incredible Y-axis')
 
+plt.legend(['Y1','Y2'], loc=4)
+
 plt.show()
