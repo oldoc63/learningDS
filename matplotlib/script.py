@@ -283,7 +283,15 @@ plt.figure(figsize=(7,3))
 plt.plot(years, power_generated)
 plt.savefig('power_generated.png')
 
+plt.close('all')
+
 # Review
+# Define three lists
 x = range(6)
 y1 = [1, 2, 3, 4, 5, 6]
 y2 = [-1, 1, 3, 4, 4, 4]
+
+# Plot y1 vs x and display the plot
+plt.plot(x, y1)
+
+plt.show()
