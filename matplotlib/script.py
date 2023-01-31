@@ -292,6 +292,7 @@ y1 = [1, 2, 3, 4, 5, 6]
 y2 = [-1, 1, 3, 4, 4, 4]
 
 # Plot y1 vs x and display the plot
-plt.plot(x, y1)
+plt.plot(x, y1, color='pink', marker='o')
+plt.plot(x, y2, color='gray', marker='o')
 
 plt.show()
