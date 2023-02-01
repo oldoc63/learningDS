@@ -15,3 +15,13 @@ sales = [91, 76, 56, 66, 52, 27]
 
 plt.bar(range(len(sales)), sales)
 plt.show()
+
+# Steps to customize the tick marks
+# 1. Create an axes object
+ax = plt.subplot()
+# 2. Set the x-tick positions using a list of numbers
+ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8])
+# 3. Set the x-tick labels using a list of strings
+ax.set_xticklabels(['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'])
+# 4. If your labels are particularly long, you can use the rotation keyword:
+ax.set_xticklabels(['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'], rotation =30)
