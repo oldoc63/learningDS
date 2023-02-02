@@ -61,3 +61,16 @@ plt.bar(range(len(video_game_hours)), video_game_hours)
 plt.bar(range(len(book_hours)), book_hours, bottom=video_game_hours)
 
 plt.show()
+
+# MatplotSip sales represented with stacked bars
+drinks = ["cappuccino", "latte", "chai", "americano", "mocha", "espresso"]
+sales1 =  [91, 76, 56, 66, 52, 27]
+sales2 = [65, 82, 36, 68, 38, 40]
+
+# The first set of bars is plotted normally
+plt.bar(range(len(sales1)), sales1)
+
+# The second set of bars has bottom specified:
+plt.bar(range(len(sales2)), sales2, bottom=sales1)
+
+plt.show()
