@@ -49,3 +49,15 @@ plt.bar(store1_x, sales1)
 plt.bar(store2_x, sales2)
 
 plt.show()
+
+# Stacked Bars
+video_game_hours = [1, 2, 2, 1, 2]
+book_hours = [2, 3, 4, 2, 1]
+
+# The first set of bars is plotted normally
+plt.bar(range(len(video_game_hours)), video_game_hours)
+
+# The second set of bars has bottom specified:
+plt.bar(range(len(book_hours)), book_hours, bottom=video_game_hours)
+
+plt.show()
