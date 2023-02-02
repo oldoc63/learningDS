@@ -44,9 +44,8 @@ w = 0.8 # Width of each bar
 store2_x = [t*element + w*n for element in range(d)]
 
 # Position the bars corresponding to sales1 on the plot using the store1_x list
-# Position the bars corresponding to sales2 on the plot using the store2_x list
-
 plt.bar(store1_x, sales1)
+# Position the bars corresponding to sales2 on the plot using the store2_x list
 plt.bar(store2_x, sales2)
 
 plt.show()
