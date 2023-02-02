@@ -73,4 +73,7 @@ plt.bar(range(len(sales1)), sales1)
 # The second set of bars has bottom specified:
 plt.bar(range(len(sales2)), sales2, bottom=sales1)
 
+# Add a legend to know with set of bars corresponds to which location
+plt.legend(['Location 1', 'Location 2'])
+
 plt.show()
