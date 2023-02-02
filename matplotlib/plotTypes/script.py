@@ -29,14 +29,24 @@ drinks = ["cappuccino", "latte", "chai", "americano", "mocha", "espresso"]
 sales1 =  [91, 76, 56, 66, 52, 27]
 sales2 = [65, 82, 36, 68, 38, 40]
 
-# Make a list comprehension to generate the x-value sets. Start with the first one.
+# Make a list comprehension to generate the x-value sets. Start with the first one
 n = 1  # This is our first dataset (out of 2)
 t = 2 # Number of datasets
 d = len(drinks) # Number of sets of bars
 w = 0.8 # Width of each bar
 store1_x = [t*element + w*n for element in range(d)]
 
+# Make a list comprehension to generate the x-value for the second set
+n = 2  # This is our first dataset (out of 2)
+t = 2 # Number of datasets
+d = len(drinks) # Number of sets of bars
+w = 0.8 # Width of each bar
+store2_x = [t*element + w*n for element in range(d)]
+
 # Position the bars corresponding to sales1 on the plot using the store1_x list
+# Position the bars corresponding to sales2 on the plot using the store2_x list
+
 plt.bar(store1_x, sales1)
+plt.bar(store2_x, sales2)
 
 plt.show()
