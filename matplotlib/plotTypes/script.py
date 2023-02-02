@@ -79,7 +79,15 @@ plt.legend(['Location 1', 'Location 2'])
 plt.show()
 
 # Error Bars
+
+# Show same error for each bar
 values = [10,13,11,15,20]
 yerr = 2
+plt.bar(range(len(values)), values, yerr=yerr, capsize=10)
+plt.show()
+
+# Show a different error for each bar
+values = [10, 13, 11, 15, 20]
+yerr = [1, 3, 0.5, 2, 4] #list of errors
 plt.bar(range(len(values)), values, yerr=yerr, capsize=10)
 plt.show()
