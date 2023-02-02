@@ -35,3 +35,8 @@ t = 2 # Number of datasets
 d = len(drinks) # Number of sets of bars
 w = 0.8 # Width of each bar
 store1_x = [t*element + w*n for element in range(d)]
+
+# Position the bars corresponding to sales1 on the plot using the store1_x list
+plt.bar(store1_x, sales1)
+
+plt.show()
