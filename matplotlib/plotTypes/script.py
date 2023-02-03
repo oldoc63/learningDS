@@ -113,3 +113,7 @@ plt.fill_between(x_values, y_lower, y_upper, alpha=0.2) #this is the shaded erro
 plt.plot(x_values, y_values) #this is the line itself
 
 plt.show()
+
+# Use list comprehension to add or subtract from a list
+y_lower = [i - 2 for i in y_values]
+y_upper = [i + 2 for i in y values]
