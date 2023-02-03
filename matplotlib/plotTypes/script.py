@@ -116,4 +116,12 @@ plt.show()
 
 # Use list comprehension to add or subtract from a list
 y_lower = [i - 2 for i in y_values]
-y_upper = [i + 2 for i in y values]
+y_upper = [i + 2 for i in y_values]
+
+# Plot Matplot's Sip projected revenue as a line
+months = range(12)
+months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+revenue = [16000, 14000, 17500, 19500, 21500, 21500, 22000, 23000, 20000, 19500, 18000, 16500]
+plt.plot(months, revenue)
+
+plt.show()
