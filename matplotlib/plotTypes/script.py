@@ -135,4 +135,7 @@ y_lower = [i - 0.1 * i for i in revenue]
 # Upper bound of the expected revenue for each month
 y_upper = [i + 0.1 * i for i in revenue]
 
+# Shade the error below and above the line we've plotted
+plt.fill_between(months, y_lower, y_upper, alpha=0.2)
+
 plt.show()
