@@ -159,7 +159,11 @@ plt.show()
 budget_data = [500, 1000, 750, 300, 100]
 budget_categories = ['marketing', 'payroll', 'engineering', 'design', 'misc']
 
+# Using a legend to label each color
 plt.pie(budget_data)
 plt.legend(budget_categories)
+plt.show()
 
+# Labels next to each corresponding slice
+plt.pie(budget_data, labels=budget_categories)
 plt.show()
