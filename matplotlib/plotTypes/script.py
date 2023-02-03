@@ -146,3 +146,20 @@ budget_data = [500, 1000, 750, 300, 100]
 plt.pie(budget_data)
 
 plt.show()
+
+# MatplotSip payment methods
+payment_method_names = ["Card Swipe", "Cash", "Apple Pay", "Other"]
+payment_method_freqs = [270, 77, 32, 11]
+
+plt.pie(payment_method_freqs)
+
+plt.show()
+
+# Pie chart labeling
+budget_data = [500, 1000, 750, 300, 100]
+budget_categories = ['marketing', 'payroll', 'engineering', 'design', 'misc']
+
+plt.pie(budget_data)
+plt.legend(budget_categories)
+
+plt.show()
