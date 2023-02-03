@@ -122,6 +122,11 @@ y_upper = [i + 2 for i in y_values]
 months = range(12)
 months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 revenue = [16000, 14000, 17500, 19500, 21500, 21500, 22000, 23000, 20000, 19500, 18000, 16500]
+
+# Create an ax object to set the x-ticks and x-tick labels
+ax = plt.subplot()
 plt.plot(months, revenue)
+ax.set_xticks(months)
+ax.set_xticklabels(months_names)
 
 plt.show()
