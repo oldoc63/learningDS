@@ -91,3 +91,12 @@ values = [10, 13, 11, 15, 20]
 yerr = [1, 3, 0.5, 2, 4] #list of errors
 plt.bar(range(len(values)), values, yerr=yerr, capsize=10)
 plt.show()
+
+# ounces_of_milk at MatplotSip
+drinks = ["cappuccino", "latte", "chai", "americano", "mocha", "espresso"]
+ounces_of_milk = [6, 9, 4, 0, 9, 0]
+error = [0.6, 0.9, 0.4, 0, 0.9, 0]
+
+plt.bar(range(len(ounces_of_milk)), ounces_of_milk)
+
+plt.show()
