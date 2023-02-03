@@ -167,3 +167,9 @@ plt.show()
 # Labels next to each corresponding slice
 plt.pie(budget_data, labels=budget_categories)
 plt.show()
+
+# Adding the percentage that each slice occupies
+plt.pie(budget_data,
+        labels=budget_categories,
+        autopct='%0.1f%%')
+plt.show()
