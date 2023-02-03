@@ -139,3 +139,10 @@ y_upper = [i + 0.1 * i for i in revenue]
 plt.fill_between(months, y_lower, y_upper, alpha=0.2)
 
 plt.show()
+
+## Pie Chart
+budget_data = [500, 1000, 750, 300, 100]
+
+plt.pie(budget_data)
+
+plt.show()
