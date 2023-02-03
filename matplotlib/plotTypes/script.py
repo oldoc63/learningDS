@@ -129,4 +129,7 @@ plt.plot(months, revenue)
 ax.set_xticks(months)
 ax.set_xticklabels(months_names)
 
+# Lower bound of the expected revenue for each month
+y_lower = [i - 0.1 * i for i in revenue]
+
 plt.show()
