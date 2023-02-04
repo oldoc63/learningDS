@@ -9,7 +9,7 @@ def convert_time_to_num(time):
   return time
 
 sales_times_raw = []
-with open('sales_times.csv') as csvDataFile:
+with open('matplotlib/plotTypes/histogram/sales_times.csv') as csvDataFile:
   csvReader = csv.reader(csvDataFile)
   for row in csvReader:
     sales_times_raw.append(row[2])
