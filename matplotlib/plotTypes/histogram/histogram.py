@@ -18,6 +18,6 @@ plt.hist(b, range=(55, 75), bins=20, alpha= 0.5, density=True)
 plt.show()
 
 # Plot the histogram of sales_times2 on top of sales_times1
-plt.hist(sales_times1)
-plt.hist(sales_times2)
+plt.hist(sales_times1, alpha=0.4)
+plt.hist(sales_times2, alpha=0.4)
 plt.show()
