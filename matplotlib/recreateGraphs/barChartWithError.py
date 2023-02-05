@@ -19,4 +19,9 @@ ax = plt.subplot()
 ax.set_xticks(range(len(years)))
 ax.set_xticklabels(years)
 
+# Add the plt.title(), plt.xlabel() and plt.ylabel()
+plt.title("Final Exam Averages")
+plt.xlabel("Year")
+plt.ylabel("Test average")
+
 plt.show()
