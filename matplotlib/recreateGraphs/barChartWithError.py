@@ -14,4 +14,9 @@ plt.bar(range(len(years)), past_years_averages, yerr=error, capsize=5)
 # Set the axis to go from -0.5 to 6.5 (x) 70 a 95 (y)
 plt.axis([-0.5, 6.5, 70, 95])
 
+# Create an ax object using plt.subplot to set x-axis ticks / labels
+ax = plt.subplot()
+ax.set_xticks(range(len(years)))
+ax.set_xticklabels(years)
+
 plt.show()
