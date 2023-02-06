@@ -10,3 +10,11 @@ def create_x(t, w, n, d):
 # Determine x-axis for Middle School A and Middle School B
 school_a_x = create_x(2,0.8,1,len(unit_topics))
 school_b_x = create_x(2,0.8,2,len(unit_topics))
+
+# Create a figure of width 10 and height 8
+plt.figure(figsize=(10, 8))
+
+# Create a set of axes and save them to ax
+ax = plt.subplot()
+
+plt.show()
