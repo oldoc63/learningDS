@@ -21,4 +21,7 @@ ax = plt.subplot()
 plt.bar(school_a_x, middle_school_a)
 plt.bar(school_b_x, middle_school_b)
 
+# Use list comprehension and zip to create middle_x
+middle_x = [(a + b) / 2 for a, b in zip(school_a_x, school_b_x)]
+
 plt.show()
