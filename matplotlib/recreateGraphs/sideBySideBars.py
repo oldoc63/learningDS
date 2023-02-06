@@ -27,4 +27,7 @@ middle_x = [(a + b) / 2 for a, b in zip(school_a_x, school_b_x)]
 # Set x-ticks to be the middle_x list
 ax.set_xticks(middle_x)
 
+# Set x-ticks labels to be the unit_topics list
+ax.set_xticklabels(unit_topics)
+
 plt.show()
