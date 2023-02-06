@@ -17,4 +17,8 @@ plt.figure(figsize=(10, 8))
 # Create a set of axes and save them to ax
 ax = plt.subplot()
 
+# Plot middle_school_a and middle_school_b next to each other
+plt.bar(school_a_x, middle_school_a)
+plt.bar(school_b_x, middle_school_b)
+
 plt.show()
