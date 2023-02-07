@@ -41,4 +41,7 @@ plt.ylabel('Test Average')
 # Change the limits of the y-axis
 plt.ylim((70,90))
 
+# Save your figure to a file called my_side_by_side.png
+plt.savefig('my_side_by_side.png')
+
 plt.show()
