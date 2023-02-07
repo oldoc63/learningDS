@@ -38,4 +38,7 @@ plt.title('Test Averages on Different Units')
 plt.xlabel('Unit')
 plt.ylabel('Test Average')
 
+# Change the limits of the y-axis
+plt.ylim((70,90))
+
 plt.show()
