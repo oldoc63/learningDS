@@ -33,4 +33,9 @@ ax.set_xticklabels(unit_topics)
 # Create a legend for each set and locate it upper right
 plt.legend(['Middle School A', 'Middle School B'], loc='upper right')
 
+# Create a title and label de x and y axes
+plt.title('Test Averages on Different Units')
+plt.xlabel('Unit')
+plt.ylabel('Test Average')
+
 plt.show()
