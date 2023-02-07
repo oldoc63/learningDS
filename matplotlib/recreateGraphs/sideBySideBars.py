@@ -30,4 +30,7 @@ ax.set_xticks(middle_x)
 # Set x-ticks labels to be the unit_topics list
 ax.set_xticklabels(unit_topics)
 
+# Create a legend for each set and locate it upper right
+plt.legend(['Middle School A', 'Middle School B'], loc='upper right')
+
 plt.show()
