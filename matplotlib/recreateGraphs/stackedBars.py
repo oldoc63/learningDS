@@ -17,3 +17,15 @@ f_bottom = np.add(d_bottom, Ds)
 
 # Create a figure of width 10 and height 8
 plt.figure(figsize=(10,8))
+
+# Stack appropriately As, Bs, Cs, Ds and Fs.
+# The first set of bars is plotted normally
+plt.bar(range(len(As)), As)
+
+# The following set of bars has bottom specified:
+plt.bar(range(len(Bs)), Bs, bottom=As)
+plt.bar(range(len(Cs)), Cs, bottom=c_bottom)
+plt.bar(range(len(Ds)), Ds, bottom=d_bottom)
+plt.bar(range(len(Fs)), Fs, bottom=f_bottom)
+
+plt.show()
