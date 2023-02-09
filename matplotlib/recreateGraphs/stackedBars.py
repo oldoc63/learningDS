@@ -42,4 +42,7 @@ plt.title('Grade Distribution')
 plt.xlabel('Unit')
 plt.ylabel('Number of Students')
 
+# Save your figure to a file called my_stacked_bar.png
+plt.savefig('my_stacked_bar.png')
+
 plt.show()
