@@ -37,4 +37,9 @@ ax.set_xticks(range(len(unit_topics)))
 # Set the x-ticks labels to be the unit_topics
 ax.set_xticklabels(unit_topics)
 
+# Give the plot the title, x-axis and y-axis labels
+plt.title('Grade Distribution')
+plt.xlabel('Unit')
+plt.ylabel('Number of Students')
+
 plt.show()
