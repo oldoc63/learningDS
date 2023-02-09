@@ -10,3 +10,7 @@ Fs = [1, 0, 0, 3, 0]
 
 # Bs will go on top of As, but the bottom of Cs
 c_bottom = np.add(As, Bs)
+
+# Create d_bottom and f_bottom
+d_bottom = np.add(c_bottom, Cs)
+f_bottom = np.add(d_bottom, Ds)
