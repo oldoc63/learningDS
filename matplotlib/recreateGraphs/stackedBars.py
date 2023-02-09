@@ -31,4 +31,7 @@ plt.bar(range(len(Fs)), Fs, bottom=f_bottom)
 # Create a set of axes and save them to ax
 ax = plt.subplot()
 
+# Set the x-ticks to be range(len(unit_topics))
+ax.set_xticks(range(len(unit_topics)))
+
 plt.show()
