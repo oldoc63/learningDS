@@ -28,4 +28,7 @@ plt.bar(range(len(Cs)), Cs, bottom=c_bottom)
 plt.bar(range(len(Ds)), Ds, bottom=d_bottom)
 plt.bar(range(len(Fs)), Fs, bottom=f_bottom)
 
+# Create a set of axes and save them to ax
+ax = plt.subplot()
+
 plt.show()
