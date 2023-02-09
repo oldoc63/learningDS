@@ -14,3 +14,6 @@ c_bottom = np.add(As, Bs)
 # Create d_bottom and f_bottom
 d_bottom = np.add(c_bottom, Cs)
 f_bottom = np.add(d_bottom, Ds)
+
+# Create a figure of width 10 and height 8
+plt.figure(figsize=(10,8))
