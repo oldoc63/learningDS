@@ -34,4 +34,7 @@ ax = plt.subplot()
 # Set the x-ticks to be range(len(unit_topics))
 ax.set_xticks(range(len(unit_topics)))
 
+# Set the x-ticks labels to be the unit_topics
+ax.set_xticklabels(unit_topics)
+
 plt.show()
