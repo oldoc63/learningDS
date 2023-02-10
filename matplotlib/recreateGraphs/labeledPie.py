@@ -7,7 +7,10 @@ num_hardest_reported = [1, 3, 10, 15, 1]
 plt.figure(figsize=(10,8))
 
 # Plot the num_hardest_reported list as a pie chart
-plt.pie(num_hardest_reported)
+# Label the slices with the unit topic list
+# Put a percentage label on each slice
+plt.pie(num_hardest_reported, autopct='%d%%')
+plt.legend(unit_topics)
 
 
 plt.show()
