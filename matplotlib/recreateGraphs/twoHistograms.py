@@ -15,4 +15,9 @@ plt.hist(exam_scores2, bins=12, density=True, histtype='step', linewidth=2)
 # Create a legend
 plt.legend(['1st Yr Teaching', '2nd Yr Teaching'])
 
+# Add title, x-axis and y-axis labels
+plt.title('Final Exam Score Distribution')
+plt.xlabel('Percentage')
+plt.ylabel('Frequency')
+
 plt.show()
