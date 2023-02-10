@@ -12,5 +12,7 @@ plt.figure(figsize=(10,8))
 plt.pie(num_hardest_reported, autopct='%d%%')
 plt.legend(unit_topics)
 
+# Add the title
+plt.title('Hardest Topics')
 
 plt.show()
