@@ -14,4 +14,7 @@ plt.plot(exam_scores, hours_reported, linewidth=2)
 hours_lower_bound = [element - (element*.20) for element in hours_reported]
 hours_upper_bound = [element + (element*.20) for element in hours_reported]
 
+# Use plt.fill_between to shade the error area
+plt.fill_between(exam_scores, hours_lower_bound, hours_upper_bound, alpha=.2)
+
 plt.show()
