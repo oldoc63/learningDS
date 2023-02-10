@@ -6,5 +6,7 @@ exam_scores2 = [72.38, 71.28, 79.24, 83.86, 84.42, 79.38, 75.51, 76.63, 81.48,78
 # Create a figure of width 10 and height 8
 plt.figure(figsize=(10, 8))
 
+# Make a histogram of the exam_scores1, normalized, with 12 bins
+plt.hist(exam_scores1, bins=12, density=True)
 
 plt.show()
