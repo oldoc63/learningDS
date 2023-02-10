@@ -15,4 +15,7 @@ plt.legend(unit_topics)
 # Add the title
 plt.title('Hardest Topics')
 
+# Save your figure to a file called my_pie_chart.png
+plt.savefig('my_pie_chart.png')
+
 plt.show()
