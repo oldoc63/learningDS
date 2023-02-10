@@ -6,5 +6,8 @@ exam_scores = [52.53, 59.05, 61.15, 61.72, 62.58, 62.98, 64.99, 67.63, 68.52, 70
 # Create a figure of width 10 and height 8
 plt.figure(figsize=(10,8))
 
+# Plot exam_scores on the x-axis and the hours_reported on the y-axis
+# linewidth=2
+plt.plot(exam_scores, hours_reported, linewidth=2)
 
 plt.show()
