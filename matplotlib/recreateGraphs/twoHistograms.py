@@ -12,4 +12,7 @@ plt.hist(exam_scores1, bins=12, density=True, histtype='step', linewidth=2)
 # Make a histogram of the exam_scores2, normalized, with 12 bins
 plt.hist(exam_scores2, bins=12, density=True, histtype='step', linewidth=2)
 
+# Create a legend
+plt.legend(['1st Yr Teaching', '2nd Yr Teaching'])
+
 plt.show()
