@@ -10,4 +10,8 @@ plt.figure(figsize=(10,8))
 # linewidth=2
 plt.plot(exam_scores, hours_reported, linewidth=2)
 
+# Create your hours_lower_bound and hours_upper_bound lists
+hours_lower_bound = [element - (element*.20) for element in hours_reported]
+hours_upper_bound = [element + (element*.20) for element in hours_reported]
+
 plt.show()
