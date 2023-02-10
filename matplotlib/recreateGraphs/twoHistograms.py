@@ -9,4 +9,7 @@ plt.figure(figsize=(10, 8))
 # Make a histogram of the exam_scores1, normalized, with 12 bins
 plt.hist(exam_scores1, bins=12, density=True)
 
+# Make a histogram of the exam_scores2, normalized, with 12 bins
+plt.hist(exam_scores2, bins=12, density=True)
+
 plt.show()
