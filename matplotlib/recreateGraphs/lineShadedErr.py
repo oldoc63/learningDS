@@ -22,4 +22,7 @@ plt.title('Time spent studying vs final exam scores')
 plt.xlabel('Score')
 plt.ylabel('Hours studying (self-reported)')
 
+# Save your figure to a file called my_line_graph.png
+plt.savefig('my_line_graph.png')
+
 plt.show()
