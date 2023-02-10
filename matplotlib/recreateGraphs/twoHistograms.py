@@ -20,4 +20,7 @@ plt.title('Final Exam Score Distribution')
 plt.xlabel('Percentage')
 plt.ylabel('Frequency')
 
+# Save your figure to a file called my_histogram.png
+plt.savefig('my_histogram.png')
+
 plt.show()
