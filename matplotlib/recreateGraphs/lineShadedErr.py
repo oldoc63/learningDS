@@ -17,4 +17,9 @@ hours_upper_bound = [element + (element*.20) for element in hours_reported]
 # Use plt.fill_between to shade the error area
 plt.fill_between(exam_scores, hours_lower_bound, hours_upper_bound, alpha=.2)
 
+# Give the plot a title and label the axes
+plt.title('Time spent studying vs final exam scores')
+plt.xlabel('Score')
+plt.ylabel('Hours studying (self-reported)')
+
 plt.show()
