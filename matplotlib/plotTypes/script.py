@@ -8,6 +8,7 @@ x_values = range(len(heights))
 days_in_a_year = [88, 225, 365, 687, 4333, 10756, 30687, 60190, 90553]
 plt.bar(range(len(days_in_a_year)), days_in_a_year)
 plt.show()
+plt.savefig('number_of_days_in_different_planets.png')
 
 # Sales at MatplotSip Cafe
 drinks = ["cappuccino", "latte", "chai", "americano", "mocha", "espresso"]

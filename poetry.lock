@@ -1657,6 +1657,30 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "pyobject"
+version = "1.2.1"
+description = "一个提供操作Python底层对象工具的模块。A tool of operating internal python object with some submodules."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyobject-1.2.1-cp310-cp310-win32.whl", hash = "sha256:51a5234e249ede9e1795955653a5ca447827edfae9eea41526137213143578a0"},
+    {file = "pyobject-1.2.1-cp310-cp310-win_amd64.whl", hash = "sha256:164ad6e8ad90a289071e04217a82ebe94eeffa09d0a1f183450a49505e6e5485"},
+    {file = "pyobject-1.2.1-cp311-cp311-win32.whl", hash = "sha256:deab97dcbc0f5a33c1e25748de8bbad53c989bb7989ef7fcf83ac665de9cb298"},
+    {file = "pyobject-1.2.1-cp311-cp311-win_amd64.whl", hash = "sha256:e2a55855b9f8f3ce03d0e24a9bc7ce820cc90d573a8e53b0f7a52c6c0ada46fa"},
+    {file = "pyobject-1.2.1-cp36-cp36m-win32.whl", hash = "sha256:ce56e236ea4d94d33cda0392f6de039fdb5d96e24c1f719d85caaacdcc89e9a9"},
+    {file = "pyobject-1.2.1-cp36-cp36m-win_amd64.whl", hash = "sha256:778a36bbf3f85300cb664bce705d377c3b5e53efcac68c0c9d403a3e91136a72"},
+    {file = "pyobject-1.2.1-cp37-cp37m-win32.whl", hash = "sha256:f5429228db8fd9a7512a8acf01d523d2d118d3039bbe8a9b8c9350651adcc4f0"},
+    {file = "pyobject-1.2.1-cp37-cp37m-win_amd64.whl", hash = "sha256:8eeb513a60a4c83094b3396d2b60f01c8f196bffea9579623b6fd3bc4789bb3b"},
+    {file = "pyobject-1.2.1-cp38-cp38-win32.whl", hash = "sha256:639c7db28de6627b2c5a6bb9807cdd126dda963738090335c52b759d1905a0f4"},
+    {file = "pyobject-1.2.1-cp38-cp38-win_amd64.whl", hash = "sha256:60d5c6a099eb7de6e98f145f173e07281590cd8c52bcc42d5bddab4cbdb86d8a"},
+    {file = "pyobject-1.2.1-cp39-cp39-win32.whl", hash = "sha256:066b0f18e6a507690c1e22db0c0a5185d1ee94026cd07422a66aac96b568351b"},
+    {file = "pyobject-1.2.1-cp39-cp39-win_amd64.whl", hash = "sha256:33408c650e351c15571c356303dfa419ef3e6978216e987d1965e35e3a32d217"},
+    {file = "pyobject-1.2.1-py3--none-any.whl", hash = "sha256:510d23cc99d35adc730c08c92284d46f1d548ff72fce9f976063d283d11437eb"},
+    {file = "pyobject-1.2.1_.tar.gz", hash = "sha256:58dfd745ceb3552bdf916c525ea212abc9f02003cf31f3fe88797d9c9214db3e"},
+]
+
+[[package]]
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -2322,4 +2346,4 @@ test = ["websockets"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9792a4105a3051031133c4b16ed55c8c0892c345e63fa8782a348760dcfe3fa6"
+content-hash = "61833cc6c792fa180a4f34d2b7d8c379c9170e9eed2a768483f990494ac32e9a"
