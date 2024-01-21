@@ -115,6 +115,20 @@ $$
 instantaneous\ rate\ of\ change = \lim_{x\to 0} \frac{f(x + h) - f(x)}{h}
 $$
 
-This is called the /derivative at a point/, which is the function’s slope (rate of change) at a specific point. In the next few exercises, we will dive further into derivatives.
+This is called the /derivative at a point/, which is the function’s slope (rate of change) at a specific point. In the next few exercises, we will dive further into derivatives.\\
 
 *Note:* We have shown examples where h is positive, but it can also be a negative value approaching 0. 
+
+* The Derivative Function
+
+In the previous exercise, we discussed the idea of the derivative at a point as the instantaneous rate of change at that point. The idea behind the definition is that by finding how the function changes over increasingly small intervals starting at a point, we can understand how a function changes exactly at that point. The formal expression of this concept is written as:
+
+$$
+instantaneous\ rate\ of\ change = \lim_{x\to 0} \frac{f(x + h) - f(x)}{h}
+$$
+
+An equivalent interpretation is that the derivative is the slope of the tangent line at a point. A /tangent line/ at a point is the line that touches the function at that point. Just as the slope of a line describes how a "curvier" function changes at a specific point.
+
+Our discussion of taking increasingly smaller intervals in the last exercise gives us a way to calculate the derivative of a function at a point, but this would be a laborious process if we always had to find the derivative at a point this way.
+
+Fortunately, many common functions have corresponding derivative functions. Derivative functions are often denoted $f’(x)$ (read f prime of x) or $df/dx$ (read derivative of f at x). If $f(x)$ represents the function value at a point $x$, the corresponding derivative function $f’(x)$ represents how a function is changing at the same point $x$. Essentially, it saves us from having to draw a tangent line or take a limit to compute the derivative at a point. In later exercises, we will see a number of different rules at our disposal that allow us to calculate the derivatives of common functions. 
