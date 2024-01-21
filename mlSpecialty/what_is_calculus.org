@@ -132,3 +132,21 @@ An equivalent interpretation is that the derivative is the slope of the tangent 
 Our discussion of taking increasingly smaller intervals in the last exercise gives us a way to calculate the derivative of a function at a point, but this would be a laborious process if we always had to find the derivative at a point this way.
 
 Fortunately, many common functions have corresponding derivative functions. Derivative functions are often denoted $f’(x)$ (read f prime of x) or $df/dx$ (read derivative of f at x). If $f(x)$ represents the function value at a point $x$, the corresponding derivative function $f’(x)$ represents how a function is changing at the same point $x$. Essentially, it saves us from having to draw a tangent line or take a limit to compute the derivative at a point. In later exercises, we will see a number of different rules at our disposal that allow us to calculate the derivatives of common functions. 
+
+* Properties of the Derivative Function
+
+Derivative function contains important information. Let's look at a couple of examples. Going back to our running example, $f(t)$ describes a runner's position as a function of time; therefore, the derivative function $f'(x)$ describes the runner's speed at any time $t$. Let's say we have a function $s(t)$ that describes the real-time sales of a particular product; the corresponding derivative function $s'(t)$ describes how those sales are changing in real time.
+
+Let's look at the general information we can get as well. If $f'(x) > 0$, the corresponding function $f(x)$ is /increasing./ Keep in mind that $f(x)$ itself may be negative even though the derivative $f'(x)$ is positive. The derivative says nothing about the value of the original function, only about /how it is changing./ Similarly, if $f'(x) < 0$, then the original function is /decreasing./
+
+If f’(x) = 0, then the function is /not changing./ This can mean one of a few things.
+
+    - It may mean that the function has reached a /local maximum/ (or maxima). A local maximum is a value of x where f’(x) changes from positive to negative and thus hits 0 along the way. In f(x), the local maximum is /higher/ than all the points around it.
+      
+    - It may also mean that the function has reached what is called a /local minimum./ A local minimum is /lower/ than the points around it. When f’(x) goes from negative values to 0 to positive values, a local minimum forms.
+
+    - It may be an /inflection point./ This is a point where a function has a change in the direction of curvature. For example, the curve of the function goes from “facing down” to “facing up.” Finding inflection points involves a second derivative test, which we will not get to in this lesson.
+
+/Global maxima/ and /global minima/ are the largest or smallest over the /entire range/ of a function.
+In machine learning models, maxima and minima are key concepts as they’re usually what we are trying to find when we optimize!
+
