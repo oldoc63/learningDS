@@ -227,3 +227,60 @@ This is because for a constant there is never any change in value, so the deriva
 $$
 \frac{d}{dx}5 = 0
 $$
+
+*Differentiating* is to take the derivative of things like:
+
+$$
+4\log(x)
+$$
+
+$$
+x^2 + \log(x)
+$$
+
+$$
+x^2log(x)
+$$
+
+Our final step is to understand how to differentiate specific items themselves, like $log(x)$ and $x^2$.
+
+Let's start off with how to differentiate /polynomials/. As a reminder, these are expressions that include the following operations:
+
+    - addition
+    - subtraction
+    - multiplication
+    - nonnegative exponents
+
+For example:
+
+$$
+3x^4 - 2x^2 + 4
+$$
+
+To differentiate polynomials, we use the /power rule./ This states the following:
+
+$$
+\frac{d}{dx}x^n = nx^{n - 1} 
+$$
+
+To take the derivative of $3x^4$, we do the following:
+
+$$
+\frac{d}{dx}3x^4 = 4 * 3x^{4 - 1} = 12x^3
+$$
+
+Let’s try a challenging problem. Find the derivative of the following polynomial:
+
+$$
+4x^5 +2x
+$$
+
+Remember, we can take the derivative of summed terms separately!
+
+$$
+\begin {align}
+\frac{d}{dx}(4x^5 +2x) &= \frac{d}{dx}(4x^5) + \frac{d}{dx}(2x)\\
+\frac{d}{dx}(4x^5 +2x) &= 5 * 4 * x^{5-1} + 1 * 2x^{1-1}\\
+\frac{d}{dx}(4x^5 +2x) &= 20x^4 + 2
+\end {align}
+$$
