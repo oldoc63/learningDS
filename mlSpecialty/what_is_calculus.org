@@ -114,3 +114,7 @@ Using limits, we can make h very small. By taking the limit as h goes to 0, we c
 $$
 instantaneous\ rate\ of\ change = \lim_{x\to 0} \frac{f(x + h) - f(x)}{h}
 $$
+
+This is called the /derivative at a point/, which is the function’s slope (rate of change) at a specific point. In the next few exercises, we will dive further into derivatives.
+
+*Note:* We have shown examples where h is positive, but it can also be a negative value approaching 0. 
