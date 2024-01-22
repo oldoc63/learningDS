@@ -1,0 +1,95 @@
+* Calculating Derivatives in Python
+
+We’ve discussed how to compute derivatives by hand. However, oftentimes when working on a computer, we have functions given to us in array form rather than an explicit equation. In this exercise, we will investigate how to calculate derivatives using Python.
+
+For example, let’s say we have an array that represents the following function:
+
+$$
+f(x) = x^2 + 3
+$$
+
+We can define this function in two sets of arrays using the following code:
+
+#+begin_src python
+  from math import pow
+  # dx is the "step" between each x value
+  dx = 0.05
+  def f(x):
+    # to calculate the y values of the function
+    return pow(x, 2) + 3
+  # x values
+  f_array_x = [x for x in np.arange(0,4,dx)]
+  # y values
+  f_array_y = [f(x) for x in np.arange(0,4,dx)]
+#+end_src
+
+The ~pow()~ function within the ~f(x)~ function we defined allows us to calculate the values of $x^2$, and we use a list comprehension to create a list of the y-values in a variable called ~f_array_y~.
+
+To compute the derivative of ~f_array~, we use a NumPy function called ~gradient()~.
+
+#+begin_src python
+  f_array_deriv = np.gradient(f_array_y, dx)
+#+end_src
+
+~gradient()~ takes in an array (in this case, a one-dimensional array) as its first argument. We also need to specify the distance between the x values, which is ~dx~. For a one-dimensional array, ~gradient()~ calculates the rate of change using the following formula:
+
+$$
+\frac{\Delta y}{\Delta x} = \frac{Change\ in\ y}{Change\ in\ x}
+$$
+
+As we know from the limit definition of the derivative, we want “Change in x” to be as small as possible, so we get an accurate instantaneous rate of change for each point.
+
+* Instructions
+
+In the script, we have code that defines and plots the following function:
+
+$$
+f(x) = \sin(x)
+$$
+
+~sin_x~ contains the x-values, while ~sin_y~ contains the y-values.
+
+Define a variable ~sin_deriv~ that calculates the derivative of f(x) = sin(x).
+
+Uncomment the following line of code to plot ~sin_deriv~:
+
+#+begin_src python
+plt.plot(sin_x, sin_deriv)
+#+end_src
+
+What does the new plot look like?
+
+The new plot looks like the function f(x) = cos(x). This makes sense because:
+
+$$
+\frac{d}{dx} \sin(x) = \cos(x)
+$$
+
+Let’s play around with the dx variable. Change the value of ~dx~ from 0.01 to 1. 
+
+What do you notice about the graphs after you hit run? Does the accuracy of your calculation appear to increase or decrease?
+
+** Script.py
+
+#+begin_src python :results output
+  import numpy as np
+  from math import pow
+  from math import sin
+  import matplotlib.pyplot as plt
+
+  # our change in x value
+  dx = 0.01
+  def f(x):
+      return sin(x)
+  sin_y = [f(x) for x in np.arange(0,20,dx)] 
+  sin_x = [x for x in np.arange(0,20,dx)]
+
+  # Define your derivative here
+  sin_deriv = np.gradient(sin_y,dx)
+
+  plt.plot(sin_x, sin_y)
+  plt.plot(sin_x, sin_deriv)
+  plt.show()
+#+end_src
+
+#+RESULTS:

@@ -302,3 +302,45 @@ $$
 $$
 \frac{d}{dx}\cos(x) = -\sin(x)
 $$
+
+Let's use these rules to try out some practice problems:
+
+** Practice Problem 1
+
+$$
+2x + \ln(x) + \cos(x)
+$$
+
+Take the derivative of each term separately!
+
+$$
+\frac{d}{dx}(2x + \ln(x) + \cos(x)) = \frac{d}{dx} (2x) + \frac{d}{dx} (\ln (x)) + \frac{d}{dx} (\cos (x))
+$$
+
+$$
+\frac{d}{dx}(2x + \ln(x) + \cos(x)) = 2 + \frac{1}{x} - \sin(x)
+$$
+
+** Practice Problem 2
+
+$$
+2x * \ln(x)
+$$
+
+Use the product rule!
+
+$$
+\frac{d}{dx}(2x * \ln(x)) = 2x\frac{d}{dx}(\ln(x)) + \ln(x)\frac{d}{dx}(2x)
+$$
+
+$$
+\frac{d}{dx}(2x * \ln(x)) = 2x * \frac{1}{x} + \ln(x) + 2
+$$
+
+$$
+\frac{d}{dx}(2x * \ln(x)) = 2\ln(x) + 2
+$$
+
+** Advice
+
+Taking derivatives is something that takes plenty of practice to get the hang of. As a learner in this course, your biggest takeaway should be that we can differentiate many common functions by using some combination of these rules in tandem.
