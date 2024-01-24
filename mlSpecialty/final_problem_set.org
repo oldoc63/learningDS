@@ -15,3 +15,85 @@ Here are some things you should know before you begin:
 *** Problem 1
 Set A is the set of all multiples of 2. Set B is the set of all multiples of 5. Set C is the set of all multiples of 7. What is A $\cap$ B $\cap$ C ?
 
+**** Answer
+The symbol $\cap$ represents the intersection of sets. In this case, A $\cap$ B $\cap$ C refers to the set containing elements that belong to **all three sets A, B, and C**.
+
+1. **Multiples of 2:** 2, 4, 6, 8, 10, 12, ...
+2. **Multiples of 5:** 5, 10, 15, 20, 25, 30, ...
+3. **Multiples of 7:** 7, 14, 21, 28, 35, ...
+
+Looking at all three sets, we can see that only the number **10** is a common element, as it is a multiple of 2, 5, and 7.
+
+Therefore, A $\cap$ B $\cap$ C = {10}.
+
+In other words, the only element that belongs to all three sets, the set of multiples of 2, 5, and 7, is 10.
+
+*** Problem 2
+We roll three six-sided dice. What is the probability that all rolls come up as a six?
+
+**** Answer
+Each die has a 1/6 chance of rolling a six. Since the rolls are independent, we multiply the probabilities to get the probability of all three rolls being sixes:
+
+Probability of all sixes = (1/6) * (1/6) * (1/6) = 1/216
+
+Therefore, the probability of rolling all sixes is 1/216, which is about 0.46%.
+
+*** Problem 3
+A patient goes to see their doctor to get tested for a virus. The test is accurate 95% of the time given a patient has the virus, but it is only 80% accurate given they do not have the virus. The doctor giving the test knows that about 4% of the city has the virus. If the patient tests negative, what are the chances that they actually do have the virus?
+
+Start off by organizing what we know:
+
+P(+∣virus)=0.95 Probability of positive test given patient has virusP(−∣virus)=0.05 Probability of negative test given patient has virusP(+∣no virus)=0.20 Probability of positive test given patient has no virusP(−∣no virus)=0.80 Probability of negative test given patient has no virusP(virus)=0.04 Probability patient has virusP(no virus)=0.96 Probability patient has no virusP(+∣virus)=0.95 Probability of positive test given patient has virusP(−∣virus)=0.05 Probability of negative test given patient has virusP(+∣no virus)=0.20 Probability of positive test given patient has no virusP(−∣no virus)=0.80 Probability of negative test given patient has no virusP(virus)=0.04 Probability patient has virusP(no virus)=0.96 Probability patient has no virus​
+
+We are looking for:
+
+P(virus∣−)P(virus∣−)
+
+Using Bayes’ Theorem, we write out:
+
+P(virus∣−)=P(−∣virus)⋅P(virus)P(−)P(virus∣−)=P(−)
+
+P(−∣virus)⋅P(virus)​
+
+We can find P(-) by summing two events:
+
+P(−)=P(− and no virus)+P(− and virus)P(−)=P(− and no virus)+P(− and virus)
+
+Recall that:
+
+P(A∣B)⋅P(B)=P(A and B)P(A∣B)⋅P(B)=P(A and B)
+
+Therefore, we say:
+
+P(− and no virus)+P(− and virus)=P(−∣no virus)⋅P(no virus)+P(−∣virus)⋅P(virus)P(− and no virus)+P(− and virus)=P(−∣no virus)⋅P(no virus)+P(−∣virus)⋅P(virus)​
+
+Plugging this into the Bayes’ theorem equation, we have:
+
+P(virus∣−)=P(−∣virus)⋅P(virus)P(−∣no virus)⋅P(no virus)+P(−∣virus)⋅P(virus)P(virus∣−)=P(−∣no virus)⋅P(no virus)+P(−∣virus)⋅P(virus)
+
+P(−∣virus)⋅P(virus)​
+
+Finally, plugging in numbers, we have:
+
+P(virus∣−)≈.003P(virus∣−)≈.003
+
+Therefore, even though the test is not 100 percent accurate, we know there is only about one third of one percent chance a patient has the virus given they test negative.
+
+*** Problem 4
+Write a python program that calculates the average of my_array in a variable called my_array_average using numpy.
+
+#+begin_src python :results output
+import numpy as np
+
+# Define your array here
+my_array = np.array([1, 2, 3, 4, 5])
+
+# Calculate the average using numpy.mean
+my_array_average = np.mean(my_array)
+
+# Print the average
+print(f"The average of my_array is: {my_array_average}")
+#+end_src
+
+#+RESULTS:
+: The average of my_array is: 3.0

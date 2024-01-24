@@ -8,14 +8,14 @@ This mostly comes down to testing hypotheses and designing experiments. Sometime
 
 Though you’ve had an introduction to Hypothesis testing already, to work as an Inferential or Machine Learning Data Scientist, we will go a little deeper to develop a more sophisticated toolset in this area.
 
-* What will Statistics Fundamentals Part II cover?
+** What will Statistics Fundamentals Part II cover?
 - Test the strength of an association between two variables
 - Design experiments
 - Conduct A/B Tests
 - Calculate the necessary sample size for an experiment
 - Apply your hypothesis testing skills to new projects
 
-* Why did we build this?
+** Why did we build this?
 To make claims about data, you need statistics to back you up. This unit will equip you with everything you need to make reliable claims about data.
 
 * Hypothesis Testing
@@ -33,3 +33,173 @@ Suppose that a company is considering a new color-scheme for their website. They
 
 One way of testing this is with a 2-sample t-test. The null hypothesis for this test is that average length of a visit does not differ based on the color of the website. In other words, if we could observe all site visitors in two alternate universes (one where they see each version of the site), the average visiting times in these universes would be equal.
 
+We can use SciPy’s ~ttest_ind()~ function to perform a 2-sample t-test. It takes the values for each group as inputs and returns the t-statistic (not covered in this course) and a p-value:
+
+#+begin_src python
+from scipy.stats import ttest_ind
+tstat, pval = ttest_ind(times_version1, times_version2)
+#+end_src
+
+By default, ~ttest_ind()~ runs a two-sided test.
+
+**** Instructions
+***** Task 1
+The company randomly sampled 100 site visitors. They showed the old version of their website to half of their sample and the new version to the other half. The amount of time (in minutes) that each visitor spent on the website was recorded.
+
+An overlaid histogram showing the amount of time spent on the website by visitors to the new and old versions has already been created for you in script.py. Press “Run” and inspect the histograms. Based on this picture, do you think there is a significant association between the version of the website a visitor saw and how long they spent on the site?
+
+#+begin_src python
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import ttest_ind
+data = pd.read_csv('version_time.csv')
+
+#separate out times for  two versions
+old = data.time_minutes[data.version=='old']
+new = data.time_minutes[data.version=='new']
+
+#run the t-test here:
+
+
+#determine significance
+significant = None
+
+#plot overlapping histograms
+plt.hist(old, alpha=.8, label='old')
+plt.hist(new, alpha=.8, label='new')
+plt.legend()
+plt.show()
+#+end_src
+
+#+RESULTS:
+: None
+
+***** Task 2
+The data from this study has already been saved for you in script.py: the time spent by the 50 visitors to the old version is saved as ~old~; the time spent by visitors to the new version is saved as ~new~. Run a two-sample t-test comparing these groups and save the p-value as ~pval~, then print it out.
+
+#+begin_src python :results output
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import ttest_ind
+data = pd.read_csv('version_time.csv')
+
+#separate out times for  two versions
+old = data.time_minutes[data.version=='old']
+new = data.time_minutes[data.version=='new']
+
+#run the t-test here:
+tstat, pval = ttest_ind(old, new)
+print(pval)
+
+#determine significance
+significant = None
+
+#plot overlapping histograms
+plt.hist(old, alpha=.8, label='old')
+plt.hist(new, alpha=.8, label='new')
+plt.legend()
+plt.show()
+
+#+end_src
+
+#+RESULTS:
+: 0.0020408264429904
+
+***** Task 3
+Using a significance threshold of 0.05, is there a significant difference between the average amount of time visitors are spending on the old and new versions of the website? In script.py set the value of ~significant~ equal to ~True~ if there is a significant difference and ~False~ if not.
+
+#+begin_src python :results output
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import ttest_ind
+data = pd.read_csv('version_time.csv')
+
+#separate out times for  two versions
+old = data.time_minutes[data.version=='old']
+new = data.time_minutes[data.version=='new']
+
+#run the t-test here:
+tstat, pval = ttest_ind(old, new)
+print(pval)
+
+#determine significance
+significant = True
+
+#plot overlapping histograms
+plt.hist(old, alpha=.8, label='old')
+plt.hist(new, alpha=.8, label='new')
+plt.legend()
+plt.show()
+
+#+end_src
+
+#+RESULTS:
+: 0.0020408264429904
+
+If the p-value is less than 0.05, we can conclude there is a significant difference.
+
+*** Multiple Test
+In the previous exercise, we used a two-sample t-test to investigate an association between a quantitative variable (time spent on a website) and a binary categorical variable (an old color scheme or a new color scheme).
+
+In some circumstances, we might instead care about an association between a quantitative variable and a non-binary categorical variable (non-binary means more than two categories).
+
+For example, suppose that we own a chain of stores that sell ants, called VeryAnts. There are three different locations: A, B, and C. We want to know whether customers are spending a significantly different amount per order at any of the locations.
+
+There are three different comparisons we could make: A vs. B, B vs. C, and A vs. C. One way to answer our question is to simply run three separate 2-sample t-tests.
+
+**** Instructions
+***** Task 1
+We have created samples a, b, and c, representing the amount (in U.S.D) spent on orders at VeryAnts at locations A, B, and C, respectively. We want to see if there’s a significant difference in the average spending per order at the three locations.
+
+Code has been provided for you to generate side by side box plots of the sales at each of these stores. Based on this visualization, are there any stores where customers appear to be spending more or less money?
+
+#+begin_quote
+*Hint*
+
+It looks like the largest difference is between stores A and B (the orange box is clearly higher than the blue box). For the other comparisons (A vs. C and B vs. C), it’s a little harder to tell.
+#+end_quote
+
+***** Task 2
+- Perform a 2-Sample T-test between each pair of location data.
+
+- Store the p-values in variables called ~a_b_pval~, ~a_c_pval~, and ~b_c_pval~. Print them to the console.
+
+- Note that you may see numbers in scientific notation in the print out of one or more p-values. If you see something like e-05 at the end of a number, that means that the preceding number is multiplied by 10^(-5). In other words, 2.5134230524e-05 is equal to 0.000025134230524.
+
+***** Task 3
+Inspect the p-values that you printed out. Using a significance level of 0.05, for which pairs of stores did you find a significant difference between the average sale price? Assign the values of ~a_b_significant~, ~a_c_significant~, ~b_c_significant~ to ~True~ if the p-value indicates a significant difference and ~False~ if the p-value does not indicate a significant difference.
+
+#+begin_src python :results output
+from scipy.stats import ttest_ind
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# store the data
+veryants = pd.read_csv('veryants.csv')
+a = veryants.Sale[veryants.Store == 'A']
+b = veryants.Sale[veryants.Store == 'B']
+c = veryants.Sale[veryants.Store == 'C']
+
+# run t-tests
+a_b_tval, a_b_pval = ttest_ind(a,b)
+print(a_b_pval)
+a_c_tval, a_c_pval = ttest_ind(a,c)
+print(a_c_pval)
+b_c_tval, b_c_pval = ttest_ind(b,c)
+print(b_c_pval)
+
+# determine significance
+a_b_significant = True
+a_c_significant = True
+b_c_significant = False
+
+# create plot
+sns.boxplot(data=veryants, x='Store', y='Sale')
+plt.show()
+#+end_src
+
+#+RESULTS:
+: 2.769886558708305e-05
+: 0.02102938693149484
+: 0.05986788486166067
