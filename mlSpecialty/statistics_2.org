@@ -1,0 +1,35 @@
+* Introduction: Statistics Fundamentals Part II
+** Discover what you will learn in Statistics Fundamentals Part II
+The ‘Science’ part of Data Science comes from using the scientific method to get results. A lot of what Data Scientists do is conduct experiments with data that already exists. This presents some unique challenges compared to creating a completely new data set.
+
+For starters, the data might not address exactly what you want it to, it might be incidental data from multiple sources that you have to reconcile. Whatever the case may be, it’s the responsibility of the Data Scientist to still analyze that data with the same rigor as they might analyze the results of a lab experiment.
+
+This mostly comes down to testing hypotheses and designing experiments. Sometimes those experiments are in the shape of A/B tests - like when evaluating two variables. Sometimes they are testing the strength of a relationship between two variables.
+
+Though you’ve had an introduction to Hypothesis testing already, to work as an Inferential or Machine Learning Data Scientist, we will go a little deeper to develop a more sophisticated toolset in this area.
+
+* What will Statistics Fundamentals Part II cover?
+- Test the strength of an association between two variables
+- Design experiments
+- Conduct A/B Tests
+- Calculate the necessary sample size for an experiment
+- Apply your hypothesis testing skills to new projects
+
+* Why did we build this?
+To make claims about data, you need statistics to back you up. This unit will equip you with everything you need to make reliable claims about data.
+
+* Hypothesis Testing
+
+** Associations
+In this lesson, we’ll use hypothesis tests to make inference about population-level associations between two variables.
+
+We will cover four different hypothesis tests:
+- Two Sample T-Tests (for an association between a quantitative variable and a binary categorical variable)
+- ANOVA and Tukey Tests (for an association between a quantitative variable and a non-binary categorical variable)
+- Chi-Square Tests (for an association between two categorical variables)
+
+*** Two-Sample T-Test
+Suppose that a company is considering a new color-scheme for their website. They think that visitors will spend more time on the site if it is brightly colored. To test this theory, the company shows the old and new versions of the website to 50 site visitors, each — and finds that, on average, visitors spent 2 minutes longer on the new version compared to the old. Will this be true of future visitors as well? Or could this have happened by random chance among the 100 people in this sample?
+
+One way of testing this is with a 2-sample t-test. The null hypothesis for this test is that average length of a visit does not differ based on the color of the website. In other words, if we could observe all site visitors in two alternate universes (one where they see each version of the site), the average visiting times in these universes would be equal.
+
