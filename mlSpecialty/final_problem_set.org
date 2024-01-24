@@ -1,0 +1,17 @@
+
+* Final Problem Set
+Assess your math skills with a problem set.
+
+Congrats for making it through Fundamental Math for Data Science! To assess your knowledge of content from the path, we put together some questions for you to try.
+
+Here are some things you should know before you begin:
+
+    Some problems are designed to be done by hand, while some are coding questions.
+    All problems are based on the material taught in the exercises; using outside sources to solve these problems is discouraged.
+    If you feel stuck, feel free to use the hint provided to help you out.
+    When you submit your final answer, an example solution will be provided to you so you can compare both your answer and strategy to solve it.
+
+** Probability Questions
+*** Problem 1
+Set A is the set of all multiples of 2. Set B is the set of all multiples of 5. Set C is the set of all multiples of 7. What is A $\cap$ B $\cap$ C ?
+

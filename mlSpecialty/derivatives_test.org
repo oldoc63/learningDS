@@ -1,0 +1,46 @@
+
+* Derivatives Test
+** Find the derivative of the following function: $f(x) = 2x^4 + e^x - \sin(x)$
+
+1. **Recognize the function components:** The function f(x) consists of three basic components: a **polynomial term**, an **exponential term**, and a **trigonometric term**. Each term requires a different differentiation rule.
+2. **Differentiate the polynomial term:** The derivative of 2x^4 is simply 8x^3, obtained by applying the power rule: d/dx(x^n) = nx^(n-1).
+3. **Differentiate the exponential term:** The derivative of e^x is itself, e^x, according to the exponential rule: d/dx(e^x) = e^x.
+4. **Differentiate the trigonometric term:** The derivative of sin(x) is cos(x), using the derivative rule for sine: d/dx(sin(x)) = cos(x).
+5. **Combine the differentiated terms:** Since differentiation is linear, we can simply add the derivatives of each term: d/dx(f(x)) = d/dx(2x^4) + d/dx(e^x) - d/dx(sin(x)) = 8x^3 + e^x - cos(x).
+
+Therefore, the derivative of f(x) is 8x^3 + e^x - cos(x).
+
+Here's a summary of the steps:
+
+- **Component:** 2x^4 | e^x | sin(x)
+- **Rule:** Power rule | Exponential rule | Sine rule
+- **Derivative:** 8x^3 | e^x | cos(x)
+- **Combined derivative:** 8x^3 + e^x - cos(x)
+
+** Having $f'(x) = 2x^2 - 3$, is the function increasing, decreasing or neither. Explain.
+
+To determine if the function f(x) is increasing, decreasing, or neither, we need to analyze its derivative, f'(x) = 2x^2 - 3. Here's how we proceed:
+
+
+**1. Find the critical points:**
+These are the points where the derivative is 0 or undefined. In this case, f'(x) = 0 when 2x^2 = 3, which leads to x = ±√(3/2). However, f'(x) is a polynomial and therefore defined for all real numbers. Therefore, the critical points are x = √(3/2) and x = -√(3/2).\\
+
+**2. Analyze the intervals between the critical points:** We can split the real number line into three intervals:
+
+- **Interval 1:** (-\infty, -\sqrt{(3/2)}).
+- **Interval 2:** (-\sqrt{(3/2)}, \sqrt{(3/2)}).
+- **Interval 3:** (\sqrt{(3/2)},\infty).
+
+**3. Evaluate the derivative at each interval:**
+Choose any x-value within each interval and evaluate f'(x) at that point. If the result is positive, the function is increasing in that interval; if it's negative, the function is decreasing.
+
+- **Interval 1:** Let's choose x = -1. Then, f'(-1) = 2(-1)^2 - 3 = -1. Therefore, f(x) is **decreasing** on interval 1.
+- **Interval 2:** Let's choose x = 0. Then, f'(0) = 2(0)^2 - 3 = -3. Therefore, f(x) is **decreasing** on interval 2.
+- **Interval 3:** Let's choose x = 1. Then, f'(1) = 2(1)^2 - 3 = -1. Therefore, f(x) is **decreasing** on interval 3.
+
+**4. Conclusion:**
+Since f'(x) is negative for all real numbers, the function f(x) is **decreasing** throughout its entire domain.
+
+**Therefore, f(x) is always decreasing, not increasing or neither.**
+
+I hope this explanation clarifies the monotonicity analysis of f(x). If you have any further questions or would like to see specific calculations for each interval, feel free to ask!
