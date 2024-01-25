@@ -169,8 +169,34 @@ It looks like the largest difference is between stores A and B (the orange box i
 ***** Task 3
 Inspect the p-values that you printed out. Using a significance level of 0.05, for which pairs of stores did you find a significant difference between the average sale price? Assign the values of ~a_b_significant~, ~a_c_significant~, ~b_c_significant~ to ~True~ if the p-value indicates a significant difference and ~False~ if the p-value does not indicate a significant difference.
 
+*** ANOVA
+In the last exercise, we ran three separate 2-sample t-tests to investigate an association between a quantitative variable (amount spent per sale) and a non-binary categorical variable (location of VeryAnts visited, with options A, B, and C). The problem with this approach is that it inflates our probability of a type I error; the more tests we run, the worse the problem becomes!
+
+In this situation, one approach is to instead use ANOVA (Analysis of Variance). ANOVA tests the null hypothesis that all groups have the same population mean (eg., the true average price of a sale is the same at every location of VeryAnts).
+
+In Python, we can use the SciPy function f_oneway() to perform an ANOVA. f_oneway() has two outputs: the F-statistic (not covered in this course) and the p-value. If we were comparing scores on a video-game for math majors, writing majors, and psychology majors, we could run an ANOVA test with this line:
+
+#+begin_src python
+from scipy.stats import f_oneway
+fstat, pval = f_oneway(scores_mathematicians, scores_writers, scores_psychologists)
+#+end_src
+
+If the p-value is below our significance threshold, we can conclude that at least one pair of our groups earned significantly different scores on average; however, we won’t know which pair until we investigate further!
+
+**** Instructions
+***** Task One
+The same data from the previous exercise is available to you in the workspace: costs of sales made at three locations of VeryAnts (saved as a, b, and c).
+
+Perform an ANOVA test on a, b, and c and store the p-value in a variable called pval, then print it out.
+
+***** Task Two
+At a .05 significance level, does this p-value lead you to reject the null hypothesis (and conclude that at least one pair of stores have significantly different average sales)?
+
+Change the value of significant to True if the p-value indicates at least one pair of stores have significantly different sales and False otherwise.
+
+
 #+begin_src python :results output
-from scipy.stats import ttest_ind
+from scipy.stats import ttest_ind, f_oneway
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -194,6 +220,13 @@ a_b_significant = True
 a_c_significant = True
 b_c_significant = False
 
+#ANOVA
+fstat, pval = f_oneway(a, b, c)
+print("Anova: ", pval)
+
+#ANOVA significance (True or False)
+anova_significance = True
+
 # create plot
 sns.boxplot(data=veryants, x='Store', y='Sale')
 plt.show()
@@ -203,3 +236,5 @@ plt.show()
 : 2.769886558708305e-05
 : 0.02102938693149484
 : 0.05986788486166067
+: Anova:  0.00015355234908845413
+
