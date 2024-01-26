@@ -174,7 +174,7 @@ In the last exercise, we ran three separate 2-sample t-tests to investigate an a
 
 In this situation, one approach is to instead use ANOVA (Analysis of Variance). ANOVA tests the null hypothesis that all groups have the same population mean (eg., the true average price of a sale is the same at every location of VeryAnts).
 
-In Python, we can use the SciPy function f_oneway() to perform an ANOVA. f_oneway() has two outputs: the F-statistic (not covered in this course) and the p-value. If we were comparing scores on a video-game for math majors, writing majors, and psychology majors, we could run an ANOVA test with this line:
+In Python, we can use the SciPy function ~f_oneway()~ to perform an ANOVA. ~f_oneway()~ has two outputs: the F-statistic (not covered in this course) and the p-value. If we were comparing scores on a video-game for math majors, writing majors, and psychology majors, we could run an ANOVA test with this line:
 
 #+begin_src python
 from scipy.stats import f_oneway
@@ -238,3 +238,68 @@ plt.show()
 : 0.05986788486166067
 : Anova:  0.00015355234908845413
 
+*** Tukey's Range Test
+Let’s say that we have performed an ANOVA to compare sales at the three VeryAnts stores. We calculated a p-value less than 0.05 and concluded that there is a significant difference between at least one pair of stores.
+
+Now, we want to find out *which* pair of stores are different. This is where Tukey’s range test comes in handy!
+
+In Python, we can perform Tukey’s range test using the ~statsmodels~ function ~pairwise_tukeyhsd()~. For example, suppose we are again comparing video-game scores for math majors, writing majors, and psychology majors. We have a dataset named ~data~ with two columns: ~score~ and ~major~. We could run Tukey’s range test with a type I error rate of 0.05 as follows:
+
+#+begin_src python
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+tukey_results = pairwise_tukeyhsd(data.score, data.major, 0.05)
+print(tukey_results)
+#+end_src
+
+[[./tukey.png]]
+
+Tukey’s range test is similar to running three separate 2-sample t-tests, except that it runs all of these tests simultaneously in order to preserve the type I error rate.
+
+The function output is a table, with one row per pair-wise comparison. For every comparison where reject is True, we “reject the null hypothesis” and conclude there is a significant difference between those two groups. For example, in the output above, we would conclude that there is a significant difference between scores for math and writing majors, but no significant difference in scores for the other comparisons.
+
+**** Intructions
+***** Task 1
+The veryants dataset is provided for you once again in script.py. The Store column represents the store that a sale was made at ('A', 'B', or 'C') and the Sale column represents the cost of a sale in U.S.D.
+
+Run Tukey’s range test with a type I error rate of 0.05 to determine whether average sales are different at any pair of two stores and save the result as tukey_results, then print it out.
+
+***** Task 2
+Inspect the output from the test you just ran. For which pairs of stores did you find a significant difference in average sales?
+
+Assign the values of a_b_significant, a_c_significant b_c_significant to True if the test indicates a significant difference in sales at the indicated pair of stores and False if not.
+
+Recall that when we ran three t-tests, we found significant differences for the A vs. B and A vs. C comparisons. Do we get the same result with this test?
+
+#+begin_quote
+*Answer*
+
+Look at the reject column of the output. If reject is True then there is a significant difference between those groups.
+#+end_quote
+
+#+begin_src python :results output
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+import pandas as pd
+
+# store the data
+veryants = pd.read_csv('veryants.csv')
+
+# run tukey's test
+tukey_results = pairwise_tukeyhsd(veryants.Sale, veryants.Store, 0.05)
+print(tukey_results)
+
+# determine significance
+a_b_significant = True
+a_c_significant = False
+b_c_significant = False
+#+end_src
+
+#+RESULTS:
+: Multiple Comparison of Means - Tukey HSD, FWER=0.05 
+: ====================================================
+: group1 group2 meandiff p-adj   lower   upper  reject
+: ----------------------------------------------------
+:      A      B   7.2763 0.0001  3.2264 11.3263   True
+:      A      C    4.011 0.0529 -0.0389  8.0609  False
+:      B      C  -3.2653  0.141 -7.3153  0.7846  False
+: ----------------------------------------------------
