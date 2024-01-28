@@ -267,7 +267,7 @@ Run Tukey’s range test with a type I error rate of 0.05 to determine whether a
 ***** Task 2
 Inspect the output from the test you just ran. For which pairs of stores did you find a significant difference in average sales?
 
-Assign the values of a_b_significant, a_c_significant b_c_significant to True if the test indicates a significant difference in sales at the indicated pair of stores and False if not.
+Assign the values of ~a_b_significant~, ~a_c_significant~ and ~b_c_significant~ to True if the test indicates a significant difference in sales at the indicated pair of stores and False if not.
 
 Recall that when we ran three t-tests, we found significant differences for the A vs. B and A vs. C comparisons. Do we get the same result with this test?
 
@@ -303,3 +303,190 @@ b_c_significant = False
 :      A      C    4.011 0.0529 -0.0389  8.0609  False
 :      B      C  -3.2653  0.141 -7.3153  0.7846  False
 : ----------------------------------------------------
+
+*** Assumptions of T-Tests, ANOVA, and Tukey
+Before we use a two sample t-test, ANOVA, or Tukey’s range test, we need to be sure that the following things are true:
+
+**** The observations should be independently randomly sampled from the population
+Suppose the population we are interested in is all visitors to a website. Random sampling will help ensure that our sample is representative of the population we care about. For example, if we only sample site visitors on Halloween, those visitors may behave differently from the general population. In practice, this can be a challenging assumption to meet, but it’s important to be aware of.
+
+**** The standard deviations of the groups should be equal
+For example, if we’re comparing time spent on a website for two versions of a homepage, we first want to make sure that the standard deviation of time spent on version 1 is roughly equal to the standard deviation of time spent on version 2. To check this assumption, it is normally sufficient to divide one standard deviation by the other and see if the ratio is “close” to 1. Generally, a ratio between 0.9 and 1.1 should suffice.
+
+That said, there is also a way to run a 2-sample t-test without assuming equal standard deviations — for example, by setting the ~equal_var~ parameter in the ~scipy.stats.ttest_ind()~ function equal to False. Running the test in this way has some disadvantages (it essentially makes it harder to reject the null hypothesis even when there is a true difference between groups), so it’s important to check for equal standard deviations before running the test.
+
+**** The data should be normally distributed
+Data analysts in the real world often still perform these tests on data that are not normally distributed. This is usually not a problem if sample size is large, but it depends on how non-normal the data is. In general, the bigger the sample size, the safer you are!
+
+**** The groups created by the categorical variable must be independent
+Here are some examples where the groups are not independent:
+- the number of goals scored per soccer player before, during, and after undergoing a rigorous training regimen (not independent because the same players are measured in each category)
+- years of schooling completed by a group of adults compared to their parents (not independent because kids and their parents can influence one another)
+
+**** Instructions
+***** Task 1
+Suppose that we want to run a two-sample t-test to compare the sample means for two groups (saved as dist_1 and dist_2 in the workspace).
+
+Before running the test, we want to check whether the ratio of standard deviations for these groups is equal. Use the NumPy std() function to divide the standard deviation of dist_1 by the standard deviation of dist_2 and save the result as ratio, then print it out.
+
+Are the standard deviations roughly equal?
+
+NumPy has already been loaded in script.py as np; therefore, we can use np.std(dist_1) to calculate the standard deviation of the first distribution.
+
+The ratio of standard deviations is approximately 0.62 — outside the range of 0.9-1.1, which we said would indicate equal standard deviations. Thus, the standard deviations do not appear to be equal.
+
+***** Task 2
+Code has already been provided for you in the workspace to create an overlaid histogram of these two distributions. Inspect the distributions. Are they approximately normal?
+
+If so, set the value of ~normal_assumption~ equal to True in script.py; otherwise set ~normal_assumption~ equal to False.
+
+Look for things like a multi-modal distribution (multiple ‘humps’), highly skewed data, or outliers. As long as you don’t see any of those things, you can assume that the normality assumption is met.
+
+
+#+begin_src python :results output
+import numpy as np
+import matplotlib.pyplot as plt
+
+dist_1 = np.genfromtxt("1.csv")
+dist_2 = np.genfromtxt("2.csv")
+
+#calculate ratio of standard deviations:
+dist_1_sd = np.std(dist_1)
+dist_2_sd = np.std(dist_2)
+ratio = dist_1_sd / dist_2_sd
+print(ratio)
+
+#check normality assumption
+normal_assumption = True
+
+#plot histograms of each distribution
+plt.hist(dist_1, alpha = .8, density = True, label = 'dist 1')
+plt.hist(dist_2, alpha = .8, density = True, label = 'dist 2')
+plt.legend()
+plt.show()
+#+end_src
+
+#+RESULTS:
+: 0.6240550627217001
+
+*** Chi-Square Test
+If we want to understand whether the outcomes of two categorical variables are associated, we can use a Chi-Square test. It is useful in situations like:
+
+- An A/B test where half of users were shown a green submit button and the other half were shown a purple submit button. Was one group more likely to click the submit button?
+
+- People under and over age 40 were given a survey asking “Which of the following three products is your favorite?” Did these age groups have significantly different preferences?
+
+In ~SciPy~, we can use the function ~chi2_contingency()~ to perform a Chi-Square test. The input to ~chi2_contingency~ is a contingency table, which can be created using the pandas ~crosstab()~ function as follows:
+
+#+begin_src python
+#create table:
+import pandas as pd
+table = pd.crosstab(variable_1, variable_2)
+
+#run the test:
+from scipy.stats import chi2_contingency
+chi2, pval, dof, expected = chi2_contingency(table)
+#+end_src
+
+For example, suppose we want to know whether gender is associated with the probability of a website visitor making a purchase. The null hypothesis is that there’s no association between the variables (eg. males, females, and non-binary people are all equally likely to make a purchase on the website, so gender and purchase-status are not associated). If the p-value is below our chosen threshold (often 0.05), we reject the null hypothesis and can conclude there is a statistically significant association between the two variables (eg. men, women, and non-binary people appear to have different probabilities of making a purchase, so gender is associated with purchase-status).
+
+**** Instructions
+***** Task 1
+The management at the VeryAnts ant store wants to know if their two most popular species of ants, the Leaf Cutter and the Harvester, vary in popularity between 1st, 2nd, and 3rd graders.
+
+We have provided a dataset named ants with a sample of 108 sales to 1st, 2nd, and 3rd grade teachers. The dataset has two columns: Grade (equal to '1st', '2nd', or '3rd') and Ant (equal to 'Leaf Cutter' or 'Harvester').
+
+Use this data to create a contingency table of the Grade and Ant columns, and save the table as table.
+
+To access the columns of the dataset, use ~ants.Grade~ and ~ants.Ant~. These are the two variables that you should use to create the contingency table.
+
+***** Task 2
+Use the ~chi2_contingency()~ function from SciPy to run a Chi-Square test using the contingency table you just created (saved as table). Save the p-value as ~pval~ and print it out.
+
+***** Task 3
+Are certain types of ants more popular among specific grades (is there an association between grade and ant type)? Using a significance threshold of 0.05, indicate your answer by changing the value of significant to True if there is a significant association between these variables and False otherwise.
+
+If the p-value is less than 0.05, then there is a significant association between these variables (the ant types differ in popularity across grades), so significant = True. If the p-value is greater than 0.05, significant = False
+
+#+begin_src python :results output
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# read in and print data
+ants = pd.read_csv("ants_grade.csv")
+print(ants.head())
+
+# create contingency table
+table = pd.crosstab(ants.Grade, ants.Ant)
+print(table)
+
+# run Chi-Square test and print p-value
+chi2, pval, dof, expected = chi2_contingency(table)
+print(pval)
+
+# determine significance
+significant = False
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  Grade          Ant
+0   1st    harvester
+1   2nd    harvester
+2   2nd  leaf cutter
+3   1st    harvester
+4   3rd  leaf cutter
+Ant    harvester  leaf cutter
+Grade                        
+1st           28            8
+2nd           31            5
+3rd           23           13
+0.08356116834982279
+#+end_example
+
+*** Assumptions of a Chi-Square Test
+Before we use a Chi-Square test, we need to be sure that the following things are true:
+
+**** The observations should be independently randomly sampled from the population
+This is also true of 2-sample t-tests, ANOVA, and Tukey. The purpose of this assumption is to ensure that the sample is representative of the population of interest.
+
+**** The categories of both variables must be mutually exclusive
+In other words, individual observations should only fall into one category per variable. This means that categorical variables like “college major”, where students can have multiple different college majors, would not be appropriate for a Chi-Square test.
+
+**** The groups should be independent
+Similar to 2-sample t-tests, ANOVA, and Tukey, a Chi-Square test also shouldn’t be used if either of the categorical variables splits observations into groups that can influence one another. For example, a Chi-Square test would not be appropriate if one of the variables represents three different time points.
+
+**** Instructions
+***** Task 1
+Researchers are running a study to test a new vaccine for Covid-19 in adults. A sample of 1000 adults (you can assume that they are randomly sampled adults, or at least representative of the population) are randomly split into two groups: half get a vaccine, while the other half get a placebo. Everyone is monitored for six months to see if they develop symptoms of Covid-19. The first few rows of the resulting dataset looks like this:
+
+[[./covid chi.png]]
+
+The researchers want to use this data to determine whether their vaccine will be effective at preventing illness in the general population of adults (eg., is whether or not someone got a vaccine associated with whether or not they got sick?).
+
+Is a Chi-Square test appropriate to address this question? Change the value of ~checkpoint_1~ to True if a Chi-Square test is appropriate and False if it is not.
+
+This research question addresses an association between two categorical variables. The sample is representative of the population, the categories are mutually exclusive (each person gets a placebo or vaccine but not both; each person gets sick or doesn’t get sick), and the groups are independent.
+
+***** Task 2
+Researchers are interested in studying the effect of a 10 minute yoga regimen on self-reported mood in adults. In order to test this, a representative sample of 1000 adults are asked to complete a survey where they rate their current happiness level as “very low”, “low”, “neutral”, “high”, or “very high”. Each person then completes a 10 minute yoga regimen, then responds to the same survey once again. The first few rows of data from this study look like this:
+
+[[./yoga happiness.png]]
+
+Is a Chi-Square test appropriate to address this question? Change the value of checkpoint_2 to True if a Chi-Square test is appropriate and False if it is not.
+
+Note that one of the categorical variables has to do with time (before or after yoga). This variable splits observations into groups that are not independent: someone’s happiness level before yoga can clearly influence their happiness level after yoga.
+
+[[./associations tree.png]]
+
+*** Review
+In this lesson, we have reviewed a few different ways to run a hypothesis test for an association between two variables:
+
+    - Two Sample T-Tests (for an association between a quantitative variable and a binary categorical variable)
+    - ANOVA and Tukey Tests (for an association between a quantitative variable and a non-binary categorical variable)
+    - Chi-Square Tests (for an association between two categorical variables)
+
+You are now equipped to use and interpret the results of each of these tests!
+
+**** Instructions
+Take a look at the diagram provided for you in the workspace. The picture summarizes the four different hypothesis tests we’ve covered in this lesson and when to use them. Think of an association that you might be interested in exploring — in your own work or daily life! Can you identify which hypothesis test would be best suited to address your question?
