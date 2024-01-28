@@ -1,0 +1,33 @@
+
+* Sample Size Calculators
+** Introduction
+An A/B Test is a scientific method of choosing between two options (Option A and Option B). Some examples of A/B test include:
+
+- What number of sale items on a website makes customers most likely to purchase something: 25 or 50?
+- What color button are customers more likely to click on: blue or green?
+- Do people spend more time on a website if the background is green or orange?
+
+For A/B tests where the outcome of interest (eg., whether or not a customer makes a purchase) is categorical, and A/B test is conducted using a Chi-Square hypothesis test. In order to determine the sample size necessary for this kind of test, a sample size calculator requires three numbers:
+
+- Baseline conversion rate
+- Minimum detectable effect (also called the minimun desired lift)
+- Statistical significance threshold
+
+In this lesson, we will discuss each of these numbers and how a data scientist might choose them.
+
+** Baseline Conversion Rate
+A/B tests usually compare an option that we're currently using to a new option that we suspect might be better. In order to compare the two options, we need a metric. Often, our metric. Often, our metric will be the percent of users who take a certain action after interacting with one of our options. For instance:
+
+- The percent of customers who buy a t-shirt after visiting one of two versions of a website
+- The percent of users who click on one of two versions of an ad
+
+In the t-shirt example above, the baseline conversion rate is our estimate for the percent of people who will buy a shirt under the current website design.
+
+We can generally calculate a baseline by looking at historical data for the option that we're currently using. For example, suppose that 2000 people visited a website over the past three months and 320 of those visitors purchased a shirt. We could estimate the baseline rate as follows:
+
+#+begin_src python
+baseline = 320/2000*100
+print(baseline) #output: 16.0
+#+end_src
+
+This number may be written as a proportion (eg., 0.16) or a percent (eg., 16%).
