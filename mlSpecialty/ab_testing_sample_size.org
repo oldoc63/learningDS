@@ -31,3 +31,29 @@ print(baseline) #output: 16.0
 #+end_src
 
 This number may be written as a proportion (eg., 0.16) or a percent (eg., 16%).
+
+** Instructions
+*** Task 1
+Suppose that an online media company wants to run an A/B test to see if a re-designed subscribe button will make site visitors more likely click "subscribe". Some historical data is saved for you in *script.py*:
+
+- number_of_site_visitors is the number of people who visited the site over the past month
+- number_of_converted_visitors is the number who clicked "subscribe".
+
+Use these two variables to calculate the baseline conversion rate and save the result as a variable named baseline_rate, then print it out. Report the percentaje, not the proportion.
+
+
+* Script.py
+
+#+begin_src python :results output
+number_of_site_visitors = 2000.0
+number_of_converted_visitors = 1300.0
+
+# calculate baseline_rate and print it out:
+baseline_rate = number_of_converted_visitors / number_of_site_visitors * 100
+
+print('baseline rate is: ', baseline_rate)
+
+#+end_src
+
+#+RESULTS:
+: baseline rate is:  65.0
