@@ -32,8 +32,8 @@ print(baseline) #output: 16.0
 
 This number may be written as a proportion (eg., 0.16) or a percent (eg., 16%).
 
-** Instructions
-*** Task 1
+*** Instructions
+**** Task 1
 Suppose that an online media company wants to run an A/B test to see if a re-designed subscribe button will make site visitors more likely click "subscribe". Some historical data is saved for you in *script.py*:
 
 - number_of_site_visitors is the number of people who visited the site over the past month
@@ -42,7 +42,7 @@ Suppose that an online media company wants to run an A/B test to see if a re-des
 Use these two variables to calculate the baseline conversion rate and save the result as a variable named baseline_rate, then print it out. Report the percentaje, not the proportion.
 
 
-* Script.py
+***** Script.py
 
 #+begin_src python :results output
 number_of_site_visitors = 2000.0
@@ -57,3 +57,101 @@ print('baseline rate is: ', baseline_rate)
 
 #+RESULTS:
 : baseline rate is:  65.0
+
+** Minimun Detectable Effect
+Suppose we're running an A/B Test to find out if a new website layout drives more subscriptions than the current one. If the new layout is only a tiny percent better, would we really care?
+
+In order to detect precise differences, we need a very large sample size. In order to choose a sample size, we need to know the smallest difference that we actually care to measure. This "smallest difference" is our desired minimum detectable effect. This is also sometimes referred to as desired lift.
+
+Minimum detectable effect or lift is generally expressed as a percent of the baseline conversion rate. Suppose that 6% of customers currently subscribe to our website (that's our baseline conversion rate). Changin a website layout is hard, so we only think that it's worth doing if al least 8% of our customers would subscribe with the new layout. To calculate this as a percentage of our baseline:
+
+#+begin_src python
+baseline = 6
+new = 8
+min_detectable_effect = (new - baseline) / baseline * 100
+print(min_detectable_effect) #output: 33.0
+#+end_src
+
+Our minimum detectable effect/desired lift is 33%.
+
+*** Instructions
+**** Task 1
+Suppose you have a baseline conversion rate of 8% and want to implement a new website design if it will increase the conversion rate to 12%. What is your minimum detectable effect? Save that number into a variable called mde and print it out.
+
+***** Script.py
+
+#+begin_src python :results output
+#calculate mde and print it out:
+baseline = 8
+new = 12
+
+mde = (new - baseline) / baseline * 100
+print(mde)
+#+end_src
+
+#+RESULTS:
+: 50.0
+
+** Significance Threshold
+When we run an A/B test, we usually want to use the results of the test to make a decision: use version A or B? In order to make that decision, many data scientists use a pre-determined significance threshold for their hypothesis test. For example, if we set a significance threshold of 0.05 (a commonly chosen value), we'll "reject the null hypothesis" and conclude  that the conversion rate for version B is significantly different from version A if we get a p-value less than 0.05.
+
+I turns out that this significance threshold is the false positive rate for the test: the probability of finding a significant difference when there really is none. As a business owner, we don't want to make this kind of mistake, because then we might invest money in a change that doesn't actually make a difference!
+
+Unfortunately, there's a trade-off between false positives and false negatives. A false negative occurs when there is a difference between version A and B, but the test doesn't detect it. This is a potential missed opportunity for a business owner!
+
+Most A/B test sample size calculators estimate the sample size needed for a 20% false negative rate; while a data scientist needs to choose the false positive rate they are confortable with. The lower the false positive rate, the larger the sample size will need to be!
+
+** Don't interfere with your tests
+Suppose that a product manager is running an A/B test for a redesign of a landing page. Before starting the test, she used a sample size calculator to determine the sample size: 2.200 total web visitors. After reaching 2.200 visits, she ran a Chi-Square test. The new website design performed slightly better, but the results were not statistically significant.
+
+It might be tempting to run the test for another week to see if the difference becomes significant, but that would be a big mistake! By choosing to extend the A/B test past the original sample size, the project manager would introduce personal bias to the results of the test; she will be more likely to get the results she wants, regardless if these results reflect reality.
+
+Here are two important rules for making sure that A/B tests remain unbiased:
+
+- Don't continue to run the test after the predetermined sample size, until "significant" results are found.
+- Dont't stop a test before reaching the predetermined sample size, just because your results reach significance early (unless there are ethical reasons that require you to stop, like a prescription drug trial).
+
+Test data is sensitive to changes in sample size, which is why it is important to calculate beforehand.
+
+** Review
+Congratulations! You now know how to use a sample size calculator to figure out an appropriate sample size for an A/B Test! As a reminder, you learned about the following inputs to a sample-size calculator:
+
+    - Baseline Conversion Rate
+    - Minimum Detectable Effect
+    - Significance Threshold
+
+*** Intructions
+As a final exercise, let's put everything together into a single calculation. Suppose that you are running a business and want to see if a new advertisement will drive more clicks on your website. Currently, about 10% of people who see your ad are clicking on it. You want to run the new ad if al least 14% of people will click the new ad. When you run your Chi-Square test after collecting your data, you plan to use a significance threshold of 0.05, so that your chances of a false positive are relatively low. Try the following:
+
+- Based on the description above, identify the baseline conversion rate and significance threshold
+- Based on the description above, calculate the minimum detectable effect (hint: it's not 4%)
+- Plug in your baseline, minimum detectable effect, and significance threshold to the provided calculator.
+- Calculate the total sample size needed for this experiment (note: this calculator assumes that exactly half of the sample will see each version of the ad)
+
+**** Script.py
+
+#+begin_src python :results output
+#calculate baseline
+baseline = 10
+print('baseline: ', baseline)
+
+#calculate MDE:
+new = 14
+MDE = (new - baseline) / baseline * 100
+print('Minimum Detectable Effect: ', MDE)
+
+#calculate significance threshold:
+sig_threshold = 0.05
+print('Significance threshold: ', sig_threshold)
+
+#calculate total sample size:
+samp_size = 2060
+print('sample size: ', samp_size)
+
+#+end_src
+
+#+RESULTS:
+: baseline:  10
+: Minimum Detectable Effect:  40.0
+: Significance threshold:  0.05
+: sample size:  2060
