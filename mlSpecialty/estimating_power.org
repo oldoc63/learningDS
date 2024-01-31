@@ -1,0 +1,77 @@
+
+* Sample Size Determination with Simulation: Estimating Power
+In the last exercise, we learned how to simulate a dataset for a Chi-Square test, run the test, and then output a result: 'significant' or 'not significant'. In this exercise, we'll repeat that process many times so that we can inspect the relative frequency of each outcome.
+
+To do this, we'll start by creating an empty list to store the results of our repeated experiments. Next, we'll move all of our simulation code (to create a sample dataset, run a Chi-Square test, and determine a result) inside of a for-loop. In each iteration of the loop, we'll append the outcome to our results list so that we can inspect it later.
+
+The outline of the code looks something like this:
+
+#+begin_src shell
+  Set the sample size and subscription probabilities
+  Create an empty list named `results`
+
+  Repeat 100 times in a for-loop:
+      Simulate a dataset
+      Run a Chi-Square test
+      Use the p-value to determine significance
+      Append the result ('significant' or 'not significant') to `results`
+#+end_src
+
+Finally, we can inspect results by calculating the proportion of simulated test where the result was 'significant':
+
+#+begin_src python
+results = np.array(results)
+print(np.sum(results == 'significant'/100)
+#+end_src
+
+** Instructions
+*** Task 1
+In script.py we've copied over the code from the previous exercise and moved the simulation inside a for-loop as described in the narrative. We've also initialized an empty list named results.
+
+Below the determination of result, but still inside the for-loop, add a line of code to append result onto results.
+
+** Script.py
+
+#+begin_src python :results output
+import numpy as np
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# preset values
+significance_threshold = 0.05
+sample_size = 100
+lift = .3
+control_rate = .5
+name_rate = (1 + lift) * control_rate
+
+# initialize an empty list of results
+results = []
+
+# start the loop
+for i in range(100):
+  # simulate data:
+  sample_control = np.random.choice(['yes', 'no'],  size=int(sample_size/2), p=[control_rate, 1-control_rate])
+  sample_name = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[name_rate, 1-name_rate])
+  group = ['control']*int(sample_size/2) + ['name']*int(sample_size/2)
+  outcome = list(sample_control) + list(sample_name)
+  sim_data = {"Email": group, "Opened": outcome}
+  sim_data = pd.DataFrame(sim_data)
+
+  # run the test
+  ab_contingency = pd.crosstab(np.array(sim_data.Email), np.array(sim_data.Opened))
+  chi2, pval, dof, expected = chi2_contingency(ab_contingency)
+  result = ('significant' if pval < significance_threshold else 'not significant')
+
+  # append the result to our results list here:
+  results.append(result)
+
+# calculate proportion of significant results here:
+print("Proportion of significant results:")
+results =  np.array(results)
+sig_prop = np.sum(results == 'significant')/100
+print(sig_prop)
+#+end_src
+
+#+RESULTS:
+: Proportion of significant results:
+: 0.38
