@@ -1,0 +1,222 @@
+
+* Sample Size Determination with simulation
+
+** Introduction
+In this lesson, we will use simulation to understand some of the considerations for setting up an A/B test: sample size, power, and the false positive rate. But before we think about designing an A/B test, let's first remind ourselves how to conduct the test itself, after planning and collecting data.
+
+Suppose that a media company currently has a weekly newsletter email and wants to see if using the recipient's first name in the email subject will cause more people to open the email (ie. “Bob! Checkout this week’s updates” vs “Checkout this week’s updates”). They randomly assign a group of 100 recipients to receive one of the two email subjects and record whether or not each recipient opened the email. The first few rows of their data might look something like this:
+
+Email 	Opened
+name 	yes
+name 	no
+control 	yes
+control 	yes
+name 	no
+
+In order to run a hypothesis test to decide whether there is a significant difference in the open rate for these emails, we could run a Chi-Square test. To accomplish this, we would first create a contingency table for the Email and Opened variables in the above table:
+
+#+begin_src python
+X = pd.crosstab(data.Email, data.Opened)
+print(X)
+#+end_src
+
+Output:
+
+Opened 	no 	yes
+Email 		
+control 	23 	27
+name 	16 	34
+
+We would then use this table to run a Chi-Square test and get a p-value:
+
+#+begin_src python
+chi2, pval, dof, expected = chi2_contingency(X)
+print(pval) #Output: 0.2186
+#+end_src
+
+Based on the p-value, we would make a decision about which email to use; a small p-value would provide evidence that the open rates are significantly different for the two groups, while a large p-value would suggest no significant difference.
+
+*** Instructions
+**** Task 1
+Run the code in script.py to see the first five rows of data.
+
+**** Task 2
+Suposse that you are running an A/B test comparing two versions of a checkout page (version A or version B) to see whether there is significantly different purchase rate for one version compared to the other. Data from this experiment has been loaded for you in script.py as a dataframe named data. Use this data to create a contingency table and save the result as ab_contingency, then print out the result.
+
+Use the pd.crosstab() function with the two columns of the dataframe Web_Version and Purchased as the two input variables.
+
+**** Task 3
+Use ab_contingency to run a Chi-Square test using chi2_contingency() and save the p-value as a variable named pval. Print out pval.
+
+** Script.py
+
+#+begin_src python :results output
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+data = pd.read_csv("ab_data.csv")
+print(data.head())
+
+# calculate contingency table here
+ab_contingency = pd.crosstab(data.Web_Version, data.Purchased)
+print(ab_contingency)
+
+# run your chi square test here
+chi2, pval, dof, expected = chi2_contingency(ab_contingency)
+print(pval)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  Web_Version Purchased
+0           A        no
+1           A        no
+2           A       yes
+3           A       yes
+4           A       yes
+Purchased    no  yes
+Web_Version         
+A            24   26
+B            15   35
+0.10096676200907678
+#+end_example
+
+** Simulating data for a chi-square test
+In the last exercise, we used some data from an A/B test to run a Chi-Square test. In the next few exercises, we'll build up a simulation to understand the considerations that go into choosing a sample size for that test.
+
+Again consider the A/B test example from the previous exercise, comparing email subjects with and without the recipient's first name. Suppose we know that visitors have a 50% chance of opening the control email and 65% chance of opening the name email (30% lift!).
+
+Here we use lift to refer to he inherent difference in the distributions of our two groups of data. In the A/B Testing: Sample Size Calculators lesson, we learned that minimum detectable effect es the smallest size of the difference between the two groups tha we want our test to be able to detect. If w set up our experiment with a minumum detectable effect of at least 20%, our statistical test should detect a difference with a "lift" or "effect" of 20% or greater. In this lesson we are going to simulate data that has a lift of 30% to demonstrate how the inherent lift impacts the power of our statistical test.
+
+We can use the aforementioned probabilities to simulate a dataset of 100 email recipients as follows:
+
+#+begin_src python
+sample_control = np.random.choice(['yes', 'no'], size=50, p=[.5, .5])
+
+sample_name = np.random.choice(['yes', 'no'], size=50, p=[.65, .35])
+#+end_src
+
+This gives us two simulated samples, of 50 recipients each, who hypothetically saw the name or control email subject. Each one looks something like ['yes' 'no' 'no' 'no' 'yes' 'yes' ...], where 'yes' corresponds to an opened email.
+
+Next, we can assemble these arrays into a data frame that looks a lot like the one we saw in exercise 1:
+
+#+begin_src python
+group = ['control']*50 + ['name']*50
+outcome = list(sample_control) + list(sample_name)
+sim_data = {"Email": group, "Opened": outcome}
+sim_data = pd.DataFrame(sim_data)
+print(sim_data.head())
+#+end_src
+
+Output:
+
+Email 	Opened
+control 	no
+control 	yes
+control 	yes
+control 	no
+control 	no
+
+Because of how we created this data frame, all of the "control" observations will be listed first, followed by all of the "name" observations.
+
+** Instructions
+*** Task 1
+In script.py, you’ll see the code from the narrative, which can be used to simulate a dataset for a Chi-Square test. You’ll notice that we’ve replaced all hard-coded numbers with the following variables: sample_size, control_rate, and name_rate (which is calculated using control_rate and lift).
+
+Change the sample size to 4 and press “Run”. Inspect the output. Does it look as expected?
+
+*** Task 2
+Press “Run” a few more times and notice how the data changes each time even though you haven’t changed the code. This happens because we’ve provided probabilities for the outcomes; (opened or not), rather than specific values.
+
+** Script.py
+
+#+begin_src python :results output
+import numpy as np
+import pandas as pd
+
+sample_size = 4
+lift = .3
+control_rate = .5
+name_rate = (1 + lift) * control_rate
+
+sample_control = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[control_rate,1-control_rate])
+sample_name = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[name_rate, 1-name_rate])
+
+group = ['control']*int(sample_size/2) + ['name']*int(sample_size/2)
+outcome = list(sample_control) + list(sample_name)
+sim_data = {"Button": group, "Opened": outcome}
+sim_data = pd.DataFrame(sim_data)
+print(sim_data)
+#+end_src
+
+#+RESULTS:
+:     Button Opened
+: 0  control     no
+: 1  control     no
+: 2     name     no
+: 3     name     no
+
+** Determining Significance
+Now that we've practiced simulating data for an A/B test, let's actually run a Chi-Square test for each simulated dataset and consider the decision we would make based on the outcome.
+
+If we were really running this test, we would want to use the data to make a decision about whether to use the control (old) or name (new) email subject. To make that decision, we can use a significance threshold. For example, if we're using a significant threshold of 0.05, we'll reject the null hypothesis for any p-value less than 0.05. In this context, rejecting the null would mean that we conclude that there is a significant difference between the open rates for the two email subjects and therefore we should switch to the email subject that uses the recipient's first name.
+
+We can use the following Python statement to record whether a particular p-value is significant or not, based on a threshold of 0.05:
+
+#+begin_src python
+result = ('significant' if pval < 0.05 else 'not significant')
+print(result)
+#+end_src
+
+** Instructions
+*** Task 1
+The code from the previous exercises is provided for you in script.py. This code generates a simulated dataset named sim_data and then runs a Chi-Square test for that data, saving the p-value as pval.
+
+An additional variable named significance_threshold has been defined for you in script.py, which is equal to the significance_threshold for the test. After the p-value calculation, add a line of code that uses significance_threshold to determine whether the p-value is 'significant' or 'not significant'. Save the result as result and print it out.
+
+*** Task 2
+Press “Run” a few times until you see both a 'significant' and a 'not significant' result. Note that it is possible to get different results every time you sample a new group of 100 recipients.
+
+** Script.py
+
+#+begin_src python :results output
+import numpy as np
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# pre-set values
+significance_threshold = 0.05
+sample_size = 100
+lift = .3
+control_rate = .5
+name_rate = (1 + lift) * control_rate
+
+# simulate a dataset
+sample_control = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[control_rate,1-control_rate])
+sample_name = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[name_rate, 1-name_rate])
+
+group = ['control']*int(sample_size/2) + ['name']*int(sample_size/2)
+outcome = list(sample_control) + list(sample_name)
+sim_data = {"Email": group, "Opened": outcome}
+sim_data = pd.DataFrame(sim_data)
+
+# run a chi-square test
+ab_contingency = pd.crosstab(np.array(sim_data.Email), np.array(sim_data.Opened))
+chi2, pval, dof, expected = chi2_contingency(ab_contingency, correction=False)
+print("P Value:")
+print(pval)
+
+# determine significance here:
+result = ('significant' if pval < 0.05 else 'not significant')
+
+print("Result:")
+print(result)
+
+#+end_src
+
+#+RESULTS:
+: P Value:
+: 0.42333964158244364
+: Result:
+: not significant
