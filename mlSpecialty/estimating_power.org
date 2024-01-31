@@ -30,6 +30,23 @@ In script.py we've copied over the code from the previous exercise and moved the
 
 Below the determination of result, but still inside the for-loop, add a line of code to append result onto results.
 
+~results~ is a list, so you can use the ~.append()~ method to append a value to it. Make sure to keep this inside the for-loop by indenting to keep it inline with the rest of the code in the for-loop.
+
+*** Task 2
+Outside of the for-loop, create a variable named, sig_prop that calculates the proportion of results that are 'significant'. Make sure to divide it by the total number of simulations to make it a proportion!
+
+Print the results, then press "Run" a few times (note: you'll see slightly different numbers each time because this is a random process). Approximately what proportion of the results were significant (would have led us to switch to the new, name email subject)?
+
+To find the proportion of results that were significant, you can add the 1s and divide by the total number of simulations. The code is similar to what we used above:
+
+#+begin_src python
+results = np.array(results)
+sig_prop = np.sum(results == 'significant')/100
+print(sig_prop)
+#+end_src
+
+Don’t forget to convert the list into an array before summing.
+
 ** Script.py
 
 #+begin_src python :results output

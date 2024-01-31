@@ -1,0 +1,70 @@
+
+* Sample size determination with simulation: false positives and true positives
+In the previous exercise, we simulated 1000 datasets and ran a Chi-Square test for each one, recording whether the results were 'significant' or 'not significant'. This allowed us to estimate the proportion of simulated datasets that led to a 'significant' result.
+
+In general, we hope that the test reflects reality. We therefore want the result to be 'significant' if there really is a significant difference in the probability of an open for the two email subjects (lift > 0). In that case , the proportion of significant results is the /true positive rate/, also called the *power of the test*. Most sample size calculators aim for a power of 80%.
+
+On the other hand, if there's no difference in the probability of an email bein opened for the two email subjects (lift = 0), a 'significant' result would be a false positive (also called a type 1 error). This would lead us to invest time and resources into adding first names into email subjects when there's no real pay-off in the long run.
+
+** Instructions
+*** Task 1
+The simulation code from the previous exercises is loaded for you in script.py. We've included the code to print out the proportion of tests where a significant result was recorded. Currently, the simulation is set up so that there is a difference in the probability of a subscription for the two buttons.
+
+Press "Run" a few times and inspect the proportion of significant tests (printed to the output terminal) each time. If we ran a test with the provided sample size (100), baseline conversion rate (50%) and lift (30%), approximately what percent of the time would we correctly observe a significant result? Note that this is the "power" of the test.
+
+When we run this code, we see that approximately 28% of the tests result in a significant p-value. Every time we run the simulation, we’ll get slightly different numbers, but they’re all roughly between .20 and .36.
+
+*** Task 2
+Now, change the value of lift so that the proportion of significant tests is equal to the false positive rate and pres "Run" once more.
+
+Note that the proportion of significant tests should be approximately equal to the significance threshold if you've done this correctly.
+
+If the proportion of significant tests is equal to the false positive rate, that means the significant results are wrong and there is no difference between the groups. This means lift should be 0.
+
+Remember that lift is the inherent difference between the groups. Here, a lift of 0% will mean that we are sampling from populations that have an equal probability of a “success”.
+
+
+** Script.py
+
+#+begin_src python :results output
+import numpy as np
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# preset values
+significance_threshold = 0.05
+sample_size = 100
+lift = 0
+control_rate = .5
+name_rate = (1 + lift) * control_rate
+
+# initialize an empty list of results
+results = []
+
+# start the loop
+for i in range(100):
+  # simulate data:
+  sample_control = np.random.choice(['yes', 'no'],  size=int(sample_size/2), p=[control_rate, 1-control_rate])
+  sample_name = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[name_rate, 1-name_rate])
+  group = ['control']*int(sample_size/2) + ['name']*int(sample_size/2)
+  outcome = list(sample_control) + list(sample_name)
+  sim_data = {"Email": group, "Opened": outcome}
+  sim_data = pd.DataFrame(sim_data)
+
+  # run the test
+  ab_contingency = pd.crosstab(np.array(sim_data.Email), np.array(sim_data.Opened))
+  chi2, pval, dof, expected = chi2_contingency(ab_contingency)
+  result = ('significant' if pval < significance_threshold else 'not significant')
+
+  # append the result to our results list:
+  results.append(result)
+
+# calculate proportion of significant results:
+print("Proportion of significant results:")
+results =  np.array(results)
+print(np.sum(results == 'significant')/100)
+#+end_src
+
+#+RESULTS:
+: Proportion of significant results:
+: 0.02
