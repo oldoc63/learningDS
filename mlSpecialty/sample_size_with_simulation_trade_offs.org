@@ -1,0 +1,67 @@
+
+* Trade Offs
+At this point, let's return to the point of view of a product manager who is actually planning this A/B test. Suppose that the product manager wants to be able to accurately detect a lift of 30% (or higher), but also wants to avoid false positives (they don't want to change the email subjects unless there's actually a difference between them). To plan their test, the product manager needs to consider the following:
+
+- Increasing the /sample size/ increases the power of the test (the probability of detecting a difference if there is one); however, larger samples sizes require more time and resources.
+
+- Increasing the /significance threshold/ also increases the power of the test; however, it simultaneously increases the false positive rate (the probability of detecting a difference when there isn't one).
+
+Finally, if the project manager chooses a larger minimum detectable effect/lift, then they'll be able to decrease the sample size without decreasing power. However, if they set up their test to detect a minimum lift of 30% (for example), they may not be able to detect smaller differences that are still meaningful.
+
+** Instructions
+*** Task 1
+The simulation code from the previous exercises is provided for you in script.py. Currently, the simulation is set up to use an open rate of 50% for the control email, and a lift of 30% for the name email subject. Set the sample size  of 100 and press "Run" and make note of the proportion of significant results (which is the power of the test).
+
+*** Task 2
+Now increase the sample size to 500 and press "Run" again. Note that the power of the test also increases.
+
+*** Task 3
+Next, increase the significance threshold to 0.10. Note that the power of the test increases even more.
+
+*** Task 4
+Finally, increase the lift to 40%. Note that again, the power to the test increases.
+
+** Script.py
+
+#+begin_src python :results output
+import numpy as np
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# preset values
+significance_threshold = 0.10
+sample_size = 500
+lift = .4
+control_rate = .5
+name_rate = (1 + lift) * control_rate
+
+# initialize an empty list of results
+results = []
+
+# start the loop
+for i in range(100):
+  # simulate data:
+  sample_control = np.random.choice(['yes', 'no'],  size=int(sample_size/2), p=[control_rate, 1-control_rate])
+  sample_name = np.random.choice(['yes', 'no'], size=int(sample_size/2), p=[name_rate, 1-name_rate])
+  group = ['control']*int(sample_size/2) + ['name']*int(sample_size/2)
+  outcome = list(sample_control) + list(sample_name)
+  sim_data = {"Email": group, "Opened": outcome}
+  sim_data = pd.DataFrame(sim_data)
+
+  # run the test
+  ab_contingency = pd.crosstab(np.array(sim_data.Email), np.array(sim_data.Opened))
+  chi2, pval, dof, expected = chi2_contingency(ab_contingency)
+  result = ('significant' if pval < significance_threshold else 'not significant')
+
+  # append the result to our results list:
+  results.append(result)
+
+# calculate proportion of significant results:
+print("Proportion of significant results:")
+results =  np.array(results)
+print(np.sum(results == 'significant')/100)
+#+end_src
+
+#+RESULTS:
+: Proportion of significant results:
+: 1.0
