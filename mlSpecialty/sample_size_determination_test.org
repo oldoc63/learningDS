@@ -1,0 +1,70 @@
+
+* Sample Size Determination Test
+** Question 1
+Suppose that we want to simulate a dataset for a Chi-Square test such that a significant p-value is a "true positive" result. What value of lift should we use for the simulated data? (hint: lift is the relative percent difference between the conversion rates for groups A and B, AKA effect size).
+
+Any non - zero value will work
+
+** Question 2
+When running an A/B test, if we decrease the minimum detectable effect, then the sample size will need to be ...
+
+Larger
+
+We need a larger sample to detect a smaller difference between groups
+
+** Question 3
+For an A/B test where the outcome of interest (eg., whether or not a store visitor makes a purchase) is categorical, an A/B test is conducted using which of the following hypothesis tests?
+
+Chi-Square Test
+
+An A/B test with a categorical outcome is essentially testing an association between two categorical variables (A vs. B and the categorical outcome).
+
+** Question 4
+When running an A/B test, when should we stop collecting data?
+
+After collecting data from the predetermined sample size
+
+We should stop the A/B test as soon as we reach our pre-determined sample size.
+
+** Question 5
+If you have a 30% baseline conversion rate (for version A of a website) and hope that your conversion rate will be at least 40% for a new version (version B), what is your minimum detectable effect?
+
+From 30% to 40% is a 33% increase in conversion rate.
+
+** Question 6
+Fill in the code to simulate data for an A/B test where the probability of a "click" is 20% for version "A" of an ad and 30% for version "B".
+
+#+begin_src python
+group_A = np.random.choice(['click', 'no click'],size=50, p=[.2,.8])
+
+group_B =np.random.choice(['click', 'no click'],size=50, p=[.3,.7])
+
+group = ['A']*50 + ['B']*50
+outcome = list(group_A) + list(group_B)
+sim_data = {"Version": group, "Outcome": outcome}
+#+end_src
+
+** Question 7
+Which of the following shows a dataset that might be collected for an A/B test that uses a Chi-Square hypothesis test?
+
+This data shows the version (A vs. B) and a categorical outcome (click vs. no click) for each observation.
+
+** Question 8
+Suppose that we want to compare our current advertisement to a new version to see if more people will click ont the new version. Approximately 10% of people who see the current ad click on it. The value 10% refers to which of the following:
+
+The current click rate is our baseline conversion rate.
+
+** Question 9
+Suppose that you want to run an A/B test with a false positive rate of 5%. Which of the following inputs to a sample size calculator should be equal to 5%?
+
+The significance threshold is equal to the false positive rate for a hypothesis test.
+
+** Question 10
+Suppose that we want to simulate a dataset for a Chi-Square test such that a significant p-value is a “false positive” result. What value of lift should we use for the simulated data? (hint: lift is the relative percent difference between the conversion rates for groups A and B, AKA effect size).
+
+A false positive occurs when there’s a significant p-value but the true difference between the groups is 0.
+
+** Question 11
+Which of the following changes would increase the power of an A/B test (the probability that the test detects a difference between the two groups if there really is one)?
+
+The larger the sample size, the more accurate the test will be.
