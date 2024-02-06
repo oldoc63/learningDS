@@ -29,6 +29,51 @@ Now that you’ve imported the function you need, run the significance test and 
 
 We conclude that the average lifespan of Vein Pack subscribers IS significantly different from 73 years.
 
+* Upselling Familiar: Pumping Life Into The Company
+** Task 6
+In order to differentiate Familiar's different product lines, we'd like to compare this lifespan data between our different packages. Our next step up from the Vein Pack is the Artery Pack.
+
+Let's get the lifespans of Artery Pack subscribers. Using the same lifespans dataset, extract the lifespans of subscribers to the Artery Pack and save them as artery_pack_lifespans.
+
+** Task 7
+Use np.mean() to calculate the average lifespan for Artery Pack subscribers and print the result. Is it longer than for the Vein Pack?
+
+** Task 8
+We'd like to find out if the average lifespam of a Vein Pack subscriber is significantly different from the average life expectancy for the Artery Pack.
+
+Import the statistical test from scipy.stats that we would use to test the following null and alternative hypotheses:
+
+    - Null: The average lifespan of a Vein Pack subscriber is equal to the average lifespan of an Artery Pack subscriber.
+    - Alternative: The average lifespan of a Vein Pack subscriber is NOT equal to the average lifespan of an Artery Pack subscriber.
+
+** Task 9
+Now that you’ve imported the function you need, run the significance test and print out the p-value! Is the average lifespan of a Vein Pack subscriber significantly different from the average lifespan of an Artery Pack subscriber? Use a significance threshold of 0.05.
+
+If you’ve run your test correctly, you should get a p-value of 0.05588883079070819. This is larger than 0.05, so we conclude that the average lifespan of Vein Pack subscribers not significantly different from the average lifespan of an Artery Pack subscriber.
+
+* Side Effects: A Familiar Problem
+** Task 10
+The Familiar team has provided us with another dataset containing survey data about iron counts for our subscribers. This data has been pre-processed to categorize iron counts as "low", "normal", and "high" for each subscriber. Familiar wants to be able to advise potential subscribers about possible side effects of these packs and whether they differ for the Veins vs. the Artery pack.
+
+The data has been loaded for you as a dataframe named iron. Use the .head() method to print out the first five rows and take a look!
+
+** Task 11
+Is there an association between the pack that a subscriber gets (Vein vs. Artery) and their iron level? Use the pandas crosstab() function to create a contingency table of the pack and iron columns in the iron data. Save the result as Xtab and print it out.
+
+** Task 12
+We’d like to find out if there is a significant association between which pack (Vein vs. Artery) someone subscribes to and their iron level. 
+
+Import the statistical test from scipy.stats that we would use to test the following null and alternative hypotheses:
+
+    - Null: There is NOT an association between which pack (Vein vs. Artery) someone subscribes to and their iron level.
+    - Alternative: There is an association between which pack (Vein vs. Artery) someone subscribes to and their iron level.
+
+** Task 13
+Now that you’ve imported the function you need, run the significance test and print out the p-value! Is there a significant association between which pack (Vein vs. Artery) someone subscribes to and their iron level? Use a significance threshold of 0.05.
+
+If you’ve run your test correctly, you should get a p-value of 9.359749337433008e-25, which is equivalent to 0.000000000000000000000000936. This is smaller than 0.05, so we conclude that there IS a significant association between pack and iron level.
+
+
 * Script.py
 
 #+begin_src python :results output
@@ -51,15 +96,59 @@ from scipy.stats import ttest_1samp
 tstat, pval = ttest_1samp(vein_pack_lifespans, 73)
 print(pval)
 
+# Save lifespans for artery pack subscribers
+artery_pack_lifespans = lifespans.lifespan[lifespans.pack=='artery']
+
+# Calculate average lifespans for artery pack
+print(np.mean(artery_pack_lifespans))
+
+# Run one-sample t-test
+from scipy.stats import ttest_1samp
+tstat, pval = ttest_1samp(artery_pack_lifespans, 73)
+print(pval)
+
+# Run two sample t-test
+from scipy.stats import ttest_ind
+tstat, pval = ttest_ind(vein_pack_lifespans, artery_pack_lifespans)
+print(pval)
+
+# Load dataset
+iron = pd.read_csv("familiar_iron.csv")
+print(iron.head())
+
+# Create contingency table
+Xtab = pd.crosstab(iron.pack, iron.iron)
+print(Xtab)
+
+# Run Chi-Square test
+from scipy.stats import chi2_contingency
+chi2, pval, dof, exp = chi2_contingency(Xtab)
+print(pval)
 
 #+end_src
 
 #+RESULTS:
-:      pack   lifespan
-: 0    vein  76.255090
-: 1  artery  76.404504
-: 2  artery  75.952442
-: 3  artery  76.923082
-: 4  artery  73.771212
-: 76.16901335636044
-: 5.972157921433211e-07
+#+begin_example
+     pack   lifespan
+0    vein  76.255090
+1  artery  76.404504
+2  artery  75.952442
+3  artery  76.923082
+4  artery  73.771212
+76.16901335636044
+5.972157921433211e-07
+74.8736622351704
+0.0012405464510317015
+0.05588883079070819
+     pack    iron
+0    vein     low
+1  artery  normal
+2  artery  normal
+3  artery  normal
+4  artery    high
+iron    high  low  normal
+pack                     
+artery    87   29      29
+vein      20  140      40
+9.359749337433008e-25
+#+end_example
