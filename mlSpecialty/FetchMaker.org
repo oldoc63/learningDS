@@ -49,6 +49,35 @@ pval = binom_test(x = , n = , p = )
 
 In general, x is the number of  'successes', n is the sample size, and p is the null probability of 'success'.
 
+** Mid-Sized Dog Weights
+*** Task 6
+Three of FetchMaker's most popular mid-sized dog breeds are 'whippet', 'terriers', and 'pitbull'. Is there a significant difference in the average weights of these three dog breeds?
+
+To start aswering this question, save the weights of each of these breeds in three separate series named wt_whippets, wt_terriers, and wt_pitbulls, respectively.
+
+*** Task 7
+Run a single hypothesis test to address the following null and alternative hypotheses:
+
+    - Null: whippets, terriers and pitbulls all weigh the same amount on average
+    - Alternative: whippets, terriers, and pitbulls do not all weigh the same amount on average (at least one pair of breeds has differing average weights)
+
+Save the resulting p-value as pval and print it out. Using a significance threshold of 0.05, is there at least one pair of dog breeds that have significantly different average weights?
+
+This test addresses an association between two variables: a non-binary categorical variable (breed, with three possible options) and a quantitative variable (weight). It is not a good idea to run three separate two-sample t-test here, because running multiple t-tests increases our chances of a type 1 error, or a false positive. In order to run a single hypothesis test with three categories, we should use an ANOVA.
+
+To do this, we first need to import the f_oneway() function:
+
+#+begin_src python
+from scipy.stats import f_oneway
+#+end_src
+
+Then, we need to input the weights of each breed.
+
+#+begin_src python
+Fstat, pval = f_oneway(___,___,___)
+print(pval)
+#+end_src
+
 * Script.py
 
 #+begin_src python :results output
@@ -84,6 +113,18 @@ from scipy.stats import binomtest
 pval = binomtest(num_whippet_rescues, num_whippets, 0.08)
 print(pval)
 
+# Save the weights of whippets, terriers and pitbulls
+wt_whippets = dogs.weight[dogs.breed == 'whippet']
+wt_terriers = dogs.weight[dogs.breed == 'terrier']
+wt_pitbulls = dogs.weight[dogs.breed == 'pitbull']
+
+# Run an ANOVA
+from scipy.stats import f_oneway
+Fstat, pval = f_oneway(wt_whippets, wt_terriers, wt_pitbulls)
+print(pval)
+
+
+
 #+end_src
 
 #+RESULTS:
@@ -99,4 +140,5 @@ print(pval)
 Whippet rescues:  6
 Total of whippets:  100
 BinomTestResult(k=6, n=100, alternative='two-sided', statistic=0.06, pvalue=0.5811780106238111)
+3.276415588274815e-17
 #+end_example
