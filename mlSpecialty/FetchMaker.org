@@ -1,0 +1,33 @@
+
+* FetchMaker
+Congratulations! You’ve just started working at the hottest new tech startup, FetchMaker. FetchMaker’s mission is to match up prospective dog owners with their perfect pet. FetchMaker has been collecting data on their adoptable dogs, and it’s your job to analyze some of that data.
+
+** Data to the Rescue
+*** Task 1
+FetchMaker has provided us with data for a sample of dogs from their app, including the following attributes:
+    - ~weight~, an integer representing how heavy a dog is in pounds
+    - ~tail_length~, a float representing tail length in inches
+    - ~age~, in years
+    - ~color~, a String such as "brown" or "grey"
+    - ~is_rescue~, a boolean 0 or 1
+
+The data has been saved for you as a pandas DataFrame named dogs. Used the .head() method to inspect the first five rows of the dataset.
+
+* Script.py
+
+#+begin_src python :results output
+# Import libraries
+import numpy as np
+import pandas as pd
+
+# Import data
+dogs = pd.read_csv('dog_data.csv')
+
+# Subset to just whippets, terriers, and pitbulls
+dogs_wtp = dogs[dogs.breed.isin(['whippet', 'terrier', 'pitbull'])]
+
+# Subset to just poodles and shihtzus
+dogs_ps = dogs[dogs.breed.isin(['poodle', 'shihtzu'])]
+
+
+#+end_src
