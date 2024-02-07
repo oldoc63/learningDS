@@ -13,6 +13,42 @@ FetchMaker has provided us with data for a sample of dogs from their app, includ
 
 The data has been saved for you as a pandas DataFrame named dogs. Used the .head() method to inspect the first five rows of the dataset.
 
+*** Task 2
+FetchMaker estimates (based on historical data for all dogs) that 8% of dogs in their system are rescues.
+
+They would like to know if whippets are significantly more or less likely than other dogs to be a rescue.
+
+Store the is_rescue values for 'whippets' in a variable called whipped_rescue.
+
+*** Task 3
+How many whippets are rescues (remember that the value of is_rescue is 1 for rescues and 0 otherwise)? Save this number as num_whippet_rescues and print it out.
+
+*** Task 4
+How many whippets are in this sample of data in total? Save this number as num_whippets and print it out.
+
+*** Task 5
+Use a hypothesis test to test the following null and alternative hypotheses:
+    - Null: 8% of whippets are rescues
+    - Alternative: more or less than 8% of whippets are rescues
+
+Save the p-value from this test as pval and print it out. Using a significance threshold of 0.05, Is the proportion of whippets who are rescues significantly different from 8%?
+
+For this test, we are focused on a single binary categorical variable, which indicates whether or not each whippet is a rescue. We want to compare the number of rescues in our sample to a hypothetical population-level proportion of 0.08. Therefore, we should use a bynomial test.
+
+First we need to import the binom_test() function:
+
+#+begin_src python
+from scipy.stats import binom_test
+#+end_src
+
+Then, we need to use the function to run our test:
+
+#+begin_src python
+pval = binom_test(x = , n = , p = )
+#+end_src
+
+In general, x is the number of  'successes', n is the sample size, and p is the null probability of 'success'.
+
 * Script.py
 
 #+begin_src python :results output
@@ -29,5 +65,38 @@ dogs_wtp = dogs[dogs.breed.isin(['whippet', 'terrier', 'pitbull'])]
 # Subset to just poodles and shihtzus
 dogs_ps = dogs[dogs.breed.isin(['poodle', 'shihtzu'])]
 
+# Inspect first few rows of data
+print(dogs.head())
+
+# Save the is_rescue column for whippets
+whippet_rescue = dogs.is_rescue[dogs.breed == 'whippet']
+
+# How many whippets are rescues 
+num_whippet_rescues = np.sum(whippet_rescue == 1)
+print("Whippet rescues: ", num_whippet_rescues)
+
+# How many whippets are in total
+num_whippets = len(whippet_rescue)
+print("Total of whippets: ", num_whippets)
+
+# Run a binomial test
+from scipy.stats import binomtest
+pval = binomtest(num_whippet_rescues, num_whippets, 0.08)
+print(pval)
 
 #+end_src
+
+#+RESULTS:
+#+begin_example
+   is_rescue  weight  tail_length  ...  is_hypoallergenic      name      breed
+0          0       6         2.25  ...                  0      Huey  chihuahua
+1          0       4         5.36  ...                  0   Cherish  chihuahua
+2          0       7         3.63  ...                  1     Becka  chihuahua
+3          0       5         0.19  ...                  0     Addie  chihuahua
+4          0       5         0.37  ...                  1  Beverlee  chihuahua
+
+[5 rows x 9 columns]
+Whippet rescues:  6
+Total of whippets:  100
+BinomTestResult(k=6, n=100, alternative='two-sided', statistic=0.06, pvalue=0.5811780106238111)
+#+end_example
