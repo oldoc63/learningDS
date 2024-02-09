@@ -61,6 +61,11 @@ Now that we know how many sales we need at a $0.99 price point, calculate the *p
 
 To calculate  the proportion of visits that would need to be purchases in order to meet the $1000 weekly goal for a $0.99 price point, we divide the number of sales needed (calculated in the previous step as num_sales_needed_099) by the number of expected visits (num_visits).
 
+*** Task 7
+Repeat the steps from tasks 5 and 6 for the other price points ($1.99 and $4.99). Save the number of sales needed for each price point as num_sales_needed_199 and num_sales_needed_499, respectively. Then, save the proportion of visits needed as p_sales_needed_199 and p_sales_needed_499, respectively.
+
+Print out the proportions. Note that for higher price points, you’ll need to sell fewer upgrade packages in order to meet your minimum revenue target — so the proportions should decrease as the price points increase.
+
 * Script.py
 
 #+begin_src python :results output
@@ -102,6 +107,19 @@ print('Num sales needed at 0.99: ', num_sales_needed_099)
 p_sales_needed_099 = num_sales_needed_099 / num_visits
 print('Proportion of the visits being actual purchases at 0.99: ', p_sales_needed_099)
 
+# Calculate the purchase rate needed at 0.99
+num_sales_needed_199 = 1000/1.99
+print('Num sales needed at 1.99: ', num_sales_needed_199)
+
+p_sales_needed_199 = num_sales_needed_199 / num_visits
+print('Proportion of the visits being actual purchases at 1.99: ', p_sales_needed_199)
+
+# Calculate the purchase rate needed at 0.99
+num_sales_needed_499 = 1000/4.99
+print('Num sales needed at 4.99: ', num_sales_needed_499)
+
+p_sales_needed_499 = num_sales_needed_499 / num_visits
+print('Proportion of the visits being actual purchases at 4.99: ', p_sales_needed_499)
 #+end_src
 
 #+RESULTS:
@@ -121,4 +139,8 @@ C            1583   83
 4998
 Num sales needed at 0.99:  1010.1010101010102
 Proportion of the visits being actual purchases at 0.99:  0.20210104243717691
+Num sales needed at 1.99:  502.51256281407035
+Proportion of the visits being actual purchases at 1.99:  0.10054272965467594
+Num sales needed at 4.99:  200.40080160320642
+Proportion of the visits being actual purchases at 4.99:  0.040096198800161346
 #+end_example
