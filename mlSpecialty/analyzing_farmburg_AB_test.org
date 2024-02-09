@@ -1,0 +1,77 @@
+
+* Analyzing Farmburg's A/B Test
+Brian is a Product Manager at FarmBurg, a company that makes a farming simulation social network game. In the FarmBurg game, you can plow, plant, and harvest different crops. Brian has been conducting an A/B Test with three different variants, and he wants you to help him analyze the results. Using the Python modules pandas and SciPy, you will help him make some important business decisions!
+
+** Project Requirements
+*** Task 1
+Brian ran an A/B test with three different groups: A, B, and C. He has provided us with a CSV file of this results named clicks.csv. It has the following columns:
+
+    - user_id: a unique id for each visitor to the FarmBurg site
+    - group: either 'A', 'B', or 'C' depending on which group the visitor was assigned to
+    - is_purchase: either 'Yes' if the visitor made a purchase or 'No' if they did not.
+
+We've already imported pandas as pd and loaded clicks.csv as abdata. Inspect the data using the .head() method.
+
+*** Task 2
+Note that we have two categorical variables: group and is_purchase. We are interested in whether visitors are more likely to make a purchase if they are in any one group compared to the others. Because we want to know if there is an association between two categorical variables, we'll start by using a Chi-Square test to address our question.
+
+In order to run a Chi-Square test, we first need to create a contingency table of the variables group and is_purchase. Use pd.crosstab() to create this table and name the result Xtab, then print it out. Which group appears to have the highest number of purchases?
+
+*** Task 3
+To conduct the Chi-Square Test, import chi2_contingency from scipy.stats.
+
+Then, use the function chi2_contingency with the data in Xtab to calculate the p-value. Remember that of the four values returned by chi2_contingency, the p-value is the second value.
+
+Save the p-value to a variable named pval and print the result. Using a significance threshold of 0.05, is there a significant difference in the purchase rate for groups A, B and C?
+
+Note that you might see a number in scientific notation. For example, 1.234e-8 is equal to 0.00000001234 (we move the decimal to the left by 8 places and insert zeros).
+
+Therefore, the p-value is less than 0.05 and we can conclude that there is a significant difference in the purchase rate for groups A, B, and C.
+
+
+* Script.py
+
+#+begin_src python :results output
+import pandas as pd
+import numpy as np
+
+# Read in the `clicks.csv` file as `abdata`
+abdata = pd.read_csv('clicks.csv')
+
+# Inspect the database
+print(abdata.head())
+
+# Create a contingency table with pd.crosstab
+Xtab = pd.crosstab(abdata.group, abdata.is_purchase)
+print(Xtab)
+
+# Import the Chi-Square contingency module
+from scipy.stats import chi2_contingency
+
+# Calculate the p-value
+chi2, pval, dof, expected = chi2_contingency(Xtab)
+
+# Print the p-value
+print(pval)
+
+# Determine if the p-value is significant
+is_significant = True
+
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    user_id group is_purchase
+0  8e27bf9a     A          No
+1  eb89e6f0     A          No
+2  7119106a     A          No
+3  e53781ff     A          No
+4  02d48cf1     A         Yes
+is_purchase    No  Yes
+group                 
+A            1350  316
+B            1483  183
+C            1583   83
+2.4126213546684264e-35
+#+end_example
