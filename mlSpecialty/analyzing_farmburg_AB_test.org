@@ -28,6 +28,38 @@ Note that you might see a number in scientific notation. For example, 1.234e-8 i
 
 Therefore, the p-value is less than 0.05 and we can conclude that there is a significant difference in the purchase rate for groups A, B, and C.
 
+*** Task 4
+Our day is a little less busy than expected, so we decide to ask Brian about his test.
+
+Us: Hey Brian! What was that test you were running anyway?
+
+Brian: We are trying to get users to purchase a small FarmBurg upgrade package. It's called a microtransaction. We're not sure how much to charge for it, so we tested three different price points: $0.99 (group 'A'), $1.99 (group 'B'), and $4.99 (group 'C'). It looks like significantly more people bought the upgrade package for $0.99, so I guess that's what we'll charge.
+
+Us: Oh no! We should have asked you this before we did that Chi-Square test. That wasn't the right test at all. It's true that more people wanted to purchase the upgrade at $0.99; you probable expected that. What we really want to know is whether each price point allows us to make enough money that we can exceed some target goal. Brian, how much do you think it cost to build this feature?
+
+Brian: Hmm. I guess that we need to generate a minimum of $1000 in revenue per week in order to justify this project.
+
+Us: We have some work to do!
+
+In order to justify this feature, we will need to calculate the necessary purchase rate for each price point. Let's start by calculating the number of visitors to the site this week.
+
+It turns out that Brian ran his original test over the course of a week, so the number of visitors in ~abdata~ is equal to number of visitors in a typical week. Calculate the number of visitors in the data and save the value in a variable named num_visits. Make sure to print the value.
+
+Calculate the number of rows in the abdata dataframe.
+
+*** Task 5
+Now that we know how many visitors we generally get each week (num_visits), we need to calculate the number of visitors who would need to purchase the upgrade package at each price point ($0.99, $1.99, $4.99) in order to generate Brian's minimum revenue target of $1000 per week.
+
+To start, calculate the number of sales that would be needed to reach $1000 dollars of revenue at a price point of $0.99. Save the result as ~num_sales_needed_099~ and print it out.
+
+#+begin_src python
+num_sales_needed_099 = 1000 / 0.99
+#+end_src
+
+*** Task 6
+Now that we know how many sales we need at a $0.99 price point, calculate the *proportion* of weekly visitors who would need to make a purchase in order to meet that goal. Remember that the number of weekly visitors is saved as num_visits. Save the results as p_sales_needed_099 and print it out. 
+
+To calculate  the proportion of visits that would need to be purchases in order to meet the $1000 weekly goal for a $0.99 price point, we divide the number of sales needed (calculated in the previous step as num_sales_needed_099) by the number of expected visits (num_visits).
 
 * Script.py
 
@@ -57,6 +89,18 @@ print(pval)
 # Determine if the p-value is significant
 is_significant = True
 
+# Calculate and print the number of visits
+num_visits = len(abdata)
+
+# Print the number of visits
+print(num_visits)
+
+# Calculate the purchase rate needed at 0.99
+num_sales_needed_099 = 1000/0.99
+print('Num sales needed at 0.99: ', num_sales_needed_099)
+
+p_sales_needed_099 = num_sales_needed_099 / num_visits
+print('Proportion of the visits being actual purchases at 0.99: ', p_sales_needed_099)
 
 #+end_src
 
@@ -74,4 +118,7 @@ A            1350  316
 B            1483  183
 C            1583   83
 2.4126213546684264e-35
+4998
+Num sales needed at 0.99:  1010.1010101010102
+Proportion of the visits being actual purchases at 0.99:  0.20210104243717691
 #+end_example
