@@ -91,6 +91,23 @@ For this test, we need Tukey's range test, which can be implemented with pairwis
 
 For any pair where "Reject" is "True", we conclude that those two breeds weigh significantly different amounts.
 
+** Poodle and Shihtzu Colors
+*** Task 9
+FetchMaker wants to know if 'poodle's and 'shihtzu's come in different colors. Note that we've already provided you with code in script.py to subset the data to just these breeds and have saved this subset as dogs_ps using the following showed code.
+
+To start, use the subsetted data to create a contingency table of dog colors by breed (poodle vs. shihtzu). Save the table as Xtab and print it out.
+
+*** Task 10
+Run a hypothesis test for the following null and alternative hypotheses:
+    - Null: There is not an association between breed (poodle vs. shihtzu) and color.
+    - Alternative: There is an association between breed (poodle vs. shihtzu) and color.
+
+Save the p-value as pval and print it out. Do poodles and shihtzus come in significantly different color combinations? Use a significance threshold of 0.05.
+
+This test investigates an association between two categorical variables, so we can use a Chi-Square test. First, we can import the chi2_contingency() function as shown.
+
+Then we can use that function to run our test. The chi2_contingency() function has four outputs and the p-value is the second one. It takes one input that you'll need to fill in below - the contingency table.
+
 * Script.py
 
 #+begin_src python :results output
@@ -141,6 +158,15 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 output = pairwise_tukeyhsd(dogs_wtp.weight, dogs_wtp.breed)
 print(output)
 
+# Create a contingency table of color vs. breed
+Xtab = pd.crosstab(dogs_ps.color, dogs_ps.breed)
+print(Xtab)
+
+# Run a Chi-Square Test
+from scipy.stats import chi2_contingency
+chi2, pval, dof, exp = chi2_contingency(Xtab)
+print(pval)
+
 #+end_src
 
 #+RESULTS:
@@ -165,4 +191,12 @@ pitbull terrier   -13.24    0.0 -16.7278 -9.7522   True
 pitbull whippet    -3.34 0.0638  -6.8278  0.1478  False
 terrier whippet      9.9    0.0   6.4122 13.3878   True
 -------------------------------------------------------
+breed  poodle  shihtzu
+color                 
+black      17       10
+brown      13       36
+gold        8        6
+grey       52       41
+white      10        7
+0.005302408293244593
 #+end_example
