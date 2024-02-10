@@ -66,6 +66,50 @@ Repeat the steps from tasks 5 and 6 for the other price points ($1.99 and $4.99)
 
 Print out the proportions. Note that for higher price points, you’ll need to sell fewer upgrade packages in order to meet your minimum revenue target — so the proportions should decrease as the price points increase.
 
+*** Task 8
+Now let's return to Brian's question. To start, we want to know if the percent of Group A (the $0.99 price point) that purchased an upgrade package is significantly greater than p_sales_needed_099 (the percent of visitors who need to buy an upgrade package at $0.99 in order to make our minimum revenue target of $1000).
+
+To answer this question, we want to focus on just the visitors in group A. Then, we want to compare the number of purchases in that group to p_sales_needed_099.
+
+Since we have a single sample of categorical data and want to compare it to a hypothetical population value, a binomial test is appropriate. In order to run a binomial test for group A, we need to know to pieces of information:
+
+    - The number of visitors in group A (the number of visitors who were offered the $0.99 price point)
+    - The number of visitors in Group A who made a purchase
+
+Calculate these two numbers and save them as samp_size_099 and sales_099, respectively. Note that you can use the contingency table that you printed earlier to get these numbers OR you can use Python syntax.
+
+*** Task 9
+Calculate the sample size and number of purchases in group B (the $1.99 price point) and save them as samp_size_199 and sales_199, respectively. Then do the same for group C (the $4.99 price point) and save them as samp_size_499 and sales_499, respectively.
+
+*** Task 10
+For Group A ($0.99 price point), perform a binomial test using ~binom_test()~ to see if the observed purchase rate is significantly greater than p_sales_needed_099.
+
+Remember that there are four inputs to binom_test():
+
+    - x will be the number of purchases for Group A
+    - n will be the total number of visitors assigned group A
+    - p will be the target percent of purchases for the $0.99 price point
+    - alternative will indicate the alternative hypothesis for this test; in this case, we want to know if the observed purchase rate is significantly 'greater' than the purchase rate that results in the minimun revenue target.
+
+Save the results to pvalueA, and print its value. Note that you'll first need to import the binom_test() function from scipy.stats using the showed line of code.
+
+Remember that the number of purchases in group A is saved as sales_099, the sample size for group A is saved as samp_size_099, and the target proportion of sales needed to meet the $1000 goal at a $0.99 price point is saved as p_sales_needed_099.
+
+*** Task 11
+For Group B ($1.99 price point), perform a binomial test to see if the observed purchase rate is significantly greater than p_sales_needed_199.
+
+Save the results to pvalueB, and print its value.
+
+*** Task 12
+For Group C ($4.99 price point), perform a binomial test to see if the observed purchase rate is significantly greater than p_sales_needed_499.
+
+Save the results to pvalueC, and print its value.
+
+*** Task 13
+Based on the three p-values you calculated for the binomial tests in each group and a significance threshold of 0.05, were there any groups where the purchase rate was significantly higher than the target? Based on this information, what price should Brian charge for the upgrade package?
+
+pvalueC is the only p-value below the threshold of 0.05. Therefore, the C group is the only group where we would conclude that the purchase rate is significantly higher than the target needed to reach $1000 revenue per week. Therefore, Brian should charge $4.99 for the upgrade.
+
 * Script.py
 
 #+begin_src python :results output
@@ -107,19 +151,60 @@ print('Num sales needed at 0.99: ', num_sales_needed_099)
 p_sales_needed_099 = num_sales_needed_099 / num_visits
 print('Proportion of the visits being actual purchases at 0.99: ', p_sales_needed_099)
 
-# Calculate the purchase rate needed at 0.99
+# Calculate the purchase rate needed at 1.99
 num_sales_needed_199 = 1000/1.99
 print('Num sales needed at 1.99: ', num_sales_needed_199)
 
 p_sales_needed_199 = num_sales_needed_199 / num_visits
 print('Proportion of the visits being actual purchases at 1.99: ', p_sales_needed_199)
 
-# Calculate the purchase rate needed at 0.99
+# Calculate the purchase rate needed at 4.99
 num_sales_needed_499 = 1000/4.99
 print('Num sales needed at 4.99: ', num_sales_needed_499)
 
 p_sales_needed_499 = num_sales_needed_499 / num_visits
 print('Proportion of the visits being actual purchases at 4.99: ', p_sales_needed_499)
+
+# Calculate the sample size & sales for 0.99 price point
+samp_size_099 = np.sum(abdata.group == 'A')
+sales_099 = np.sum((abdata.group == 'A') & (abdata.is_purchase == 'Yes'))
+
+# Print sample size & sales for 0.99 price point
+print('sample size for 0.99: ', samp_size_099)
+print('sales for 0.99: ', sales_099)
+
+# Calculate the sample size & sales for 1.99 price point
+samp_size_199 = np.sum(abdata.group == 'B')
+sales_199 = np.sum((abdata.group == 'B') & (abdata.is_purchase == 'Yes'))
+
+# Print sample size & sales for 0.99 price point
+print('sample size for 1.99: ', samp_size_199)
+print('sales for 1.99: ', sales_199)
+
+# Calculate the sample size & sales for 4.99 price point
+samp_size_499 = np.sum(abdata.group == 'C')
+sales_499 = np.sum((abdata.group == 'C') & (abdata.is_purchase == 'Yes'))
+
+# Print sample size & sales for 0.99 price point
+print('sample size for 4.99: ', samp_size_499)
+print('sales for 4.99: ', sales_499)
+print('\n')
+# Import the binom test module
+from scipy.stats import binomtest
+
+# Calculate the pvalue for Group A
+pvalueA = binomtest(sales_099, n=samp_size_099, p=p_sales_needed_099, alternative='greater')
+
+print('Observed purchase significantly greater for Group A?: ', pvalueA)
+print('\n')
+# Calculate the pvalue for Group B
+pvalueB = binomtest(sales_199, n=samp_size_199, p=p_sales_needed_199, alternative='greater')
+print('Observed purchase significantly greater for Group B?: ', pvalueB)
+print('\n')
+# Calculate the pvalue for Group C
+pvalueC = binomtest(sales_499, n=samp_size_499, p=p_sales_needed_499, alternative='greater')
+print('Observed purchase significantly greater for Group C?: ', pvalueC)
+
 #+end_src
 
 #+RESULTS:
@@ -143,4 +228,19 @@ Num sales needed at 1.99:  502.51256281407035
 Proportion of the visits being actual purchases at 1.99:  0.10054272965467594
 Num sales needed at 4.99:  200.40080160320642
 Proportion of the visits being actual purchases at 4.99:  0.040096198800161346
+sample size for 0.99:  1666
+sales for 0.99:  316
+sample size for 1.99:  1666
+sales for 1.99:  183
+sample size for 4.99:  1666
+sales for 4.99:  83
+
+
+Observed purchase significantly greater for Group A?:  BinomTestResult(k=316, n=1666, alternative='greater', statistic=0.18967587034813926, pvalue=0.9028081076188554)
+
+
+Observed purchase significantly greater for Group B?:  BinomTestResult(k=183, n=1666, alternative='greater', statistic=0.10984393757503001, pvalue=0.11184562623740596)
+
+
+Observed purchase significantly greater for Group C?:  BinomTestResult(k=83, n=1666, alternative='greater', statistic=0.04981992797118848, pvalue=0.027944826659830616)
 #+end_example
