@@ -81,3 +81,31 @@ This second scatterplot is between Proline and Color_Intensity and appears to ha
 This final scatterplot is between Alcohol and OD280 and contains three distinct round blobs of points.
 
 Based on these plots we can conclude that there are probably at least three different types of wine in this dataset and that Flavanoids, Color_Intensity, Alcohol, and OD280 may be particularly important in distinguishing those groups.
+
+** Feature reduction for EDA
+The first pair plot with all of the variables was difficult to inspect, but we can reduce the number of dimensions by transforming our data using PCA. Let's look at the pair plot of the first few principal components:
+
+[[./first_few_principal_components.png]]
+
+Now, instead looking at a 13 by 13 pair plot, we can zoom in on a 5 by 5 plot that includes all od the original features. In fact, a single plot can be used to visualize relationships between all of the original features at once, not just two at a time. We can see that there is some distinction between groups in clusters 1 and 2, as well as 2 and 4. We also see three fairly clear groups in the plot of component 1 vs. 2. But what does this mean about our original features?
+
+We can look at the weights for each of these components and see which features were most highly weighted in components 1 and 2 (which seem to cluster into three clear groups):
+
+[[./weighted_feature.png]]
+
+We are looking for the highest weighted feature for each component of interest. For component 1, this would be Flavanoids, component 2, Color_Intensity, and so on. These may be particularly important features to include in our model.
+
+We can also use the transformed data to visually inspect the groups that are produced by other supervised machine learning methods. For example, here is the same pair plot of the transformed data, but the points are colored by the outcome of a k-means analysis with 3 groups:
+
+[[./k-means.png]]
+
+We can see here that the groupings we saw in the PCA-transformed data align with those produced by the k-means model. Specifically, we see that the pair plot of components 1 and 2 separates the k-means clusters particularly well.
+
+We can also look at the same bivariate scatterplots from earlier, with the added k-means results:
+
+[[./bivariate_scatterplots.png]]
+
+We suspected that these features would be useful in clustering our wines, and now we see that the k-means model is producing groups based on these features. This is also useful for explaining the k-means model to potential stake-holders. For example, we can say that the "purple" group produced by our k_means model is characterized by lower than average amounts of flavanoids and higher than average color intensity.
+
+** Conclusion
+EDA before and after fitting unsupervised clustering algorithms is extremely helpful for checking model assumptions, choosing an algorithm, determining the number of groups, and explaining the results to potential stake-holders.
