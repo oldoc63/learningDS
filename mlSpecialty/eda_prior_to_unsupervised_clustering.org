@@ -1,0 +1,83 @@
+
+* Eda prior to unsupervised clustering
+### Learn the EDA steps that can be helpful prior to creating an unsupervised clustering model.
+
+** Introduction
+When we want to understand underlying groups for a set of observations but don't know what the group labels should be, we often turn to unsupervised clustering. If we are planning to fit an unsupervised machine learning model, we often want to explore questions such as:
+
+    - How many groups are there?
+    - How might those groups differ?
+
+In this article, we will demonstrate an exploratory process for beginning to address these questions.
+
+** Data
+Let's say that you are opening a restaurant and want to be sure to offer a "wide variety" of wines. You get this dataset of chemical differences between types of wines from [[https://archive.ics.uci.edu/dataset/109/wine][UCI Machine Learning Repository]] with traits such as:
+
+    - Alcohol
+    - Malic acid
+    - Ash
+    - Alcalinity of ash
+    - Magnesium
+    - Total phenols
+    - Flavanoids
+    - Nonflavanoid phenols
+    - Proanthocyanins
+    - Color intensity
+    - Hue
+    - OD280/OD315 of diluted wines
+    - Proline
+
+You want to use this information to try to categorize the wine into different groups to ensure that the wines that you decide to buy for the restaurant have a good amount of variety. You want the wines within each group to be similar to each other, and wines in different groups to be less similar. You have no idea how many groups there are or what the group labels should be. So instead, you want to see if the given information has natural groupings based on the characteristics that you have collected data about.
+
+In order to get started, you might need to answer some of the following questions:
+
+    - How many different kinds of wine are there?
+    - How do those wine types differ?
+
+For some unsupervised clustering algorithms, you'll need to specify the number of groups ahead of time. Also, different types of algorithms can handle different kinds of groupings more efficiently, so it can be helpful to visualize the shapes of the clusters. For example, k-means algorithms are good at identifying data groups with spherical shapes because they are based on principles of equal variance and distance between data points:
+
+[[./clusters.png]]
+
+On the other hand, Principal Component Analysis algorithms and BIRCH methods are better at identifying elongated groupings:
+
+[[./elongated.png]]
+
+There is no method that is the best in every situation. It takes some investigating to know which method will be best for a given set of data.
+
+** Prepare the data
+As usual, before we analyze the data, we should go through the process of previewing the data:
+
+[[./preview_wine.png]]
+
+Before continuing wity our analysis, we will want to clean and standardize the data, as well as ensure that the variables are coded appropriately as numeical values.
+
+** Pairplot to look for clusters
+A pair plot of the variables is a good way to llok for univariate and bivariate clusters.
+
+[[./univariate_bivariate.png]]
+
+Looking at the histograms along the diagonal, some variables have what appear to be bimodal distributions, as indicated by the two peaks. Let's take a closer look at a couple of them:
+
+[[./flavanoids.png]]
+
+In this histogram of Flavanoids, we can see a peak at the very left-hand side as well as between 0 and 1. This is evidence that there could be two groups of wines with respect to Flavanoids (low and high flavanoid wines).
+
+[[./OD280.png]]
+
+Similarly, the variable of OD280 has two distinct peaks, one between -1,5 and -1, and another between 0 and 0.5. Thus, we have evidence of at least two wine groups based on OD280 as well.
+
+Looking at the rest of the pair plot, it is difficult to see relationships in the scatterplots when there are this many variables. The task of looking at each scatterplot can be tedious, so we have selected three bivariate plots to highlight:
+
+[[./color_flavanoid.png]]
+
+This first scatterplot is between Flavanoids and Color_Intensity. In this plot, we see at least two clear elongated clusters.
+
+[[./color_proline.png]]
+
+This second scatterplot is between Proline and Color_Intensity and appears to have at least three different clusters.
+
+[[./OD280_alcohol.png]]
+
+This final scatterplot is between Alcohol and OD280 and contains three distinct round blobs of points.
+
+Based on these plots we can conclude that there are probably at least three different types of wine in this dataset and that Flavanoids, Color_Intensity, Alcohol, and OD280 may be particularly important in distinguishing those groups.
