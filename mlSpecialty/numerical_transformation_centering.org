@@ -1,0 +1,100 @@
+
+* Centering Your Data
+Data centering involves *subtracting the mean* of a data set from each data point so taht the new mean is 0. This process helps us understand how far above or below each of our data points is from the mean.
+
+We can look at the nearest_starbucks column.
+
+#+begin_src python
+distance = coffee['nearest_starbucks']
+#+end_src
+
+We will find the mean of our feature, create one line of code to center our data, and then plot the centered data. Here's what it will look like in Python.
+
+#+begin_src python
+#get the mean of your feature
+mean_dis = np.mean(distance)
+
+#take our distance array and subtract the mean_dis, this will create a new series with the results
+centered_dis = distance - mean_dis
+
+#visualize your new list
+plt.hist(centered_dis, bins = 5, color = 'g')
+
+#label our visual
+plt.title('Starbucks Distance Data Centered')
+plt.xlabel('Distance from Mean')
+plt.ylabel('Count')
+plt.show()
+
+#+end_src
+
+[[./starbucks_distance_data_centered.png]]
+
+Now, look at that! Our data is centered at 0 and we can see the spread of data, may of our customers who took the survey tend to live fairly close to a Starbucks.
+
+Let's try centering our age feature to see what happens there.
+
+* Instructions
+** Task 1
+Start by setting your age feature to a variable called ages
+
+** Task 2
+It's helpful to know both the minimum and maximum age in our feature. First, create a variable called min_age and print the value
+
+** Task 3
+Now find the maximum age and set it to a variable called max_age and print the value
+
+** Task 4
+We want to better understand the spread of our data, so print the difference between min_age and max_age
+
+** Task 5
+We will need the mean age of our feature to center our data around, so create a variable called mean_age and print that value
+
+** Task 6
+Let's center our data! Set the result to a variable called centered_ages and print the results
+
+** Task 7
+Plot your centered data as a histogram
+
+* Script.py
+
+#+begin_src python :results output
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+coffee = pd.read_csv('starbucks_customers.csv')
+
+ages = coffee['age']
+
+min_age = np.min(ages)
+
+print('min age: ', min_age)
+
+max_age = np.max(ages)
+
+print('max age: ', max_age)
+
+print('max age - min age: ', max_age - min_age)
+
+mean_age = np.mean(ages)
+
+print('mean age: ', mean_age)
+
+centered_ages = ages - mean_age
+
+plt.hist(centered_ages, bins = 5, color = 'g')
+
+plt.title('Starbucks Age Data Centered')
+plt.xlabel('Distance from Mean')
+plt.ylabel('Count')
+plt.show()
+
+#+end_src
+
+#+RESULTS:
+: min age:  13
+: max age:  70
+: max age - min age:  57
+: mean age:  27.33606557377049
