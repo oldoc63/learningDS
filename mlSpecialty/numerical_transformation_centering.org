@@ -1,6 +1,6 @@
 
 * Centering Your Data
-Data centering involves *subtracting the mean* of a data set from each data point so taht the new mean is 0. This process helps us understand how far above or below each of our data points is from the mean.
+Data centering involves *subtracting the mean* of a data set from each data point so that the new mean is 0. This process helps us understand how far above or below each of our data points is from the mean.
 
 We can look at the nearest_starbucks column.
 
