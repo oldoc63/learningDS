@@ -1,0 +1,66 @@
+
+* Standardizing our data with sklearn
+Now that we understand the mathematics behind a standard scaler let's quickly implement it with the sklearn library. We will begin by importing our ~StandardScaler~ library from ~sklearn.preprocessing~.
+
+#+begin_src python
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+#+end_src
+
+We instantiate the StandardScaler by setting it to a variable called scaler which we can then use to transform our feature. The next step is to *reshape* our distance array. StandardScaler must take in our array as 1 column, so we'll reshape our distance array using the .reshape(-1,1) method. This numpy method says to take our data and give it back to us as 1 column, represented in the second value. The -1 asks numpy to figure out the exact number of rows to create based on our data.
+
+#+begin_src python
+reshaped_distance = np.array(distance).reshape(-1,1)
+
+distance_scaler = scaler.fit_transform(reshaped_distance)
+#+end_src
+
+Just like we learned in the last lesson, we do this so our data has a mean of 0 and standard deviation of 1. Let's print to see how the StandardScaler did.
+
+#+begin_src python
+print(np.mean(distance_scaler))
+#output = -9.464196275493137e-17
+print(np.std(distance_scaler))
+#output = 0.9999999999999997
+#+end_src
+
+You'll notice the e-17 at the end of our output for the mean, and that is our number written in exponential notation. Written in standard notation our answer is -0.00000000000000009464196275493137. Which basically has the mean at 0 and our standard deviation = 1. Now you can try to standardize the age column with the new knowledge you just gained.
+
+* Instructions
+** Task 1
+Instantiate StandardScaler by creating a variable named scaler
+
+** Task 2
+Reshape our ages feature and set the result to a variable named ages_reshape
+
+** Task 3
+Now we are ready to perform a .fit_transform on our ages_reshaped feature and set the results to the variable named ages_scaled
+
+** Task 4
+Print the mean and standard deviation of your new variable ages_scaled
+
+* Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.preprocessing import StandardScaler
+
+  coffee = pd.read_csv('starbucks_customers.csv')
+  ages = coffee['age']
+
+  scaler = StandardScaler()
+
+  ages_reshaped = np.array(ages).reshape(-1,1)
+
+  ages_scaled = scaler.fit_transform(ages_reshaped)
+
+  print(np.mean(ages_scaled))
+
+  print(np.std(ages_scaled))
+#+end_src
+
+#+RESULTS:
+: 1.7290358580227847e-16
+: 0.9999999999999999
