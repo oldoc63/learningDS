@@ -1,0 +1,71 @@
+
+* Min-Max Normalization with sklearn
+Happy to see you now have a strong understanding of how a Min-Max Normalization works, let's try implementing it with the sklearn library.
+
+We will start by importing our MinMaxScaler library from sklearn.preprocessing. Just like we covered in the StandardScaler exercise, we start by instantiating the MinMaxScaler by setting it to a variable called mmscaler which we can then use to transform our feature.
+
+#+begin_src python
+  from sklearn.preprocessing import MinMaxScaler
+
+  mmscaler = MinMaxScaler()
+#+end_src
+
+The next step is to import our distance feature and reshape it so it is ready for our mmscaler.
+
+#+begin_src python
+  #get our distance feature
+  distance = coffee['nearest_starbucks']
+
+  #reshape our array to prepare it for the mmscaler
+  reshaped_distance = np.array(distance).reshape(-1,1)
+
+  #.fit_transform our reshaped data
+  distance_norm = mmscaler.fit_transform(reshaped_distance)
+
+  #see unique values
+  print(set(np.unique(distance_norm)))
+#+end_src
+
+Excellent. We now have a normalized feature within our dataset using the sklearn library MinMaxScaler!
+
+* Instructions
+** Task 1
+Reshape the array, and set it to a variable called spent_reshaped
+
+** Task 2
+Instantiate MinMaxScaler and set the variable equal to mmscaler
+
+** Task 3
+Now let's try using the MinMaxScaler form the imported sklearn library to perform a .fit_transform on our spent_reshaped feature and set the results to the variable reshaped_scaled
+
+** Task 4
+Print the minimum and maximum number from your new normalized array named reshaped_scaled. Do they equal 0 and 1?
+
+* Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.preprocessing import MinMaxScaler
+
+  coffee = pd.read_csv('starbucks_customers.csv')
+  spent = coffee['spent']
+
+  #reshape the array
+  spent_reshaped = np.array(spent).reshape(-1,1)
+
+  #instantiate MinMaxScaler
+  mmscaler = MinMaxScaler()
+
+  #.fit_transform spent_reshaped
+  reshaped_scaled = mmscaler.fit_transform(spent_reshaped)
+
+  #print minimum and maximum from reshaped_scaled
+  print(np.min(reshaped_scaled))
+  print(np.max(reshaped_scaled))
+
+#+end_src
+
+#+RESULTS:
+: 0.0
+: 1.0
