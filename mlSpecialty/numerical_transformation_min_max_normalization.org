@@ -1,0 +1,104 @@
+
+* Min-Max Normalization
+Another form of scaling your data is to use a min-max normalization process. The name says it all, we find the minimum and maximum data point in our entire data set and set each of those to 0 and 1, respectively. Then the rest of the data points will transform to a number between 0 and 1, depending on its distance between the minimum and maximum number. We find that transformed number by taking the data point, subtracting it from the minimum point, then dividing by the value of our maximum minus minimum.
+
+Mathematically a min-max normalization looks like this:
+
+$$
+X_{norm} = \frac{X - X_{min}}{X_{max} - X_{min}}
+$$
+
+One thing to note about min-max normalization is that this transformation does not work well with data that has extreme outliers. You will want to perform a min-max normalization if the range between your min and max point is not too drastic.
+
+The reason we would want to normalize our data is very similar to why we would want to standardize our data -getting everything on the same scale.
+
+We'd do this process to our entire data set, buy lets look at our distance to a nearest Starbucks feature. We already know from earlier in this lesson that our range in this feature in not too large, so it is a good candidate for a min-max normalization. We'll write a function that will perform the mathematics needed to transform the entire column.
+
+#+begin_src python
+  
+  distance = coffee['nearest_starbucks']
+
+  #find the min value in our feature
+  distance_min = np.min(distance)
+
+  #find the max value in our feature
+  distance_max = np.max(distance)
+
+  #normalize our feature by following the formula
+  distance_normalized = (distance - distance_min) / (distance_max - distance_min)
+
+#+end_src
+
+Excellent! Now if I were to print all the unique numbers in distance_norm here is what we will see:
+
+#+begin_src python
+{0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1.0}
+#+end_src
+
+We can see that all numbers are between 0 and 1.
+
+* Instructions
+** Task 1
+We will now work with the spent feature in our data frame. Take just that column and set it equal to a new variable called spent.
+
+** Task 2
+Find the maximum amount someone spent and set that to a variable called max_spent
+
+** Task 3
+Find the minimum amount someone spent and set that to a variable called min_spent
+
+** Task 4
+Find the difference between max_spent and min_spent and set that to a variable called spent_range. Print the results.
+
+** Task 5
+Normalize your spent column. Set the results to a variable called spent_normalized.
+
+** Task 6
+Print your spent_normalized array to see how your numbers are transformed
+
+* Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+
+  coffee = pd.read_csv('starbucks_customers.csv')
+
+  ## add code below
+  ## get spent feature
+  spent = coffee['spent']
+
+  # find the max spent
+  max_spent = np.max(spent)
+
+  # find the min spent
+  min_spent = np.min(spent)
+
+  # find the difference
+  spent_range = max_spent - min_spent
+
+  print(spent_range)
+
+  # normalize your spent
+  spent_normalized = (spent - min_spent)/(max_spent - min_spent)
+
+  print(spent_normalized)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+28
+0      0.464286
+1      0.892857
+2      0.357143
+3      0.250000
+4      0.357143
+         ...   
+117    0.178571
+118    0.571429
+119    0.071429
+120    0.678571
+121    0.107143
+Name: spent, Length: 122, dtype: float64
+#+end_example
