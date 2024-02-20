@@ -1,0 +1,112 @@
+
+* Binning our data
+Binning data is the process of taking numerical or categorical data and breaking it up into groups. We could decide to bin our data to help capture patterns in noisy data. There isn't a clean and fast rule about how to bin your data, but like so many things in machine learning, you need to be aware of the trade offs.
+
+You want to make sure that your bin ranges aren't so small that your model is still seeing it as noisy data. Then you also want to make sure that the bin ranges are not so large that your model is unable to pick up on any pattern. It is a delicate decision to make and will depend on the data you are working with.
+
+Going back to our customer data and looking at our distance feature, let's look at the data with a histogram.
+
+[[./binning_distance.png]]
+
+We can easily see that a lot of customers who completed this survey live fairly close to a Starbucks, and our data has a tange of 0 km to 8 km. I wonder how our data would transform if we were to bin our data in the following way:
+
+    - distance < 1 km
+    - 1.1km <= distance < 3km
+    - 3.1km <= distance < 5km
+    - 5.1km <= distance
+
+First, we'll set the upper boundaries of what we listed above.
+
+#+begin_src python
+bins = [0, 1, 2, 3, 5, 8.1]
+#+end_src
+
+Now you may be asking yourself 'Why end at 8.1? Isn't our max value 8?' That is true! We have 8.1 and not 8 because the pandas function we will use pd.cut() has a parameter where it will include the lower bound, and excludes the upper bound. Let me show you what I mean.
+
+#+begin_src python
+  coffee['binned_distance'] = pd.cut(coffee['nearest_starbucks'], bins, right = False)
+
+  print(coffee[['binned_distance', 'nearest_starbucks']].head(3))
+
+  #output
+  #  binned_distance  nearest_starbucks
+  #0      [5.0, 8.1)                  8
+  #1      [5.0, 8.1)                  8
+  #2      [5.0, 8.1)                  8
+#+end_src
+
+We can see that those who marked 8 km now live in the  [5.0, 8.1) bucket. The bracket [ tells us 5.0 is included, and the ) tells us that 8.1 is excluded. We could write it as an inequality statement like this: 5 <= distance < 8.1 this allows our customers who marked 8 to belong to the 'Lives greater than 5.1 km' bin. Now let's have a look at our newly binned data.
+
+#+begin_src python
+  # Plot the bar graph of binned distances
+  coffee['binned_distance'].value_counts().plot(kind='bar')
+
+  # Label the bar graph
+  plt.title('Starbucks Distance Distribution')
+  plt.xlabel('Distance')
+  plt.ylabel('Count')
+
+  # Show the bar graph
+  plt.show()
+#+end_src
+
+[[./graph_binned_distances.png]]
+
+Use this new skill to bin our age feature.
+
+* Instructions
+** Task 1
+Print the age features min and max values.
+
+** Task 2
+Based on our results from above, let's set the bin boundaries. Store it as a variable called age_bins and use the followin limits [12, 20, 30, 40, 71].
+
+** Task 3
+Create a new binned column with pd.cut(). Name the new column binned_ages.
+
+** Task 4
+Plot a bar graph of new binned data.
+* Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  coffee = pd.read_csv('starbucks_customers.csv')
+  ages = coffee['age']
+
+  print(np.min(ages))
+  print(np.max(ages))
+
+  age_bins = [12,20,30,40,71]
+
+  coffee['binned_ages'] = pd.cut(coffee['age'], age_bins, right = False)
+
+  print(coffee['binned_ages'].head(10))
+
+  coffee['binned_ages'].value_counts().plot(kind='bar')
+  plt.title('Starbucks Age Distribution')
+  plt.xlabel('Age')
+  plt.ylabel('Count')
+  plt.show()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+13
+70
+0    [40, 71)
+1    [30, 40)
+2    [20, 30)
+3    [20, 30)
+4    [20, 30)
+5    [20, 30)
+6    [20, 30)
+7    [20, 30)
+8    [20, 30)
+9    [20, 30)
+Name: binned_ages, dtype: category
+Categories (4, interval[int64, left]): [[12, 20) < [20, 30) < [30, 40) < [40, 71)]
+#+end_example
