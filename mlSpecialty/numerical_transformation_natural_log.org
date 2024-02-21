@@ -1,0 +1,138 @@
+
+* Natural Log Transformation
+We've covered plenty of transformations! We have one last transformation we need to cover, and that is log transformations. Logarithms are an essential tool in statistical analysis and machine learning preparation. This transformation works well for right-skewed data and data with large outliers. After we log transform our data, one large benefit is that it will allow the data to be closer to a "normal" distribution. It also changes the scale so our data points will drastically reduce the range of their values.
+
+For example, let's explore a whole new data set from Kaggle around used car prices. Take a look a this histogram plot of 100,000 used car odometers.
+
+#+begin_src python
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  #import our dataframe
+  cars = pd.read_csv('cars.csv')
+
+  #set our variable
+  odometer = cars['odometer']
+
+  #graph our odometer readings
+  plt.hist(odometer, bins = 200, color = 'g')
+
+  #add labels
+  plt.xticks(rotation = 45)
+  plt.title('Number of Cars by Odometer Reading')
+  plt.ylabel('Number of Cars')
+  plt.xlabel('Odometer')
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: None
+
+This histogram is right-skewed, where the majority of our data is located on the left side of our graph. If we were to provide this feature to our machine learning model it will see a lot of different cars with odometer readings off on the left of our graph. It will not see a lot of examples with very high odemeter readings. This may cause issues with our model, as it may struggle to pick up on patterns that are within those examples off on the right side of our histogram.
+
+We'll perform a log transformation using numpy to see how our data will transform.
+
+#+begin_src python
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  #import our dataframe
+  cars = pd.read_csv('cars.csv')
+
+  #set our variable
+  odometer = cars['odometer']
+
+  #graph our odometer readings
+  plt.hist(odometer, bins = 200, color = 'g')
+
+  #add labels
+  plt.xticks(rotation = 45)
+  plt.title('Number of Cars by Odometer Reading')
+  plt.ylabel('Number of Cars')
+  plt.xlabel('Odometer')
+  plt.show();
+
+  #perform the log transformation
+  log_car = np.log(cars['odometer'])
+
+  #graph our transformation
+  plt.hist(log_car, bins = 200, color = 'g')
+
+  #rotate the x labels so we can read it easily
+  plt.xticks(rotation = 45)
+
+  #provide a title
+  plt.title('Logarithm of Car Odometers')
+  plt.show();
+#+end_src
+
+#+RESULTS:
+: None
+
+Our data looks much closer to a normal distribution! If we were to look at a sample of five different cars with varying odometer readings, let's examine how the log transformation changed their values.
+
+make 	   odometer   odometer_logged
+Altima 	10126 	        9.222862
+Jetta 	        34042 	       10.435350
+Camry 	56762 	       10.946622
+Civic 	        100103 	11.513955
+F-150 	145695 	11.889271
+Saturn 	151687 	11.929574
+
+If we compare the Altima with 10,126 miles to the Saturn with 151,687 miles those two cars have a huge difference in odometer readings. Yet, once we log transform the data we see the range from 9.22 to 11.93 is much smaller. Compressing the range of our data can help our model perform better!
+
+There is so much more to add about log transformation. For the purpose of this exercise we just want to give a high overview and demonstrate how to log transform your data. Before we have you start testing your new skills let’s quickly cover two major topics with log transformation:
+
+    - Using a log transformation in a machine learning model will require some extra interpretation. For example, if you were to log transform your data in a linear regression model, our independent variable has a multiplication relationship with our dependent variable instead of the usual additive relationship we would have if our data was not log-transformed.
+
+    - Keep in mind, just because your data is skewed does not mean that a log transformation is the best answer. You would not want to log transform your feature if:
+          - You have values less than 0. The natural logarithm of a negative number is undefined.
+          - You have left-skewed data. That data may call for a square or cube transformation.
+          - You have non-parametric data
+
+* Instructions
+** Task 1
+We've imported all the necessary libraries, now you need to bring in the cars.csv file set it to a variable named cars.
+
+** Task 2
+We will be working with the sellingprice feature in this data set, so set that column to a variable called prices.
+
+** Task 3
+Let's look at a histogram of prices to check to see if it is right-skewed. Set your histogram to show 150 bins so we can see more values in our graph.
+
+** Task 4
+Now perform a log transformation on that variable prices and set the results to a variable called log_prices.
+
+** Task 5
+
+* Script.py
+
+#+begin_src python
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  cars = pd.read_csv('cars.csv')
+
+  prices = cars['sellingprice']
+
+  plt.hist(prices, bins=150, color='g')
+  plt.show();
+
+  log_prices = np.log(cars['sellingprice'])
+
+  plt.hist(log_prices, bins=150, color='g')
+  plt.show();
+
+#+end_src
+
+#+RESULTS:
+: None
+
+   
