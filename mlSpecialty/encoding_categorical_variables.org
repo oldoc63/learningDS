@@ -126,3 +126,69 @@ We'll also note, this method will not work if your feature has NaN values. Those
   #create a new variable with assigned numbers
   cars['condition_rating'] = encoder.fit_transform(condition_reshaped)
 #+end_src
+
+** Label encoding
+Now, we can talk about nominal data, and we have to approach this type of data differently than what we did with ordinal data. Our color feature has a lot of different labels, but here are the top five colors that appear in our data frame.
+
+#+begin_src python :results output
+  import pandas as pd
+
+  cars = pd.read_csv('cars.csv')
+
+  print(cars['color'].nunique())
+
+  print(cars['color'].value_counts()[:5])
+#+end_src
+
+#+RESULTS:
+: 19
+: color
+: black     2015
+: white     1931
+: gray      1506
+: silver    1503
+: blue       869
+: Name: count, dtype: int64
+
+To prepare this feature, we still need to convert our text to numbers, so let's do just that. We will demonstrate two different approaches, with the firs one showing how to convert the feature from an object type to a categories type.
+
+#+begin_src python :results output
+  import pandas as pd
+
+  cars = pd.read_csv('cars.csv')
+
+  #convert feature to category type
+  cars['color'] = cars['color'].astype('category')
+
+  #save a new version of category codes
+  cars['color'] = cars['color'].cat.codes
+
+  #print to see transformation
+  print(cars['color'].value_counts()[:5])
+#+end_src
+
+#+RESULTS:
+: color
+: 1     2015
+: 16    1931
+: 7     1506
+: 14    1503
+: 2      869
+: Name: count, dtype: int64
+
+Comparing our newly transformed data to the original top 5, we can see Black was transformed to 1, White as transformed to 16, and so on.
+
+However, we have created a problem for ourselves and potentially our model. We can see that 'Blue' cars now have a value of 2, and 'White' cars = 18, our model could actually give 'White' cars 8 times more weight than a 'Blue' car simply because of the way we encoded this feature. To combat this ordinal assumption our model will make, we should one-hot encode our nominal data, which we will cover shortly.
+
+One more way we can transform this feature is by using sklearn.preprocessing and the LabelEncoder library. This method will not work if your feature has NaN values. Those need to be addressed prior to running .fit_transform.
+
+#+begin_src python
+  from sklearn.preprocessing import LabelEncoder
+
+  #create encoder
+  encoder = LabelEncoder()
+
+  #create new variable with assigned numbers
+  cars['color'] = encoder.fit_transform(cars['color'])
+#+end_src
+
