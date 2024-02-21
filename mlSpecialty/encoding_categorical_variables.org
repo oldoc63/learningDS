@@ -192,3 +192,155 @@ One more way we can transform this feature is by using sklearn.preprocessing and
   cars['color'] = encoder.fit_transform(cars['color'])
 #+end_src
 
+** One-hot Encoding
+One-hot encoding is when we create a *dummy* variable for each value of our categorical feature, and a dummy variable is defined as a numeric variable with two values: 1 and 0. We will continue to talk about our color feature from our used car dataset.
+
+Looking at this visual below, we can see we have ten cars in four different colors. In place of the single color column, we create four dummy variables -one new column for each color. Then the values that go into that column are binary, indicating if the car in that row is the color of the column name (1) or not (0).
+
+[[./dummy_variables.png]]
+
+This approach is great for our color feature and will allow the model to see each category as its own feature and not try to create order between a "Black car" and a "Red Car". Here is how we can implement this in Python:
+
+#+begin_src python
+  import pandas as pd
+  #use pandas .get_dummies method to create one new column for each color
+  ohe = pd.get_dummies(cars['color'])
+  #join the new columns back onto our cars dataframe
+  cars = cars.join(ohe)
+#+end_src
+
+A downside to this approach is that it can create a lot of features which can then create a very sparse matrix.
+
+One-hot encode the feature body from our cars dataset.
+
+Remember  to use pd.get_dummies(feature) when building your new feature.
+
+#+begin_src python :results output
+  import pandas as pd
+
+  cars = pd.read_csv('cars.csv')
+
+  ## one hot encode the feature
+  ## label this variable ohe
+  ohe = pd.get_dummies(cars['body'])
+
+  ## join our new columns back
+  cars = cars.join(ohe)
+
+  ## print the column names
+  print(cars.columns)
+
+  ## iterate the columns
+  for col in cars.columns:
+      print(col)
+
+  ## print the 'suv' column
+  print(cars[['suv']])
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Index(['Unnamed: 0', 'year', 'make', 'model', 'trim', 'body', 'transmission',
+       'vin', 'state', 'condition', 'odometer', 'color', 'interior', 'seller',
+       'mmr', 'sellingprice', 'saledate', 'Unnamed: 16', 'Access Cab',
+       'CTS Coupe', 'Club Cab', 'Convertible', 'Coupe', 'Crew Cab',
+       'CrewMax Cab', 'Double Cab', 'E-Series Van', 'Elantra Coupe',
+       'Extended Cab', 'G Convertible', 'G Coupe', 'G Sedan', 'Genesis Coupe',
+       'Hatchback', 'King Cab', 'Koup', 'Mega Cab', 'Minivan',
+       'Promaster Cargo Van', 'Quad Cab', 'Regular Cab', 'SUV', 'Sedan',
+       'SuperCab', 'SuperCrew', 'Van', 'Wagon', 'Xtracab', 'club cab',
+       'convertible', 'coupe', 'crew cab', 'double cab', 'e-series van',
+       'extended cab', 'g convertible', 'g coupe', 'g sedan', 'genesis coupe',
+       'hatchback', 'king cab', 'koup', 'mega cab', 'minivan',
+       'promaster cargo van', 'quad cab', 'regular cab', 'sedan', 'supercab',
+       'supercrew', 'suv', 'van', 'wagon'],
+      dtype='object')
+Unnamed: 0
+year
+make
+model
+trim
+body
+transmission
+vin
+state
+condition
+odometer
+color
+interior
+seller
+mmr
+sellingprice
+saledate
+Unnamed: 16
+Access Cab
+CTS Coupe
+Club Cab
+Convertible
+Coupe
+Crew Cab
+CrewMax Cab
+Double Cab
+E-Series Van
+Elantra Coupe
+Extended Cab
+G Convertible
+G Coupe
+G Sedan
+Genesis Coupe
+Hatchback
+King Cab
+Koup
+Mega Cab
+Minivan
+Promaster Cargo Van
+Quad Cab
+Regular Cab
+SUV
+Sedan
+SuperCab
+SuperCrew
+Van
+Wagon
+Xtracab
+club cab
+convertible
+coupe
+crew cab
+double cab
+e-series van
+extended cab
+g convertible
+g coupe
+g sedan
+genesis coupe
+hatchback
+king cab
+koup
+mega cab
+minivan
+promaster cargo van
+quad cab
+regular cab
+sedan
+supercab
+supercrew
+suv
+van
+wagon
+        suv
+0     False
+1     False
+2     False
+3     False
+4     False
+...     ...
+9995  False
+9996  False
+9997  False
+9998  False
+9999  False
+
+[10000 rows x 1 columns]
+#+end_example
