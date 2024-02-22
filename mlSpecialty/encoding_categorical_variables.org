@@ -344,3 +344,42 @@ wagon
 
 [10000 rows x 1 columns]
 #+end_example
+
+** Binary encoding
+If we find the need to one-hot encode a lot of categorical features which would, in turn, create a sparse matrix and may cause problems for our model, a strong alternative to this issue is performing a binary encoder. A binary encoder will find the number of unique categories and then convert each category to its binary representation. Let us take a quick review of binary numbers and keep using our color feature. We know that we have 19 unique colors, so the way to represent the numbers from 1 to 19 in binary format is as follows:
+
+Number 	Binary Number
+1  	1
+2 	10
+3 	11
+4 	100
+5 	101
+6 	110
+7 	111
+8 	1000
+9 	1001
+10 	1010
+11 	1011
+12 	1100
+13 	1101
+14 	1110
+15 	1111
+16 	10000
+17 	10001
+18 	10010
+19 	10011
+
+We can easily see that our highest number 19 is 5 digits long, so our binary encoder will need 5 columns to be able to represent all digits. Here is a sample of how our color column will transform each color if we were to perform a binary encoder.
+
+[[./color binary encoding.png]]
+
+Our 19th color, pink, has transformed to be represented in the binary form 10011. If we were to utilize this process instead of the traditional one -hot encoder we would have 5 numerical features instead of 19, reducing our features by about 75%!
+
+To make this happen with Python we'll use a library called category_encoders and import BinaryEncoder. We will determine which column to transform and set drop_invariant to True so it will keep the five binary columns. If it is set to the default 0, then we would have an additional column full of zeros.
+
+#+begin_src python
+  from category_encoders import BinaryEncoder
+
+  #This will create a new dataframe with the color column removed and replaced with our 5 new binary feature columns
+  colors = BinaryEncoder(cols = ['color'], drop_invariant = True).fit_transform(cars)
+#+end_src
