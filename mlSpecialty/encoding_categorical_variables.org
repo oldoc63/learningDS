@@ -450,3 +450,43 @@ print(np.sort(encoder_results['color'].unique()))
 #  17174.36440678 17176.25931731 18007.27699531 18048.52540833]
 #+end_src
 
+** Encoding date-time variables
+Every data analyst or scientist will have to work with date-time objects at some point in their career. There is so much information to be gained from date-time objects. We will work with the saledate feature -yay, a new column to explore! The very first thing we need to do is convert this to a date-time object.
+
+#+begin_src python
+  print(cars['saledate'].dtypes)
+  # # OUTPUT
+  # dtype('O')
+
+  cars['saledate'] = pd.to_datetime(cars['saledate'])
+  # #OUTPUT
+  # datetime64[ns, tzlocal()]
+#+end_src
+
+Now that we have our feature set up as a datetime object, let's demonstrate some methods we can utilize to get additional information.
+
+#+begin_src python
+  # create new variable for month
+  cars['month'] = cars['saledate'].dt.month
+
+  # create new variable for day of the week
+  cars['dayofweek'] = cars['saledate'].dt.day
+
+  # create new variable for difference between cars model year and year sold
+  cars['yearbuild_sold'] = cars['saledate'].dt.year - cars['year']
+#+end_src
+
+Additiona methods can be found [[https://pandas.pydata.org/pandas-docs/version/0.23/api.html#datetimelike-properties][here]].
+
+** Review
+You have so many options when it comes to transforming categorical data into numerical values. We touched in:
+
+    - Ordinal encoding
+    - Label encoding
+    - One-hot encoding
+    - Binary encoding
+    - Hashing
+    - Target encoding
+    - Date-time encoding
+
+We hope you can see the importance of getting your categorical features just right before you begin to train and test a model.
