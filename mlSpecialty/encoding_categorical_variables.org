@@ -383,3 +383,28 @@ To make this happen with Python we'll use a library called category_encoders and
   #This will create a new dataframe with the color column removed and replaced with our 5 new binary feature columns
   colors = BinaryEncoder(cols = ['color'], drop_invariant = True).fit_transform(cars)
 #+end_src
+
+** Hashing
+Another option we have available to us is an encoding technique called hashing. This process is similar to one-hot encoding where it will create new binary columns, but within the parameters, you can decide how many features to output. A huge advantage is reduced dimensionality, but a large disadvantage is that some categories will be mapped to the same values. That is called collision.
+
+For example, we have 19 different colored cars. If I were to use the hash encoder and set the number of features to be 5, I will definitely have colors with the same hash values.
+
+[[./hashing.png]]
+
+We can easily see that brown and charcoal colors have the same hash values. Meaning, we've lost some information and our model won't be able to see the difference between those two colors.
+
+Here is how we can make this work with Python. Our final result of hash_results will produce a data frame of just 5 columns, so we will want to concatenate this new data onto our original data frame.
+
+#+begin_src python
+  from category_encoders import HashingEncoder
+
+  #instantiate our encoder
+  encoder = HashingEncoder(cols='color', n_components=5)
+
+  #do a fit transform on our color column and set to a new variable
+  hash_results = encoder.fit_transform(cars['color'])
+#+end_src
+
+Now you may be thinking, when would I use this if I'm going to lose information and my model will see brown and charcoal (or some other color combo with the same hash value) as the same thing? Well, this could be a solution to your project and dataset if you are not as interested in assessing the impact of any particular categorical value.
+
+For this example, maybe you aren't interested in knowing which color car had an impact on you final prediction, but you want to be able to get the best performance from your model. This encoding solution may be a good approach. 
