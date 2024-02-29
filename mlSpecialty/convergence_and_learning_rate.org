@@ -1,0 +1,182 @@
+
+* Convergence
+How do we know when we should stop changing the parameters m and b? How will we know when our program has learned enough?
+
+To answer this, we have to define convergence. Convergence is when the loss stops changing (or changes very slowly) when parameters are changed.
+
+Hopefully, the algorithm will converge at the best values for the parameters m and b.
+
+** Instructions
+
+*** Task 1
+Run the file. Look at the graph. This graph shows how much the parameter b changed with each iteration of a gradient descent runner.
+
+*** Task 2
+How many iterations did it take for this program to converge?
+
+Enter your answer in a variable called num_iterations.
+
+*** Task 3
+At what b value did this program converge?
+
+Enter your answer in a variable called convergence_b.
+
+** Script.py
+
+#+begin_src python
+  import codecademylib_3_seaborn
+  import matplotlib.pyplot as plt
+  from data import bs, bs_000000001, bs_01
+
+  iterations = range(1400)
+
+  plt.plot(iterations, bs)
+  plt.xlabel("Iterations")
+  plt.ylabel("b value")
+  plt.show()
+
+  num_iterations = 800
+  convergence_b = 47
+#+end_src
+
+[[./convergence.png]]
+
+* Learning Rate
+We want our program to be able to iteratively learn what the best m and b values are. So for each m and b pair that we guess, we want to move them in the direction of the gradients we've calculated. But how far do we move in that direction?
+
+We have to choose a learning rate, which will determine how far down the loss curve we go.
+
+A small learning rate will take a long time to converge -you might run out of time or cycles before getting an answer. A large learning rate might skip over the best value. It might never converge!
+
+[[./Linear_regression_gif_2.gif]]
+
+Finding the absolute best learning rate is not necessary for training a model. You just have to find a learning rate large enough that gradient descent converges with the efficiency you need, and not so large that convergence never happens.
+
+** Instructions
+
+*** Task 1
+We have reported two new lists representing how the b value changed with different learning rates:
+
+    - bs_000000001: 1400 iterations of gradient descent on b with a learning rate of 0.000000001
+
+    - bs_01: 100 iterations of gradient descent on b with a learning rate of 0.01
+
+Change the plot to plot bs_000000001 instead of bs.
+
+Does the gradient descent algorithm still converge to the same b value? Does it converge at all? Look at the values on the y-axis!
+
+[[./bs_000000001.png]]
+
+The line should now read:
+
+plt.plot(iterations, bs_000000001)
+
+This learning rate is far too small! The b value is still changing with each iteration, and has not reached a plateau. Whereas our other learning rate reached an answer at 1400 iterations (or before!), this one barely reached 0.00035 as a guess for b, which we know is far from the value of 48.5 that the other learning rate converged to.
+
+*** Task 2
+Change the plot to plot bs_01 instead of bs_000000001. Unfortunately, our computers blew up after 100 iterations of this, so you’ll also have to change the number of iterations to 100 instead of 1400:
+
+iterations = range(100)
+
+Does the gradient descent algorithm still converge to the same b value? Does it converge at all?
+
+The line should now read:
+
+plt.plot(iterations, bs_01)
+
+This learning rate is far too large! The b value changed way too much with each iteration, and quickly blew up to 1e192. That’s a 1 with 192 zeros after it. Whereas our other learning rate reached an answer at 1400 iterations, this one melted our processors at 100 iterations, because the b value had become way too large.
+
+** Put it Together
+At each step, we know how to calculate the gradient and move in that direction with a step size proportional to our learning rate. Now we want to make these steps until we reach convergence.
+
+** Intructions
+
+*** Task 1
+We have all of the functions we have defined throughout the lesson.
+
+Now, let's create a function called gradient_descent() that takes in x, y, learning_rate and a num_iterations.
+
+For now, return [-1, -1].
+
+*** Task 2
+In the function gradient_descent(), create variables b and m and set them both to zero for our initial guess.
+
+Return b and m from the function.
+
+*** Task 3
+Update your step_gradient() function to take in the parameter learning_rate (as the last parameter) and replace the 0.01s in the calculations of b_gradient and m_gradient with learning_rate.
+
+*** Task 4
+Create a loop that runs num_iterations times. At each step, it should:
+    - Call step_gradient() with b, m, x, y and learning_rate
+    - Update the values of b and m with the values step_gradient() returns
+
+*** Task 5
+Outside of the function, uncomment the line that calls gradient_descent on months and revenue, with a learning rate of 0.01 and 1000 iterations.
+
+It stores the results in variables called b and m.
+
+*** Task 6
+Uncomment the lines that will plot the result to the browser.
+
+** Script.py
+
+#+begin_src python :results output
+import seaborn
+import matplotlib.pyplot as plt
+
+def get_gradient_at_b(x, y, b, m):
+  N = len(x)
+  diff = 0
+  for i in range(N):
+    x_val = x[i]
+    y_val = y[i]
+    diff += (y_val - ((m * x_val) + b))
+  b_gradient = -(2/N) * diff  
+  return b_gradient
+
+def get_gradient_at_m(x, y, b, m):
+  N = len(x)
+  diff = 0
+  for i in range(N):
+      x_val = x[i]
+      y_val = y[i]
+      diff += x_val * (y_val - ((m * x_val) + b))
+  m_gradient = -(2/N) * diff  
+  return m_gradient
+
+#Your step_gradient function here
+def step_gradient(b_current, m_current, x, y, learning_rate):
+    b_gradient = get_gradient_at_b(x, y, b_current, m_current)
+    m_gradient = get_gradient_at_m(x, y, b_current, m_current)
+    b = b_current - (learning_rate * b_gradient)
+    m = m_current - (learning_rate * m_gradient)
+    return [b, m]
+  
+#Your gradient_descent function here:  
+def gradient_descent(x, y, learning_rate, num_iterations):
+    b = 0
+    m = 0
+    for i in range(num_iterations):
+      b, m = step_gradient(b, m, x, y, learning_rate)
+    return [b, m]
+
+
+months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+revenue = [52, 74, 79, 95, 115, 110, 129, 126, 147, 146, 156, 184]
+
+#Uncomment the line below to run your gradient_descent function
+b, m = gradient_descent(months, revenue, 0.01, 1000)
+
+#Uncomment the lines below to see the line you've settled upon!
+y = [m*x + b for x in months]
+
+plt.plot(months, revenue, "o")
+plt.plot(months, y)
+
+plt.show()
+
+#+end_src
+
+#+RESULTS:
+
