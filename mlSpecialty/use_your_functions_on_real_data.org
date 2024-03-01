@@ -1,0 +1,56 @@
+
+* Use your functions on real data
+We have constructed a way to find the "best" b and m values using gradient descent! Let's try this on the set of baseball player's heights and weights that we saw at the beginning of the lesson.
+
+** Instructions
+
+*** Task 1
+Run the code in script.py
+
+This is a scatterplot of weight vs height.
+
+*** Task 2
+We have imported your gradient_descent() function. Call it with parameters:
+
+    - X
+    - y
+    - num_iterations of 1000
+    - learning_rate of 0.0001
+
+Store the result in variables called b and m.
+
+*** Task 3
+Create a list called y_predictions. Set it to be every element of X multiplied by m and added to b.
+
+The easiest way to do this would be a list comprehension.
+
+*** Task 4
+Plot X vs. y_predictions on the same plot as the scatterplot.
+
+** Script.py
+
+#+begin_src python :results output
+  import seaborn
+  from gradient_descent_funcs import gradient_descent
+  import pandas as pd
+  import matplotlib.pyplot as plt
+
+  df = pd.read_csv("heights.csv")
+
+  X = df["height"]
+  y = df["weight"]
+
+  plt.plot(X, y, 'o')
+
+  #plot your line here:
+  b, m = gradient_descent(X, y, num_iterations=1000, learning_rate=0.0001)
+
+  y_predictions = [x * m + b for x in X]
+
+  plt.plot(X, y_predictions)
+  
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
