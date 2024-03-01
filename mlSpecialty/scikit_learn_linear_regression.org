@@ -1,0 +1,78 @@
+
+* Scikit-Learn Linear Regression
+Congratulations! You've now built a linear regression algorithm from scrach.
+
+Luckily, we don't have to do this every time we want to use linear regression. We can use Python's scikit-learn library. Scikit-learn, or sklearn, is used specifically for Machine Learning. Inside the linear_model module, there is a LinearRegression() function we can use:
+
+#+begin_src python
+  from sklearn.linear_model import LinearRegression
+#+end_src
+
+#+RESULTS:
+: None
+
+You can firs create a LinearRegression model, and then fit it to your x and y data:
+
+#+begin_src python
+  line_fitter = LinearRegression()
+  line_fitter.fit(X, y)
+#+end_src
+
+The .fit() method gives the model two variables that are useful to us:
+
+    1. ~the line_fitter.coef_~, which contains the slope
+    2. ~the line_fitter.intercept_~, which contains the intercept
+
+ We can also use the .predict() function to pass in x-values and receive the y-values that this line would predict:
+
+ #+begin_src python
+   y_predicted = line_fitter.predict(X)
+ #+end_src
+
+ #+begin_quote
+ **Note:**
+ The num_iterations and the learning_rate that you learned about in your own implementation have default values within scikit-learn, so you don't need to worry about setting them specifically!
+ #+end_quote
+
+** Instructions
+
+*** Task 1
+We have imported a dataset of soup sales data vs temperature.
+
+Run the code to see the scatterplot. Can you envision the line that would fit this data?
+
+*** Task 2
+Create an sklearn linear regression model and call it line_fitter
+
+*** Task 3
+Fit the line_fitter object to temperature and sales.
+
+*** Task 4
+Create a list called sales_predict that is the predicted sales values that line_fitter would generate from the temperature list.
+
+*** Task 5
+Plot sales_predict against temperature as a line, on the same plot as the scatterplot.
+
+** Script.py
+
+#+begin_src python :results output
+  import seaborn as sns
+  from sklearn.linear_model import LinearRegression
+  import matplotlib.pyplot as plt
+  import numpy as np
+
+  temperature = np.array(range(60, 100, 2))
+  temperature = temperature.reshape(-1, 1)
+  sales = [65, 58, 46, 45, 44, 42, 40, 40, 36, 38, 38, 28, 30, 22, 27, 25, 25, 20, 15, 5]
+
+  line_fitter = LinearRegression()
+  line_fitter.fit(temperature, sales)
+
+  sales_predict = line_fitter.predict(temperature)
+
+  plt.plot(temperature, sales, 'o')
+  plt.plot(temperature, sales_predict)
+  plt.show()
+#+end_src
+
+#+RESULTS:
