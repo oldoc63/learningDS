@@ -1,0 +1,238 @@
+% Created 2024-03-09 Sat 17:01
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{Solving a Regression Problem: Ordinary Least Squares to Gradient Descent}
+\label{sec:orgc640652}
+\begin{itemize}
+\item Learn about how the linear regression problem is solved analytically (using Ordinary Least Squares) and algorithmically (using Gradient Descent) and how these two methods are connected!
+\end{itemize}
+
+Linear regression finds a linear relationship between one or more predictor variables and an outcome variable. This article will explore two different ways of  finding linear relationships: \emph{Ordinary Least Squares} and \emph{Gradient Descent.}
+
+\subsection{Ordinary Least Squares}
+\label{sec:orgebde171}
+To understand the method of least squares, let's take a look at how to set up the linear regression problem with linear equations. We'll use the Diabetes dataset as an example. The outcome variable, Y, is a measure of disease progression. There are 10 predictor variables in this dataset, but to simplify things let's take a look at just one of them: BP (average blood pressure). Here are the first five rows of data:
+
+\begin{center}
+\begin{tabular}{rr}
+BP & Y\\[0pt]
+32.1 & 151\\[0pt]
+21.6 & 75\\[0pt]
+0.5 & 141\\[0pt]
+25.3 & 206\\[0pt]
+23 & 135\\[0pt]
+\end{tabular}
+\end{center}
+
+We can fit the data with the following simple linear regression model with slope m and intercept b:
+
+$$
+Y = m * BP + b + error
+$$
+
+This equation is actually short-hand for a large number of equations -one for each patient in our dataset. The first five equations (corresponding to the first five rows of the data set) are:
+
+\begin{itemize}
+\item 151=m∗32.1+b+error\textsubscript{1}
+\item 75=m∗21.6+b+error\textsubscript{2}
+\item 141=m∗0.5+b+error\textsubscript{3}
+\item 206=m∗25.3+b+error\textsubscript{4}
+\item 135=m∗23+b+error\textsubscript{5}
+\end{itemize}
+
+When we fit this linear regression model, we are trying to find the values of m and b such that the sum of the squared error terms above (e.g., error\textsubscript{1}\textsuperscript{2} + error\textsubscript{2}\textsuperscript{2} + error\textsubscript{3}\textsuperscript{2} + error\textsubscript{4}\textsuperscript{2} + error\textsubscript{5}\textsuperscript{2} + \ldots{}) is minimized.
+
+We can create a column matrix of Y (the outcome variable), a column matrix of BP (the predictor variable), and a column matrix of the errors and rewrite the fivyyes
+e equations above as one matrix equation:
+
+\begin{equation*}
+
+\begin{pmatrix}
+151 \\
+75 \\
+141 \\
+206 \\
+135
+\end{pmatrix}
+= m \times
+\begin{pmatrix}
+32.1 \\
+21.6 \\
+0.5 \\
+25.3 \\
+1100
+\end{pmatrix}
++ b \times
+\begin{pmatrix}
+1 \\
+1 \\
+1 \\
+1 \\
+1
+\end{pmatrix}
++
+\begin{pmatrix}
+error_1 \\
+error_2 \\
+error_3 \\
+error_4 \\
+error_5
+\end{pmatrix}
+\end{equation*}\\
+
+Using the rules of matrix addition and multiplication, it is possible to simplify this to the following:
+
+\begin{equation*}
+
+\begin{pmatrix}
+151 \\
+75 \\
+141 \\
+206 \\
+135
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 & 32.1 \\
+1 & 21.6 \\
+1 & 0.5 \\
+1 & 25.3 \\
+1 & 1100
+\end{pmatrix}
+\times
+\begin{pmatrix}
+b \\
+m
+\end{pmatrix}
++
+\begin{pmatrix}
+error_1 \\
+error_2 \\
+error_3 \\
+error_4 \\
+error_5
+\end{pmatrix}
+\end{equation*}
+
+In total we have 4 matrices in this equation:
+
+\begin{itemize}
+\item A one-column matrix on the left hand side of the equation containing the outcome variable values that we will call Y
+
+\item A two-column matrix on the right hand side that contains a column of 1's and a column of the predictor variable (BP here) that we will call X.
+
+\item A one-column matrix containing the intercept b and the slope m, i.e, the solution matrix that we will denote by the Greek letter beta. The goal of the regression problem is to find this matrix.
+
+\item A one-column matrix of the residuals or errors, the error matrix. The regression problem can be solved by minimizing the sum of the squares of the elements of this matrix. The error matrix will be denoted by the Greek letter epsilon.
+\end{itemize}
+
+Using these shorthands, the matrix representation of the regression equation is thus:
+
+$$
+Y = X \beta + \epsilon
+$$
+
+Ordinary Least Squares gives us an explicit formula for beta. Here's the formula:
+
+$$
+\beta = (XX^T)^{-1} X^TY
+$$
+
+A couple of reminders: X\textsuperscript{T} is the \emph{transpose} of X. M\textsuperscript{-1} is the \emph{inverse} of a matrix.
+
+This looks like a fairly simple formula. In theory, you should be able to plug in X and Y, do the computations, and get \emph{beta.} But it's no always so simple.
+
+First of all, it's possible that the matrix XX\textsuperscript{T} might not even have an inverse. This will be the case if there happens to be an exact linear relationship between some of the columns of X, we say that X is multicollinear. For example, your data set might contain temperature readings in both Fahrenheit and Celcius. Those columns would be linearly related, and thus XX\textsuperscript{T} would not have an inverse.
+
+In practice, you also have to watch out for data that is almost multicollinear. For example, a data set might have Fahrenheit and Celsius readings that are rounded to the nearest degree. Due to rounding error, those columns would not be perfectly correlated. In that case it would still be possible to compute the inverse of XX\textsuperscript{T}, but it would lead to other problems. Dealing with situations like that is beyond the scope of this article, but you should be aware that multicollinarity can be troublesome.
+
+Another drawback of the OLS equation for beta is that it can take a long time to compute. Matrix multiplication and matrix inversion are both computationally intensive operations. Data sets with a large number of predictor variables and rows can make these computations impractical.
+
+\subsection{Gradient Descent}
+\label{sec:org72c71bd}
+Gradient descent is a numerical technique that can determine regression parameters without resorting to OLS. It's an iterative process that uses calculus to get closer and closer to the exact coefficients one step at a time. To introduce the concept, we'll look at a a simple example: linear regression with one predictor variable. For each row of data, we have the following equation:
+
+$$
+y_1 = mx_1 + b + \epsilon_1
+$$
+
+The sum of the squared errors is:
+
+$$
+\sum_{i=1}^N \epsilon_i^2 = \sum_{i=1}^N (y_i - (mx_i + b))^2
+$$
+
+This is the loss function. It depends on two variables: m and b. \href{https://content.codecademy.com/programs/data-science-path/line-fitter/line-fitter.html}{Here} is an interactive plot where you can tune the parameters m and b and see how it affects the loss.
+
+Try changing m and b and observe how those changes affect the loss. You can also try to come up with an algorithm for how to adjust m and b in order to minimize the loss.
+
+Also you adjust the sliders and try to minimize the loss, you might notice that there is a sweet spot where changing either m or b too far in either direction will increase the loss. Get too far away from that sweet spot, and small changes in m or b will result in bigger changes to the loss.
+
+If playing with the sliders made you think about rates of change, derivatives, and calculus, then you're well on your way toward understanding gradient descent. The gradient of a function is a calculus concept that's very similar to the derivative of a function. We won't cover the technical definition here, but you can think of it as a vector that points uphill in the steepest direction. The steeper the slope, the larger the gradient. If you step in the opposite direction of the gradient, you will move downhill.
+
+That's where the descent part of the gradient descent comes in. Imagine you're standing on some ondulating terrain with peaks and valleys. Now take a step in the oposite direction of the gradient. If the gradient is large (in other words, if the slope you're on is steep), take a big step. If the gradient is small, take a small step. If you repeat this process enough times, you'll probably end up at the bottom of a valley. By going against the gradient, you've minimized your elevation.
+
+Let's take a closer look at how gradient descent works in the case of linear regression with one predictor variable. The process always starts by making starting guesses for m and b. The initial guesses arent't important. You could make random guesses, or just start with m=0 and b=0. The initial guesses will be adjusted by using gradient formulas.
+
+Here's the gradient formula for b. This formula can be obtained by differentiating the average of the squared error terms with respect to b.
+
+$$
+-\frac{2}{N} \sum_{i=1}^n (y_1 - (mx_1 + b))
+$$
+
+In this formula,
+
+\begin{itemize}
+\item N is the total number of observations in the data set,
+
+\item x\textsubscript{i} and y\textsubscript{i} are the observations,
+
+\item m is the current guess for the slope of the linear regression equation, and
+
+\item b is the current guess for the intercept of the linear regression equation.
+\end{itemize}
+
+Here's the gradient formula for m. Again, this can be obtained by differentiating the average of the squared error terms with respect to m.
+
+$$
+-\frac{2}{N} \sum_{i=1}^n x_i(y_i - (mx_i + b))
+$$
+
+The next step of gradient descent is to adjust the current guesses for m and b by substracting a number proportional the gradient.
+
+Our new guess for b is
+
+$$
+b - \eta \left ( -\frac{2}{N} \sum_{i=1}^n (y_1 - (mx_1 + b)) \right )
+$$
+
+Our new guess for m is
+
+$$
+b - \eta \left ( -\frac{2}{N} \sum_{i=1}^n x_i(y_1 - (mx_1 + b)) \right )
+$$
+\end{document}
