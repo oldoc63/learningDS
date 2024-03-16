@@ -1,0 +1,849 @@
+
+* Logistic Regression: Introduction
+When an email lands in your inbox, how does your email service know whether it's real or span? This evaluation is made billions of times per day, and one possible method is logistic regression.
+
+Logistic regression is a supervised machine learning algorithm that predicts the probability, ranging from 0 to 1, of a datapoint belonging to a specific category, or class. These probabilities can then be used to assign, or /classify/, observations to the more probable group.
+
+For example, we could use a logistic regression model to predict the probability that an incoming email is spam. If that probability is greater than 0.5, we could automatically send it to a spam folder. This is called /binary classification/ because there are only two groups (eg., spam or not spam).
+
+Some other examples of problems that we could solve using logistic regression:
+
+    - Disease identification - Is a tumor malignant?
+
+    - Customer conversion - Will a customer arriving on a sign-up page enroll in a service?
+
+In this lesson you will learn how to perform logistic regression and use it to make predictions!
+
+** Task 1
+Codecademy University's Data Science department is interested in creating a model to predict whether or not a student will pass the final exam of its Introductory Machine Learning Course. They plan to accomplish this by building a logistic regression model that predicts the probability of passing based on the number of hours a student reports studying.
+
+Run the code in script.py to plot the data. 0 indicates that a student failed the exam, and 1 indicates a student passed the exam.
+
+How many hours does a student need to study to pass the exam?
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import matplotlib.pyplot as plt
+
+  codecademyU = pd.read_csv('codecademU.csv')
+
+  # Scatter plot of exam passage vs number of hours studied
+  plt.scatter(x = 'hours_studied', y = 'passed_exam', data = codecademyU, color='black')
+  plt.ylabel('passed/failed')
+  plt.xlabel('hours studied')
+
+  plt.show()
+#+end_src
+
+#+RESULTS:
+[[./passed_failed.png]]
+
+* Linear Regression Approach
+With the data from Codecademy University, we want to predict whether each student will pass their final exam. Recall that in linear regression, we fit a line of the following form to the data:
+
+$$
+y = b_0 + b_1x_1 + b_2x_2 + \cdots + b_nx_n
+$$
+
+where
+
+    - ~y~ is the value we are trying to predict
+    - ~b_0~ is the intercept of the regression line
+    - ~b_1, b_2, ... b_n~ are the coefficients
+    - ~x_1, x_2, ... x_n~ are the predictors (also sometimes called features)
+
+For our data, ~y~ is a binary variable, equal to either 1 (passing), or 0 (failing). We have only one predictor ~(x_1): num_hours_studied~.
+
+Below we've fitted a linear regression model to our data and plotted the results. The best fit line is in red.
+
+[[./logistic_best_fit.png]]
+
+We see that the linear model does not fit the data well. Our goal is to predict whether a student passes or fails; however, a best fit line allows predictions between negative and positive infinity.
+
+** Task 1
+We've provided you with the code to train a linear regression model on the Codecademy University data and plot the regression line. Run the code and observe the plot. Expand the plot to fullscreen for a larger view.
+
+Using the regression line, estimate the predicted outcomes (given by the line) for students who study 0 hour, 10 hours, and 30 hours, respectively. Save the results to slacker, average, and studious.
+
+How would you use these numerical outcomes to determine whether a student is predicted to pass or fail? Can you think of a threshold you might use?
+
+Find 1 hour, 10 hours, and 30 hours on the x-axis (~num_hours_studied~) and approximate the y-value that would correspond to the red regression line.
+
+** Script.py
+
+#+begin_src python
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+
+  codecademyU = pd.read_csv('codecademyU.csv')
+
+  # Define slaker, average, and studious below
+  slacker = 0
+  average = 10
+  studious = 30
+
+  # Fit a linear model
+  from sklearn.linear_model import LinearRegression
+  model = LinearRegression()
+  model.fit(codecademyU[['hours_studied']], codecademyU[['passed_exam']])
+
+  # Get predictions form the linear model
+  sample_x = np.linspace(-16.65, 33.35, 300).reshape(-1,1)
+  predictions = model.predict(sample_x)
+
+  # Plot the data
+  plt.scatter(x = 'hours_studied', y = 'passed_exam', data = codecademyU, color = 'black', s = 100)
+
+  # Plot the line
+  plt.plot(sample_x, predictions, color='red', linewidth=3)
+
+  # Customization for readability
+  plt.xticks(fontsize = 20)
+  plt.yticks(fontsize = 20)
+  plt.axhline(y=0, color='k', linestyle='--')
+  plt.axhline(y=1, color='k', linestyle='--')
+
+  # Label plot and set limits
+  plt.ylabel('outcome (1=passed, 0=failed)', fontsize = 15)
+  plt.xlabel('hours studied', fontsize = 15)
+  plt.xlim(-16.65, 33.35)
+  plt.ylim(-.3, 1.8)
+
+  # Show the plot
+  plt.tight_layout()
+  plt.show()
+
+#+end_src
+
+[[./hours_outcome.png]]
+
+* Logistic Regression
+We saw that predicted outcomes from a linear regression model range from negative to positive infinity. These predictions don't really make sense for a classification problem. Step in logistic regression!
+
+To build a logistic regression model, we apply a *logit link function* to the left-hand side of our linear regression function. Remember the equation for a linear model looks like this:
+
+$$
+y = b_0 + b_1x_1 + b_2x_2 + \cdots + b_nx_n
+$$
+
+When we apply the logit function, we get the following:
+
+$$
+\ln (\frac{y}{1 - y}) = b_0 + b_1x_1 + b_2x_2 + \cdots + b_nx_n
+$$
+
+For the Codecademy University example, this means that we are fitting the curve shown below to our data -instead of a line, like in linear regression:
+
+[[./logit_function.png]]
+
+Notice that the red line stays between 0 and 1 on the y-axis. It now makes sense to interpret this value as a probability of group membership; whereas that would have been non-sensical for regular linear regression.
+
+Note that this is a pretty nifty trick for adapting a linear regression model to solve classification problems! There are actually many other kinds of link functions that we can use for different adaptations.
+
+** Task 1
+We’ve provided the code to build a logistic regression model on the Codecademy University data and plot the fitted curve. Take a look at the plot. Expand the plot to fullscreen for a larger view.
+
+Using this curve, estimate the probability that a student who studied for five hours will pass the exam. Save the result as five_hour_studier and press “Run”.
+
+** Script.py
+
+#+begin_src python
+import codecademylib3
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+codecademyU = pd.read_csv('codecademyU.csv')
+
+# Define five_hour_studier below
+five_hour_studier = 0.02
+# Fit the logistic regression model
+hours_studied = codecademyU[['hours_studied']]
+passed_exam = codecademyU[['passed_exam']]
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()
+model.fit(hours_studied,passed_exam)
+
+# Plug sample data into fitted model
+sample_x = np.linspace(-16.65, 33.35, 300).reshape(-1,1)
+probability = model.predict_proba(sample_x)[:,1]
+
+# Plot exam data
+plt.scatter(hours_studied, passed_exam, color='black', s=100)
+
+# Plot logistic curve
+plt.plot(sample_x, probability, color='red', linewidth=3)
+
+# Customization for readability
+plt.xticks(fontsize = 30)
+plt.yticks(fontsize = 30)
+plt.axhline(y=0, color='k', linestyle='--')
+plt.axhline(y=1, color='k', linestyle='--')
+
+# Label plot and set limits
+plt.ylabel('probability passed', fontsize = 30)
+plt.xlabel('hours studied', fontsize = 30)
+plt.xlim(-1, 25)
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+#+end_src
+
+* Log-Odds
+So far, we've learned that the equation for a logistic regression model looks like this:
+
+$$
+\ln (\frac{p}{1 - p}) = b_0 + b_1x_1 + b_2x_2 + \cdots + b_nx_n
+$$
+
+Note that we've replaced ~y~ with the letter ~p~ because we are going to interpret it as a probability (eg., the probability of a student passing the exam). The whole left-hand side of this equation is called log-odds because it is the natural logarithm (/ln/) of odds (/p/(1-p)/). The right-hand side of this equation looks exactly like regular linear regression!
+
+In order to understand how this link function works, let's dig into the interpretation of log-odds a little more. The odds of an event ocurring is:
+
+$$
+Odds = \frac{p}{1 - p} = \frac{P(event\ ocurring)}{P(event\ not\ ocurring)}
+$$
+
+For example, suppose that the probability a student passes an exam is 0.7. That means the probability of failing is 1 - 0.7 = 0.3. Thus, the odds of passing are:
+
+$$
+Odds\ of\ passing = \frac{0.7}{0.3} = 2.\overline{33}
+$$
+
+This means that students are 2.33 times more likely to pass than to fail.
+
+Odds can only be a positive number. When we take the natural log of odds (the log odds), we transform the odds from a positive value to a number between negative and positive infinity -which is exactly what we need! The logit function (log odds) transforms a probability (which is a number between 0 and 1) into a continuous value that can be positive or negative. 
+
+** Task 1
+Suppose that there is a 40% probability of rain today (p=0.4). Calculate the odds of rain and save it as ~odds_of_rain~. Note that the odds are less than 1 because the probability of rain is less than 0.5.
+
+The odds of an event ocurring is p/(1-p) where p is the probability of the event.
+
+** Task 2
+Use the odds that you calculate above to calculate the log odds of rain and save it as ~log_odds_of_rain~. You can calculate the natural log of a value using the ~numpy.log()~ function. Note that the log odds are negative because the probability of rain was less than 0.5.
+
+** Task 3
+Suppose that there is a 90% probability that my train to work arrives on-time. Calculate the odds of my train being on-time and save it as ~odds_on_time~. Note that the odds are greater than 1 because the probability is greater than 0.5.
+
+** Task 4
+Use the odds that you calculated above to calculate the log odds of an on-time train and save it as ~log_odds_on_time~. Note that the log odds are positive because the probability of an on-time train was greater than 0.5.
+
+** Script.py
+
+#+begin_src python
+  import numpy as np
+  from exam import hours_studied, calculated_coefficients, intercept
+
+# Calculate odds_of_rain 
+  odds_of_rain = 0.4 / (1 - 0.4)
+  print(odds_of_rain)
+
+# Calculate log_odds_of_rain
+  log_odds_of_rain = np.log(odds_of_rain)
+  print(log_odds_of_rain)
+
+
+# Calculate odds_on_time
+  odds_on_time = 0.9 / (1 - 0.9)
+  print(odds_on_time)
+
+# Calculate log_odds_on_time
+  log_odds_on_time = np.log(odds_on_time)
+  print(log_odds_on_time)
+
+#+end_src
+
+* Sigmoid Function
+Let's return to the logistic regression equation and demonstrate how this works by fitting a model in sklearn. The equation is:
+
+$$
+\ln (\frac{p}{1 - p}) = b_0 + b_1x_1 + b_2x_2 + \cdots + b_nx_n
+$$
+
+Suppose that we want to fit a model that predicts whether a visitor to a website will make a purchase. We'll use the number of minutes they spent on the site as a predictor. The following code fits the model:
+
+#+begin_src python
+  from sklearn.linear_model import LogisticRegression
+
+  model = LogisticRegression()
+  model.fit(min_on_site, purchase)
+#+end_src
+
+Next, just like linear regression, we can use the right-hand side of our regression equation to make predictions for each od our original datapoints as follows:
+
+#+begin_src python
+  log_odds = model.intercept_ + model.coef_ * min_on_site
+  print(log_odds)
+#+end_src
+
+Output:
+
+#+begin_src
+ [[-3.28394203]
+ [-1.46465328]
+ [-0.02039445]
+ [ 1.22317391]
+ [ 2.18476234]]
+#+end_src
+
+Notice that these predictions range from negative to positive infinity: these are log odds. In other words, for the first datapoint, we have:
+
+$$
+\ln (\frac{p}{1 - p}) = -3028394203
+$$
+
+We can turn log odds into a probability as follows:
+
+$$
+\ln (\frac{p}{1 - p}) = -3028
+$$
+
+$$
+\frac{p}{1 - p} = e^{-3.28}
+$$
+
+$$
+p = e^{-3.28} (1 - p)
+$$
+
+$$
+p = e^{-3.28} - e^{-3.28} * p
+$$
+
+$$
+p + e^{-3.28} * p = e^{-3.28}
+$$
+
+$$
+p * (1 + e^{-3.28}) = e^{-3.28}
+$$
+
+$$
+p = \frac{e^{-3.28}}{1 +e^{-3.28} }
+$$
+
+$$
+p = 0.04
+$$
+
+In Python, we can do this /simultaneously/ for all of the datapoints using NumPy (loaded as np):
+
+#+begin_src python
+  np.exp(log_odds)/(1 + np.exp(log_odds))
+#+end_src
+
+Output:
+
+#+begin_src
+  array([[0.0361262 ],
+       [0.18775665],
+       [0.49490156],
+       [0.77262162],
+       [0.89887279]])
+#+end_src
+
+The calculation that we just did required us to use something called the /sigmoid function/, which is the inverse of the logit function. The sigmoid function produces the S-shaped curve we saw previously:
+
+[[./sigmoid_function.png]]
+
+** Task 1
+In the workspace, we've fit a logistic regression on the Codecademy University data and saved the intercept and coefficient on ~hours_studied~ as intercep and coef, respectively.
+
+For each student in the dataset, use the intercept and coefficient to calculate the log odds of passing the exam. Save the result as ~log_odds~.
+
+** Task 2
+Now, convert the predicted log odds for each student into a predicted probability of passing the exam. Save the predicted probabilities as ~pred_probability_passing~.
+
+** Script.py
+
+#+begin_src python
+  # Import libraries and data
+  import pandas as pd
+  import numpy as np
+
+  codecademyU = pd.read_csv('codecademyU.csv')
+
+  # Fit the logistic regression model
+  hours_studied = codecademyU[['hours_studied']]
+  passed_exam = codecademyU[['passed_exam']]
+
+  from sklearn.linear_model import LogisticRegression
+  model = LogisticRegression()
+  model.fit(hours_studied, passed_exam)
+
+  # Save intercept and coef
+  intercept = model.intercept_
+  coef = model.coef_
+
+  # Calculate log_odds here
+  log_odds = intercept + coef * hours_studied
+  print(log_odds)
+
+  # Calculate pred_probability_passing here
+  pred_probability_passing = np.exp(log_odds)/(1 + np.exp(log_odds))
+  print(pred_probability_passing)
+  #+end_src
+
+#+begin_src
+  hours_studied
+0       -6.236653
+1       -5.643001
+2       -5.049350
+3       -4.455698
+4       -3.862046
+5       -3.268395
+6       -2.674743
+7       -2.081092
+8       -1.487440
+9       -0.893788
+10      -0.300137
+11       0.293515
+12       0.887166
+13       1.480818
+14       2.074470
+15       2.668121
+16       3.261773
+17       3.855425
+18       4.449076
+19       5.042728
+None
+#+end_src
+
+#+begin_src
+  hours_studied
+0        0.001953
+1        0.003530
+2        0.006373
+3        0.011479
+4        0.020592
+5        0.036671
+6        0.064480
+7        0.110948
+8        0.184306
+9        0.290329
+10       0.425524
+11       0.572856
+12       0.708305
+13       0.814696
+14       0.888397
+15       0.935119
+16       0.963094
+17       0.979274
+18       0.988446
+19       0.993585
+#+end_src
+
+* Fitting a model in sklearn
+Now that we've learned a little bit about how logistic regression works, let's fit a model using sklearn.
+
+To do this, we'll begin by importing the LogisticRegression module and creating a LogisticRegression object:
+
+#+begin_src python
+  from sklearn.linear_model import LogisticRegression
+
+  model = LogisticRegression()
+#+end_src
+
+After creating the object, we need to fit our model on the data. We can accomplish this using the .fit() method, which takes two parameters: a /*matrix* of features/ and a /*matrix* of class labels/ (the outcome we are trying to predict).
+
+#+begin_src python
+model.fit(features, labels)
+#+end_src
+
+Now that the model is trained, we can access a few useful attributes:
+
+    - ~model.coef_~ is a vector of the coefficients of each feature
+
+    - ~model.intercept_~ is the intercept
+
+The coefficients can be interpreted as follows:
+
+    - Large positive coefficient: a one unit increase in that feature is associated with a large *increase* in the log odds (and therefore probability) of a data point belonging to the positive class (the outcome group labeled as 1)
+
+    - Large negative coefficient: a one unit increase in that feature is associated with a large *decrease* in the log odds/probability of belonging to the positive class.
+
+    - Coefficient of 0: The feature is not associated with the outcome.
+
+One important note is that sklearn's logistic regression implementation requires the features to be standardized because regularization is implemented by default.
+
+** Task 1
+We've pre-processed this data and split it into training and test sets as follows:
+
+    - ~X_train~ is the feature matrix, containing standardized training data for hours studied and practice test score
+
+    - ~y_train~ contains the outcome variable for the training data: whether or not each student passed the final exam (1 indicates passing, 0 indicates failing)
+
+Create a ~LogisticRegression~ object named ~cc_lr~ and fit it to the provided training data.
+
+** Task 2
+Print out the coefficients and intercept for the model. Are the cofficients positive or negative and does this match your expectation? Which feature (hours studied or practice test score) is more strongly associated with students' probability of passing the final exam?
+
+Both coefficients are positive, which makes sense: we expect students who study more and earn higher grades on the practice test to be more likely to pass the final exam. The coefficient on ~hours_studied~ is larger than the coefficient on ~practice_test~, suggesting that  ~hours_studied~ is more strongly associated with students' probability of passing.
+
+** Script.py
+
+#+begin_src python
+  # Import pandas and the data
+  import pandas as pd
+  codecademyU = pd.read_csv('codecademyU_2.csv')
+
+  # Separate out X and y
+  X = codecademyU[['hours_studied', 'practice_test']]
+  y = codecademyU.passed_exam
+
+  # Transform X
+  from sklearn.preprocessing import StandarScaler
+  scaler = StandardScaler()
+  scaler.fit(X)
+  X = scaler.transform(X)
+
+  # Split data into training and testing sets
+  from sklearn.model_selection import train_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=27)
+
+  # Create and fit the logistic regression model here:
+  from sklearn.linear_model import LogisticRegression
+  cc_lr = LogisticRegression()
+  cc_lr.fit(X_train, y_train)
+
+  # Print the intercept and coefficients here:
+  print(cc_lr.coef_)
+  print(cc_lr.intercept_)
+
+#+end_src
+
+#+begin_src
+ [[[[1.5100409  0.12002228]]]]
+[-0.13173123]
+#+end_src
+
+* Predictions in sklearn
+Using a trained model, we can predict whether new datapoints belong to the positive class (the group labeled as 1) using the .predict() method. The input is a matrix of features and the output is a vector of predicted labels, 1 or 0.
+
+#+begin_src python
+  print(model.predict(features))
+  # Sample output: [0 1 1 0 0]
+#+end_src
+
+If we are more interested in the predicted probability of group membership, we can use the ~.predict_proba()~ method. The input to ~predict_proba()~ is also a matrix of features and the output is an array of probabilities, ranging from 0 to 1:
+
+#+begin_src python
+  print(model.predict_proba(features)[:,1])
+  # Sample output: [0.32 0.75  0.55 0.20 0.44]
+#+end_src
+
+By default, ~.predict_proba()~ returns the probability of class membership for both possible groups. In the example code above, we've only printed out the probability of belonging to the positive class. Notice that datapoints with predicted probabilities greater than 0.5 (the second and third datapoints in this example) were classified as 1 s by the .predic() method. This is a process known as thresholding. As we can see here, sklearn sets the default classification threshold probability as 0.5.
+
+** Task 1
+In the workspace, we've fit the same logistic regression model on the CodecademyU training data. We've also created ~X_test~ and ~y_test~, which contain the testing data.
+
+Use the ~.predict()~ method to predict whether the students in the test dataset will pass the final exam, then print out the resulting vector of predictions.
+
+** Task 2
+Now, use the ~.predict_proba()~ method to calculate the predicted probability that each student in the test dataset will pass the exam. Print out the results.
+
+** Task 3
+Print out y_test to see whether the students in the test dataset actually passed the exam. Did the model make accurate predictions? Looking at the probabilities, do the misclassifications(s) make sense?
+
+You should see that the fourth datapoint was incorrectly classified as having passed the exam; however, the predicted probability of passing for this datapoint was only 57.7%, which is much lower than the other students who were correctly predicted to pass the exam (79.3% and 87.1%, respectively).
+
+** Script.py
+
+#+begin_src python
+  # Import pandas and the data
+  import pandas as pd
+  codecademyU = pd.read_csv('codecademyU_2.csv')
+
+  # Separate out X and y
+  X = codecademyU[['hours_studied', 'practice_test']]
+  y = codecademyU.passed_exam
+
+  # Transform X
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  scaler.fit(X)
+  X = scaler.transform(X)
+
+  # Split data into training and testing sets
+  from sklearn.model_selection import train_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=27)
+
+  # Create and fit the logistic regression model here:
+  from sklearn.linear_model import LogisticRegression
+  cc_lr = LogisticRegression()
+  cc_lr.fit(X_train, y_train)
+
+  # Print out the predicted outcomes for the test data
+  print(cc_lr.predict(X_test))
+
+  # Print out the predicted probabilities for the test data
+  print(cc_lr.predict_proba(X_test)[:,1])
+
+  # Print out the true outcomes for the test data
+  print(y_test)
+
+#+end_src
+
+#+begin_src python
+[0 1 0 1 1]
+[0.32065927 0.7931881  0.05547483 0.57747928 0.87070434]
+7     0
+15    1
+0     0
+11    0
+17    1
+Name: passed_exam, dtype: int64
+#+end_src
+
+* Classification Thresholding
+As we've seen, logistic regression is used to predict the probability of group membership. Once we have this probability, we need to make a decision about what class a datapoint belongs to. This is where the classification threshold comes in!
+
+The default threshold for sklearn is 0.5. If the predicted probability of an observation belonging to the positive class is greater than or equal to the threshold, 0.5, the datapoint is assigned to the positive class.
+
+[[./threshold.png]]
+
+We can choose to change the threshold of classification based on the use-case of our model. For example, if we are creating a logistic regression model that classifies whether or not an individual has cancer, we may want to be more sensitive to the positive cases. We wouldn't want to tell someone they don't have cancer when they actually do!
+
+In order to ensure that most patients with cancer are identified, we can move the classification threshold down to 0.3 or 0.4, increasing the sensitivity of our model to predicting a positive cancer classification. While this might result in more overall misclassifications, we are now missing fewer of the cases  we are trying to detect: actual cancer patients.
+
+[[./increase_sensitivity.png]]
+
+** Task 1
+In the workspace, we've fit the same logistic regression model on the CodecademyU training data. We've also printed the predicted classes and true classes for the test data.
+
+Take a look at the predicted probability of passing the exam for the misclassified datapoint. The .predict() method uses a default threshold of 0.5 for predicting group membership. For this example, we could correctly classify all five datapoints in the test dataset using a different threshold.
+
+Set the value of ~alternative_threshold~ to any value that would accomplish this.
+
+** Script.py
+
+#+begin_src python
+  # Pick an alternative threshold here:
+  alternative_threshold = 0.6
+
+  # Import pandas and the data
+  import pandas as pd
+  codecademyU = pd.read_csv('codecademyU_2.csv')
+
+  # Separate out X and y
+  X = codecademyU[['hours_studied', 'practice_test']]
+  y = codecademyU.passed_exam
+
+  # Transform X
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  scaler.fit(X)
+  X = scaler.transform(X)
+
+  # Split data into training and testing sets
+  from sklearn.model_selection import train_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=27)
+
+  # Create and fit the logistic regression model here:
+  from sklearn.linear_model import LogisticRegression
+  cc_lr = LogisticRegression()
+  cc_lr.fit(X_train, y_train)
+
+  # Print out the predicted outcomes for the test data
+  print(cc_lr.predict(X_test))
+
+  # Print out the predicted probabilities for the test data
+  print(cc_lr.predict_proba(X_test)[:,1])
+
+  # Print out the true outcomes for the test data
+  print(y_test)
+#+end_src
+
+#+begin_src
+[0 1 0 1 1]
+[0.32065927 0.7931881  0.05547483 0.57747928 0.87070434]
+7     0
+15    1
+0     0
+11    0
+17    1
+Name: passed_exam, dtype: int64
+#+end_src
+
+* Confusion matrix
+When we fit a machine learning model, we need some way to evaluate it. Often, we do this by splitting our data into training and test datasets. We use the training data to fit the model; then we use the test set to see how well the model performs with new data.
+
+As a first step, data scientist often look at a confusion matrix, which shows the number of true positives, false positives, true negatives, and false negatives.
+
+For example, suppose that the true and predicted classes for a logistic regression model are:
+
+#+begin_src python
+y_true = [0, 0, 1, 1, 1, 0, 0, 1, 0, 1]
+y_pred = [0, 1, 1, 0, 1, 0, 1, 1, 0, 1]
+#+end_src
+
+We can create a confusion matrix as follows:
+
+#+begin_src python
+  from sklearn.metrics import confusion_matrix
+  print(confusion_matrix(y_true, y_pred))
+#+end_src
+
+Output:
+
+#+begin_src
+  array([[3, 2],
+       [1, 4]])
+#+end_src
+
+This output tells us that there are 3 true negatives, 1 false negative, 4 true positives, and 2 false positives. Ideally, we want the numbers on the main diagonal (in this case, 3 and 4, which are the true negatives and true positives, respectively) to be as large as possible.
+
+** Task 1
+In the workspace, we've fit the same logistic regression model on the codecademyU training data and made predictions for the test data. ~y_test~ contains the true classes and ~y_pred~ contains the predicted classes.
+
+Create and print a confusion matrix for this data. How many incorrect classifications were there (false positives or false negatives)?
+
+** Script.py
+
+#+begin_src python
+  # Import pandas and the data
+  import pandas as pd
+  codecademyU = pd.read_csv('codecademyU_2.csv')
+
+  # Separate out X and y
+  X = codecademyU[['hours_studied', 'practice_test']]
+  y = codecademyU.passed_exam
+
+  # Transform X
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  scaler.fit(X)
+  X = scaler.transform(X)
+
+  # Split data into training and testing sets
+  from sklearn.model_selection import traing_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=27)
+
+  # Create and fit the logistic regression model here:
+  from sklearn.linear_model import LogisticRegression
+  cc_lr = LogisticRegression()
+  cc_lr.fit(X_train, y_train)
+
+  # Save and print the predicted outcomes
+  y_pred = cc_lr.predic(X_test)
+  print('predicted classes: ', y_pred)
+
+  # Print out the true outcomes for the test data
+  print('true classes: ', y_test)
+
+  # Print out the confusion matrix here
+  from sklearn.metrics import confusion_matrix
+
+  print(confusion_matrix(y_test, y_pred))
+#+end_src
+
+* Accuracy, Recall, Precision, F1 Score
+Once we have a confusion matrix, there are a few different statistics we can use to summarize the four values in the matrix. These include accuracy, precision, recall, and F1 score. We won't go into much detail about these metrics here, but a quick summary is shown below (T=true, F=false, P=positive, N=negative). For all of these metrics, a value closer to 1 is better and closer to 0 is worse.
+
+    - Accuracy = (TP + TN)/(TP + FP + TN + FN)
+
+    - Precision = TP/(TP + FP)
+
+    - Recall = TP/(TP + FN)
+
+    - F1 score : weighted average of precision and recall
+
+In sklearn, we can calculate these metrics as follows:
+
+#+begin_src python
+  # accuracy:
+  from sklearn.metrics import accuracy_score
+  print(accuracy_score(y_true, y_pred))
+  # output: 0.7
+
+  # precision:
+  from sklearn.metrics import precision_score
+  print(precision_score(y_true, y_pred))
+  # output: 0.67
+
+  # recall:
+  from sklearn.metrics import recall_score
+  print(recall_score(y_true, y_pred))
+  # output: 0.8
+
+  # F1 score
+  from sklearn.metrics import f1_score
+  print(f1_score(y_true, y_pred))
+  #output: 0.73
+#+end_src
+
+** Task 1
+In the workspace, we've fit the same logistic regression model on the codecademyU training data and made predictions for the test data. ~y_pred~ contains the predicted classes and ~y_test~ contains the true classes.
+
+Also, note that we've changed the train-test split (by using a different value for the ~random_state~ parameter, making the confusion matrix different form the one you saw in the previous exercise.
+
+Calculate the accuracy for the model and print it out.
+
+** Task 2
+Calculate the F1 score for the model and print it out.
+
+** Script.py
+
+#+begin_src python
+  # Import pandas and the data
+  import pandas as pd
+  codecademyU = pd.read_csv('codecademyU_2.csv')
+
+  # Separate out X and y
+  X = codecademyU[['hours_studied', 'practice_test']]
+  y = codecademyU.passed_exam
+
+  # Transform X
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  scaler.fit(X)
+  X = scaler.transform(X)
+
+  # Split data into training and testing sets
+  from sklearn.model_selection import train_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=51)
+
+  # Create and fit the logistic regression model here:
+  from sklearn.linear_model import LogisticRegression
+  cc_lr = LogisticRegression()
+  cc_lr.fit(X_train, y_train)
+
+  # Save and print the predicted outcomes
+  y_pred = cc_lr.predic(X_test)
+  print('predicted classes: ', y_pred)
+
+  # Print out the true outcomes for the test data
+  print('true classes: ', y_test)
+
+  # Print out the confusion matrix
+  from sklearn.metrics import confusion_matrix
+  print('confusion matrix: ')
+  print(confusion_matrix(y_test, y_pred))
+
+  # Print accuracy here:
+  from sklearn.metrics import accuracy_score
+  print(accuracy_score(y_test, y_pred))
+
+  # Print F1 score here:
+  from sklearn.metrics import f1_score
+  print(f1_score(y_test, y_pred))
+
+#+end_src
+
+* Review
+You just learned how a logistic regression model works and how to fit one to a dataset. Here are some of the things you learned:
+
+    - Logistic regression is used to perform binary classification
+
+    - Logistic regression is an extension of linear regression where we use a logit link function to fit a sigmoid curve to the data, rather than a line
+
+    - We can use the coefficients from a logistic regression model to estimate the log odds that a datapoint belongs to the positive class. We can then transform the log odds into a probability.
+
+    - The coefficients of a logistic regression model can be used to estimate relative feature importance.
+
+    - A classification threshold is used to determine the probabilistic cutoff for where a data sample is classified as belonging to a positive or negative class. The default cutoff in sklearn is 0.5.
+
+    - We can evaluate a logistic regression model using a confusion matrix or summary statistics such as accuracy, precision, recall, and F1 score.
