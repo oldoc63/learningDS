@@ -1,0 +1,116 @@
+
+* Assumptions of Logistic Regression I
+We are now ready to delve deeper into Logistic Regression. In this lesson, we will cover the different assumptions that go into logistic regression, model hyperparameters, how to evaluate a classifier, ROC curves, and what to do when there's a class imbalance in the classification problem we're working with.
+
+For this lesson, we will be using the [[https://www.kaggle.com/uciml/breast-cancer-wisconsin-data][Wisconsin Breast Cancer Data Set]] (Diagnostic) to predict whether a tumor is bening (0) or malignant (1) based on characteristics of the cells, such as radius, texture, smoothness, etc. Like a lot of real-world data sets, the distribution of outcomes is uneven (bening diagnoses are more common than malignant) and there is a bias in terms of the importance of the outcomes (classifying all malignant cases correctly is of the utmost importance).
+
+We're going to begin with the primary assumptions about the data that need to be checked before implementing a logistic regression model.
+
+1. *The target variable is binary*
+
+   One of the most basic assumptions of logistic regression is that the outcome variable needs to be /binary,/ which means there are /two possible outcomes./ Multinomial logistic regression is an exception to this assumption and is beyond the scope of this lesson.
+
+2. *Independent observations*
+
+    While often overlooked, checking for independent observations in a data set is important for logistic regression. This can be violated if, in this case, patients are biopsed multiple times (repeated sampling of the same individual).
+
+3. *Large enough sample size*
+
+     Since logistic regression is fit using /maximun likelihood estimation/ instead of /least squares minimization,/ there must be a large enough sample to get convergence. When a model fails to converge, this causes the estimates to be extremely inaccurate. Now, what does a "large enough" sample mean? Often a rule of thumb is that there should be at least 10 samples per feature for the smallest class in the outcome variable.
+
+     For example, if there were 100 samples and the outcome variable diagnosis had 60 bening tumors and 40 malignant tumors, then the max number of features allowed would be 4. To get 4 we took the smallest of the classes in the outcome variable, 40, and divided it by 10.
+
+4. *No influential outliers*
+
+   Logistic regression is sensitive to outliers, so we must remove any extremely influential outliers for model building. Outliers are a broad topic with many different definitions -z scores, scaler of the interquartile range, Cook's distance/influence/leverage, etc- so there are many ways to identify them. But here, we will use visual tools to rule out obvious outliers.
+
+** Task 1
+We need to verify that there are two classes in diagnosis, making it binary.
+
+Using ~value_counts()~ print the distinct diagnosis values and their frequency in the dataset.
+
+** Task 2
+Now we need to make sure that there are no repeat samples. We can do this by making sure the number of /unique/ ids ia equal to the number of ids.
+
+Use .nunique() to find the number of unique id values and use .count() to find the number of id values. Set this two values equal to each other and print the result.
+
+** Task 3
+If classes are very imbalanced, it is important the smallest class still meets the rule of thumb. Based on this how many features should we have at maximun?
+
+Using the outcome variable diagnosis, divide the smallest class size by 10. Save this variable as max_features and print the value.
+
+** Task 4
+We're going to view a boxplot ot the mean features (predictor_var has the list of these features) so that we can find and exclude any obvious outliers. Since the features are not normally distributed (since all the values must be greater than zero and are right-skewed), it is more informative to look at the boxplot of the log-transformed z-scores.
+
+Uncomment the relevant lines here and press Run to see the output.
+
+Which features have extreme outliers?
+
+Remember, outliers are the data points that are outside the bulk of the distribution pattern.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  # Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+  from sklearn.preprocessing import StandardScaler
+  from scipy.stats import zscore
+
+  df = pd.read_csv('breast_cancer_data.csv')
+
+  # Encode malignant as 1, benign as 0
+  df['diagnosis'] = df['diagnosis'].replace({'M':1, 'B':0})
+
+  # Imports/load data
+  predictor_var = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean', 'concavity_mean', 'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean']
+
+  #print(df.head())
+
+  # Print distinct diagnosis values and frequency in dataset
+  print(df['diagnosis'].value_counts())
+
+  # Test if the number of unique IDs is equal to sample size, i.e. no repeated patients
+  print(df['id'].nunique())
+  print(df['id'].count())
+
+  unique_ids = df.id.nunique()==df.id.count()
+  print(unique_ids)
+
+  # At a maximum, there should be no more than the smallest size class divided by 10 number of features
+  max_features = min(df['diagnosis'].value_counts() / 10)
+  print(max_features)
+
+  # See which features have extreme outliers
+  sns.boxplot(data=np.log(df[predictor_var]+.01).apply(zscore))
+  plt.xticks(rotation=45);
+  plt.show()
+  plt.close()
+
+  #5. Uncomment the code to remove the samples with extreme fractal_dimensions_mean values:
+  q_hi  = df["fractal_dimension_mean"].quantile(0.99)
+  df_filtered = df[(df["fractal_dimension_mean"] < q_hi)]
+  
+  #6. Run the boxplot again but with the filtered dataframe:
+  sns.boxplot(data=np.log(df_filtered[predictor_var]+.01).apply(zscore))
+  plt.xticks(rotation=45);
+  plt.show()
+  plt.close()
+
+#+end_src
+
+#+RESULTS:
+: diagnosis
+: 0    357
+: 1    212
+: Name: count, dtype: int64
+: 569
+: 569
+: True
+: 21.2
