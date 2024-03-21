@@ -40,7 +40,7 @@ If classes are very imbalanced, it is important the smallest class still meets t
 Using the outcome variable diagnosis, divide the smallest class size by 10. Save this variable as max_features and print the value.
 
 ** Task 4
-We're going to view a boxplot ot the mean features (predictor_var has the list of these features) so that we can find and exclude any obvious outliers. Since the features are not normally distributed (since all the values must be greater than zero and are right-skewed), it is more informative to look at the boxplot of the log-transformed z-scores.
+We're going to view a boxplot ot the mean features (~predictor_var~ has the list of these features) so that we can find and exclude any obvious outliers. Since the features are not normally distributed (since all the values must be greater than zero and are right-skewed), it is more informative to look at the boxplot of the log-transformed z-scores.
 
 Uncomment the relevant lines here and press Run to see the output.
 
@@ -114,3 +114,68 @@ Remember, outliers are the data points that are outside the bulk of the distribu
 : 569
 : True
 : 21.2
+
+* Assumptions of Logistic Regression II
+
+1. *Features linearly related to log odds*
+
+   Similar to linear regression, the underlying assumption of logistic regression is that the features are /linearly related/ to the logit fo the outcome. To test this visually, we can use Seaborn's regplot, with the parameter ~logistic=True~ and the x value as our feature of interest. If this condition is met, the fit model will resemble a sigmoidal curve (as is the case when ~x=radius_mean~).
+
+   We've added code to create another plot using the feature fractal_dimension_mean. How do the curves compare?
+
+2. *Multicollinearity*
+
+   Like in linear regression, one of the assumptions is that there is no multicollinearity in the data. Meaning the features /should not be highly correlated./ Multicollinearity can cause the coefficients and p-values to be inaccurate. With a correlation plot, we can see which features are highly correlated and then we can drop one of the features.
+
+   We're going to look at the "mean" features which are highly correlated with each other using a heatmap correlation plot.
+
+** Task 1
+Uncomment the relevant lines of code and press Run to see the heatmap.
+
+There are two features that are highly positively correlated with ~radius_mean~. Can you spot them?
+
+The heatmap shows that ~radius_mean~, ~perimeter_mean~, and ~area_mean~ are all highly positively correlated. It would be beneficial to only keep one of these three features to avoid multicollinearity.
+
+** Task 2
+Not including ~radius_mean~, ~perimeter_mean~, or ~area_mean~, there is another pair of features that are highly correlated. Create an array named ~correlated_pair~ containing these two features.
+
+** Script.py
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  # Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+
+  df = pd.read_csv('breast_cancer_data.csv')
+
+  #encode malignant as 1, bening as 0
+  df['diagnosis'] = df['diagnosis'].replace({'M':1, 'B':0})
+
+  predictor_var = ['radius_mean', 'texture_mean', 'perimeter_mean','area_mean', 'smoothness_mean', 'compactness_mean','concavity_mean', 'symmetry_mean', 'fractal_dimension_mean']
+
+  x = df[predictor_var]
+
+  # Compare the curves
+  sns.regplot(x='radius_mean', y='diagnosis', data=df, logistic=True)
+  plt.show()
+  plt.close()
+
+  sns.regplot(x='fractal_dimension_mean', y='diagnosis', data=df, logistic=True)
+  plt.show()
+  plt.close()
+
+  # Uncomment the heatmap and identify the two features that are highly correlated with the radius_mean
+  plt.figure(figsize = (10, 7))
+  sns.heatmap(x.corr(), annot=True)
+  plt.show()
+
+  #2. Identify the other highly correlated pair. Define an array called correlated_pair containing the two features you've identified.
+  correlated_pair = ['compactness_mean', 'concavity_mean']
+#+end_src
+
+#+RESULTS:
