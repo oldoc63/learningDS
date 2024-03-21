@@ -179,3 +179,83 @@ Not including ~radius_mean~, ~perimeter_mean~, or ~area_mean~, there is another 
 #+end_src
 
 #+RESULTS:
+
+* Scikit-learn implementation
+
+** Model Training and Hyperparameters
+Now that we have checked the assumptions of Logistic Regression, we can train and predict a model using scikit-learn. We will first set the /hyperparameters/ of our model.
+
+Hyperparameters are set before the model implementation step and tuned later to improve model performance. Conversely, parameters are the result of model implementation, such as the intercept and coefficients.
+
+#+begin_quote
+*Note:*
+Within scikit-learn these hyperparameters are often referred to as "parameters" which might cause some confusion. It is worth noting that the meaning within scikit-learn documentation refers to these being "parameters" of the function and not of the model itself.
+#+end_quote
+
+** Evaluation Metrics
+Despite the name, logistic regression is being used as classifier here, son any evaluation metrics for classification tasks will apply. The simplest metric is accuracy - how many correct predictions did we make out of the total? However, when classes are imbalanced, this can be a misleading metric for model performance. Similarly, if we care more about accurately predicting a certain class, other metrics may be more appropriate to use, such as precision, recall, or F1-score may be better to evaluate performance. All of these metrics are available in scikit-learn.
+
+#+begin_src
+Accuracy = (TP + TN)/Total
+
+Precision = TP/(TP + FP)
+
+Recall = TP/(TP + FN)
+
+F1 score = 2*((Precision*Recall)/(Precision+Recall))
+#+end_src
+
+** Which metrics matter most?
+For our breast cancer dataset, predicting ALL malignant cases as malignant is of the utmost importance -and even if there are some false positives (bening cases that are marked as malignant), these likely will be discovered by follow-up tests. Whereas missing a malignant case (classifying it as benign) could have deadly consequences. Thus, we want to minimize false negatives. This in turn will maximize the recall ratio (also known as the sensitivity or true positive rate).
+
+** Task 1 : Model Hyperparameters
+Using the mean predictor variables defined in the code editor, define a logistic regression classifier named ~log_reg~ using scikit-learn with no regularization (i.e. no penalty) and an intercept term. This will mean setting:
+
+    - the input argument ~penalty~ to 'none' (the default penalty is '12').
+
+    - the input argument ~fit_intercept~ to True
+
+Print the hyperparameters using the ~.get_params()~ method.
+
+** Model Parameters
+Fit the model to the training data and calculate the resulting model coefficients and intercept. Store them as variables coefficients and intercept respectively and print their values.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  # Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+
+  df = pd.read_csv('breast_cancer_data.csv')
+
+  #encode malignant as 1, benign as 0
+  df['diagnosis'] = df['diagnosis'].replace({'M':1, 'B':0})
+  predictor_var = ['radius_mean', 'texture_mean', 'compactness_mean', 'symmetry_mean']
+
+  outcome_var = 'diagnosis'
+
+  x_train, x_test, y_train, y_test = train_test_split(df[predictor_var], df[outcome_var], random_state=0, test_size=0.3)
+
+  # Fit a Logistic Regression model with the specified hyperpatameters
+  log_reg = LogisticRegression(penalty='none', fit_intercept=True)
+  print(log_reg.get_params())
+
+  # Fit the model to the training data and obtain coefficients and intercept
+  log_reg.fit(x_train, y_train)
+  coefficients = log_reg.coef_
+  intercept = log_reg.intercept_
+  print('coefficients: ', coefficients)
+  print('intercept: ', intercept)
+#+end_src
+
+#+RESULTS:
+: {'C': 1.0, 'class_weight': None, 'dual': False, 'fit_intercept': True, 'intercept_scaling': 1, 'l1_ratio': None, 'max_iter': 100, 'multi_class': 'auto', 'n_jobs': None, 'penalty': 'none', 'random_state': None, 'solver': 'lbfgs', 'tol': 0.0001, 'verbose': 0, 'warm_start': False}
+: coefficients:  [[ 1.07991529  0.28744917 30.96010078 29.97251652]]
+: intercept:  [-30.15566409]
