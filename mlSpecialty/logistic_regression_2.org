@@ -240,6 +240,12 @@ Take a look at the confusion matrix by uncommenting the code lines listed in # 4
 
 How many tumors were predicted correctly? How many people's tumors were predicted as bening but wew actually malignant? And vise versa?
 
+Out of the 171 samples, 155 were predicted correctly (57+98).
+
+6 people were told their tumor was benign and it was actually malignant (false negative) and 10 people were told their tumor was malignant but it was actually benign (false positive).
+
+Even though our model was fairly accurate, we should strive for improvement, especially when dealing with medical care!
+
 ** Script.py
 
 #+begin_src python :results output
