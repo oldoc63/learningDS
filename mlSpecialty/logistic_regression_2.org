@@ -235,6 +235,11 @@ First, use .predict() to predict the outcome variable and save it as y_pred. The
 
 Print the evaluation metrics you just stored. Which metric gives  the highest and lowest values?
 
+** Task 4: Evaluation metrics (Confusion Matrix)
+Take a look at the confusion matrix by uncommenting the code lines listed in # 4.
+
+How many tumors were predicted correctly? How many people's tumors were predicted as bening but wew actually malignant? And vise versa?
+
 ** Script.py
 
 #+begin_src python :results output
@@ -280,13 +285,27 @@ Print the evaluation metrics you just stored. Which metric gives  the highest an
   print(f'Test set precision:\t{precision}')
   print(f'Test set recall:\t{recall}')
   print(f'Test set f1-score:\t{f1}')
+
+  # Remove the comments from the following code block to print the confusion matrix
+  test_conf_matrix = pd.DataFrame(
+      confusion_matrix(y_test, y_pred),
+      index=['actual no', 'actual yes'],
+      columns=['predicted no', 'predicted yes']
+       )
+  print(test_conf_matrix)
+
 #+end_src
 
 #+RESULTS:
-: {'C': 1.0, 'class_weight': None, 'dual': False, 'fit_intercept': True, 'intercept_scaling': 1, 'l1_ratio': None, 'max_iter': 100, 'multi_class': 'auto', 'n_jobs': None, 'penalty': 'none', 'random_state': None, 'solver': 'lbfgs', 'tol': 0.0001, 'verbose': 0, 'warm_start': False}
-: coefficients:  [[ 1.07991529  0.28744917 30.96010078 29.97251652]]
-: intercept:  [-30.15566409]
-: Test set accuracy:	0.9064327485380117
-: Test set precision:	0.8507462686567164
-: Test set recall:	0.9047619047619048
-: Test set f1-score:	0.8769230769230769
+#+begin_example
+{'C': 1.0, 'class_weight': None, 'dual': False, 'fit_intercept': True, 'intercept_scaling': 1, 'l1_ratio': None, 'max_iter': 100, 'multi_class': 'auto', 'n_jobs': None, 'penalty': 'none', 'random_state': None, 'solver': 'lbfgs', 'tol': 0.0001, 'verbose': 0, 'warm_start': False}
+coefficients:  [[ 1.07991529  0.28744917 30.96010078 29.97251652]]
+intercept:  [-30.15566409]
+Test set accuracy:	0.9064327485380117
+Test set precision:	0.8507462686567164
+Test set recall:	0.9047619047619048
+Test set f1-score:	0.8769230769230769
+            predicted no  predicted yes
+actual no             98             10
+actual yes             6             57
+#+end_example
