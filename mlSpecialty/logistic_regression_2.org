@@ -443,3 +443,96 @@ Confusion Matrix: Threshold 75%
  [ 11  52]]
 0.22222222222222224
 #+end_example
+
+* ROC Curve and AUC
+We have examined how changing the threshold can affect the logistic regression predictions. There is a continuum of predictions available in a single model by varying the threshold incrementally from zero to one. For each of these thresholds, the True Positive Rate (TPR) and the False Positive Rate (FPR) can be calculated and then plot. The resulting curve these points form is known as the Receiver Operating Characteristic (ROC) curve.
+
+[[./ROC.png]]
+
+In the ROC curve plotted above, the True Positive Rate (TPR = TP / TP + FN) is on the y-axis and the Falso Positive Rate (FPR = FP / TN + FP) is on the x-axis. The ROC curve is the orange line and the dashed blue line is the Dummy Classification line, which is the equivalent of random guessing.
+
+Notice there are three data points on the ROC curve, each labeled with their threshold values. The classification threshold of 0.5 will give us a TPR of about 0.65 with a FPR of about 0.28. For our specific data, we want a higher TPR so that we catch every malignant tumor. We might select a lower threshold of 0.25 so that our TPR is about 0.8, even though this may give us an FPR of about 0.4. The ROC curve can help us /decide on a threshold that best fits our specific classification problem./
+
+While the ROC curve measures the probabilities, the AUC (Area Under the Curve) gives us a single metric for separability. The AUC tells us how well our model can distinguish between the two classes. An AUC score close to 1 is a near-perfect classifier, whereas a value of 0.5 is equivalent to random guessing. To visualize different AUC scores, look at the ROC curve plots below:
+
+[[./AUC_scores.png]]
+
+** Task 1
+In the code editor, we've plotted the ROC Curve for the dataset and model we've been working with throughout this lesson. We used scikit-learn's ~roc_curve()~ function, where the inputs are the arrays ~y_true~ and ~y_score~. The threshold values are not discernible from the curve alone, so we've labeled five thresholds for visibility. Additionally, we also plotted the ROC curve of a "dummy classifier", that predicts that all the data points belong to the more frequent class. Which threshold would be best for our classification problem?
+
+A lower threshold closer to 0.32 would best fit our classification problem. This would give us a higher True Positive Rate, and therefore we would safely diagnose more malignant tumors.
+
+** Task 2
+Find the ROC AUC score using scikit-learn's ~roc_auc_score()~ function and save the results as roc_auc. The two arguments in this function will be the true binary label and the predicted probability of the positive class.
+
+Print roc_auc to see what AUC score our model has.
+
+Does our model have good separability?
+
+The function:
+
+#+begin_src python
+  roc_auc_score(y_test, y_pred_prob[:,1])
+#+end_src
+
+We want our AUC score to be close to 1. This would mean that our model has good separability and is good at distinguishing between malignant and benign tumors.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  #Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+
+  df = pd.read_csv('breast_cancer_data.csv')
+  #encode malignant as 1, benign as 0
+  df['diagnosis'] = df['diagnosis'].replace({'M':1, 'B':0})
+  predictor_var = ['radius_mean', 'texture_mean', 'compactness_mean', 'symmetry_mean',]
+  outcome_var = 'diagnosis'
+
+  x_train, x_test, y_train, y_test = train_test_split(df[predictor_var], df[outcome_var], random_state=0, test_size=0.3)
+
+  log_reg = LogisticRegression(penalty=None,
+                               fit_intercept=True,
+                               tol=0.0000001,
+                               solver='newton-cg')
+  log_reg.fit(x_train, y_train)
+  y_pred = log_reg.predict(x_test)
+  y_pred_prob = log_reg.predict_proba(x_test)
+
+  from sklearn.dummy import DummyClassifier
+  from sklearn.metrics import roc_curve, roc_auc_score
+
+  fpr, tpr, thresholds = roc_curve(y_test, y_pred_prob[:,1])
+
+  plt.figure()
+  plt.plot(fpr, tpr, color='darkorange', label='ROC curve')
+  idx = list(range(len(thresholds)))[1::4]
+  for i in idx:
+      plt.text(fpr[i], tpr[i], thresholds[i].round(2))
+  clf = DummyClassifier(strategy='most_frequent', random_state=0)
+  clf.fit(x_train, y_train)
+  roc_auc = roc_auc_score(y_test, clf.predict_proba(x_test)[:,1])
+  fpr, tpr, thresholds = roc_curve(y_test, clf.predict_proba(x_test)[:,1])
+  plt.plot(fpr, tpr, color='navy', linestyle='--', label='Dummy Classifier (most frequent) \n (area = %0.2f)' % roc_auc)
+  plt.xlabel('False Positive Rate')
+  plt.ylabel('True Positive Rate')
+  plt.title('ROC Curve')
+  plt.grid()
+  plt.legend(loc="lower right")
+  plt.show()
+
+  # Find ROC_AUC score and print it
+  roc_auc = roc_auc_score(y_test, y_pred_prob[:,1])
+  print(f'ROC AUC score: {roc_auc}')
+
+#+end_src
+
+#+RESULTS:
+: ROC AUC score: 0.9810405643738976
