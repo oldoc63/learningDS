@@ -348,7 +348,7 @@ Uncomment the relevant lines in the code editor and press Run to view the confus
 ** Task 3
 We can now calculate the confusion matrices for alternative thresholds.
 
-Calculate the confusion matrices for thresholds of 25% and 75% and store them as cm_25 and cm_75 respectively. Print them to examine how they're different from the confussion matrix for the default threshold value.
+Calculate the confusion matrices for thresholds of 25% and 75% and store them as ~cm_25~ and ~cm_75~ respectively. Print them to examine how they're different from the confussion matrix for the default threshold value.
 
 To get the class predictions for any threshold value t (in decimals and not percentages!), you can do the following:
 
@@ -356,7 +356,12 @@ To get the class predictions for any threshold value t (in decimals and not perc
   predicted_class = (y_pred_prob[:,1] > t)*1.0
 #+end_src
 
+** Task 4
+We're going to put what we've learned in this exercise together by figuring out how to set the correct threshold for a given problem. In our classification problem, we would like to minimize the number of false negatives, i.e., we'd like to correctly catch as many malignant cases as possible. Specifically, we would like to set a threshold such that no more than 2 malignancies are misindentify, i.e., no more than 2 false negatives are allowed.
 
+We've created an array thresh that contains a range of threshold values between 0 and 1. The array ~false_negatives~ contains the corresponding number of false negatives that would occur for each threshold value. What is the lowest value of thresh corresponding to the ocurrence of a false negative value of 2? Store your answer as a variable ~thresh_choice~ and print it.
+
+Identify the indices corresponding to ~false_negatives >= 2~ and pick the earliest index value.
 
 ** Script.py
 
@@ -409,6 +414,19 @@ To get the class predictions for any threshold value t (in decimals and not perc
   cm_75 = confusion_matrix(y_test, y_pred_class)
   print(cm_75)
 
+  # Choosing the right threshold for a question
+
+  # Array of thresholds
+  thresh = np.linspace(0,1,100)
+  false_negatives = []
+
+  for t in thresh:
+      cm = confusion_matrix(y_test, (y_pred_prob[:,1]>t)*1.0)
+      false_negatives.append(cm[1][0])
+
+  thresh_choice = thresh[np.argmax(np.array(false_negatives)>=2)]
+  print(thresh_choice)                    
+
 #+end_src
 
 #+RESULTS:
@@ -423,4 +441,5 @@ Confusion Matrix: Threshold 25%
 Confusion Matrix: Threshold 75%
 [[104   4]
  [ 11  52]]
+0.22222222222222224
 #+end_example
