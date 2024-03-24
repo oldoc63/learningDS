@@ -536,3 +536,188 @@ We want our AUC score to be close to 1. This would mean that our model has good 
 
 #+RESULTS:
 : ROC AUC score: 0.9810405643738976
+
+* Class Imbalance
+Class imbalance is when your binary classes for the outcome variable are not evenly split. Technically, anything different from a 50/50 distribution would be imbalanced and need appropriate care. In the case of rare events, sometimes the positive class can be less than 1% of the total. If your classes are significantly imbalanced, this could create a bias towards the majority class since the model learns that it can have a higher accuracy if it predicts the majority class more often.
+
+** Positive Rate
+We can use the positive rate to tell us how balanced our classes are. The positivity rate is the rate of occurrence for the positive class. With our breast cancer data, the formula is Positivity Rate = Total Malignant Cases / Total Cases. If our positivity rate is close to 0.5, then our clases are balanced.
+
+** Stratification
+If your classes are imbalanced (more likely to happen with smaller datasets) then this difference can become even greater after you split your data into a training and testing dataset. One way to mitigate this is to randomly split using stratification on the class labels. Stratification is when the data is sorted into subgroups to ensure a nearly equal class distribution in your train and test sets. After using stratification, the training and testing datasets should have a very similar positivity rate (but stratification does not necessarily cause the positivity rate of the dataset to reach closer to 0.5).
+
+** Undersampling/Oversampling
+To bring the positivity rate of the dataset closer to 0.5, we can undersample the majority class or oversample the minority class. For oversampling, repeated samples (with replacement) are taken from the minority class until the size is equal to that of the majority class. This causes the same data to be used multiple times, giving a higher weight to these samples. Alternatively, undersampling leaves out some of the majority class data to have the same number of samples as the minority class, leaving fewer data to build the model. We will not be practicing undersampling/oversampling in this exercise even though it can be a useful way to balance the classes.
+
+** Balance the Class Weight
+When training a model, it is the default for every sample to be weighted equally. However, in the case of class imbalance, this can result in poor predictive power for the smaller of the two classes. A way to counterac this in logistic regression is to use the parameter ~class_weight='balanced'~. This applies a weight inversely proportional to the class frequency, therefore supplying higher weight to misclassified instances in the smaller class. While overall accuracy may not increase, this can increase the accuracy for the smaller class (e.g. increase the number of malignant cases correctly diagnosed).
+
+Keep in mind that we want the recall score (also known as the True Positive Rate) to be as high as we can get it for our breast cancer data.
+
+#+begin_src python
+Recall = TP / TP + FN
+#+end_src
+
+** Task 1: Stratified Sampling
+In the code editor, we've written some code to execute a typical train-test split to calculate the positivity rate for the training and test data:
+
+#+begin_src python
+x_train, x_test, y_train, y_test = train_test_split(df[predictor_var], df[outcome_var], random_state=6, test_size=0.3)
+#+end_src
+
+Create a stratified train-test sample with the following variable names ~x_train_str~, ~x_test_str~, ~y_train_str~, ~y_test_str~. Use ~train_test_split()~ again and copy the same parameters as before buy also add the stratify parameter that is set to the class labels ~df[outcome_var]~.
+
+** Task 2: Stratified positivity rates
+Calculate the train and test positivity rates for the stratified sample and store them as ~str_train_positivity_rate~ and ~str_test_positivity_rate~ respectively. Print them to see how they differ from the positivity rates with the previous (unstratified) sample.
+
+Remember to use ~y_train_str~ and ~y_test_str~ to calculate the positivity rates for the stratified samples.
+
+After stratification, the training and testing datasets should have very similar positivity rates.
+
+** Task 3: Model predictions after stratified sampling
+Fit the logistic regression model to the stratified training data and get ~y_pred~ on the stratified test data. Calculate the recall and accuracy scores on the stratified test data and store them as variables ~recall_str~ and ~accuracy_str~ respectively.
+
+Did stratification increase the recall and accuracy scores?
+
+The functions in scikit-learn to calculate recall and accuracy are ~recall_score()~ and ~accuracy_score()~ respectively. The argument to the function are ~y_test_str~ and ~y_pred~ in that order.
+
+** Task 4: Balancing Class Weights
+To balance class weights, define a Logistic Regression classifier ~log_reg_bal~ that has the same parameters as the ~log_reg~ model that was given in the starting code:
+
+#+begin_src python
+log_reg = LogisticRegression(penalty=None, max_iter=1000, fit_intercept=True, tol=0.000001)
+#+end_src
+
+And add a parameter ~class_weight~ set to 'balanced'.
+
+** Task 5: Model predictions after balancing class weights
+Fit the balanced class LogisticRegression classifier to the training data and predict on the test data to obtain recall and accuracy scores. Store them as ~recall_bal~ and ~accuracy_bal~ respectively.
+
+In the output there should be a recall and an accuracy score for each of the three models; the default log_reg model, the log_reg model with the stratified samples, and the balanced model log_reg_bal. Which model has the highest scores?
+
+* Logistic Regression II Review
+Let's review all the concepts you've learned in this lesson:
+
+    - The logistic regression primary assumtions include:
+
+      1. The target variable is binary
+      2. The observations are independent of one another
+      3. The sample size must be large enough
+      4. There should not be any extreme outliers in the data
+
+     - Additional assumptions of LR include:
+
+       1. Features are linearly related to the logit of the outcome
+       2. No multicollinearity (can cause the coefficients and p-values to be inaccurate)
+
+      - We can train and predict a model using scikit-learn.
+
+      - Hyperparameters are set before the model implementation step and tuned later to improve model performance.
+
+      - We can use metrics (accuracy, precision, recall or F1-score) to evaluate our Logistic Regression model.
+
+      - The prediction threshold (a measure of certainty associated with each prediction) can be an additional lever to tune a model's predictions. In our breast cancer data, we wanted a lower threshold with fewer false negatives (a malignant tumor classified as benign).
+
+      - For each prediction threshold, the True Positive Rate (TPR) and the False Positive Rate (FPR) can be calculated and then plotted. The resulting curve these points form is known as the Receiver Operating Characteristic (ROC) curve.
+
+      - The AUC (Area Under the Curve) tells us how well our model can distinguish between the two classes. An AUC score close to 1 is a near-perfect classifier, whereas a value of 0.5 is equivalent to random guessing.
+
+      - If your classes are significantly imbalanced, this could create a bias toward the majority class since the model learns that it can have a higher accuracy if it predicts the majority class more often (not good).
+
+      - To bring the positivity rate of the dataset closer to 0.5, we can undersample the majority class, oversample the minority class, or balance the weights with ~class_weight='balanced'~.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  #Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+
+  df = pd.read_csv('breast_cancer_data.csv')
+  #encode malignant as 1, benign as 0
+
+  df['diagnosis'] = df['diagnosis'].replace({'M':1, 'B':0})
+  predictor_var = ['radius_mean', 'texture_mean', 'compactness_mean', 'symmetry_mean']
+  outcome_var = 'diagnosis'
+
+  x_train, x_test, y_train, y_test = train_test_split(df[predictor_var], df[outcome_var], random_state=6, test_size=0.3)
+
+  print('Train positivity rate: ')
+  print(sum(y_train)/y_train.shape[0])
+  print('Test positivity rate: ')
+  print(sum(y_test)/y_test.shape[0])
+
+  log_reg = LogisticRegression(penalty=None, max_iter=1000, fit_intercept=True, tol=0.000001)
+  log_reg.fit(x_train, y_train)
+  y_pred = log_reg.predict(x_test)
+
+  recall = recall_score(y_test, y_pred)
+  accuracy = accuracy_score(y_test, y_pred)
+
+  print('Recall and Accuracy scores')
+  print(recall, accuracy)
+
+  ## stratified sampling
+  x_train_str, x_test_str, y_train_str, y_test_str = train_test_split(df[predictor_var], df[outcome_var], random_state=6, test_size=0.3, stratify=df[outcome_var])
+
+  ## stratify positivity rates
+  print('Stratified train positivity rate: ')
+  str_train_positivity_rate = sum(y_train_str)/y_train_str.shape[0]
+  print(str_train_positivity_rate)
+
+  print('Stratified test positivity rate: ')
+  str_test_positivity_rate = sum(y_test_str)/y_test_str.shape[0]
+  print(str_test_positivity_rate)
+
+  # model prediction after stratified sampling
+  log_reg.fit(x_train_str, y_train_str)
+  y_pred = log_reg.predict(x_test_str)
+  recall_str = recall_score(y_test_str, y_pred)
+  accuracy_str = accuracy_score(y_test_str, y_pred)
+
+  print('Stratified Sampling: Recall and Accuracy scores')
+  print(recall_str, accuracy_str)
+
+  # balanced class weights
+  log_reg_bal = LogisticRegression(penalty=None,
+                                   max_iter=1000,
+                                   fit_intercept=True,
+                                   tol=0.000001,
+                                   class_weight='balanced')
+
+  # model predictions after balancing class weights
+  log_reg_bal.fit(x_train, y_train)
+  y_pred = log_reg_bal.predict(x_test)
+
+  recall_bal = recall_score(y_test, y_pred)
+  accuracy_bal = accuracy_score(y_test, y_pred)
+  print('Balanced Class Weights: Recall and Accuracy scores')
+  print(recall_bal)
+  print(accuracy_bal)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Train positivity rate: 
+0.34673366834170855
+Test positivity rate: 
+0.4327485380116959
+Recall and Accuracy scores
+0.8783783783783784 0.9181286549707602
+Stratified train positivity rate: 
+0.37185929648241206
+Stratified test positivity rate: 
+0.3742690058479532
+Stratified Sampling: Recall and Accuracy scores
+0.875 0.9239766081871345
+Balanced Class Weights: Recall and Accuracy scores
+0.9054054054054054
+0.9239766081871345
+#+end_example
