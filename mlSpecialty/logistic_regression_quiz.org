@@ -1,0 +1,84 @@
+
+* Logistic Regression Quiz Codecademy
+
+** Which of the followin would be a correct way to interpret this point on a ROC curve?
+
+[[./point_roc_curve.png]]
+
+    - Threshold = 0
+      A threshold value of zero would correspond to everything being classified as positive, which would have a true positive rate of 1.0, which is the y-axis.
+
+    - *Threshold = 1*
+      Correct! A threshold value of one would correspond to everything being classified as negative, which would have a true positive rate of 0, which corresponds to the point (0,0) on the ROC curve.
+
+    - AUC = 0%
+
+    - Threshold = 0.5
+
+** You have a dataset of patients who participated in a program to quit smoking. Features include demographics (gender, race, employment status and other health measurements (weight, height, alcohol use) and the outcome variable is whether they quit smoking for the following 3 months or not. Which of the following will violate the assumptions of logistic regression?
+
+    - *Include patients who completed multiple quit-smoking programs. Person #1234 has two rows in the dataset, one from when they completed the program in 2020 and one from when they completed the program in 2021.*
+
+      Correct! By using the same patient multiple times, the data does not consist of independent samples, which violates an assumption of logistic regression.
+
+    - Exclude patients who previously participated in a quit-smoking program.
+
+    - Randomly selecting a set of patients who completed the quit smoking program and had not previously participated in one.
+
+    - Exclude patients who did not complete the quit-smoking program
+
+** Fill in the code to plot an ROC curve from the actual outcomes (y_test), predicted classes (y_pred), and predicted class probabilities (y_pred_prob).
+
+#+begin_src python
+  from sklearn.metrics import roc_curve
+
+  fpr, tpr, thresholds = roc_curve('y_test', 'y_pred_prob', [:,1])
+
+  plt.plot('fpr', 'tpr')
+#+end_src
+
+** Which of the following is the correct interpretation of this point on a ROC curve?
+
+[[./tpr_80.png]]
+
+    - False positive rate = 80%
+
+    - Accuracy = 80%
+
+    - AUC = 80%
+
+    - *True positive rate = 80%*
+
+      Correct! The y-axis on a ROC curve represents the true positive rate.
+
+** If the following confusion matrix is obtained on a test set when using the default 0.5 threshold for a logistic regression model, which of the following COULD be the confusion matrix when the threshold is increased to 0.75?
+
+| .            | Predicted False | Predicted True |
+| Actual False |             200 |             20 |
+| Actual True  |              10 |             50 |
+
+    - Answer:
+
+      | .            | Predicted False | Predicted True |
+      | Actual False |             210 |             10 |
+      | Actual True  |              30 |             30 |
+
+    - Error:
+
+      | .            | Predicted False | Predicted True |
+      | Actual False |             190 |             30 |
+      | Actual True  |               5 |             55 |
+
+In both "actual false" and "actual true", "predicted true" increased, which would be the case if the threshold value decreased (NOT increased).
+
+** For a logistic regression classifier, under what situation is accuracy a good measure of model performance?
+
+    - Outcome classes are unbalanced and correctly predicting positives and negatives are of equal importance.
+
+    - Answer:
+      Outcome classes are evenly balanced and correctly predicting positives and negatives are of equal importance
+
+    - Error:
+      Outcome classes are unbalanced and correctly predicting positives and negatives are of equal importance.
+
+      When data is unbalanced, accuracy can be very misleading and often AUC or F1 score is used instead.
