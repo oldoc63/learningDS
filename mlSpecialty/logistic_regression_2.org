@@ -605,26 +605,26 @@ Let's review all the concepts you've learned in this lesson:
       3. The sample size must be large enough
       4. There should not be any extreme outliers in the data
 
-     - Additional assumptions of LR include:
+    - Additional assumptions of LR include:
 
        1. Features are linearly related to the logit of the outcome
        2. No multicollinearity (can cause the coefficients and p-values to be inaccurate)
 
-      - We can train and predict a model using scikit-learn.
+    - We can train and predict a model using scikit-learn.
 
-      - Hyperparameters are set before the model implementation step and tuned later to improve model performance.
+    - Hyperparameters are set before the model implementation step and tuned later to improve model performance.
 
-      - We can use metrics (accuracy, precision, recall or F1-score) to evaluate our Logistic Regression model.
+    - We can use metrics (accuracy, precision, recall or F1-score) to evaluate our Logistic Regression model.
 
-      - The prediction threshold (a measure of certainty associated with each prediction) can be an additional lever to tune a model's predictions. In our breast cancer data, we wanted a lower threshold with fewer false negatives (a malignant tumor classified as benign).
+    - The prediction threshold (a measure of certainty associated with each prediction) can be an additional lever to tune a model's predictions. In our breast cancer data, we wanted a lower threshold with fewer false negatives (a malignant tumor classified as benign).
 
-      - For each prediction threshold, the True Positive Rate (TPR) and the False Positive Rate (FPR) can be calculated and then plotted. The resulting curve these points form is known as the Receiver Operating Characteristic (ROC) curve.
+    - For each prediction threshold, the True Positive Rate (TPR) and the False Positive Rate (FPR) can be calculated and then plotted. The resulting curve these points form is known as the Receiver Operating Characteristic (ROC) curve.
 
-      - The AUC (Area Under the Curve) tells us how well our model can distinguish between the two classes. An AUC score close to 1 is a near-perfect classifier, whereas a value of 0.5 is equivalent to random guessing.
+    - The AUC (Area Under the Curve) tells us how well our model can distinguish between the two classes. An AUC score close to 1 is a near-perfect classifier, whereas a value of 0.5 is equivalent to random guessing.
 
-      - If your classes are significantly imbalanced, this could create a bias toward the majority class since the model learns that it can have a higher accuracy if it predicts the majority class more often (not good).
+    - If your classes are significantly imbalanced, this could create a bias toward the majority class since the model learns that it can have a higher accuracy if it predicts the majority class more often (not good).
 
-      - To bring the positivity rate of the dataset closer to 0.5, we can undersample the majority class, oversample the minority class, or balance the weights with ~class_weight='balanced'~.
+    - To bring the positivity rate of the dataset closer to 0.5, we can undersample the majority class, oversample the minority class, or balance the weights with ~class_weight='balanced'~.
 
 ** Script.py
 
