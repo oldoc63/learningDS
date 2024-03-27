@@ -1,0 +1,209 @@
+
+* K-Nearest Neighbors Classifier
+*K-Nearest Neighbors (KNN)* is a classification algorithm. The central idea is that data points with similar attributes tend to fall into similar categories.
+
+Consider de image to the right. This image is complicated, but for now, let's just focus on where the data points are being placed. Every data point -whether its color is red, green, or white- has an ~x~ value an a ~y~ value. As a result, it can be plotted on this two-dimensional graph.
+
+Next, let's consider the color tof the data. The color represents the class that the K-Nearest Neighbor algorithm is trying to classify. In this image, data points can either have the class green or the class red. If a data point is white, this means that it doesn't have a class yet. The purpose of the algorithm is to classify these unknown points.
+
+Finally, consider the expanding circle around the white point. This circle is finding the k nearest neighbors to the white point. When k = 3, the circle is fairly small. Two of the three nearest neighbors are green, and one is red. So in this case, the algorithm would classify the white point as green. However, when we increase k to 5, the circle expands, and the classification changes. Three of the nearest neighbors are red and two are green, so now the white point will be classified as red.
+
+This is the central idea behind the K-Nearest Neighbor algorithm. If you have a dataset of points where the class of each point is known, you can take a new point with an unknown class, find it's nearest neighbors, and classify it.
+
+Consider the image below:
+
+[[./k_nearest.png]]
+
+    - If k = 1, what would the class of the question mark be?
+
+* Introduction
+Before diving into the K-Nearest Neighbors algorithm, let's first take a minute to think about an example.
+
+Consider a dataset of movies. Let's brainstorm some features of a movie data point. A feature is a piece of information associated with a data point. Here are some potential features of movie data points:
+
+    - the /lenght/ of the movie in minutes
+
+    - the /budget/ of the movie in dollars
+
+If you think back to the previous exercise, you could imagine movies being places in that two-dimentional space based on those numeric features. There could also be some boolean features: features that are either true or false. For example, here are some potential boolean features:
+
+    - /Black and white./ This feature would be ~True~ for black and white movies and ~False~ otherwise.
+
+    - /Directed by Stanley Kubrick./ This feature would be False for almost every movie, but for the few movies that were directed by Kubrick, it would be True.
+
+Finally, let's think about how we might want to classify a movie. For the rest of this lesson, we're going to be classifying movies as either good or bad. In our dataset, we've classified a movie as good if it had an IMDb rating of 7.0 or greater. Every "good" movie will have a class of 1, while every bad movie will have a class of 0.
+
+We've created some movie data points where the first item in the list is the length, the second is the budget, and the third is whether the movie was directed by Stanley Kubrick.
+
+** Task 1
+Add another movie to the code. Add the variable ~gone_with_the_wind~. This movie is 238 minutes long, had a budget of $3,977,000, and was not directed by Stanley Kubrick.
+
+*Hint* ~gone_with_the_wind~ should be a list of three values. The last one should be False.
+
+** Script.py
+#+begin_src python
+mean_girls = [97, 17000000, False]
+the_shining = [146, 19000000, True]
+gone_with_the_wind = [238, 3977000, False]
+#+end_src
+
+* Distance Between Points - 2D
+In the first exercise, we were able to visualize the dataset and estimate the k nearest neighbors of an unknown point. But a computer isn't going to be able to do that!
+
+We need to define what it means for two points to be close together or far apart. To do this, we're going to use the [[https://www.codecademy.com/content-items/8a61a8bd456c17af1e3a6922694c811f/exercises/points][Distance Formula]].
+
+For this example, the data has two dimensions:
+
+    - The length of the movie
+
+    - The movie's release date
+
+Consider /Star Wars/ and /Raiders of the Lost Ark./ Star Wars is 125 minutes long and was released in 1977. Raiders of the Lost Ark is 115 minutes long and was released in 1981.
+
+The distance between the movies is computed below:
+
+$$
+\sqrt{(125 - 115)^2 + (1977 - 1981)^2}
+$$
+
+** Task 1
+Write a function named distance that takes two lists named movie1 and movie2 as parameters.
+
+You can assume that each of these lists contains two numbers -the first number being the movie's runtime and the second number being the year the movie was released. The function should return the distance between the two lists.
+
+Remember, in python, x ** 0.5 will give you the square root of x.
+
+Similarly, x ** 2 will give you the square of x.
+
+*Hint*
+Break it into steps:
+
+First, find the distance between the firts dimension of each list:
+
+#+begin_src python
+  length_difference = (movie1[0] - movie2[0]) ** 2
+#+end_src
+
+Next, find the difference in the years.
+
+#+begin_src python
+  year_difference = (movie1[1] - movie2[1]) ** 2
+#+end_src
+
+Finally, add those two values together and take the square root:
+
+#+begin_src python
+  distance = (length_difference + year_difference) ** 0.5
+#+end_src
+
+Return this final distance.
+
+** Task 2
+Call the function on some of the movies we've given you.
+
+Print the distance between Star Wars and Raiders of the Lost Ark.
+
+Print the distance between Star Wars and Mean Girls.
+
+Which movie is Star Wars more similar to?
+
+*Hint*
+You can find the distance between Star Wars and Raiders of the Lost Ark by doing this:
+
+#+begin_src python
+print(distance(star_wars, raiders))
+#+end_src
+
+
+** Script.py
+
+#+begin_src python :results output
+  star_wars = [125, 1977]
+  raiders = [115, 1981]
+  mean_girls = [97, 2004]
+
+  def distance(movie1, movie2):
+      length_difference = (movie1[0] - movie2[0]) ** 2
+      year_difference = (movie1[1] - movie2[1]) ** 2
+      distance = (length_difference + year_difference) ** 0.5
+      return distance
+
+  print(distance(star_wars, raiders))
+  print(distance(star_wars, mean_girls))
+ #+end_src
+
+#+RESULTS:
+: 10.770329614269007
+: 38.897300677553446
+
+* Distance Between Points - 3D
+Making a movie rating predictor based on just the length and release date of movies is pretty limited. There are so many more interesting pieces of data about movies that we could use! So let's add another dimension.
+
+Let's say this third dimension is the movie's budget. We now have to find the distance between these two points in three dimensions.
+
+[[./3D.png]]
+
+What if we're not happy with just three dimensions? Unfortunately, it becomes pretty difficult to visualize points in dimensions higher than 3. But that doesn't mean we can't find the distance between them.
+
+The generalized distance formula between points A and B is as follows:
+
+$$
+\sqrt{(A_1 - B_1)^2 + (A_2 - B_2)^2 + \cdots + (A_n - B_n)^2}
+$$
+
+Here, A_1 - B_1 is the difference between the first feature of each point. A_n - B_n is the difference between the last feature of each point.
+
+Using this formula, we can find the K-Nearest Neighbors of a point in N-dimensional space! We now can use as much information about our movies as we want.
+
+We will eventually use these distances to find the nearest neighbors to an unlabeled point.
+
+** Task 1
+Modify your distance function to work with any number of dimensions. Use a for loop to iterate through the dimensions of each movie.
+
+Return the total distance between the two movies.
+
+*Hint*
+Create a variable to sum the squared differences of each dimension and start it at 0.
+
+Then loop through each dimension and add the squared difference of each dimension to your new variable:
+
+#+begin_src python
+  for i in range(len(movie1)):
+      squared_difference += (movie1[i] - movie2[i]) ** 2 
+#+end_src
+
+After looping through all of the dimensions of your movies, take the square root of squared_difference and return that new value.
+
+** Task 2
+We’ve added a third dimension to each of our movies.
+
+Print the new distance between Star Wars and Raiders of the Lost Ark.
+
+Print the new distance between Star Wars and Mean Girls.
+
+Which movie is Star Wars closer to now?
+
+** Script.py
+
+#+begin_src python :results output
+  star_wars = [125, 1977, 11000000]
+  raiders = [115, 1981, 18000000]
+  mean_girls = [97, 2004, 17000000]
+
+  def distance(movie1, movie2):
+    squared_difference = 0
+    for i in range(len(movie1)):
+      squared_difference += (movie1[i] - movie2[i]) ** 2
+      total_distance = squared_difference ** 0.5
+    return total_distance
+
+  print(distance(star_wars, raiders))
+  print(distance(star_wars, mean_girls))
+
+#+end_src
+
+#+RESULTS:
+: 7000000.000008286
+: 6000000.000126083
+
+
