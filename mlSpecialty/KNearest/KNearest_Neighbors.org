@@ -509,3 +509,94 @@ def classify(unknown, dataset, labels, k):
 
 print(classify([.4, .2, .9], movie_dataset, movie_labels, 5))
 #+end_src
+
+* Classify your favorite movie
+Nice work! Your classifier is now able to predict whether a movie will be good or bad. So far, we've only tested this on a completely random point [.4, .2, .9]. In this exercise we're going to pick a real movie, normalize it, and run it through our classifier to see what it predicts!
+
+In the instructions below, we are going to be testing our classifier using the 2017 movie Call Me By Your Name. Feel free to pick your favorite movie instead!
+
+** Task 1
+To begin, we want to make sure the movie that we want to classify isn't already in our database. This is important because we don't want one of the nearest neighbors to be itself!
+
+We can do this by using the in keyword.
+
+Begin by printing if the title of your movie is in movie_dataset. This should print False.
+
+** Task 2
+Once you confirm your movie is not in your database, we need to make a datapoint for your movie. Create a variable named my_movie and set it equal to a list of three numbers. They should be:
+
+    - The movie's budget (dollars)
+
+    - The movie's runtime (minutes)
+
+    - The year the movie was released
+
+Make sure to put the information in that order.
+
+If you want to use Call Me By Your Name, the budget was 3.500.000 dollars, the runtime was 132 minutes, and the movie was released in 2017.
+
+** Task 3
+Next, we want to normalize this datapoint. We've included the function ~normalize_point~ which takes a datapoint as a parameter and returns the point normalized. Create a variable called ~normalized_my_movie~ and set it equal to the normalized value of ~my_movie~. Print the result!
+
+** Task 4
+Finally, call classify with the following parameters:
+
+    - ~normalized_my_movie~
+
+    - ~movie_dataset~
+
+    - ~movie_labels~
+
+    - 5
+
+Print the result. Did your classifier think your movie was good or bad?
+
+#+begin_src python
+  classify(normalized_my_movie, movie_dataset, movie_labels, 5)
+#+end_src
+
+** Script.py
+
+#+begin_src python
+from movies import movie_dataset, movie_labels, normalize_point
+
+def distance(movie1, movie2):
+  squared_difference = 0
+  for i in range(len(movie1)):
+    squared_difference += (movie1[i] - movie2[i]) ** 2
+  final_distance = squared_difference ** 0.5
+  return final_distance
+
+def classify(unknown, dataset, labels, k):
+  distances = []
+  #Looping through all points in the dataset
+  for title in dataset:
+    movie = dataset[title]
+    distance_to_point = distance(movie, unknown)
+    #Adding the distance and point associated with that distance
+    distances.append([distance_to_point, title])
+  distances.sort()
+  #Taking only the k closest points
+  neighbors = distances[0:k]
+  num_good = 0
+  num_bad = 0
+  for neighbor in neighbors:
+    title = neighbor[1]
+    if labels[title] == 0:
+      num_bad += 1
+    elif labels[title] == 1:
+      num_good += 1
+  if num_good > num_bad:
+    return 1
+  else:
+    return 0
+
+print("Call Me By Your Name" in movie_dataset)
+
+my_movie = [3500000, 132, 2017]
+
+normalized_my_movie = normalize_point(my_movie)
+
+classify(normalized_my_movie, movie_dataset, movie_labels, 5)
+
+#+end_src
