@@ -702,10 +702,21 @@ On the other hand, if k is very large, our classifier will suffer from /underfit
 Begin by creating a function called ~find_validation_accuracy~ that takes five parameters. The parameters should be ~trainin_set~, ~training_labels~, ~validation_set~, ~validation_labels~, and ~k~.
 
 ** Task 2
-Create a variable called ~num_correct~ and have it begin at 0.0. Loop through the movies of validation_set, and call classify using each movie's data, the training_set, the training_labels, and k. Store the result in a variable called guess. For now, return guess outside of your loop.
+Create a variable called ~num_correct~ and have it begin at 0.0. Loop through the movies of ~validation_set~, and call classify using each movie's data, the ~training_set~, the ~training_labels~, and ~k~. Store the result in a variable called guess. For now, return guess outside of your loop.
 
-Remember, the movie's data can be found by using validation_set[title]
+Remember, the movie's data can be found by using ~validation_set[title]~.
 
+** Task 3
+Inside the for loop, compare guess to the corresponding label in ~validation_labels~. If they were equal, add 1 to ~num_correct~. For now, outside of the for loop, return ~num_correct~.
+
+*Hint*
+The label that you want to compare guess to is ~validation_labels[title]~.
+
+** Task 4
+Outside the for loop return the validation error. This should be ~num_correct~ divided by the total number of points in the validation set.
+
+** Task 5
+Call ~find_validation_accuracy~ with k=3. Print the results. The code should take a couple of seconds to run.
 
 ** Script.py
 
@@ -747,7 +758,79 @@ Remember, the movie's data can be found by using validation_set[title]
       num_correct = 0
       for title in validation_set:
           guess = classify(validation_set[title], training_set, training_labels, k)
-          return guess
+      if guess == validation_labels[title]:
+          num_correct += 1
+      return num_correct / len(validation_set)
 
+  print(find_validation_accuracy(trainin_set, trainin_labels, validation_set, validation_labels, 3))
 
+#+end_src
+
+* Graph of K
+The graph to the right shows the validation accuracy of our movie classifier as k increases. When k is small, overfitting occurs and the accuracy is relatively low. On the other hand, when k gets too large, underfitting occurs and accuracy starts to drop.
+
+[[./Validation_Accuracy.png]]
+
+* Using sklearn
+You've now written your own K-nearest Neighbor classifier from scratch! However, rather than writing your own classifier every time, you can use Python's sklearn library. sklearn is a Python library specifically used for Machine Learning. It has an amazing number of features, but for now, we're only going to investigate its K-Nearest Neighbor classifier.
+
+There are a couple of steps we'll need to go through in order to use the library. First, you need to create a KNeighborsClassifier object. This object takes one parameter k. For example, the code below will create a classifier where k=3
+
+#+begin_src python
+  classifier = KNeighborsClassifier(n_neighbors = 3)
+#+end_src
+
+Next, we'll need to train our classifier. The .fit() method takes two parameters. The first is a list of points, and the second is the labels associated with those points. So for our movie example, we might have something like this:
+
+#+begin_src python
+training_points = [
+  [0.5, 0.2, 0.1],
+  [0.9, 0.7, 0.3],
+  [0.4, 0.5, 0.7]
+]
+
+training_labels = [0, 1, 1]
+classifier.fit(training_points, training_labels)
+#+end_src
+
+Finally, after training the model, we can classify new points. The .predict() method takes a list of points that you want to classify. It returns a list of guesses for those points.
+
+#+begin_src python
+unknown_points = [
+  [0.2, 0.1, 0.7],
+  [0.4, 0.7, 0.6],
+  [0.5, 0.8, 0.1]
+]
+
+guesses = classifier.predict(unknown_points)
+#+end_src
+
+** Task 1
+We've imported sklearn for you. Create a KNeighborsClassifier named classifier that uses k=5.
+
+** Task 2
+We've also imported some movie data. Train your classifier using ~movie_dataset~ as the training points and labels as the training labels.
+
+** Task 3
+Let's classify some movies. Classify the followin movies [.45, .2, .5], [.25, .8, .9], [.1, .1, .9]. Print the classifications!
+
+Which movies were classified as good movies and which were classified as bad movies?
+
+Remember, those three numbers associated with a movie are the normalized budget, run time, and year of release.
+
+** Script.py
+
+#+begin_src python
+  from movies import movie_dataset, labels
+  from sklearn.neighbors import KNeighborsClassifier
+
+  classifier = KNeighborsClassifier(n_neighbors = 5)
+
+  classifier.fit(movie_dataset, labels)
+
+  unknown_movies = [[.45, .2, .5], [.25, .8, .9], [.1, .1, .9]]
+
+  guesses = classifier.predict(unknown_movies)
+
+  print(guesses)
 #+end_src
