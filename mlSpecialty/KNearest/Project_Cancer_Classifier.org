@@ -1,0 +1,18 @@
+
+* Cancer Classifier
+In this project, we will be using several Python libraries to make a K-Nearest Neighbor classifier that is trained to predict whether a patient has breast cancer.
+
+** Explore the data
+*** Task 1
+Let's begin by importing the breast cancer data form sklearn. We want to import the function ~load_breast_cancer~ from sklearn.datasets.
+
+Once we've imported the dataset, let's load the data into a variable called ~breast_cancer_data~. Do this by setting ~breast_cancer_data~ equal to the function ~load_breast_cancer()~.
+
+* Script.Py
+#+begin_src python :results output
+  from sklearn.datasets import load_breast_cancer
+
+  breast_cancer_data = load_breast_cancer()
+#+end_src
+
+#+RESULTS:
