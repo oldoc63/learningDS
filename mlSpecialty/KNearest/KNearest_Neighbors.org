@@ -834,3 +834,86 @@ Remember, those three numbers associated with a movie are the normalized budget,
 
   print(guesses)
 #+end_src
+
+* Review
+Congratulations! You just implemented your very own classifier from scratch and used Python's sklearn library. In this lesson, you learned some techniques very specific to the K-Nearest Neighbor algorithm, but some general machine learning techniques as well. Some of the major takeaways from this lesson include:
+
+    - Data with n features can be conceptualized as points lying in n-dimensional space.
+
+    - Data points can be compared by using the distance formula. Data points that are similar will have a smaller distance between them.
+
+    - A point with an unknown class can be classified by finding the k nearest neighbors.
+
+    - To verify the effectiveness of a classifier, data with known classes can be split into a training set and a validation set. Validation error can then be calculated.
+
+    - Classifier have parameters that can be tuned to increase their effectiveness. In the case of K-Nearest Neighbors, k can be changed.
+
+    - A classifier can be trained improperly and suffer from overfitting or underfitting. In the case of K-Nearest Neighbors, a low k often leads to overfitting and a large k often leads to underfitting.
+
+    - Python's sklearn library can be used for many classification and machine learning algorithms.
+
+      To the right is an interactive visualization of K-Nearest Neighbors. If you move your mouse over the canvas, the location of your mouse will be classified as either green or blue. The nearest neighbors to your mouse are highlighted in yellow. Use the slider to change k to see how the boundaries of the classification change.
+
+* Quiz
+** Question 1
+True/False: K-Nearest Neighbors can work with data with 1000 features.
+
+*True*: K-Nearest Neighbors can work with data with any number of features greater than 0.
+
+** Question 2
+What  is a potential problem if k is even?
+There could be an equal number of nearest neighbors from both classes.
+If k = 2 and one neighbor is of class A, and the other is class B, which one should the classifier choose?
+
+** Question 3
+How does K-Nearest Neighbors define what it means for to points to be close to each other?
+
+By using the distance formula using all features of the data.
+
+Correct! The distance formula can work with any number of features.
+
+** Question 4
+Overfitting happens when:
+
+Larger trends in the dataset aren't represented when k is too big.
+If k is too small, outliers dominate the result.
+
+** Question 5
+Why is normalizing your data essential for K-Nearest Neighbors?
+
+So a feature with a vastly different scale does not dominate other features.
+
+If one feature is in the millions, and one feature is in the hundreds, the feature in the hundreds will hardly matter!
+
+** Question 6
+What would you expect to happen to the validation accuracy of a K-Nearest Neighbors classifier as k increases from 1 to infinity?
+
+Validation accuracy goes up and then down.
+
+If k is 1, the model is likely overfitted. Increasing k will improve accuracy. When k gets too big, accuracy will go down, since the model will begin to underfit the data.
+
+** Question 7
+What is the nearest neighbor to the point (1,2)?
+
+    - (1,0)
+
+    - (3,1)
+
+    - (0,1)
+
+    - *(1,3)*
+
+** Question 8
+Underfitting happens when:
+
+k is too big so larger trends in the dataset aren't represented.
+
+Correct! If k is the size of your training set, then all predictions will be the exact same.
+
+** Question 9
+The .predict() function in scikit-learn’s KNeighborClassifier class takes _____ as a parameter and returns _____.
+
+A list of points to classify / a list of predictions
+
+Correct! The input needs to be a list, even if it is only one point.
+      
