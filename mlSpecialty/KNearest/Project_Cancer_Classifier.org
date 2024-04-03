@@ -27,10 +27,49 @@ Was the very first data point tagged as malignant or bening?
 ** Splitting the data into training and validation sets
 
 *** Task 4
+We have our data, but now it needs to be split into training and validation sets. Luckily, sklearn has a function that does that for us. Begin by importing the train_test_split function from sklearn.model_selection.
+
+*** Task 5
+Call the train_test_split function. It takes several parameters:
+
+    - The data you want to split (for us ~breast_cancer_data.data~)
+
+    - The labels associated with that data (for us, ~breast_cancer_data.target~)
+
+    - The ~test_size~. This is what percentage of your data you want to be in your testing set. Let's use ~test_size = 0.2~.
+
+    - ~random_state~. This will ensure that every time you run your code, the data split in the same way. This can be any number. We use ~random_state = 100~.
+
+      *Hint*
+      The third and fourth parameters need the name of the parameter. For example look at the code below:
+
+      #+begin_src python
+  train_test_split(___,___,test_size = 0.2, random_state = 100)
+      #+end_src
+
+*** Task 6
+Right now we're not storing the return value of ~train_test_split~. ~train_test_split~ returns four values in the following order:
+
+    - The training set
+
+    - The validation set
+
+    - The training labels
+
+    - The validation labels
+
+  Store those values in variables named ~training_data~, ~validation_data~,~ training_labels~, ~validation_labels~.
+
+*** Task 7
+Let's confirm that worked correctly. Print out the length of ~training_data~ and ~training_labels~. They should be the same size - one label for every piece of data!
+
+
+
 
 * Script.Py
 #+begin_src python :results output
   from sklearn.datasets import load_breast_cancer
+  from sklearn.model_selection import train_test_split
 
   breast_cancer_data = load_breast_cancer()
 
@@ -41,6 +80,14 @@ Was the very first data point tagged as malignant or bening?
   print(breast_cancer_data.target)
 
   print(breast_cancer_data.target_names)
+
+  training_data, validation_data, training_labels, validation_labels = train_test_split(breast_cancer_data.data, breast_cancer_data.target, test_size = 0.2, random_state = 100)
+
+  print(len(training_data))
+
+  print(len(training_labels))
+
+
 #+end_src
 
 #+RESULTS:
@@ -76,4 +123,6 @@ Was the very first data point tagged as malignant or bening?
  1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
  1 1 1 1 1 1 1 0 0 0 0 0 0 1]
 ['malignant' 'benign']
+455
+455
 #+end_example
