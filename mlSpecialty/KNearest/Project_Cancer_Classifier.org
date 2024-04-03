@@ -77,6 +77,11 @@ Train your classifier using the fit function. This funtion takes two parameters:
 *** Task 11
 Now that the classifier has been trained, let's find how accurate it is on the validation set. Call the classifier's ~score~ function. ~score~ takes two parameters: the validation set and the validation labels. Print the result!
 
+*** Task 12
+The classifier does pretty well when k = 3. But maybe there's a better k! Put the previous 3 lines of code inside a for loop. The loop should have a variable named k that starts at 1 and increases to 100. Rather than ~n_neighbors~ always being 3, it should be this new variable k.
+
+You should now see 100 different validation accuracies print out. Which k seems the best?
+
 
 * Script.Py
 #+begin_src python :results output
