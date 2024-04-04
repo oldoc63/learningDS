@@ -82,12 +82,39 @@ The classifier does pretty well when k = 3. But maybe there's a better k! Put th
 
 You should now see 100 different validation accuracies print out. Which k seems the best?
 
+** Graphing the results
+
+*** Task 13
+We now have the validation accuracy for 100 different k s. Rather than just printing it out, let's make a graph using matplotlib. Begin by importing matplotlib.pyplot as plt.
+
+*** Task 14
+The x-axis should be the values of k that we tested. This should be a list of numbers between 1 and 100. You can use the range function to make this list. Store it in a variable named k_list.
+
+*Hint*
+range(1, 5) will give you a list [1, 2, 3, 4]. Create a list of numbers of 1 through 100 (including 100).
+
+*** Task 15
+The y-axis of our graph should be the validation accuracy. Instead of printing the validation accuracies, we want add them to a list. Outside of the for loop, create an empty list named accuracies.
+
+*** Task 16
+We can now plot our data! Call plt.plot(). The first parameter should be ~k_list~ and the second parameter should be accuracies.
+
+After plotting the graph, show it using plt.show().
+
+*** Task 17
+Let's add some labels and a title. Set the x_axis label to "k" using plt.xlabel(). Set the y-axis label to "Validation Accuracy". Set the title to "Breast Cancer Classifier Accuracy".
+
+*** Task 18
+If you want to play around with this more, try changing the random_state parameter when making the training set and validation set. This will change which points are in the training set and which are in the validation set.
+
+Ideally, the graph will look the same no matter how you split up the training set and test set. This data set is fairly small, so there is slightly more variance than usual.
 
 * Script.Py
 #+begin_src python :results output
   from sklearn.datasets import load_breast_cancer
   from sklearn.model_selection import train_test_split
   from sklearn.neighbors import KNeighborsClassifier
+  import matplotlib.pyplot as plt
 
   breast_cancer_data = load_breast_cancer()
 
@@ -111,10 +138,20 @@ You should now see 100 different validation accuracies print out. Which k seems 
 
   print(classifier.score(validation_data, validation_labels))
 
+  accuracies = []
   for k in range(1, 101):
       classifier = KNeighborsClassifier(n_neighbors = k)
       classifier.fit(training_data, training_labels)
-      print(classifier.score(validation_data, validation_labels))
+      accuracies.append(classifier.score(validation_data, validation_labels))
+
+  k_list = range(1, 101)
+
+
+  plt.plot(k_list, accuracies)
+  plt.xlabel("k")
+  plt.ylabel("Validation Accuracy")
+  plt.title("Breast Cancer Classify Accuracy")
+  plt.show()
 
 #+end_src
 
@@ -154,104 +191,4 @@ You should now see 100 different validation accuracies print out. Which k seems 
 455
 455
 0.9473684210526315
-0.9298245614035088
-0.9385964912280702
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.9649122807017544
-0.9649122807017544
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.9473684210526315
-0.956140350877193
-0.9473684210526315
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.956140350877193
-0.9473684210526315
-0.9473684210526315
-0.9473684210526315
-0.956140350877193
-0.956140350877193
-0.9649122807017544
-0.9473684210526315
-0.9473684210526315
-0.9385964912280702
-0.9298245614035088
-0.9298245614035088
-0.9385964912280702
-0.9473684210526315
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9298245614035088
-0.9298245614035088
-0.9298245614035088
-0.9298245614035088
-0.9210526315789473
-0.9298245614035088
-0.9210526315789473
-0.9385964912280702
-0.9298245614035088
-0.9385964912280702
-0.9385964912280702
-0.9385964912280702
-0.9298245614035088
-0.9298245614035088
-0.9210526315789473
-0.9385964912280702
-0.9210526315789473
-0.9298245614035088
-0.9298245614035088
-0.9385964912280702
-0.9298245614035088
-0.9385964912280702
-0.9298245614035088
-0.9298245614035088
 #+end_example
