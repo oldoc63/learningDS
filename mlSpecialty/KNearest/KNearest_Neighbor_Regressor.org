@@ -11,7 +11,7 @@ For example, if the three nearest neighbors to an unrated movie have ratings of 
 ** Task 1
 We've imported most of the K-Nearest Neighbor algorithm. Before we dive into finishing the regressor, let's refresh ourselves with the data.
 
-At the bottom of your code, print ~movie_dataset["Life of Pi"]~. You should see a list of three values. These values are the normalized values for the movie's budget, runtime, and release year.
+At the bottom of your code, ~print movie_dataset["Life of Pi"]~. You should see a list of three values. These values are the normalized values for the movie's budget, runtime, and release year.
 
 ** Task 2
 Print the rating for "Life of Pi". This can be found in ~movie_ratings~.
@@ -72,4 +72,61 @@ Note that the list [0.016, 0.300, 1.022] is the normalized budget, runtime, and 
 #+begin_src python
   [0.00982356711895032, 0.30716723549488056, 0.9550561797752809]
   8.0
+  6.859999999999999
+#+end_src
+
+* Weighted Regression
+We're off to a  good start, but we can be even more clever in the way that we compute the average. We can compute a /weighted/ average based on how close each neighbor is.
+
+Let's say we're trying to predict the rating of movie X and we've found its three nearest neighbors. Consider the following table:
+
+| Movie | Rating | Distance to movie X |
+| A     |    5.0 |                 3.2 |
+| B     |    6.8 |                11.5 |
+| C     |    9.0 |                 1.1 |
+
+If we find the mean, the predicted rating for X would be 6.93. However, movie X is most similar to movie C, so movie C's rating should be more important when computing the average. Using a weighted average, we can find movie X's rating:
+
+[[./weighted_average.png]]
+
+The numerator is the sum of every rating divided by their respective distance. Even though the ratings are the same as before, the weighted average has now gone up to 7.9.
+
+** Task 1
+Let's redo our predict() function so it computes the weighted average.
+
+Before you begin looping through the neighbors, create a variable named numerator and set it to 0.
+
+** Script.py
+
+#+begin_src python
+  from movies import movie_dataset, movie_ratings
+
+  def distance(movie1, movie2):
+      squared_difference = 0
+      for i in range(len(movie1)):
+          squared_difference += (movie1[i] - movie2[i]) ** 2
+      final_distance = squared_difference ** 0.5
+      return final_distance
+
+  def predict(unknown, dataset, movie_ratings, k):
+      distances = []
+      #Looping through all points in the dataset
+      for title in dataset:
+          movie = dataset[title]
+          distance_to_point = distance(movie, unknown)
+          #Adding the distance and point associated with that distance
+          distances.append([distance_to_point, title])
+      distances.sort()
+      #Taking only the k closest points
+      neighbors = distances[0:k]
+      numerator = 0
+      denominator = 0
+      for neighbor in neighbors:
+          rating = movie_ratings[neighbor[i]]
+          distance_to_neighbor = neighbor[0]
+          numerator += rating / distance_to_neighbor
+          denominator += / distance_to_neighbor
+      return numerator / denominator
+
+  print(predict([0.016, 0.300, 1.022], movie_dataset, movie_ratings, 5))
 #+end_src
