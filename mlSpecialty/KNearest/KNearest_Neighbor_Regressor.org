@@ -96,6 +96,18 @@ Let's redo our predict() function so it computes the weighted average.
 
 Before you begin looping through the neighbors, create a variable named numerator and set it to 0.
 
+** Task 2
+Let’s now calculate the denominator of the weighted average. Before your loop, create a variable named denominator and set it equal to 0.
+
+Inside your for loop, add 1 divided by the neighbor’s distance to denominator.
+
+Outside the loop, return numerator/denominator.
+
+** Task 3
+Once again call your predict function using Incredibles 2‘s features. Those features were [0.016, 0.300, 1.022]. Set k = 5. Print the results.
+
+How did using a weighted average change the predicted rating? Remember, before calculating the weighted average the prediction was 6.86.
+
 ** Script.py
 
 #+begin_src python
@@ -129,4 +141,75 @@ Before you begin looping through the neighbors, create a variable named numerato
       return numerator / denominator
 
   print(predict([0.016, 0.300, 1.022], movie_dataset, movie_ratings, 5))
+#+end_src
+
+* Scikit-learn
+Now that you've written  your own K-Nearest Neighbor regression model, let's take a look at scikit-learn's implementation. The KNeighborsRegressor class is very similar to KNeighborsClassifier.
+
+We first need to create the regressor. We can use the parameter n_neighbors to define our value for k.
+
+We can also choose whether or not to use a weighted average using the parameter weights. If weights equals "uniform", all neighbors will be considered equally in the average. If weights equals "distance", then a weighted average is used.
+
+#+begin_src python
+  classifier = KNeighborsRegressor(n_neighbors = 3, weights = "distance")
+#+end_src
+
+Next, we need to fit the model to our training data using the .fit() method. .fit() takes two parameters. The first is a list of points, ant the second is a list of values associated with those points.
+
+#+begin_src python
+  training_points = [
+  [0.5, 0.2, 0.1],
+  [0.9, 0.7, 0.3],
+  [0.4, 0.5, 0.7]
+]
+
+training_labels = [5.0, 6.8, 9.0]
+classifier.fit(training_points, training_labels)
+#+end_src
+
+Finally, we can make predictions on new data points using the .predict() method. .predict() takes a list of points and returns a list of predictions for those points.
+
+#+begin_src python
+  unknown_points = [
+  [0.2, 0.1, 0.7],
+  [0.4, 0.7, 0.6],
+  [0.5, 0.8, 0.1]
+]
+
+guesses = classifier.predict(unknown_points)
+#+end_src
+
+** Task 1
+Create a KNeighborsRegressor named regressor where ~n_neighbors = 5~ and weights = "distance".
+
+** Task 2
+We've also imported some movie data. Train your classifier using ~movie_dataset~ as the training points and ~movie_ratings~ as the training values.
+
+** Task 3
+Let's predict some movie ratings. Predict the ratings for the following movies:
+
+    [0.016, 0.300, 1.022],
+    [0.0004092981, 0.283, 1.0112],
+    [0.00687649, 0.235, 1.0112] .
+
+These three lists are the features for Incredibles 2, The Big Sick, and The Greatest Showman. Those three numbers associated with a movie are the normalized budget, runtime, and year of release.
+
+Print the predictions!
+
+** Script.py
+
+#+begin_src python
+  from movies import movie_dataset, movie_ratings
+  from sklearn.neighbors import KNeighborsRegressor
+
+  regressor = KNeighborsRegressor(n_neighbors=5, weights="distance")
+
+  regressor.fit(movie_dataset, movie_ratings)
+
+  predictions = regressor.predict([[0.016, 0.300, 1.022],
+    [0.0004092981, 0.283, 1.0112],
+    [0.00687649, 0.235, 1.0112]])
+
+  print(predictions)
+
 #+end_src
