@@ -15,3 +15,13 @@ In order to make a classification, this classifier needs a data point with four 
    - Whether or not the student plans on cheating.
 
 For example, let's say that somebody has a "B" average in the class, studied for more than 3 hours, slept less than 5 hours before the test, and doesn't plan to cheat. If we start at the top of the tree and take the correct path based on that data, we'll arrive at a leaf node that predicts the person will not get an A on the next test.
+
+If we're given this magic tree, it seems relatively easy to make classifications. But how do these trees get created in the first place? Decision trees are supervised machine learning models, which means that they're created from a training set of labeled data. Creating the tree is where the learning in machine learning happens.
+
+Take a look at the gif on this page. We begin with every point in the training set at the top of the tree. These training points have labels -the red points represent students that didn't get an A on a test and the green points represent students that did get an A on a test.
+
+We then decide to split the data into smaller groups based on a feature. For example, that feature could be something like their average grade in the class. Students with an A average would go into one set, strudents with a B average would go into another subset, and so on.
+
+Once we have these subsets, we repeat the process -we split the data in each subset again on a different feature. Eventually, we reach a point where we decide to stop splitting the data into smaller groups. We've reached a leaf of the tree. We can now count up the labels of the data in that leaf. If an unlabeled point reaches that leaf, it will be classified as the majority label.
+
+We can now make a tree, buy how did we know which features to split the data set with? After all, if we started by splitting the data based on the number of hours they slept the night before the test, we'd end up with a very different tree that would produce very different results. How do we know which tree is best? We'll tackle this question soon!
