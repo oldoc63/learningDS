@@ -1,0 +1,17 @@
+
+* What is a Decision Tree?
+Decision trees are machine learning models that try to find patterns in the features of data points. Take a look at the tree on this page. This tree tries to predict whether a student will get an A on their next test.
+
+By asking questions like "What is the student's average grade in the class" the decision tree tries to get a better understanding of their chances on the next test.
+
+In order to make a classification, this classifier needs a data point with four features:
+
+    - The student's average grade in the class.
+
+    - The number of hours the student plans on studying for the test.
+
+   - The number of hours the student plans on sleeping the night before the test.
+
+   - Whether or not the student plans on cheating.
+
+For example, let's say that somebody has a "B" average in the class, studied for more than 3 hours, slept less than 5 hours before the test, and doesn't plan to cheat. If we start at the top of the tree and take the correct path based on that data, we'll arrive at a leaf node that predicts the person will not get an A on the next test.
