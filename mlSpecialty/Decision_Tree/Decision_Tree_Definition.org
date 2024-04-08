@@ -25,3 +25,100 @@ We then decide to split the data into smaller groups based on a feature. For exa
 Once we have these subsets, we repeat the process -we split the data in each subset again on a different feature. Eventually, we reach a point where we decide to stop splitting the data into smaller groups. We've reached a leaf of the tree. We can now count up the labels of the data in that leaf. If an unlabeled point reaches that leaf, it will be classified as the majority label.
 
 We can now make a tree, buy how did we know which features to split the data set with? After all, if we started by splitting the data based on the number of hours they slept the night before the test, we'd end up with a very different tree that would produce very different results. How do we know which tree is best? We'll tackle this question soon!
+
+* Implementing a Decision Tree
+To answer the questions posed in the previous exercise, we're going to do things a bit differently in this lesson and work "backwards": we're going to first fit a decision tree to a dataset and visualize this tree using scikit-learn. We're then going to systematically unpack the following: how to interpret the tree visualization, how scikit-learn's implementation works, what is gini impurity,  what are parameters and hyperparameters of the decision tree model, etc.
+
+We’re going to use a dataset about cars with six features:
+
+    - The price of the car, ~buying~, which can be “vhigh”, “high”, “med”, or “low”.
+
+    - The cost of maintaining the car, ~maint~, which can be “vhigh”, “high”, “med”, or “low”.
+
+    - The number of doors, ~doors~, which can be “2”, “3”, “4”, “5more”.
+    - The number of people the car can hold, persons, which can be “2”, “4”, or “more”.
+
+    - The size of the trunk, ~lugboot~, which can be “small”, “med”, or “big”.
+
+    - The safety rating of the car, ~safety~, which can be “low”, “med”, or “high”.
+
+** Task 1
+We've imported the dataset in the workspace.
+    - Take a look at the first five rows of the dataset by uncommenting print(df.head()) and clicking run.
+
+    - We've created dummy features for the categorical values and set the predictor and target variables as X and y respectively. Uncomment the lines pertaining to this and press run.
+
+    - You can examine the new set of features using print(X.columns)
+
+How many features are there now? Do they make sense?
+
+*Hint*
+Each categorical  variable is replaced by multiple binary (0 or 1) variables. For instance, instead of the variable ‘buying’ in the original dataset, we now have ‘buying_high’, ‘buying_low’, ‘buying_med’ and ‘buying_vhigh’, each taking a value of 0 or 1 depending on which category the price of the car belongs to.
+
+Running print(len(X.columns)) gives us the total number of features. (There are now 21 new features!)
+
+** Task 2
+We can now perform a train-test split and fit a decision tree to our training data. We'll be using scikit-learn's train_test_split function to do the split and the DecisionTreeClassifier() class to fit the data. Uncomment the lines that do the same and press Run.
+
+** Task 3
+We're now ready to visualize the decision tree! The tree module within scikit-learn has a plotting functionality that allows us to do this. Uncomment the lines relevant to this and press Run to view the tree visualization.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+
+  #Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn import tree
+
+  #Loading the dataset
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+
+  # 1a. Take a look at the dataset
+  print(df.head())
+
+  # 2a. Setting the target and predictor variables
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 is not acceptable
+  X = pd.get_dummies(df.iloc[:,0:6])
+  y = df['accep']
+
+  ## 1c. Examine the new features
+  print(X.columns)
+  print(len(X.columns))
+
+  # 2a. Performing the train-test split
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.2)
+
+  # 2b. Fitting the decision tree classifier
+  dt = DecisionTreeClassifier(max_depth=3, ccp_alpha=0.01, criterion='gini')
+
+  dt.fit(x_train, y_train)
+
+  # 3.Plotting the tree
+  plt.figure(figsize=(20, 12))
+  tree.plot_tree(dt, feature_names = x_train.columns, max_depth=5, class_names = ['unacc', 'acc'], label='all', filled=True)
+  plt.tight_layout()
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  buying  maint doors persons lug_boot safety  accep
+0  vhigh  vhigh     2       2    small    low  unacc
+1  vhigh  vhigh     2       2    small    med  unacc
+2  vhigh  vhigh     2       2    small   high  unacc
+3  vhigh  vhigh     2       2      med    low  unacc
+4  vhigh  vhigh     2       2      med    med  unacc
+Index(['buying_high', 'buying_low', 'buying_med', 'buying_vhigh', 'maint_high',
+       'maint_low', 'maint_med', 'maint_vhigh', 'doors_2', 'doors_3',
+       'doors_4', 'doors_5more', 'persons_2', 'persons_4', 'persons_more',
+       'lug_boot_big', 'lug_boot_med', 'lug_boot_small', 'safety_high',
+       'safety_low', 'safety_med'],
+      dtype='object')
+21
+#+end_example
