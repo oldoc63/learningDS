@@ -181,3 +181,62 @@ Let's traverse the tree from the root node. We have ~safety_low~ = 0, so we move
 : Fraction of acceptable cars: 0.2981186685962373
 : Cars with low safety: unacc
 : The classs of the sample car: unacc
+
+* Gini Impurity
+Consider the two trees below. Which tree would be more useful as a model that tries to predict whether someone would get an A in a class?
+
+[[./gini_impurity.png]]
+
+Let's say you use the top tree. You'll end up at a leaf node where the label is up for debate. The training data has labels from both classes! If you use the bottom tree, you'll end up at a leaf where there's only one type of label. There is not debate at all! We'd be much more confident about our classification if we used the bottom tree.
+
+The idea can be quantified by calculating the Gini impurity of a set of data points. For two classes (1 and 2) with probabilities $p_1$ and $p_2$ respectively, the Gini impurity is:
+
+$$
+1 - (p_1^2 + p_2^2) = 1 - (p_1^2 + (1 - p_1)^2)
+$$
+
+[[./gini_impurity_graph.png]]
+
+The goal of a decision tree model is to separate the classes the best possible, i.e. minimize the impurity (or maximize the purity). Notice that if p_1 is 0 or 1, the Gini impurity is 0, which means there is only one class so there is perfect separation. From the graph, the Gini impurity is maximum at p_1=0.5, which means the two classes are equally balanced, so this is perfectly impure!
+
+In general, the Gini impurity for C classes is defined as:
+
+$$
+1 - \sum_1^C p_i^2
+$$
+
+** Task 1
+Using the same decision tree from the previous exercise, notice that each node is labeled with a gini=, which is the Gini impurity for the samples at that node. For the root node, calculate the Gini impurity using the formula and confirm this matches the value listed on the node.
+
+*Hint*
+Use the formula:
+
+$$
+1 - (p_1^2 + p_2^2) = 1 - (p_1^2 + (1 - p_1)^2)
+$$
+
+$$
+1 - \left(\left (\frac{412}{1382} \right )^2 + \left (\frac{970}{1382} \right )^2 \right)
+$$
+
+$$
+1 -  \left(\left (\frac{412}{1382} \right )^2 + \left (1 - \frac{412}{1382} \right )^2 \right)
+$$
+
+** Task 2
+Confirm the Gini impurity for the bottom left node. Since this is a non-root node (either a leaf or a split node), the Gini impurity is only calculated for he samples passing through this node, not the entire dataset -hence the number of samples is 449, not 1382.
+
+*Hint*
+Use the same formula as above, but observe that the bottom left node has 449 samples with 96 acc and 353 unacc cars. (So p1 = 96/449 and so on.)
+
+#+begin_src python :results output
+  gini_root = 1 - ((412/1382)**2 + (1 - (412/1382))**2)
+  print(f'Gini impurity root node : {gini_root}')
+
+  gini_bottom_left = 1 - ((96/449)**2 + (1 - (96/449))**2)
+  print(f'Gini impurity bottom left node : {gini_bottom_left}')
+#+end_src
+
+#+RESULTS:
+: Gini impurity root node : 0.41848785606128835
+: Gini impurity bottom left node : 0.33618880858725886
