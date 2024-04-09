@@ -240,3 +240,66 @@ Use the same formula as above, but observe that the bottom left node has 449 sam
 #+RESULTS:
 : Gini impurity root node : 0.41848785606128835
 : Gini impurity bottom left node : 0.33618880858725886
+
+* Information Gain
+We know that we want to end up with leaves with a low Gini Impurity, but we still need to figure out which features to split on in order to achieve this. To answer this question, we can calculate the /information gain/  of splitting the data on a certain feature. Information gain measures the difference in the impurity of the data before and after the split.
+
+For example, let's start with the root node of our car acceptability tree.
+
+The initial Gini impurity (which we confirmed previously) is 0.418. The first split occurs based on the feature ~safety_low<=0.5~, and as this is a dummy variable with values 0 and 1, this split is pushing higher safety cars to the left (912 samples) and low safety cars to the right (470 samples). Before we discuss how we decided to split on this feature, let's calculate the information again.
+
+The new Gini impurities for these two split nodes are 0.495 and 0 (which is a pure leaf node). All together, the now weighted Gini impurity after the split is:
+
+$$
+912/1382*(.495) + 470/1382*(0) = 0.3267
+$$
+
+Not bad! (Remember we want our Gini impurity to be lower!) This is lower than our initial Gini impurity, so by splitting the data in that way, we've gained some information about how the data is structured -the datasets after the split are purer than they were before the split.
+
+Then the information gain (or reduction in impurity after the split) is:
+
+$$
+0.4185 - 0.3267 = 0.0918
+$$
+
+The higher the information gain the better -if information gain is 0, then splitting the data on that feature was useless!
+
+** Task 1
+Verify splitting on a pure node will result in an information gain of zero. For example, with the right-hand-side split of the root node, ~safety_low<=0.5~ is false, consider a further split of this node.
+
+The result will be each subsequent split will still have Gini impurity of zero. Fill this in the code editor and uncomment the relevant lines to calculate the gini information gain.
+
+** Task 2
+Calculate the information gain on the next split, on persons_2 in the tree but reading the following:
+
+   - The number of samples off the tree to input the split ratio (r_persons_2)
+
+   - The gini values at the child nodes (gini_left_node and gini_right_node) Input these, uncomment the relevant lines of code and press Run to obtain the information gain at this split.
+** Script.py
+
+#+begin_src python :results output
+  #1. Information gain at a pure node (i.e., node with no more branches)
+  r = 0.5 #ratio of new split, could be anything
+  gini_pure_node = 0
+  gini_info_gain = r*gini_pure_node  + (1-r)*gini_pure_node
+  print(f'Gini information gain pure node split safety_low >= .5 : {gini_info_gain}')
+
+  #2. Information gain at the 'persons_2 split'
+  r_persons_2 =  604/912 #read ratio of the split from the tree
+  gini_left_split = 0.434
+
+  gini_right_split = 0
+
+  initial_gini_persons_2 = 0.495
+
+  weighted_gini_persons_2 = r_persons_2 * gini_left_split + (1-r_persons_2) * gini_right_split
+
+  gini_info_gain_persons_2 = initial_gini_persons_2 - weighted_gini_persons_2
+
+  print(f'Gini information gain node persons_2 : {gini_info_gain_persons_2}')
+
+#+end_src
+
+#+RESULTS:
+: Gini information gain pure node split safety_low >= .5 : 0.0
+: Gini information gain node persons_2 : 0.20757017543859652
