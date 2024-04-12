@@ -581,3 +581,57 @@ Predict the classes of the test data set (~x_test~) and save this as an array ~y
 : Decision Tree Parameters:  {'ccp_alpha': 0.0, 'class_weight': None, 'criterion': 'gini', 'max_depth': None, 'max_features': None, 'max_leaf_nodes': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'random_state': None, 'splitter': 'best'}
 : Decision Tree Depth: 11
 : Test set accuracy: 0.9826589595375722
+
+* Visualizing Decision Trees
+We built a decision tree using scikit-learn and predicted new values with it. But what does the tree look like? What features are used to split? Two methods using only scikit-learn/matplotlib can help visualize the tree, the first using tree_plot, the second listing the rules as text. There are other libraries available with more advanced visualization (graphviz and dtreeviz, for example, but may require additional instalation and won't be covered here).
+
+** Task 1
+Press Run on the existing code and inspect the current output of ~tree.plot_tree()~ (Use the arrows in the browser to zoom out for a closer wiew). What seems to be missing? The features are labeled only by index rather than name. Pass the additional parameters ~feature_names~ = ~x_train.columns~, ~class_names~ = ['unacc', 'acc'], filled=True to the plotting function and note the differences.
+
+** Task 2
+Maybe you want a more simplistic method of visualizing the tree in a text-based fashion. This can be done by printing the result of ~tree.export_text()~. Fix the same issue as above by passing the parameter feature_names with a list of the columns to print out the names rather than index.
+
+** Script.py
+#+begin_src python :results output
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn import tree
+
+  ## Loading the data and setting target and predictor variables
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 if not acceptable
+  X = pd.get_dummies(df.iloc[:,0:6])
+  y = df['accep']
+
+  ## Train-test split and fitting the tree
+  x_train, x_test, y_train, y_test = train_test_split(X,y, random_state=0, test_size=0.3)
+  dtree = DecisionTreeClassifier(max_depth=3)
+  dtree.fit(x_train, y_train)
+
+  ## Visualizing the tree
+  plt.figure(figsize=(27,12))
+  tree.plot_tree(dtree, feature_names = x_train.columns, class_names = ['unacc','acc'], filled=True)
+  plt.tight_layout()
+  plt.show()
+
+  ## Text-based visualization of the tree (View this in the Output terminal!)
+  print(tree.export_text(dtree, feature_names = x_train.columns.tolist()))
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+|--- safety_low <= 0.50
+|   |--- persons_2 <= 0.50
+|   |   |--- maint_vhigh <= 0.50
+|   |   |   |--- class: True
+|   |   |--- maint_vhigh >  0.50
+|   |   |   |--- class: False
+|   |--- persons_2 >  0.50
+|   |   |--- class: False
+|--- safety_low >  0.50
+|   |--- class: False
+
+#+end_example
