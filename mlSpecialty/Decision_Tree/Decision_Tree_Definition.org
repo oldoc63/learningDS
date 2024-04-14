@@ -704,3 +704,100 @@ Remember, a larger depth does not always mean better accuracy, as it can lead to
 : 7
 : Test set accuracy tree no max depth: 0.9788053949903661
 : Test set accuracy tree max depth 7: 0.9614643545279383
+
+* Quiz
+
+** Question 1
+Which of the following datasets has the smallest Gini impurity?
+
+    - A set of 100 objects - 20 label A, 80 label B.
+
+    - *A set of 100 objects - 5 label A, 95 have label B.*
+      (This has an impurity of 0.095)
+
+    - A set of 100 objects - 10 label A, 90 have label B.
+
+    - A set of 100 objects - 50 label A, 50 have label B.
+      (This has an impurity of 0.5)
+
+** Question 2
+Fill in the code to fit a DecisionTreeClassifier with max_depth=5 on the training data (x_train, y_train) and score on the test data (x_test, y_test).
+
+#+begin_src python
+  from sklearn.tree import DecisionTreeClassifier
+
+  dtree = DecisionTreeClassifier('max_depth=5')
+  dtree.fit('x_train', 'y_train')
+  dtree.score('x_test', 'y_test')
+#+end_src
+
+** Question 3
+Why is the algorithm used to construct decision trees considered a greedy algorithm?
+
+    - The algorithm takes as much time as it needs to find the globally optimal solution.
+
+    - *The algorithm doesn't look ahead. It chooses to split the data based on the best possible feature given the current dataset.*
+
+    - The algorithm is difficult to implement.
+
+    - Because the algorithm is recursive, it requires more processing power.
+
+** Question 4
+Suppose the following binary features are available in a dataset to predict employee attrition. The information gain for each is computed in the table on the initial dataset.
+
+[[./employee_attrition.png]]
+
+    - BusinessTravel_Travel_Frequently
+      This has the largest information gain so will be the first split in the tree.
+
+** Question 5
+Which of the following statements about the decision tree implementation in scikit-learn is TRUE?
+
+    - Setting ~min_impurity_decrease=0~ will mean the tree will never stop be built.
+
+    - Using ~max_depth=None~ always results in the best tree.
+
+    - ~max_depth~, ~criterion~, ~min_impurity_decrease~, and ~min_samples_leaf~ can all be tuned which can result in better tree performance.
+      Correct! These are all hyper-parameters in decision trees which can be changed depending on your data and results and can lead to better performing models.
+
+    - The default criterion is ~entropy~.
+
+** Question 6
+The following tree was built on the [[https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset/version/1][IBM attrition data set]], predicting what employees will stay or leave within the year.
+
+What is the information gain when splitting at the node Age<=24?
+
+[[./IBM_attrition_data_set.png]]
+
+    - 0.125
+      The information gain is the difference in the initial Gini impurity, 0.5, and the weighted Gini impurity after the split, (16/39*.305+23/39*.423).
+
+** Question 7
+The following tree was built on the [[https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset/version/1][IBM attrition data set]], predicting what employees will stay or leave within the year.
+
+What is the initial Gini impurity of the dataset (stay vs quit) and what split maximizes the information gain on this set?
+
+[[./IBM_attrition_data_set.png]]
+
+     - 0.454, TotalWorkingYears
+       The root of the tree is labeled with the initial Gini impurity and the first split is chosen that maximizes the information gain.
+
+** Question 8
+The following tree was built on the [[https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset/version/1][IBM attrition data set]], predicting what employees will stay or leave within the year.
+
+What is the predicted value for an employee with NumCompaniesWorked=5, TotalWorkingYears = 2, DistanceFromHome = 5, and Age=22 and what is the Gini impurity of the final leaf?
+
+    - Quit, 0.305
+      Correct! Following the feature splits in the tree and our data values, the result will be split left-left-left, ending up at the leftmost leaf.
+
+** Question 9
+What does scikit-learn's DecisionTreeClassifier's .fit() method do?
+
+    - The .fit() method returns the accuracy of the tree according to the testing data and testing labels.
+
+    - The .fit() method creates a random forest of DecisionTreeClassifierS.
+
+    - *The .fit() method creates the tree according to the training data and training labels.*
+      Correct! This is where the tree gets created based on the training set.
+
+    - The .fit() method creates a DecisionTreeClassifier object.
