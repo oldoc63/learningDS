@@ -1,0 +1,47 @@
+
+* Recall
+Accuracy can be a misleading statistic depending on our data and the problem we are trying to solve. Consider a model tasked with predicting spam in the mail inboxes of top secret government employees who never use their work emai addresses for online shopping or logging onto their favorite gaming apps. We can write a pretty simple and accurate classifier that always predict False, the email is not spam. This classifier will be incredibly accurate since there are hardly ever any spam emails sent to those top secret emails, but this classifier will never be able to find the information we are actually interested in, when there is spam.
+
+In this situation, a helpful statistic to consider is *recall*. In our example, recall measures the ratio of correct spam predictions that our classifier found to the total number of spam emails.
+
+Recall is defined as:
+
+$$
+Recall = \frac{TP}{TP + FN}
+$$
+
+Recall is the ratio of correct positive predictions classifications made by the model to all actual positives. For the spam classifier, this would be the number of correctly labeled spam emails divided by all the emails that were actually spam in the dataset.
+
+Our algorithm that always predicts not spam might have a very high accuracy, but it never will find any true positives, so its recall will be 0.
+
+** Task 1
+Calculate the recall and store it in a variable named ~recall~ and print it.
+
+* Script.py
+
+#+begin_src python :results output
+  actual = [1, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+  predicted = [0, 1, 1, 1, 1, 0, 1, 0, 1, 0]
+
+  true_positives = 0
+  true_negatives = 0
+  false_positives = 0
+  false_negatives = 0
+
+  for i in range(len(predicted)):
+    if actual[i] == 1 and predicted[i] == 1:
+      true_positives += 1
+    if actual[i] == 0 and predicted[i] == 0:
+      true_negatives += 1
+    if actual[i] == 0 and predicted[i] == 1:
+      false_positives += 1
+    if actual[i] == 1 and predicted[i] == 0:
+      false_negatives += 1
+
+  recall = true_positives / (true_positives + false_negatives)
+  print(recall)
+
+#+end_src
+
+ #+RESULTS:
+ : 1.0
