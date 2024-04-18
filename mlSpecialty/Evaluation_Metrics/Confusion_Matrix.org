@@ -1,0 +1,71 @@
+
+* Confusion Matrix
+When creating a machine learning algorithm capable of making predictions, an important step in the process is to measure the model's predictive power. In this lesson we will learn how to calculate some of the more common evaluation metrics for classification problems. Remember, in order to calculate these statistics, we need to split our data into a training, validation, and test set before we start fitting our model.
+
+Let's say we are fitting a machine learning model to try to predict whether or not an email is spam. We can pass the features of our evaluation set through the trained model and get an output list of the predictions our model makes. We then compare each of those predictions to the actual labels. There are four possible categories that each of the comparisons can fall under:
+
+    - True Positive (*TP*): The algorithm predicted spam and it was spam
+
+    - True Negative (*TN*): The algorithm predicted not spam and it was not spam
+
+    - False Positive (*FP*): The algorithm predicted spam and it was not spam
+
+    - False Negative (*FN*): The algorithm predicted not spam and it was spam
+
+One common way to visualize these values is in a *confusion matrix*. In a confusion matrix the predicted classes are represented as columns and the actual classes are represented as rows.
+
+| .        | Predicted - | Predicted + |
+| Actual - | TN          | FP          |
+| Actual + | FN          | TP          |
+
+Let's calculate the number of true positives, true negatives, false positives, and false negatives from the evaluation data of a classification algorithm. Then we will construct a confusion matrix.
+
+** Task 1
+We've given you two ordered lists. ~actual~ represents the true labels of the dataset. Each ~1~ in the list represents an email that is spam and each ~0~ represents an email that is not spam. ~predicted~ represents the classifications that the machine learning algorithm returned. For each email, the classifier predicted whether the email was spam or not spam.
+
+Create four variables to store the results. They should be called ~true_positives~, ~true_negatives~, ~false_positives~, and ~false_negatives~. Initialize each of the variables to ~0~.
+
+** Task 2
+Loop through each of the predictions in the list and add ~1~ to ~true_positives~ every time the algorithm found a true positive. A true positive is when the actual label and the classifier's predicted label are both ~1~.
+
+** Task 3
+Inside the for loop, count the number of true negatives, false positives, and false negatives.
+
+** Task 4
+Outside of the for loop, print the final ~true_positives~, ~true_negatives~, ~false_positives~, and ~false_negatives~ values.
+
+** Task 5
+We have already imported a function ~confusion_matrix~ from scikit-learn. Create a variable ~conf_matrix~ and pass the list of actual and predicted values to the ~confusion_matrix~ function.
+* Script.py
+#+begin_src python :results output
+  from sklearn.metrics import confusion_matrix
+
+  actual = [1, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+  predicted = [0, 1, 1, 1, 1, 0, 1, 0, 1, 0]
+
+  true_positives = 0
+  true_negatives = 0
+  false_positives = 0
+  false_negatives = 0
+
+  for i in range(len(predicted)):
+      if predicted[i]==1 and actual[i]==1:
+          true_positives += 1
+      if predicted[i]==0 and actual[i]==0:
+          true_negatives += 1
+      if predicted[i]==1 and actual[i]==0:
+          false_positives += 1
+      if predicted[i]==0 and actual[i]==1:
+          false_negatives += 1
+  print(true_positives, true_negatives, false_positives, false_negatives)
+
+  conf_matrix = confusion_matrix(actual, predicted)
+
+  print(conf_matrix)
+
+#+end_src
+
+#+RESULTS:
+: 3 0 3 4
+: [[0 3]
+:  [4 3]]
