@@ -1,0 +1,43 @@
+
+* Precision
+Unfortunately, recall isn't a perfect statistic either. For example, we could create a spam email classifier that always returns ~True~, the email is spam. This particular classifier would have low accuracy, but the recall would be 1 because it would be able to accurately find every spam email.
+
+In this situation, a helpful statistic to understand is *precision*. In our email spam classification example, precision is the ratio of correct spam email predictions to the total number of span predictions.
+
+Precision is defined as:
+
+$$
+Precision = \frac{TP}{TP + FP}
+$$
+
+Precision is the ratio of correct positive classifications to all positive classifications made by the model. For the spam classifier, this would be the number of correctly labeled spam emails divided by all the emails that were correctly or incorrectly labeled spam.
+
+The algorithm that predicts every email is spam will have a recall of 1, but it will have very low precision. It correctly predicts every spam email, but there are tons of false positives as well.
+
+** Task 1
+Calculate the precision and store it in a variable named precision and print it.
+
+* Script.py
+
+#+begin_src python :results output
+  actual = [1, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+  predicted = [0, 1, 1, 1, 1, 0, 1, 0, 1, 0]
+
+  true_positives = 0
+  true_negatives = 0
+  false_positives = 0
+  false_negatives = 0
+
+  for i in range(len(predicted)):
+    if actual[i] == 1 and predicted[i] == 1:
+      true_positives += 1
+    if actual[i] == 0 and predicted[i] == 0:
+      true_negatives += 1
+    if actual[i] == 0 and predicted[i] == 1:
+      false_positives += 1
+    if actual[i] == 1 and predicted[i] == 0:
+      false_negatives += 1
+
+  precision = true_positives / (true_positives + false_positives)
+  print(precision)
+#+end_src
