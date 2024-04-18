@@ -1,0 +1,47 @@
+
+* Accuracy
+One method for determining the effectiveness of a classification algorithm es by measuring its accuracy statistic. Accuracy is calculated by finding the total number of correctly classified predictions (true positives and true negatives) and dividing by the total number of predictions.
+
+Accuracy is defined as:
+
+$$
+Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+SS
+
+Let's calculate the accuracy of the classification algorithm.
+
+** Task 1
+Calculate the accuracy and store it in a variable named ~accuracy~ and print it.
+
+* Script.py
+#+begin_src python :results output
+actual = [1, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+predicted = [0, 1, 1, 1, 1, 0, 1, 0, 1, 0]
+
+true_positives = 0
+true_negatives = 0
+false_positives = 0
+false_negatives = 0
+
+for i in range(len(predicted)):
+  #True Positives
+  if actual[i] == 1 and predicted[i] == 1:
+    true_positives += 1
+  #True Negatives
+  if actual[i] == 0 and predicted[i] == 0:
+    true_negatives += 1
+  #False Positives
+  if actual[i] == 0 and predicted[i] == 1:
+    false_positives += 1
+  #False Negatives
+  if actual[i] == 1 and predicted[i] == 0:
+    false_negatives += 1
+
+accuracy = (true_positives + true_negatives) / len(predicted)
+
+print(accuracy)
+
+#+end_src
+
+#+RESULTS:
+: 0.3
