@@ -1,0 +1,131 @@
+
+* F1-Score
+It is often useful to consider both the precision and recall when attempting to describe the effectiveness of a model. The *F1-Score* combines both precision and recall into a single statistic, by determining their harmonic mean. The harmonic mean is a method of averaging.
+
+F1-Score is defined as:
+
+$$
+F1-Score = \frac{2 \times precision \times recall}{precision + recall}
+$$
+
+We use the harmonic mean rather than the traditional arithmetic mean because we want the F1-score to have a low value when either precision or recall is 0.
+
+For example, consider a classifier where recall = 1 and precision = 0.02. Despite our classifier having an extremely high recall score, there is most likely a problem with this model since the precision is so low. Ideally the F1-Score would reflect that.
+
+If we took the arithmetic mean of precision and recall, we get:
+
+$$
+\frac{1 + 0.02}{2} = 0.51
+$$
+
+That performance statistic is misleading high for a classifier that has such dismal precision. If we instead calculate the harmonic mean, we get:
+
+$$
+\frac{2 \times 1 \times 0.02}{1 + 0.02} = 0.039
+$$
+
+That is a much better descriptor of the classifier's effectiveness!
+
+Let's calculate the F1-score of the classification algorithm.
+
+** Task 1
+Calculate and print the F1-Score. Store the F1-Score in a variable named f_1
+
+* Script.py
+#+begin_src python :results output
+  actual = [1, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+  predicted = [0, 1, 1, 1, 1, 0, 1, 0, 1, 0]
+
+  true_positives = 0
+  true_negatives = 0
+  false_positives = 0
+  false_negatives = 0
+
+  for i in range(len(predicted)):
+    if actual[i] == 1 and predicted[i] == 1:
+      true_positives += 1
+    if actual[i] == 0 and predicted[i] == 0:
+      true_negatives += 1
+    if actual[i] == 0 and predicted[i] == 1:
+      false_positives += 1
+    if actual[i] == 1 and predicted[i] == 0:
+      false_negatives += 1
+
+  precision = true_positives / (true_positives + false_positives)
+  print(f'precision: {precision}')
+
+  recall = true_positives / (true_positives + false_negatives)
+  print(f'recall: {recall}')
+
+  f_1 = 2 * (precision * recall) / (precision + recall)
+  print(f'f1-score: {f_1}')
+#+end_src
+
+#+RESULTS:
+: precision: 0.5
+: recall: 0.42857142857142855
+: f1-score: 0.4615384615384615
+
+* Review
+There is no perfect metric. The decision to use accuracy, precision, recall, F1-Score, or another metric not covered in this lesson ultimately comes down to the specific contex of the classification problem.
+
+Take the email spam problem. We probably want a model that is high precision and do not mind as much if it has a low recall score. This is because we want to make sure the algorithm does not incorrectly send an important email message to the spam folder, while it is not as detrimental to have a few spam emails end up in our inbox.
+
+As long as you have an understanding of what question you're trying to answer, you should be able to determine which statistic is most relevant to you.
+
+The Python library scikit-learn has some functions that will calculate these statistics for you.
+
+You have now learned may different ways to analyze the predictive power of your classification algorithm. Here are some of the key takeaways:
+
+    - Classifying a single point can result in a true positive (actual=1, predicted=1), a true negative (actual=0, predicted=0), a false positive (actual=0, predicted= 1), or a false negative (actual=1, predicted=0). These values are often summarized in a confusion matrix.
+
+    - *Accuracy* measures how many classifications your algorithm got correct out of every classification it made.
+
+    - *Recall* is the ratio of correct positive predictions classifications made by the model to all actual positives.
+
+    - *Precision* is the ratio of correct positive classifications to all posible classifications made by the model.
+
+    - *F1-Score* is a combination of precision and recall.
+
+    - ~F1-Score~ will be low if either precision or recall is low.
+
+** Task 1
+Python's scikit-learn library has functions that will help you calculate accuracy, recall, precision, and F1-score. They all take two parameters -a list of the actual labels and a list of the predicted classifications.
+
+Call accuracy_score() using the correct parameters and print the results.
+
+** Task 2
+Call the three other functions and print the results. The name of those functions are:
+
+    - recall_score()
+
+    - precision_score()
+
+    - f1_score()
+
+* Script.py
+#+begin_src python :results output
+  from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
+
+  actual = [1, 0, 0, 1, 1, 1, 0, 1, 1, 1]
+  predicted = [0, 1, 1, 1, 1, 0, 1, 0, 1, 0]
+
+  accuracy = accuracy_score(actual, predicted)
+  print(accuracy)
+
+  recall = recall_score(actual, predicted)
+  print(recall)
+
+  precision = precision_score(actual, predicted)
+  print(precision)
+
+  f_1 = f1_score(actual, predicted)
+  print(f_1)
+
+#+end_src
+
+#+RESULTS:
+: 0.3
+: 0.42857142857142855
+: 0.5
+: 0.4615384615384615
