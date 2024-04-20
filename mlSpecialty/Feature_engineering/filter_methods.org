@@ -1,0 +1,149 @@
+
+* Filter Methods
+
+    - Learn about the different filter methods for evaluating and selecting features
+
+** Introduction
+*Filter methods* are a type of feature selection methods that works by selecting features based on some criteria /prior to building the model./ Because they don't involve actually testing the subsetted features using a model, they are computationally inexpensive and flexible to use for any type of machine learning algorithm. This makes filter methods an efficient /initial step/ for narrowing down the pool of features to only most relevant, predictive ones.
+
+There are many different filter methods that can be used for evaluating and selecting features. In this article, we will use /variance thresholds/, /correlation/ and /mutual information/ to rank and select the top features. To demonstrate how these methods work in Python, we will use the ~feature_selection~ module from scikit-learn as well as the pandas library.
+
+** Example dataset
+Let's suppose we have the following dataset containing information on a class of middle school students.
+
+Our goal is to use the data to predict how well each student will perform on the exam. Thus, our target variable is ~exam_score~ and the remaining 6 variables are our features. We'll prepare the data by separating the features matrix (x) and the target vector (y).
+
+** Variance threshold
+One of the most basic filter methods is to use a /variance threshold/ to remove any features that have little to no variation in their values. this is because features with low variance do not contribute much information to a model. Since variance van only be calculated on numeric values, this method only works on quantitative features for which all or a majority of the values are the same. To do that, we would need to dummy code the categorical variables first, but we won't demonstrate that here.
+
+In our example dataset, ~edu_goal~ is the only feature that is not numeric. We can use the ~.drop()~ method to remove it from our features DataFrame and store the remaining numeric features in ~X_num~.
+
+Now, we'll be able to use the ~VarianceThreshold~ class from scikit-learn to help remove the low-variance features from ~X_num~. By default, it drops all features with zero variance, but we can adjust the threshold during class instantiation using the threshold parameter if we want to allow some variation. The ~.fit_transform()~ method returns the filtered features as a numpy array.
+
+As we can see, ~grade_level~ was removed because there is no variation in its values - all students are 8th graders. Since this data is the same across the board, a student's grade level will not be able to provide any useful predictive information about their exam score, so it makes sense to drop ~grade_level~ as a feature.
+
+Something to note is that loading datasets with scikit-learn generally works wiht numpy arrays internally, hence the output type of ~.fit_transform()~. However, the methods can also accept other data types that can be converted to numpy arrays, such as Python lists or pandas DataFrames, like the ~X_num~ we used. From a human perspective, one downside of working with numpy arrays as compared to pandas DataFrame is that we /lose information/ like /column headings/, making the data harder to visually inspect.
+
+Luckily, VarianceThreshold offers another method called ~.get_support()~ that can return the indices of the selected features, which we can use to manually subset our numeric features DataFrame.
+
+Finally, to obtain our entire features DataFrame, including the categorical column edu_goal:
+
+
+* Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.feature_selection import VarianceThreshold
+
+  df = pd.DataFrame(data={
+   'edu_goal': ['bachelors', 'bachelors', 'bachelors', 'masters', 'masters', 'masters', 'masters', 'phd', 'phd', 'phd'],
+    'hours_study': [1, 2, 3, 3, 3, 4, 3, 4, 5, 5],
+    'hours_TV': [4, 3, 4, 3, 2, 3, 2, 2, 1, 1],
+    'hours_sleep': [10, 10, 8, 8, 6, 6, 8, 8, 10, 10],
+    'height_cm': [155, 151, 160, 160, 156, 150, 164, 151, 158, 152],
+    'grade_level': [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+    'exam_score': [71, 72, 78, 79, 85, 86, 92, 93, 99, 100]
+  })
+
+  # 10 x 6 features matrix
+  X = df.drop(columns=['exam_score'])
+  print(X)
+
+  # 10 x 1 target vector
+  y = df['exam_score']
+  print(y)
+
+  # Drop the non-numeric feature
+  X_num = X.drop(columns=['edu_goal'])
+  print(X_num)
+
+  # Use the VarianceThreshold class
+  selector = VarianceThreshold(threshold=0) #0 is default
+  print(selector.fit_transform(X_num))
+
+  # Specify indices=True to get indices of selected features
+  print(selector.get_support(indices=True))
+
+  # Use indices to get the corresponding column names of selected features
+  num_cols = list(X_num.columns[selector.get_support(indices=True)])
+  print(num_cols)
+
+  # Subset X_num to retain only selected features
+  X_num = X_num[num_cols]
+  print(X_num)
+
+  # Obtain our entire features DataFrame (with edu_goal)
+  X = X[['edu_goal'] + num_cols]
+  print(X)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    edu_goal  hours_study  hours_TV  hours_sleep  height_cm  grade_level
+0  bachelors            1         4           10        155            8
+1  bachelors            2         3           10        151            8
+2  bachelors            3         4            8        160            8
+3    masters            3         3            8        160            8
+4    masters            3         2            6        156            8
+5    masters            4         3            6        150            8
+6    masters            3         2            8        164            8
+7        phd            4         2            8        151            8
+8        phd            5         1           10        158            8
+9        phd            5         1           10        152            8
+0     71
+1     72
+2     78
+3     79
+4     85
+5     86
+6     92
+7     93
+8     99
+9    100
+Name: exam_score, dtype: int64
+   hours_study  hours_TV  hours_sleep  height_cm  grade_level
+0            1         4           10        155            8
+1            2         3           10        151            8
+2            3         4            8        160            8
+3            3         3            8        160            8
+4            3         2            6        156            8
+5            4         3            6        150            8
+6            3         2            8        164            8
+7            4         2            8        151            8
+8            5         1           10        158            8
+9            5         1           10        152            8
+[[  1   4  10 155]
+ [  2   3  10 151]
+ [  3   4   8 160]
+ [  3   3   8 160]
+ [  3   2   6 156]
+ [  4   3   6 150]
+ [  3   2   8 164]
+ [  4   2   8 151]
+ [  5   1  10 158]
+ [  5   1  10 152]]
+[0 1 2 3]
+['hours_study', 'hours_TV', 'hours_sleep', 'height_cm']
+   hours_study  hours_TV  hours_sleep  height_cm
+0            1         4           10        155
+1            2         3           10        151
+2            3         4            8        160
+3            3         3            8        160
+4            3         2            6        156
+5            4         3            6        150
+6            3         2            8        164
+7            4         2            8        151
+8            5         1           10        158
+9            5         1           10        152
+    edu_goal  hours_study  hours_TV  hours_sleep  height_cm
+0  bachelors            1         4           10        155
+1  bachelors            2         3           10        151
+2  bachelors            3         4            8        160
+3    masters            3         3            8        160
+4    masters            3         2            6        156
+5    masters            4         3            6        150
+6    masters            3         2            8        164
+7        phd            4         2            8        151
+8        phd            5         1           10        158
+9        phd            5         1           10        152
+#+end_example
