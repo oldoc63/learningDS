@@ -28,6 +28,68 @@ Luckily, VarianceThreshold offers another method called ~.get_support()~ that ca
 
 Finally, to obtain our entire features DataFrame, including the categorical column edu_goal:
 
+** Pearson's correlation
+Another type of filter method involves finding the correlation between variables. In particular, the Pearson's correlation coefficient is useful for measuring the linear relationship between two numeric, continuous variables - a coefficient close to 1 represents a positive correlation, -1 represents a negative correlation, and 0 represents no correlation. Like variance, Pearson's correlation coefficient cannot be calculated for categorical variables. Although, there is a related point biserial correlation coefficient that can be computed when one variable is dichotomous, but we won't focus on that here.
+
+There are 2 main ways of using correlation for feature selection - to detect correlation between features and to detect correlation between a feature and the target variable.
+
+*** Correlation between features
+When two features are highly correlated with one another, then keeping just one to be used in the model will be enough because otherwise they provide duplicate information. The second variable would only be redundant and serve to contribute unnecessary noise.
+
+To determine which variables are correlated with one another, we can use the ~.corr()~ method from pandas to find the correlation coefficient between each pair of numeric features in a DataFrame. By default, .corr() computes the Pearson's correlation coefficient, but alternative methods can be specified using the ~method~ parameter. We can visualize the resulting correlation matrix using a heatmap.
+
+Let's define high correlation as having a coefficient of greater than ~0.7~ or less than ~-0.7~. We can loop through the correlation matrix to identify the highly correlated variables.
+
+As seen, ~hours_TV~ appears to be highly negatively correlated with ~hours_study~ - a student who watches a lot of TV tends to spend fewer hours studying, and vice versa. Because they provide redundant information, we can choose to remove one of those variables. To decide which one, we can look at their correlation with the target variable, then remove the one that is less associated with the target.
+
+*** Correlation between feature and target
+As mentioned, the second way correlation can be used is to determine if there is a relationship /between a feature and the target variable./ In the case of Pearson's correlation, this is especially useful if we intend to fit a linear model, which assumes a linear relationship between the target and predictor variables. If a feature is not very correlated with the target variable, such as having a coefficient of between -0.3 and 0.3, then it may not be very predictive and can potentially be filtered out.
+
+We can use the same ~.corr()~ method seen previously to obtain the correlation between the target variable and the rest of the features. First, we'll need to create a new DataFrame containing the numeric features with the ~exam_score~ column.
+
+Then, we can generate the correlation matrix and isolate the column corresponding to the target variable to see how strongly each feature is correlated with it.
+
+As seen, ~hours_study~ is positively correlated with ~exam_score~ and ~hours_TV~ is negatively correlated with it. It makes sense that ~hours_study~ and ~hours_TV~ would be /negatively correlated with each other/ as we saw earlier, and just one of those features would suffice for predicting ~exam_score~. Since ~hours_study~ has a stronger correlation with the target variable, let's remove ~hours_TV~ as the redundant feature.
+
+The other two features, ~hours_sleep~ and ~height_cm~, both do not seem to be correlated with ~exam_score~, suggesting they would not be very good predictors. We could potentially remove either or both of them as being uninformative. But before we do, it is a good idea to use other methods to double check that the features truly are not predictive. We will do that in the next section by using /mutual information/ to see if there are any /non-linear/ associations between the features and target variable.
+
+To conclude this section, we'll biefly note an alternative approach for assesing the correlation between variables. Instead of generating the full correlation matrix, we could use the ~f_regression()~ function from scikit-learn to find the F-statistic for a model with each predictor on its own. The F-statistic will be larger (and p-value will be smaller) for predictors that are more highly correlated with the target variable, thus it will perform the same filtering.
+
+The function returns the F-statistic in the first array and the p-value in the second. As seen, the result is consistent with what we had observed in the correlation matrix - the stronger the correlation (either positive or negative) between the feature and target, the higher the corresponding F-statistic and lower the p-value. For example, amongst all the features, hours_study has the largest correlation coefficient (0.905), highest F-statistic (3.61e+01), and lowest p-value(3.19e-04).
+
+** Mutual Information
+The final filter method we'll look at is using /mutual information/ to rank and select the top features. Mutual information is a measure of dependence between two variables and can be used to gauge how much a feature contributes to the prediction of the target variable. It is similar to Pearson's correlation, but *is not limited* to detecting linear associations. This makes mutual information useful for more flexible models where a linear functional form is not assumed. Another advantage of mutual information is that /it also works on discrete features/ or target, unlike correlation. Although, categorical variables need to be numerically encoded first.
+
+In our example, we can encode the ~edu_goal~ column using the ~LabelEncoder~ class from scikit-learn's preprocessing module.
+
+Now, we can compute the mutual information between each feature and ~exam_score~ using ~mutual_info_regression()~. This function is used because our target variable is continous, but if we had a discrete target variable, we would use ~mutual_info_classif()~. We specify the random_state in the function in order to obtain reproducible results.
+
+The estimated mutual information between each feature and the target is returned in a numpy array, where each value is a non-negative number - The higher the value, the more predictive power is assumed.
+
+However, we are missing one more important piece here. Earlier, even though we encoded ~edu_goal~ to be numeric, that des not mean it should be treated as a continuous variable. In other words, the values of ~edu_goal~ are still discrete and should be interpreted as such. If we plot ~edu_goal~ against ~exam_score~ on a graph, we can clearly see the steps between the values of ~edu_goal~.
+
+[[./still_discrete.png]]
+
+In order to properly calculate the mutual information, we need to tell ~mutual_info_regression()~ which features are discrete by providing their index positions using the ~discrete_features~ parameter.
+
+Compared to the earlier results, we now get greater mutual information between ~edu_goal~ and the target variable once it is correctly interpreted as a discrete feature.
+
+From the results, we can also see that there is ~0~ mutual information between ~height_cm~ and ~exam_score~, suggesting that these variables are largely independent. This is consistent with what we saw earlier with Pearson's correlation, where the correlation coefficient between them is very close to ~0~ as well.
+
+What is interesting to note is that the mutual information between ~hours_sleep~ and ~exam_score~ is a positive value, even thoug their Pearson's correlation coefficient is ~0~. the answer becomes more clear when we plot the relationship between ~hours_sleep~ and ~exam_score~.
+
+[[./non_linear_association.png]]
+
+As seem, there do seem to be some association between the variables, /only it is not a linear one,/ which is why it was detected using mutual information but not Pearson's correlation coefficient.
+
+Finally, let's look at using the ~SelectKBest~ class from scikit-learn to help pick out the top ~k~ features with the highest ranked scores. In our case, we are looking to select features that share the most mutual information with the target variable. When we instantiate SelectKBest, we'll specify which scoring function fo use and how many top features to select. Here, our scoring function is ~mutual_info_regression()~, but because we want to specify addtional arguments besides the ~x~ and ~y~ inputs, we'll need the help of the ~partial()~ function from Python's built-in ~functools~ module. Then, the ~.fit_transform()~ method will return the filtered features as a numpy array.
+
+As seen below, we selected the top 3 features based on mutual information, thus dropping ~height_cm~. Like VarianceThreshold, SelectKBest also offers the ~.get_support()~ method that returns the indices of the selected features, so we could subset our original features DataFrame.
+
+** Conclusion
+In our example dataset, we started out with 6 features for predicting the ~exam_score~ of students. Using various filter methods, we narrowed down that set to just the top most relevant and informative ones. First, we eliminated ~grade_level~ because it has zero variance and would contribute nothing to he model. Then, we dropped ~hours_TV~ since it is highly correlated with ~hours_study~ and is therefore redundant. Lastly, we filtered out ~height_cm~ based on mutual information, which suggested that it does not have any meaningful association with the target variable, linear or otherwise, and would not have been very predictive.
+
+Being the most simple type of feature selection method, they sure do not lack power nor potential. It is certainly worth considering how you might want to incorporate filter methods into your next machine learning project.
 
 * Script.py
 
@@ -75,6 +137,82 @@ Finally, to obtain our entire features DataFrame, including the categorical colu
   # Obtain our entire features DataFrame (with edu_goal)
   X = X[['edu_goal'] + num_cols]
   print(X)
+
+  ## Pearson's
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  corr_matrix = X_num.corr(method='pearson')
+
+  sns.heatmap(corr_matrix, annot=True, cmap='RdBu_r')
+  plt.show()
+
+  # Loop over bottom diagonal of correlation matrix
+  for i in range(len(corr_matrix.columns)):
+      for j in range(i):
+          # Print variables with high correlation
+          if abs(corr_matrix.iloc[i,j]) > 0.7:
+              print(corr_matrix.columns[i], corr_matrix.columns[j], corr_matrix.iloc[i,j])
+
+  # New DataFrame with numeric features and 'exam_score'
+  X_y = X_num.copy()
+  X_y['exam_score'] = y
+  print(X_y)
+
+  # Generate the correlation matrix
+  corr_matrix = X_y.corr()
+
+  # Isolate the column corresponding to exam_score
+  corr_target = corr_matrix[['exam_score']].drop(labels=['exam_score'])
+
+  sns.heatmap(corr_target, annot=True, fmt='.3', cmap='RdBu_r')
+  plt.show()
+
+  # Remove hours_TV as the redundant feature
+  X = X.drop(columns=['hours_TV'])
+  print(X)
+
+  # f_regression() as an alternative to corr_matrix
+  from sklearn.feature_selection import f_regression
+
+  print(f_regression(X_num, y))
+
+  ## Mutual Information
+  # Using the LabelEncoder class
+  from sklearn.preprocessing import LabelEncoder
+
+  le = LabelEncoder()
+
+  # Create copy of X for encoded version
+  X_enc = X.copy()
+  X_enc['edu_goal'] = le.fit_transform(X['edu_goal'])
+
+  print(X_enc)
+
+  # Use mutual_info_regression
+  from sklearn.feature_selection import mutual_info_regression
+
+  print(mutual_info_regression(X_enc, y, random_state=68))
+
+  # Using the discrete features parameter
+  print(mutual_info_regression(X_enc, y, discrete_features=[0], random_state=68))
+
+  # Use SelectKBest
+  from sklearn.feature_selection import SelectKBest
+  from functools import partial
+
+  score_func = partial(mutual_info_regression, discrete_features=[0], random_state=68)
+
+  # Select top 3 features with the most mutual information
+  selection = SelectKBest(score_func=score_func, k=3)
+
+  print(selection.fit_transform(X_enc, y))
+
+  # SelectKBest also supports .get_support
+  X = X[X.columns[selection.get_support(indices=True)]]
+
+  print(X)
+
 #+end_src
 
 #+RESULTS:
@@ -146,4 +284,62 @@ Name: exam_score, dtype: int64
 7        phd            4         2            8        151
 8        phd            5         1           10        158
 9        phd            5         1           10        152
+hours_TV hours_study -0.780763315142435
+   hours_study  hours_TV  hours_sleep  height_cm  exam_score
+0            1         4           10        155          71
+1            2         3           10        151          72
+2            3         4            8        160          78
+3            3         3            8        160          79
+4            3         2            6        156          85
+5            4         3            6        150          86
+6            3         2            8        164          92
+7            4         2            8        151          93
+8            5         1           10        158          99
+9            5         1           10        152         100
+    edu_goal  hours_study  hours_sleep  height_cm
+0  bachelors            1           10        155
+1  bachelors            2           10        151
+2  bachelors            3            8        160
+3    masters            3            8        160
+4    masters            3            6        156
+5    masters            4            6        150
+6    masters            3            8        164
+7        phd            4            8        151
+8        phd            5           10        158
+9        phd            5           10        152
+(array([3.61362007e+01, 3.44537037e+01, 0.00000000e+00, 1.70259066e-03]), array([3.19334945e-04, 3.74322763e-04, 1.00000000e+00, 9.68097878e-01]))
+   edu_goal  hours_study  hours_sleep  height_cm
+0         0            1           10        155
+1         0            2           10        151
+2         0            3            8        160
+3         1            3            8        160
+4         1            3            6        156
+5         1            4            6        150
+6         1            3            8        164
+7         2            4            8        151
+8         2            5           10        158
+9         2            5           10        152
+[0.50396825 0.40896825 0.         0.        ]
+[0.75563492 0.38896825 0.11896825 0.        ]
+[[ 0  1 10]
+ [ 0  2 10]
+ [ 0  3  8]
+ [ 1  3  8]
+ [ 1  3  6]
+ [ 1  4  6]
+ [ 1  3  8]
+ [ 2  4  8]
+ [ 2  5 10]
+ [ 2  5 10]]
+    edu_goal  hours_study  hours_sleep
+0  bachelors            1           10
+1  bachelors            2           10
+2  bachelors            3            8
+3    masters            3            8
+4    masters            3            6
+5    masters            4            6
+6    masters            3            8
+7        phd            4            8
+8        phd            5           10
+9        phd            5           10
 #+end_example
