@@ -31,7 +31,7 @@ Uncomment print(health.head()) and take a look at the data.
 
 What are some pros and cons of having this many features?
 
-* Script.py
+** Script.py
 #+begin_src python :results output
   import pandas as pd
 
@@ -107,7 +107,7 @@ scikit-learn uses an algorithm that goes through many iterations to find optimal
 ** Task 2
 Use the .score() method to print the accuracy of the model and print it. How often does this model correctly predict whether or not a patient has breast cancer?
 
-* Script.py
+** Script.py
 #+begin_src python :results output
   import pandas as pd
   from sklearn.linear_model import LogisticRegression
@@ -132,3 +132,113 @@ Use the .score() method to print the accuracy of the model and print it. How oft
 
 #+RESULTS:
 : 0.8017241379310345
+
+* Sequential Forward Selection
+Now that we have a specific machine learning model, we can use a wrapper method to choose a smaller feature subset.
+
+Sequential forward selection is a wrapper method that builds a feature set by starting with no features and then adding one feature at a time until a desired number of features is reached. In the first step, the algorithm will train and test a model using only one feature at a time. The algorithm keeps the feature that perform best.
+
+In each subsequent step, the algorithm will test the model on each possible new feature addition. Whichever feature improves model performance the most is then added to the feature subset. This process stops once we have the desired number of features.
+
+Let's say we want to use three features, and we have five features to choose from: age, height, weight, ~blood_pressure~, and ~resting_heart_rate~. Sequential forward selection will train your machine learning model on five different feature subsets: one for each feature.
+
+If the model perform best on the subset {age}, the algorithm will then train and test the model on the following four subsets:
+
+    - {~age, height~}
+
+    - {~age, weight~}
+
+    - {~age, blood_pressure~}
+
+    - {~age, resting_heart_rate~}
+
+If the model perform best on {~age, resting_heart_rate~}, the algorithm will test the model on the following three subsets:
+
+    - {~age, height, resting_heart_rate~}
+
+    - {~age, weight, resting_heart_rate~}
+
+    - {~age, blood_pressure, resting_heart_rate~}
+
+If the model perform best on {~age, weight, resting_hear_rate~}, it will stop the algorithm and use that feature set.
+
+Sequential forward selection is a /greedy algorithm/: instead of checking every possible feature set by brute force, it adds whichever feature gives the best inmediate performance gain.
+
+** Task 1
+If you used sequential forward selection to add a fourth feature to the feature set {age, weight, resting_hear_rate} that you saw in the preceding example, what two feature sets would the algorithm test in the next step? Create sets called set1 and set2 that contain the appropriate features.
+
+For example, if the answer was {height, resting_heart_rate} and {weight, resting_heart_rate}, you would type:
+
+#+begin_src python
+set1 = {"height", "resting_heart_rate"}
+set2 = {"weight", "resting_heart_rate"}
+#+end_src
+
+** Script.py
+
+#+begin_src python
+set1 = {"age", "height", "weight", "resting_heart_rate"}
+set2 = {"age", "weight", "blood_pressure", "resting_heart_rate"}
+#+end_src
+
+* Sequential Forward Selection with mlxtend
+Recall from a previous exercise that the logistic regression model was about 80.2% accurate at predicting if a patient had breast cancer. But there were NINE different features. Are all of those features necessary, or is it possible that the model could make accurate predictions with fewer features? That would make the model easier to understand, and it could simplity diagnosis.
+
+We will use the SFS class from Python's mlxtend library to implement sequential forward selection and choose a subset of just THREE features for the logistic regression model that se use earlier.
+
+#+begin_src python
+  # Set up SFS parameters
+  sfs = SFS(lr,
+              k_features=3, #number of features to select
+              forward=True,
+              floating=False,
+              scoring='accuracy',
+              cv=0)
+  # Fit SFS to our features X and outcome y
+  sfs.fit(X, y)
+#+end_src
+
+    - The first parameter is the name of the model that you're using, In the previous exercise, we called the logistic regression model ~lr~.
+
+    - The parameter ~k_features~ determines how many features the algorithm will select.
+
+    - ~forward=True~ and ~floating=False~ ensure that we are using sequential forward selection.
+
+    - ~scoring~ determines how the algorithm will evaluate each feature subset. It's often okay to use the default value None because mlxtend will automatically use a metric that is suitable for whatever scikit-learn model you are using. For this lesson, we'll set it to 'accuracy'.
+
+    - ~cv~ allows you to do k-fold cross-validation. We'll leave it at 0 for this lesson an only evaluate performance on the training set.
+
+We'll see which features were selected in the next exercise. For now, we just want to fit the SFS model.
+
+** Task 1
+Use mlxtend to create an SFS object called sfs. Set it to select three features, and make sure that you set forward and floating arguments to ensure that you are using sequential forward selection. Also set scoring='accuracy' and cv=0.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as sfs
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = health.iloc[:, :-1]
+  y = health.iloc[:, -1]
+
+  # Logistic regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  # Sequential forward selection
+  sfs = sfs(lr,
+            k_features=3,
+            forward=True,
+            floating=False,
+            scoring='accuracy',
+            cv=0)
+
+  # Fit the sequential forward selection model
+  sfs.fit(X, y)
+
+#+end_src
+
+#+RESULTS:
