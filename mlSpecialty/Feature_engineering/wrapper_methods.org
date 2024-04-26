@@ -351,17 +351,14 @@ Use plot_sfs(sfs.get_metric_dict()) to plot the accuracy as a function of the nu
   print(sfs.subsets_[3]['avg_score'])
 
   # Plot the model accuracy
-  plot_sfs(sfs.get_metric_dict())
-  plt.show()
+  #plot_sfs(sfs.get_metric_dict())
+  #plt.show()
 
 #+end_src
 
 #+RESULTS:
-: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
-:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
-: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
-:   ret = ret.dtype.type(ret / rcount)
-: [ Babel evaluation exited with code 0 ]
+: ('Age', 'Glucose', 'Insulin')
+: 0.7672413793103449
 
 * Sequential Backward Selection with mlxtend
 /Sequential backward selection/ is another wrapper method for feature selection. It is very similar to sequential forward selection, but there is one key difference. Instead of starting with no features and adding one feature at a time, sequential backward selection starts with all of the available features and removes one feature at a time.
@@ -422,3 +419,94 @@ Use the .fit() method to fit sbs to X and y.
 #+end_src
 
 #+RESULTS:
+
+* Evaluating the result of sequential backward selection
+As you learned in a previous exercise, ~model.subsets_~ is a dictionary that contains information about feature subsets from each step of an SFS selection model. This works with sequential backward selection just like it did with sequential forward selection.
+#+begin_src python
+print(sbs.subsets_)
+#+end_src
+
+#+begin_src python
+{6: {'feature_idx': (0, 1, 2, 3, 4, 5),
+  'cv_scores': array([0.98360656]),
+  'avg_score': 0.9836065573770492,
+  'feature_names': ('Temperature', ' RH', ' Ws', 'Rain ', 'DMC', 'FWI')},
+ 5: {'feature_idx': (1, 2, 3, 4, 5),
+  'cv_scores': array([0.98360656]),
+  'avg_score': 0.9836065573770492,
+  'feature_names': (' RH', ' Ws', 'Rain ', 'DMC', 'FWI')},
+ 4: {'feature_idx': (2, 3, 4, 5),
+  'cv_scores': array([0.98360656]),
+  'avg_score': 0.9836065573770492,
+  'feature_names': (' Ws', 'Rain ', 'DMC', 'FWI')},
+ 3: {'feature_idx': (2, 4, 5),
+  'cv_scores': array([0.9795082]),
+  'avg_score': 0.9795081967213115,
+  'feature_names': (' Ws', 'DMC', 'FWI')}}
+#+end_src
+
+You can also use ~plot_sfs(sfs.get_metric_dict())~ to visualize the results of sequential backward selection.
+
+#+begin_src python
+  # Plot the accuracy of the model as a function of the number of features
+  plot_sfs(sbs.get_metric_dict())
+  plt.show()
+#+end_src
+
+[[./backward_visualization.png]]
+
+** Task 1
+Use the ~.subsets_~ attribute of sbs to print a tuple that contains the names of the features chosen in the previous exercise (remember that we chose three features). Did you get the same feature set as you did with sequential forward selection?
+
+** Task 2
+Use the ~.subsets_~ attribute of sbs to print the accuracy of the model after doing sequential backward selection.
+
+Recall that the original model was about 80% accurate when it used all nine features. How does the accuracy of the model with only three features compare? How does the accuracy of sequential backward selection compare to sequential forward selection?
+
+** Task 3
+Use plot_sfs(sbs.get_metric_dict()) to plot the accuracy as a function of the number of features. Notice that the accuracy sometimes decreases when a feature is removed. Do you think that too much accuracy was lost, or is that a reasonable trade-off to have a simpler model?
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+  from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+  import matplotlib.pyplot as plt
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = health.iloc[:,:-1]
+  y = health.iloc[:,-1]
+
+  # Logistic regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  # Sequential backward selection
+  sbs = SFS(lr,
+            k_features=3,
+            forward=False,
+            floating=False,
+            scoring='accuracy',
+            cv=0)
+  sbs.fit(X, y)
+
+  # Print the chosen feature names
+  print(sbs.subsets_[3]['feature_names'])
+
+  # Print the accuracy of the model after sequential backward selection
+  print(sbs.subsets_[3]['avg_score'])
+
+  # Plot the model accuracy
+  plot_sfs(sbs.get_metric_dict())
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
+:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
+:   ret = ret.dtype.type(ret / rcount)
+: [ Babel evaluation exited with code 0 ]
