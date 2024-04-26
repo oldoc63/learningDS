@@ -242,3 +242,183 @@ Use mlxtend to create an SFS object called sfs. Set it to select three features,
 #+end_src
 
 #+RESULTS:
+
+* Evaluating the result of sequential forward selection
+The ~sfs~ object that you fit in the previous exercise contains information about the sequential forward selection that was applied to your feature set. The ~.subsets_~ attribute allows you to see much of that information, including which feature was chosen at each step and the model's accuracy after each feature addition.
+
+~sfs.subsets_~ is a dictionary that looks something like this:
+#+begin_src python
+{1: {'feature_idx': (7,),
+  'cv_scores': array([0.93852459]),
+  'avg_score': 0.9385245901639344,
+  'feature_names': ('FWI',)},
+ 2: {'feature_idx': (4, 7),
+  'cv_scores': array([0.97540984]),
+  'avg_score': 0.9754098360655737,
+  'feature_names': ('DMC', 'FWI')},
+ 3: {'feature_idx': (1, 4, 7),
+  'cv_scores': array([0.9795082]),
+  'avg_score': 0.9795081967213115,
+  'feature_names': (' RH', 'DMC', 'FWI')}}
+#+end_src
+
+The keys in this dictionary are the numbers of features at each step in the sequential forward selection algorithm. The values in the dictionary are dictionaries with information about the feature set at each step. 'avg_score' is the accuracy of the model with the specified number of features.
+
+In this particular example, the model had an accuracy of about 93.9% after the feature FWI was added. The accuracy improved to about 97.5% after a second feature, DMC, was added. Once three features were added the accuracy improved to about 98.0%.
+
+You can use this dictionary to easily get a tuple of chosen features or the accuracy of the model after any step.
+
+#+begin_src python
+  # Print a tuple of feature names after 5 features are added
+  print(sfs.subsets_[5]['feature_names'])
+#+end_src
+
+This outputs:
+#+begin_src python
+  (' RH', ' Ws', 'Rain ', 'DMC', 'FWI')
+#+end_src
+
+#+begin_src python
+  # Print the accuracy of the model after 5 features are added
+  print(sfs.subsets_[5]['avg_score'])
+#+end_src
+
+This outputs:
+
+#+begin_src python
+  0.9836065573770492
+#+end_src
+
+The mlxtend library also makes it easy to visualize how the accuracy of a model changes as sequential forward selection adds features. You can use the code plot_sfs(sfs.get_metric_dict()) to create a matplotlib figure that plots the model's performance as a function of the number of features used.
+
+#+begin_src python
+  from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+  import matplotlib.pyplot as plt
+
+  # Plot the accuracy of the model as a function of the number of features
+  plot_sfs(sfs.get_metric_dict())
+  plt.show()
+#+end_src
+
+#+RESULTS:
+: None
+
+[[./plot_sfs.png]]
+
+This plot shows you some of the same information that was in ~sfs.subsets_~. The accuracy after one feature was added is about 93.9%, then 97.5% after a second feature is added, and so on.
+
+** Task 1
+Use the ~.subset_ attribute~ of sfs to print a tuple that contains the names of the features chosen in the previous exercise (remember that we chose three features).
+
+** Task 2
+Use the ~.subsets_ attribute~ of sfs to print the accuracy of the model with three features after doing sequential forward selection.
+
+Recall that the original model was about 80% accurate when it used all nine features. How does the accuracy of the model with only three features compare?
+
+** Task 3
+Use plot_sfs(sfs.get_metric_dict()) to plot the accuracy as a function of the number of features. Remember to show your plot.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+  from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+  import matplotlib.pyplot as plt
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = health.iloc[:,:-1]
+  y = health.iloc[:,-1]
+
+  # Logistic regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  # Sequential forward selection
+  sfs = SFS(lr,
+            k_features=3,
+            forward=True,
+            floating=False,
+            scoring='accuracy',
+            cv=0)
+  sfs.fit(X, y)
+
+  # Print the chosen feature names
+  print(sfs.subsets_[3]['feature_names'])
+
+  # Print the accuracy of the model after sequential forward selection
+  print(sfs.subsets_[3]['avg_score'])
+
+  # Plot the model accuracy
+  plot_sfs(sfs.get_metric_dict())
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
+:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
+:   ret = ret.dtype.type(ret / rcount)
+: [ Babel evaluation exited with code 0 ]
+
+* Sequential Backward Selection with mlxtend
+/Sequential backward selection/ is another wrapper method for feature selection. It is very similar to sequential forward selection, but there is one key difference. Instead of starting with no features and adding one feature at a time, sequential backward selection starts with all of the available features and removes one feature at a time.
+
+Let's again say we want to use three of the following five features: ~age~, ~height~, ~weight~, ~blood_pressure~, and ~resting_heart_rate~. Sequential backward selection will start by training whatever machine learning model you are using on five different feature subsets, one for each possible feature removal:
+
+    - {height, weight, blood_pressure, resting_heart_rate}
+
+    - {age, weight, blood_pressure, resting_heart_rate}
+
+    - {age, height, blood_pressure, resting_heart_rate}
+
+    - {age, height, weight, resting_heart_rate}
+
+    - {age, height, weight, blood_pressure}
+
+Let's say that out of the five subsets, the model performed best on the subset without blood_pressure. Then the algorithm will proceed with the feature set {age, height, weight, resting_heart_rate}. It then tries removing each of age, height, weight, and resting_heart_rate.
+
+Let’s say that of those four subsets, the model performed best without weight. Then it will arrive at the subset {age, height, resting_heart_rate}. The algorithm will stop there since it arrived at the desired number of features.
+
+To implement sequential backward selection in mlxtend you can use the same SFS class you used for sequential forward selection. The only difference is that you have to set the parameter forward to False.
+
+** Task 1
+The object sbs is currently set to use sequential forward selection. Change the forward parameter so that it uses sequential backward selection instead. You can leave all the other parameters the same.
+
+*Hint*
+In the SFS object, set forward=False.
+
+** Task 2
+Use the .fit() method to fit sbs to X and y.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = health.iloc[:,:-1]
+  y = health.iloc[:,-1]
+
+  # Logistic regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  # Sequential backward selection
+  sbs = SFS(lr,
+            k_features=3,
+            forward=False,
+            floating=False,
+            scoring='accuracy',
+            cv=0)
+
+  # Fit sbs to X and y
+  sbs.fit(X, y)
+
+#+end_src
+
+#+RESULTS:
