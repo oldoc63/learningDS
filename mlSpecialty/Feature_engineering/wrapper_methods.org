@@ -538,3 +538,88 @@ Will it add a feature?
 #+begin_src python
   added_feature = 'weight'
 #+end_src
+
+* Sequential forward and backward floating selection with mlxtend
+We can implement sequential forward or backward floating selection in mlxtend by setting the parameter floating to True. The parameter forward determines whether mlxtend will use sequential forward floating selection or sequential backward floating selection. As usual, the dictionary ~model.subsets_~ will contain useful information about the chosen features.
+
+Here's an implementation of sequential backward floating selection.
+
+#+begin_src python
+  # Sequential backward floating selection
+  sbfs = SFS(lr,
+             k_features=5,
+             forward=False,
+             floating=True,
+             scoring='accuracy',
+             cv=0)
+  sbfs.fit(X, y)
+#+end_src
+
+We can use the ~.subsets_~ attribute to look at feature names, just like we did with the non-floating sequential selection algorithms.
+
+#+begin_src python
+print(sbfs.subsets_[5]['feature_names'])
+#+end_src
+
+This outputs:
+
+#+begin_src python
+(' RH', ' Ws', 'Rain ', 'DMC', 'FWI')
+#+end_src
+
+** Task 1
+Use mlxtend to create and fit a sequential forward floating selection model called ~sffs~ that chooses 3 features. Make sure to set scoring='accuracy' and cv=0.
+
+** Task 2
+Use the ~.subsets_~ attribute of sffs to print a tuple that contains the names of the features chosen by sequential forward selection.
+
+** Task 3
+Use mlxtend to create and fit a sequential backward floating selection model called sbfs that chooses 3 features. Make sure to set scoring='accuracy' and cv=0.
+
+** Task 4
+Use the ~.subsets_~ attribute of sbfs to print a tuple that contains the names of the features chosen by sequential backward floating selection. Are these features different form the ones chosen by previous algorithms?
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = health.iloc[:,:-1]
+  y = health.iloc[:,-1]
+
+  # Logistic regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  # Sequential forward floating selection
+  sffs = SFS(lr,
+             k_features=3,
+             forward=True,
+             floating=True,
+             scoring='accuracy',
+             cv=0)
+  sffs.fit(X, y)
+
+  # Print a tuple with the names of the features chosen by sequential forward floating selection
+  print(sffs.subsets_[3]['feature_names'])
+
+  # Sequential backward floating selection
+  sbfs = SFS(lr,
+            k_features=3,
+            forward=False,
+            floating=True,
+            scoring='accuracy',
+            cv=0)
+  sbfs.fit(X, y)
+
+  # Print a tuple with the names of the features chosen by sequential forward floating selection.
+  print(sbfs.subsets_[3]['feature_names'])
+
+#+end_src
+
+#+RESULTS:
+: ('Age', 'Glucose', 'Insulin')
+: ('Age', 'Glucose', 'Resistin')
