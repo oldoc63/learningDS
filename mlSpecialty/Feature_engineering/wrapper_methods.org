@@ -505,8 +505,36 @@ Use plot_sfs(sbs.get_metric_dict()) to plot the accuracy as a function of the nu
 #+end_src
 
 #+RESULTS:
-: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
-:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
-: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
-:   ret = ret.dtype.type(ret / rcount)
-: [ Babel evaluation exited with code 0 ]
+: ('Age', 'Glucose', 'Resistin')
+: 0.7413793103448276
+
+* Sequential Forward and Backward Floating Selection
+/Sequential forward floating selection/ is a variation of sequential forward selection. It starts with zero features and adds one feature at a time, just like sequential forward selection, but after each addition, it checks to see if we can improve performance by removing a feature.
+
+    - If performance can't be improved, the floating algorithm will continue to the next step and add another feature.
+
+    - If performance can be improved, the algorithm will make the removal that improves performance the most (unless removal of that feature would lead to an infinite loop of adding and removing the same feature over and over again).
+
+For example, let's say that the algorithm has just added weight to the feature set {age, ~resting_heart_rate~}, resulting in the set {age, weight, ~resting_heart_rate~}. The floating algorithm will test whether it can improve performance by removing age or ~resting_heart_rate~. If the removal of age improves performance, then the algorithm will proceed with the set {weight, ~resting_heart_rate~}.
+
+/Sequential backward floating selection/ works similarly. Starting with all available features, it removes one feature at a time. After each feature removal, it will check to see if any feature additions will improve performance (but it won't add any features that would result in an infinite loop).
+
+Floating selection algorithms are sometimes preferable to their non-floating counterparts because they test the model on more possible feature subsets. They can detect useful relationships between variables that plain sequential forward and backward selection might miss.
+
+** Task 1
+Let's say that sequential backward floating selection is being done on the set {age, height, weight, blood_pressure, resting_heart_rate}. The algorithm removes weight, blood_pressure, and resting_heart_rate in that order. After removing resting_heart_rate, the model had an accuracy of 86%. Now it will try some feature additions. The possible feature additions give the following accuracies:
+
+| Feature subset                | Accuracy |
+| {age, height, weight}         |     0.95 |
+| {age, height, blood_pressure} |     0.92 |
+
+Will it add a feature?
+
+    - If yes, create a variable called ~added_feature~, and set it equal to the name of the feature as a string.
+
+    - If no, added_feature, and set it equal to None
+
+** Script.py
+#+begin_src python
+  added_feature = 'weight'
+#+end_src
