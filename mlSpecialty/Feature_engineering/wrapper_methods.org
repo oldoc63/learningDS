@@ -623,3 +623,29 @@ Use the ~.subsets_~ attribute of sbfs to print a tuple that contains the names o
 #+RESULTS:
 : ('Age', 'Glucose', 'Insulin')
 : ('Age', 'Glucose', 'Resistin')
+
+* Recursive Feature Elimination
+/Recursive feature elimination/ is another wrapper method for feature selection. It starts by training a model with all available features. It then ranks each feature according to an importance metric and removes the least important feature. The algorithm then trains the model on the smaller feature set, ranks those features, and removes the least important one. The process stops when the desired number of features is reach.
+
+In regression problems, features are ranked by the size of the absolute value of their coefficients. For example, let's say that we trained a regression model with five features and got the following regression coefficients.
+
+| Feature            | Regression coefficient |
+| age                |                    2.5 |
+| height             |                    7.0 |
+| weight             |                   -4.3 |
+| blood_pressure     |                   -5.7 |
+| resting_heart_rate |                   -4.6 |
+
+The regression coefficient for ~age~ has the smallest absolute value, so it is ranked least important by recursive feature elimination. It will be removed, and the remaining four features will be re-ranked after the model is trained without ~age~.
+
+It's important to note that you might need to standardize data before doing recursive feature elimination. In regression problems in particular, it's necessary to standardize data so thath the scale of features doesn't affect the size of the coefficients.
+
+Note that recursive feature elimination is different from sequential backward selection. Sequential backward selection removes features by training a model on a collection of subsets (one for each possible feature removal) and greedily proceeding with whatever subset perform best. Recursive feature elimination, on the other hand, only trains a model on one feature subset before deciding which feature to remove next.
+
+This is one advantage of recursive feature elimination. Since it only needs to train and test a model on one feature subset per feature removal, it can be much faster than the sequential selection methods that we've covered.
+
+** Task 1
+Say you want to choose four out of six possible features for a model. If you use recursive feature elimination, how many different feature subsets will you test a model on? Set this number to a variable called ~rfe_test_count~.
+
+** Task 2
+If you use sequential backward selection to choose four out of six features, how many different feature subsets will you test a model on? Set this number to a variable called ~sbs_test_count~. Which method uses fewer tests?
