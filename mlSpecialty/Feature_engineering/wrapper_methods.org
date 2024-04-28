@@ -505,8 +505,11 @@ Use plot_sfs(sbs.get_metric_dict()) to plot the accuracy as a function of the nu
 #+end_src
 
 #+RESULTS:
-: ('Age', 'Glucose', 'Resistin')
-: 0.7413793103448276
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
+:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
+:   ret = ret.dtype.type(ret / rcount)
+: [ Babel evaluation exited with code 0 ]
 
 * Sequential Forward and Backward Floating Selection
 /Sequential forward floating selection/ is a variation of sequential forward selection. It starts with zero features and adds one feature at a time, just like sequential forward selection, but after each addition, it checks to see if we can improve performance by removing a feature.
@@ -649,3 +652,65 @@ Say you want to choose four out of six possible features for a model. If you use
 
 ** Task 2
 If you use sequential backward selection to choose four out of six features, how many different feature subsets will you test a model on? Set this number to a variable called ~sbs_test_count~. Which method uses fewer tests?
+
+* Recursive feature elimination with scikit-learn
+We can use scikit-learn to implement recursive feature elimination. Since we're using a logistic regression model, it's important to standardize data before we proceed.
+
+We can standardize features using scikit-learn's ~StandarScaler()~.
+
+#+begin_src python
+  from sklearn.preprocessing import StandardScaler
+
+  X = StandardScaler().fit_transform(X)
+#+end_src
+
+#+RESULTS:
+
+Once the data is standardized, you can train the model and do recursive feature elimination using RFE() from scikit-learn. As before with the sequential feature selection methods, you have to specify a scikit-learn model for the stimator parameter (in this case, lr for our logistic regression model). ~n_features_to_select~ is self-explanatory: set it to the number of features you want to select.
+
+#+begin_src python
+  from sklearn.feature_selection import RFE
+
+  # Recursive feature elimination
+  rfe = RFE(lr, n_features_to_select=2)
+  rfe.fit(X, y)
+#+end_src
+
+#+RESULTS:
+
+** Task 1
+Standardize the data by uncommenting the line ~X = StandardScaler().fit_transform(X)~
+
+** Task 2
+Use sklearn to create an RFE object called rfe that chooses 3 features.
+
+** Task 3
+Use the .fit() method on rfe to fit the model to X and y.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.feature_selection import RFE
+  from sklearn.preprocessing import StandardScaler
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = np.array(health.iloc[:,:-1])
+  y = np.array(health.iloc[:,-1])
+
+  # Standardize the data
+  X = StandardScaler().fit_transform(X)
+
+  # Logistic regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  # Recursive feature elimination
+  rfe = RFE(lr, n_features_to_select=3)
+  rfe.fit(X, y)
+
+#+end_src
+
+#+RESULTS:
