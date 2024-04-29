@@ -1,0 +1,74 @@
+
+* Scientist Intern
+It’s your first day working as a Data Science Intern at Codecademy! She’s excited to use some of the tools that she is learning in the Data Scientist Career Path, such as:
+
+    - Data Literacy
+
+    - Data extraction with SQL
+
+    - Programming basics with Python
+
+    - Exploratory Data Analysis with SQL and Python
+
+    - Data analysis using pandas, a Python library
+
+    - Data visualization using Matplotlib, a Python library
+
+    - Experimental Design and Hypothesis Testing
+
+You are about halfway through the Data Scientist: Machine Learning Career Path. Soon, she will either pick a different specialty or stick with Machine Learning.
+
+Machine Learning Specialist is one of four Data Scientist Specialist career paths, each of which starts with Data Science Foundations.
+
+* Exploring data with SQL
+Like most organizations, Codecademy uses *SQL* (*S* tructured *Q* uery *L* anguage) to access its database.
+
+A database is a collection of structured information stored so it can be easily accessed and updated. In a computer system, databases are commonly accessed through a database management system, DBMS.
+
+A database is a set of data stored in a computer. This data is usually structured into tables. Tables can grow large and have a multitude of columns and records.
+
+Spreadsheets, like Microsoft Excel and Google Sheets, allow you to view and manipulate data directly: with selecting, filtering, sorting, etc. By applying a number of these operations you can obtain the subset of data you are seeking.
+
+SQL (pronounced "S-Q-L" or "sequel") allows you to write *queries* which define the subset of data you are seeking. Unlike Excel and Sheets, your computer and SQL will handle how to get the data; you can focus on what data you would like. You can save these queries, refine them, share them, and run them on different databases.
+
+It is a great way to access data and a great entry point to programming because its syntax (the specific vocabulary that gives instructions to the computer) is very human-readable. Without knowing any SQL, your might still be able to guess what each command will do.
+
+** Task 1
+One of the tables in Codecademy's database is called browse. It contains information on each time someone visited the Codecademy's website. Pas the followin code into the code editor (middle panel) and click Run.
+
+#+begin_src
+SELECT *
+FROM browse
+LIMIT 10;
+#+end_src
+
+The code will select all (*) columns from browse table for the first 10 records.
+
+** Exploring the churn rate
+Next, we want to take a look at the churn rate. Churn rate is the percent of subscribers to a monthly service who have canceled. For example, in January, let’s say Codecademy had 1,000 learners. In February, 200 learners sign up, and 250 cancel.
+
+The churn rate for February would be:
+
+$$
+\frac {cancellations}{total\ subscribers} = \frac{250}{1000 + 200} = 20.8\%
+$$
+
+You want to analyse the churn rates for Codecademy for the past few months so you write another SQL query.
+
+#+begin_src
+SELECT COUNT(DISTINCT user_id) AS 'enrollments',
+  COUNT(CASE
+       	WHEN strftime("%m", cancel_date) = '03'
+        THEN user_id
+  END) AS 'march_cancellations',
+ 	ROUND(100.0 * COUNT(CASE
+       	WHEN strftime("%m", cancel_date) = '03'
+        THEN user_id
+  END) / COUNT(DISTINCT user_id)) AS 'churn_rate'
+FROM pro_users
+WHERE signup_date < '2017-04-01'
+	AND (
+    (cancel_date IS NULL) OR
+    (cancel_date > '2017-03-01')
+  );
+#+end_src
