@@ -714,3 +714,123 @@ Use the .fit() method on rfe to fit the model to X and y.
 #+end_src
 
 #+RESULTS:
+
+* Evaluating the result of recursive feature elimination
+You can inspect the results of recursive feature elimination by looking at ~rfe.ranking_~ and ~rfe.support_~.
+
+~rfe.ranking_~ is and array that contains the rank of each feature. Here are the features form the fire dataset:
+
+#+begin_src python
+['Temperature', 'RH', 'Ws', 'Rain', 'DMC', 'FWI']
+#+end_src
+
+Here are the feature rankings after recursive feature elimination is done on the fire dataset.
+
+#+begin_src python
+print(rfe.ranking_)
+#+end_src
+
+#+begin_src
+[2 5 4 1 3 1]
+#+end_src
+
+A 1 at a certain index indicates that recursive feature elimination kept the feature at the same index. In this example, the model kept the features at indices 3 and 5: Rain and FWI. The other numbers indicate at which step a feature was removed. The 5 (the highest rank in the array) at index 1 means that RH (the feature at index 1) was removed first. The 4 at index 2 means that Ws (the feature at index 2) was removed in the next step, and so on.
+
+rfe.support_ is an array with True and False values that indicate which features were chosen. Here’s an example of what this looks like, again using the fire dataset.
+
+#+begin_src python
+print(rfe.support_)
+#+end_src
+
+#+begin_src
+[False False False  True False  True]
+#+end_src
+
+This array indicates that the features at indices 3 and 5 were chosen. The features at indices 0, 1, 2, and 4 were eliminated.
+
+If you have a list of feature names, you can use a list comprehension and rfe.support_ to get a list of chosen feature names.
+
+#+begin_src python
+  # features is a list of feature names
+  # Get a list of features chosen by rfe
+  rfe_features = [f for (f, support) in zip(features, rfe.support_) if support]
+
+  print(rfe_features)
+#+end_src
+
+#+begin_src
+  ['Rain ', 'FWI']
+#+end_src
+
+You can use rfe.score(X, y) to check the accuracy of the model.
+
+** Task 1
+Create a list called rfe_features that contains the names of the features chosen by recursive feature elimination.
+
+** Task 2
+Print the accuracy of the model after doing recursive feature elimination. How does this compare to the accuracy of the original model?
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.feature_selection import RFE
+  from sklearn.preprocessing import StandardScaler
+
+  # Load the data
+  health = pd.read_csv("dataR2.csv")
+  X = health.iloc[:, :-1]
+  y = health.iloc[:, -1]
+
+  # Create a list of feature names
+  feature_list = list(X.columns)
+
+  # Standardize the data
+  X = StandardScaler().fit_transform(X)
+
+  # Logistic regression
+  lr = LogisticRegression(max_iter=1000)
+
+  # Recursive feature elimination
+  rfe = RFE(estimator=lr, n_features_to_select=3)
+  rfe.fit(X, y)
+
+  # List of features chosen by recursive feature elimination
+  rfe_features = [f for (f, support) in zip(feature_list, rfe.support_) if support]
+
+  print(rfe_features)
+
+  # Print the accuracy of the model with features chosen by recursive feature elimination
+  print(rfe.score(X, y))
+
+#+end_src
+
+#+RESULTS:
+: ['BMI', 'Glucose', 'Resistin']
+: 0.7327586206896551
+
+* Review
+You've learned about a few different wrapper methods. You've also learned how to implement them in Python and evaluate the results. Let's recap what we covered.
+
+Wrapper methods for feature selection are algorithms that select features by evaluating the performance of a machine learning model on different subsets of features. Here are some advantages of wrapper methods.
+
+    - They can detect relationships between features that might be relevant to the machine learning model.
+
+    - Unlike filter methods, they are designed to choose features that are relevant to whatever machine learning model you are using.
+
+We covered four different greedy wrapper methods and implement them using mlextend in Python.
+
+    - Sequential forward selection adds one feature at a time.
+
+    - Sequential backward selection removes one feature at a time.
+
+    - Sequential forward floating selection adds (and sometimes removes) one feature at a time.
+
+    - Sequential backward floating selection removes (and sometimes adds) one feature at a time.
+
+We also covered recursive feature elimination, which ranks features by importance and removes the least important feature at every step. We used the scikit-learn library to implement that algorithm and investigate the results.
+
+The forest fire data for this lesson were taken from the [[https://archive.ics.uci.edu/dataset/547/algerian+forest+fires+dataset][UCI Machine Learning Repository]] Faroudja ABID et al., Predicting Forest Fire in Algeria using Data Mining Techniques: Case Study of the Decision Tree Algorithms, International Conference on Advanced Intelligent Systems for Sustainable Development (AI2SD 2019) , 08 - 11 July , 2019, Marrakech, Morocco.
+
+The breast cancer data for this lesson were taken from the [[https://archive.ics.uci.edu/dataset/451/breast+cancer+coimbra][UCI Machine Learning Repository]]. [Patricio, 2018] Patrício, M., Pereira, J., Crisóstomo, J., Matafome, P., Gomes, M., Seiça, R., & Caramelo, F. (2018). Using Resistin, glucose, age and BMI to predict the presence of breast cancer. BMC Cancer, 18(1).
