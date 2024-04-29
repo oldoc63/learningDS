@@ -72,3 +72,54 @@ WHERE signup_date < '2017-04-01'
     (cancel_date > '2017-03-01')
   );
 #+end_src
+
+* Programming with Python
+After interacting with the database, it is time to analyse the data further and eventually visualize the data. And SQL cannot get us there.
+
+Python is a general-purpose programming language. It can do almost all of what other languages can do with comparable, or faster, speed. It is often chosen by Data Analyst and Data Scientists for prototyping, visualization, and execution of data analyses  on datasets.
+
+There’s an important question here. Plenty of other programming languages, like R, can be useful in the field of data science. Why are so many people choosing Python?
+
+One major factor is Python's versatility. There are over 125,000 third-party Python libraries. These libraries make Python more useful for specific purposes, from the traditional (e.g. web development, text processing) to the cutting edge (e.g. AI and machine learning). For example, a biologist might use the [[https://biopython.org/][Biopython library]] to aid their work in genetic sequencing.
+
+Additionally, Python has become a go-to language for data analysis. With data-focused libraries like pandas, NumPy, and Matplotlib, anyone familiar with Python's syntax and rules can use it as a powerful tool to process, manipulate, and visualize data.
+
+** Task 1
+You just downloaded Python 3 onto your PC.
+
+Let's test out a simple piece of code. Run the script.py program.
+
+** Script.py
+
+#+begin_src python :results output
+  libraries = ["NumPy", "SciPy", "Pandas", "Matplotlib", "Seaborn"]
+
+  completion = [100, 100, 96, 0, 0]
+
+  libraries.append("scikit-learn")
+  completion.append(0)
+
+  gradebook = list(zip(libraries, completion))
+
+  print("Lesson Completion Rates:")
+  print(gradebook)
+  print("\n")
+
+  # What's next?
+  gradebook.append(("BeautifulSoup", 0))
+  gradebook.append(("Tensorflow", 0))
+
+  print("Lesson Completion Rates:")
+  print(gradebook)
+  print("\n")
+#+end_src
+
+#+RESULTS:
+: Lesson Completion Rates:
+: [('NumPy', 100), ('SciPy', 100), ('Pandas', 96), ('Matplotlib', 0), ('Seaborn', 0), ('scikit-learn', 0)]
+:
+:
+: Lesson Completion Rates:
+: [('NumPy', 100), ('SciPy', 100), ('Pandas', 96), ('Matplotlib', 0), ('Seaborn', 0), ('scikit-learn', 0), ('BeautifulSoup', 0), ('Tensorflow', 0)]
+:
+:
