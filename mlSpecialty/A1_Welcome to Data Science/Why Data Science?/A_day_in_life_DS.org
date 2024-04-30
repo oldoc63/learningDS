@@ -123,3 +123,55 @@ Let's test out a simple piece of code. Run the script.py program.
 : [('NumPy', 100), ('SciPy', 100), ('Pandas', 96), ('Matplotlib', 0), ('Seaborn', 0), ('scikit-learn', 0), ('BeautifulSoup', 0), ('Tensorflow', 0)]
 :
 :
+
+* Analyzing data with pandas
+You want to know if Codecademy learners are finding what they need and need to analyze data from a survey that was administered to a subset of visitors.
+
+You selects the survey data from the SQL database and downloads it onto your computer. You save the data as a CSV file (extension .csv), which stands for Comma-Separated Values. CSV is a text-only spreadsheet format that lets us store and explore data.
+
+To analyze the survey data, you will use pandas. Python is a programming language, and pandas is a special set of commands in Python that lets us analyze spreadsheet data. Pandas can do a lot of the things that SQL can do, but it's also backed by the power of Python, so we can easily transition from analyzing our data with pandas to visualizing it using other Python tools.
+
+What else does Pandas let us do?
+
+Pandas provides a lot of useful features and functionality to work with data.
+
+One of the most useful features of Pandas is that it provides objects known as Dataframes, which are very similar to 2D arrays of data or database tables. Dataframes are a collection of objects named "Series", which are individual columns.
+
+With pandas and its dataframes, you can perform useful functions. As shown in the exercise, you can easily load data from a CSV file and store it as a variable in the form of a dataframe. You can also write to and create new files just as easily.
+
+In addition, you can modify the shape of these dataframes by pivoting, add or remove from a dataframe, or merge different dataframes together.
+
+Furthermore, you can utilize some of built-in methods that dataframes provide, such as the ~df.mean()~ method, which will return the mean value of all the columns, or ~df.max()~, which will return the highest value of each column of the dataframe.
+
+Because of these reasons, and many others, pandas can be a very indispensable tool for data analyst.
+
+** Task 1
+You write some code to analyze your data in script.py, the file in the center of the screen.
+
+If you press Run now, it will generate errors because it is missing this line of code:
+
+#+begin_src python
+import pandas as pd
+#+end_src
+
+Paste that code into the top of script.py and then press Run.
+
+#+begin_src python :results output
+  import pandas as pd
+
+  # Paste code here:
+
+  # Load data
+  df = pd.read_csv('page_visits.csv')
+
+  # Display data
+  print(df.head())
+#+end_src
+
+#+RESULTS:
+:   first_name last_name gender   age  visit_date          website_goal
+: 0      James   Mcguire   male  50.0  2017-10-26            Find a job
+: 1       John   Vaughan   male  35.0  2017-11-09            Pay a bill
+: 2     Robert    Dillon   male  33.0  2017-11-28            Pay a bill
+: 3    Michael   Cameron   male  40.0  2017-09-27    When is trash day?
+: 4    William      Yang   male  38.0  2017-11-01  Contact City Council
