@@ -230,3 +230,169 @@ This tells matplotlib to create and display the plot!
   #+end_src
 
   #+RESULTS:
+
+* Probability
+You are goin to visit the inference and machine learning teams this week. You know that both of these specialists work with probability, and want to brush up on your skills before you go, so you are going to explore a famous problem -about birthdays.
+
+Calculating the probability of an event is sometimes dependent on external factors. For instance, in the birthday problem "What is the probability that two people in a room have the same birthday?" the probability is dependent on the number of people in the room.
+
+Other times, the probability of something is constant. For instance, the probability of flipping a coin and it landing heads will always be 50%.
+
+** Task 1
+In data science, probability is often used to simulate scenarios.
+
+The code below simulates  the birthday problem. Right now the code simulates a room with only two people that get random birthdays, and the probability that those 2 people have the same birthday is really low.
+
+Change the number 2 to a higher number of your choosing where it says #Change this number and run the code.
+
+Is there a match in the simulation? What's the probability that there would be a match?
+
+Keep changing the number to test out different simulations.
+
+Note that if you make the number too big, the program will throw and error due to the way we have implemented some of the math. This is a great example of needing to be mindful of possible inputs to your program!
+
+** Script.py
+
+#+begin_src python :results output
+  # We have hidden code in another file. If you're curious, open the folder to the left and inspect the simulate.py file
+  from simulate import simulate
+
+  num_people_in_room = 120 #Change This Number (keep it smaller than 100 to save processing power)
+
+  simulate(num_people_in_room)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Here's what our room looks like:
+
+Person 1's birthday: September 2
+Person 2's birthday: January 26
+Person 3's birthday: January 4
+Person 4's birthday: October 4
+Person 5's birthday: March 20
+Person 6's birthday: May 23
+Person 7's birthday: April 19
+Person 8's birthday: November 17
+Person 9's birthday: March 3
+Person 10's birthday: October 30
+Person 11's birthday: February 24
+Person 12's birthday: February 14
+Person 13's birthday: October 26
+Person 14's birthday: April 22
+Person 15's birthday: January 22
+Person 16's birthday: April 16
+Person 17's birthday: August 20
+Person 18's birthday: July 27
+Person 19's birthday: November 9
+Person 20's birthday: February 4
+Person 21's birthday: April 8
+Person 22's birthday: March 22
+Person 23's birthday: November 14
+Person 24's birthday: June 12
+Person 25's birthday: September 5
+Person 26's birthday: June 28
+Person 27's birthday: November 16
+Person 28's birthday: January 12
+Person 29's birthday: November 1
+Person 30's birthday: October 27
+Person 31's birthday: October 11
+Person 32's birthday: December 27
+Person 33's birthday: December 18
+Person 34's birthday: December 7
+Person 35's birthday: October 14
+Person 36's birthday: April 6
+Person 37's birthday: July 20
+Person 38's birthday: July 11
+Person 39's birthday: September 24
+Person 40's birthday: September 20
+Person 41's birthday: November 10
+Person 42's birthday: September 6
+Person 43's birthday: November 21
+Person 44's birthday: June 8
+Person 45's birthday: July 6
+Person 46's birthday: May 2
+Person 47's birthday: November 12
+Person 48's birthday: July 5
+Person 49's birthday: June 10
+Person 50's birthday: December 16
+Person 51's birthday: November 17
+Person 52's birthday: February 23
+Person 53's birthday: January 5
+Person 54's birthday: May 7
+Person 55's birthday: September 6
+Person 56's birthday: April 20
+Person 57's birthday: September 9
+Person 58's birthday: December 1
+Person 59's birthday: August 14
+Person 60's birthday: July 19
+Person 61's birthday: November 27
+Person 62's birthday: November 13
+Person 63's birthday: June 25
+Person 64's birthday: March 30
+Person 65's birthday: December 6
+Person 66's birthday: August 7
+Person 67's birthday: February 12
+Person 68's birthday: April 26
+Person 69's birthday: September 6
+Person 70's birthday: December 22
+Person 71's birthday: July 8
+Person 72's birthday: May 18
+Person 73's birthday: January 9
+Person 74's birthday: July 29
+Person 75's birthday: June 15
+Person 76's birthday: January 27
+Person 77's birthday: January 3
+Person 78's birthday: August 29
+Person 79's birthday: June 22
+Person 80's birthday: February 27
+Person 81's birthday: September 22
+Person 82's birthday: January 20
+Person 83's birthday: July 13
+Person 84's birthday: December 22
+Person 85's birthday: March 13
+Person 86's birthday: September 24
+Person 87's birthday: May 3
+Person 88's birthday: November 13
+Person 89's birthday: January 2
+Person 90's birthday: September 19
+Person 91's birthday: February 27
+Person 92's birthday: April 30
+Person 93's birthday: May 16
+Person 94's birthday: November 28
+Person 95's birthday: May 25
+Person 96's birthday: October 4
+Person 97's birthday: May 6
+Person 98's birthday: June 18
+Person 99's birthday: August 2
+Person 100's birthday: April 20
+Person 101's birthday: October 13
+Person 102's birthday: November 12
+Person 103's birthday: September 12
+Person 104's birthday: October 7
+Person 105's birthday: October 23
+Person 106's birthday: November 22
+Person 107's birthday: May 7
+Person 108's birthday: July 3
+Person 109's birthday: June 18
+Person 110's birthday: November 2
+Person 111's birthday: June 11
+Person 112's birthday: December 22
+Person 113's birthday: March 9
+Person 114's birthday: June 18
+Person 115's birthday: June 27
+Person 116's birthday: September 18
+Person 117's birthday: January 23
+Person 118's birthday: February 16
+Person 119's birthday: February 2
+Person 120's birthday: February 4
+
+
+The probability that two people in a room of 120 people have the same birthday is nearly 100.0%
+
+
+In our simulation, the following people have the same birthdays:
+Person 96
+Person 4
+#+end_example
