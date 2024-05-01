@@ -175,3 +175,58 @@ Paste that code into the top of script.py and then press Run.
 : 2     Robert    Dillon   male  33.0  2017-11-28            Pay a bill
 : 3    Michael   Cameron   male  40.0  2017-09-27    When is trash day?
 : 4    William      Yang   male  38.0  2017-11-01  Contact City Council
+
+* Visualizing data with matplotlib and seaborn
+You want to visualize your analysis and share it with your boss. For this, you will use matplotlib, another python module.
+
+Matplotlib let you create line charts, bar charts, pie charts, and more. It gives you precise control over colors and labels so that you can create the perfect chart to communicate your findings.
+
+You has written some code using matplotlib that visualizes hours of usage on Codecademy!
+
+** Task 1
+You have written some code in script.py, but it won't display your new graph until you add the following code to the very end of the file:
+
+#+begin_src python
+plt.show()
+#+end_src
+
+This tells matplotlib to create and display the plot!
+
+** Scritp.py
+
+#+begin_src python :results output
+  from matplotlib import pyplot as plt
+  import numpy as np
+  import pandas as pd
+
+  hour = range(24)
+
+  viewers_hour = [30, 17, 34, 29, 19, 14, 3, 2, 4, 9, 5, 48, 62, 58, 40, 51, 69, 55, 76, 81, 102, 120, 71, 63]
+
+  plt.title("Codecademy Learners Time Series")
+
+  plt.xlabel("Hour")
+  plt.ylabel("Viewers")
+
+  plt.plot(hour, viewers_hour)
+
+  plt.legend(['2015-01-01'])
+
+  ax = plt.subplot()
+
+  ax.set_facecolor('seashell')
+
+  ax.set_xticks(hour)
+  ax.set_yticks([0, 20, 40, 60, 80, 100, 120])
+
+  y_upper = [i + (i*0.15) for i in viewers_hour]
+  y_lower = [i - (i*0.15) for i in viewers_hour]
+
+  plt.fill_between(hour, y_lower, y_upper, alpha=0.2)
+
+  # Add the code here:
+  plt.show()
+
+  #+end_src
+
+  #+RESULTS:
