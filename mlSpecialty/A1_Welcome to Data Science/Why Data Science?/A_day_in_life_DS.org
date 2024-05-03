@@ -396,3 +396,15 @@ In our simulation, the following people have the same birthdays:
 Person 96
 Person 4
 #+end_example
+
+* A day with the inference team
+You are now visiting all of the specialist on your team. Today you will join the inference team. They focus on measuring the impact of their work, and use statistics to find causal relationships (inferencial statistics) and report on the data (descriptive statistics).
+
+You're excited because you love asking questions and always want to know how things affect each other!
+
+A lot of statistics is based on the idea of a distribution, so your first task is to look at the distribution of learner hours on the Codecademy site.
+
+** Task 1
+There are many different types of distributions. The one on the right is called normal distribution. These distributions are very common. In a normal distribution, the mean is the middle of the distribution and the standard deviation is the width.
+
+Play with different values for the mean and standard deviation and see how the distribution changes.
