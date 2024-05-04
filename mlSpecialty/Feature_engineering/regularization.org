@@ -203,3 +203,24 @@ Followin this logic, the center of this set of concentric ellipses should repres
 
 #+RESULTS:
 : [77.30856619 18.87896326]
+
+* The regularization term
+Regularization penalizes models for overfitting by adding a "penalty term" to the lost function. The two most commonly used ways of doing this are known as /Lasso/ (or L1) and /Ridge/ (or L2) regularization.
+
+Both of these rely on penalizing overfitting by controlling how large the coefficients can get in the first place. The penalty term or regularization term is multiplied by a factor alpha and added to the old loss function as follows:
+
+$$
+new\ loss\ function = old\ loss\ function + \alpha * regularization\ term
+$$
+
+Because of the additive term, minimizing the new loss function will necessarily mean "true loss" goes up, i.e., the scores on this will be lower on the training data than regression without regularization! But this is what we want when we are regularizing. Remember that the reason we're regularizing is because our model is overfitted to our data (i.e., it is performing well on training data but doesn't generalize well on test data).
+
+The regularization term is the sum of the /absolute values/ of the coefficients in the case of L1 regularization and the sum of the /squares of the coefficients/ in the case of L2.
+
+    - L1 regularization term: $|b_1| + |b_2|$
+
+    - L2 regularization term: $b_1^2 + b_2^2$
+
+      [[./regularization_term.png]]
+
+In mathematics, the sum of the magnitudes of a vector is known as its L1 norm (related to "Manhattan distance") and the square root of the sum of the magnitudes (or the "Euclidean distance" from the origin) is known as its L2 norm -and that is the reason for the names of both methods!
