@@ -329,3 +329,107 @@ Lasso has shrunk more than half our coefficients to zero! Additionally, while th
 #+RESULTS:
 : Lasso (L1) Training Error:  3.0118464559476825
 : Lasso (L1) Testing Error:  4.272174214435374
+
+* L2 or Ridge Regularization
+L2 regularization is also called "Ridge" regularization as the mathematical formulation of it belongs to a class of analysis methods known as "ridge analysis". The modified loss function in the case of L2 regularization looks as follows:
+
+$$
+L2\ Loss = \frac{1}{n} \sum_{i=1}^n (y_i - b_0 - b_1x_{1i} - b_2x_{2i})^2 + \alpha * (b_1^2 + b_2^2)
+$$
+
+Similar to L1, this would mean constraining the regularization term to the following surface:
+
+$$
+b_1^2 + b_2^2 \leq s^2
+$$
+
+The key difference here is that instead of a diamond-shaped area, we're constraining the coefficients to live within a circle of radius ~s~ as shown in the figure here.
+
+[[./circle_surface.png]]
+
+The general goal is still similar though, we want to minimize the old loss while restricting the values of the coefficients to the boundary of this circle. Once again we want our new coefficient values to be as close to the unregularized best fit solution (i.e., the center of the contours) as possible while falling within the circle.
+
+The value of (b1,b2) that minimizes this new loss function almost never lies on either axes. The solution here is not the pink dot that lies on the X axis lil
+ke in L1, but rather the white dot that we have shown. The reason for this is as follows: The circle that contains the white and pink dots represents the smallest value of the old loss function that satisfies the regularization constraint, but while the pink dot makes the regularization term's value s^2 exactly, the white dot makes it even smaller as it lies inside the circle!
+
+Unlike Lasso, our Ridge coefficients can never be exactly zero! L2 regularization is therefore not a feature elimination method like L1. The coefficients of L2 get arbitrarily small but never zero. This is particularly useful when we don't want to get rid of features during modeling but nonetheless want their relative importances emphasized.
+
+We're now going to apply L2 regularization on the student performance dataset we've been working with to see how it works in a many-feature scenario. The loss function for a multiple linear regression model with L2 regularization with m features look as follows:
+
+$$
+L2\ Loss = \frac{1}{n} \sum_{i=1}^n (y_i - b_0 - b_1x_{li} - b_2x_{2i} - \cdots - b_mx_{mi})^2 + \alpha * (b_1^2 + b_2^2 + b_3^2 \cdots + b_m^2)
+$$
+
+We're going to examine this by reapplying a multiple linear regression model to the student performance dataset we were looking at earlier on in the lesson -only this time, we are going to do this with L2 regularization. A quick reminder that our original unregularized coefficients look as shown in the image:
+
+[[./coefficients_without_regularization.png]]
+
+We've loaded a file, script.py here containing the analysis we did earlier on. Some of the things we'd noted earlier on were:
+
+    - too many features possibly (from the number of columns in the DataFrame)
+
+    - testing error is higher than training error (by looking at the MSE)
+
+    - highly negatively correlated features (inferred from the plot of the coefficients)
+
+** Task 1
+Similar to our L1 exercise, we've loaded a file, scrip.py here containing the analysis we did earlier on. We can implement Ridge regularization for this dataset using scikit-learn by importing the Ridge module within linear_model's. We're setting ~s~ by way of setting alpha to 100 -the scikit-learn default is 1.
+
+We're going to evaluate our training and test error just as we did last time. Following the syntax for training error, calculate the testing error using the following steps:
+
+    - set the variable ~l2_pred_test~ equal to the result of applying the model to ~X_test~
+
+    - set the variable ~l2_mse_test~ equal to the mean squared error of the test data
+
+    - print ~l2_mse_test~
+
+** Task 2
+The training and test mean squared errors obtained from implementing the regression without regularization were 2.67 and 4.987 (rounded to three decimals!) respectively. We see how our training error went up but our test error went down, which makes sense as our model is performing slightly better on test data at the cost of performing slightly worse on training data.
+
+What do our coefficients look like post ridge regularization?
+
+See in the plot how L2 regularization shrinks the coefficients as well, an while there are some coefficients that are very small, *no coefficient is set to zero* . The amount by which the feature coeficcients get shrunk is related to the alpha we choose in implementing regularization. We're now ready to learn the things to consider in choosing alpha.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import helpers
+
+  df = pd.read_csv("student_math.csv")
+  y = df['Final_Grade']
+  X = df.drop(columns = ['Final_Grade'])
+
+  # 1. Train-test split and fitting an 12-regularized regression model
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import Ridge
+
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+  ridge = Ridge(alpha=100)
+  ridge.fit(X_train, y_train)
+
+  #Training error
+  l2_pred_train = ridge.predict(X_train)
+  l2_mse_train = np.mean((l2_pred_train - y_train)**2)
+  print("Ridge (L2) Training Error: ", l2_mse_train)
+
+  # 2. Calculate testing error
+  l2_pred_test = ridge.predict(X_test)
+  l2_mse_test = np.mean((l2_pred_test - y_test)**2)
+  print("Ridge (L2) Testing Error: ", l2_mse_test)
+
+  # 3. Plotting the Coefficients
+  predictors = X.columns
+  coef = pd.Series(ridge.coef_,predictors).sort_values()
+  plt.figure(figsize = (12, 8))
+  plt.ylim(-1.0, 1.0)
+  coef.plot(kind='bar', title='Regression Coefficients with Ridge (L2) Regularization')
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: Ridge (L2) Training Error:  2.8476069326177877
+: Ridge (L2) Testing Error:  4.357386340311292
