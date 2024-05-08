@@ -433,3 +433,16 @@ See in the plot how L2 regularization shrinks the coefficients as well, an while
 #+RESULTS:
 : Ridge (L2) Training Error:  2.8476069326177877
 : Ridge (L2) Testing Error:  4.357386340311292
+
+* Hyperparameter Tuning
+~alpha~ is what is known as a hyperparameter in machine learning. It is not learned during the model fitting step the way model parameters are. Rather, it's chosen prior to fitting the model and is used to control the learning process. In regularization, the choice of alpha determines how much we want to control for overfitting during the model fitting step.
+
+We're able to do this by using alpha to control the size of the constrain surface and consequently the size of the coefficients themselves. The larger the alpha, the smaller the size of the allowed coefficients. In essence, alpha is *inversely proportional* to ~s~ in the case of L1 regularization or s^2 in the case of L2 regularization.
+
+Consider all possible choices in terms of the size of the constrain boundaries for both types of regularization. In the figures shown to the right, the blue diamonds and the red circles represent the possible choices for ~s~. As we can see, the button "Less Regularization" increases ~s~ and the button "More Regularization" decreases ~s~.
+
+    - If s is very large (i.e., alpha is very small), the unregularized loss function minimun can easily fall within this large boundary and thus make it similar to regression without regularization.
+
+    - If s is very small (i.e., alpha is very large), the regression coefficients become very small and the loss value for the best fit becomes large making the regression overregularized.
+
+      To avoid either of these extreme scenarios, we need to find the /right amount of regularization/ by tuning ~alpha~ and this process is known as [[https://static-assets.codecademy.com/skillpaths/feature-engineering/regularization-intro/hyperparameter-tuning/hyperparameter-tuning.html][hyperparameter tuning]].
