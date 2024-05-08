@@ -457,3 +457,20 @@ Recall that the reason we wanted to perform regularization was to prevent our mo
 Ideally we want a machine learning model to have low bias and low variance, i.e., we want it to perform well on training data as well as test data. However, trying to minimize bias and variance simultaneously is a bit of a conundrum as lowering one raises the other! This dilemma in machine learning models is knows as the *bias-variance tradeoff*.
 
 Hyperparameter tuning help us find a sweet spot in this tradeoff to ensure that neither bias nor variance get too high. Typically, a portion of the data is set aside that in known as the "validation set" or "holdout set" (over and above the usual test-train split) and this is used to perform hyperparameter tuning on. We will delve into the ways we can implement this in scikit-learn later.
+
+* Review
+In this lesson we've learned the following topics:
+
+    - The importance of regularization in minimizing overfitting
+
+    - Lasso and Ridge regularization methods and their associated loss functions
+
+    - How to implement Lasso and Ridge with Multiple Linear Regression
+
+    - How regularization can be used as a feature selection method
+
+    - Hyperparameter tuning and the bias-variance tradeoff
+
+The tables here summarize the key concepts we've learned. These form the basis for understanding regularization in more complex non-linear algorithms such as support vector machines and neural networks. We are now ready to learn how to tune hyperparameters and explore different methods of implementing regularization in Python!
+
+[[./regularization_table.png]]
