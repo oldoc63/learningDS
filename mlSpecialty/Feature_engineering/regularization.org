@@ -446,3 +446,14 @@ Consider all possible choices in terms of the size of the constrain boundaries f
     - If s is very small (i.e., alpha is very large), the regression coefficients become very small and the loss value for the best fit becomes large making the regression overregularized.
 
       To avoid either of these extreme scenarios, we need to find the /right amount of regularization/ by tuning ~alpha~ and this process is known as [[https://static-assets.codecademy.com/skillpaths/feature-engineering/regularization-intro/hyperparameter-tuning/hyperparameter-tuning.html][hyperparameter tuning]].
+
+* The Bias-Variance Tradeoff
+When we add the regularization term to our loss function, we are in essence introducing *bias* into our problem, i.e., we are biasing our model to have coefficients within the regularization boundary. The greater the alpha, the smaller the coefficients and the more biased the model.
+
+The [[https://static-assets.codecademy.com/skillpaths/feature-engineering/regularization-intro/bias-variance/bias][animation]] shows the coefficients obtained from both types of regularization on the student performance dataset we've been working with throughout the lesson. Using the navigation buttons, we can now see what happens to the coefficients when we increase/decrease ~alpha~. For very high values of alpha, while Ridge begins to make most of the coefficients very small, Lasso ends up eliminating all but one feature!
+
+Recall that the reason we wanted to perform regularization was to prevent our model from overfitting the data. Such a model is said to have high *variance* as it is likely fitting for random errors or noise within the data. We introduced the bias term to minimize the variance, but if we're not careful and allow it to get arbitrarily large, we run the risk of underfitting the model!
+
+Ideally we want a machine learning model to have low bias and low variance, i.e., we want it to perform well on training data as well as test data. However, trying to minimize bias and variance simultaneously is a bit of a conundrum as lowering one raises the other! This dilemma in machine learning models is knows as the *bias-variance tradeoff*.
+
+Hyperparameter tuning help us find a sweet spot in this tradeoff to ensure that neither bias nor variance get too high. Typically, a portion of the data is set aside that in known as the "validation set" or "holdout set" (over and above the usual test-train split) and this is used to perform hyperparameter tuning on. We will delve into the ways we can implement this in scikit-learn later.
