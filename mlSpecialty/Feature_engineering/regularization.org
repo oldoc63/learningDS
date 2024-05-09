@@ -474,3 +474,120 @@ In this lesson we've learned the following topics:
 The tables here summarize the key concepts we've learned. These form the basis for understanding regularization in more complex non-linear algorithms such as support vector machines and neural networks. We are now ready to learn how to tune hyperparameters and explore different methods of implementing regularization in Python!
 
 [[./regularization_table.png]]
+
+* Quiz
+** Question 1
+Which one of the following statements is TRUE?
+
+    - *L1 regularization can also function as a feature selection method.*
+
+      Yes, L1 regularization sets one or more ot the coefficients to zero depending on the strength of regularization. This means that the features associated with these coefficients are eliminated, thus making it a feature selection method.
+
+    - L2 regularization preferentially sets some of the coefficients to zero.
+
+    - L2 regularization can also function as a feature selection method.
+
+    - Both L1 and L2 regularization methods transform the features to become linear combinations of the original features
+
+** Question 2
+The following piece of code has three functions to implement ridge regularization with a two-parameter linear regression model. Fill in the code:
+
+#+begin_src python
+  # Imagine the data is already centered and the intercept b0 is thus zero.
+  # The linear regression equation here is given by: b1*x1 + b2*x2 + error
+
+  import numpy as np
+
+  def loss_function(b1,b2,y,x1,x2):
+      error = y - b1*x1 - b2*x2
+      loss = np.mean(error**2)
+      return loss
+
+  def regularization_term(b1,b2):
+      ridge_regularization_term = b1**2 + b2**2
+      return ridge_regularization_term
+
+  def ridge_loss_function(b1,b2,y,x1,x2,alpha):
+      modified_loss = loss_function(b1,b2,y,x1,x2) + alpha*regularization_term(b1,b2)
+      return modified_loss
+#+end_src
+
+** Question 3
+Consider the following three-parameter linear regression model:
+
+$$
+y = b_0 + b_1x_1 + b_2x_2 + b_3x_3 + \epsilon
+$$
+
+The Ridge regularization term for this model would be:
+
+$$
+b_1^2 + b_2^2 + b_3^2
+$$
+
+Correct! The Ridge penalty term is the L2 norm of the coefficients (i.e., the sum of the squares of the coefficients).
+
+** Question 4
+Which of the following statements about regularization is FALSE?
+
+    - L2 regularization imposes a constrain on the size of the coefficients.
+
+    - *It is executed before implementing a machine learning model*.
+
+      Correct, regularization is not executed before buy rather /while/ implementing the model. This is why it is an embedded feature selection method.
+
+    - It corrects for overfitting.
+
+    - L1 regularization is also known as LASSO regularization.
+
+** Question 5
+Increasing the value of hyperparameter ~alpha~ in regularization is the same as:
+
+    - increasing the size of the regularization constrain surface
+
+    - decreasing the strength of regularization
+
+    - decreasing bias
+
+    - *increasing the training error*
+
+      Yes, that's right! Increasing ~alpha~ increases the strength of the regularization which increases the error on training data
+
+** Question 6
+Which of the following statements is FALSE?
+
+    - A model that performs well on training data buy poorly on test data is said to have high variance.
+
+    - Increasing the bias in a machine learning model lowers the variance.
+
+    - *Hyperparameters are learned from the data during the model training step*.
+
+      Correct, this statement is false! Hyperparameters are initialized before the model-fitting step.
+
+    - The regularization hyperparameter needs to be tuned to find the sweet spot in the bias-variance tradeoff.
+
+** Question 7
+Complete the following piece of code that implements L1 regularization on a dataset (X,y) and calculates the mean-squared error of the fit on test data:
+
+#+begin_src python
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import Lasso
+  from sklearn.metrics import mean_squared_error
+
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+  model = Lasso(alpha=0.1)
+
+  model.fit(X_train, y_train)
+
+  y_pred = model.predict(X_test)
+
+  mse = mean_squared_error(y_test, y_pred)
+#+end_src
+
+** Question 8
+Fill in the following paragraph about loss functions.
+
+#+begin_comment
+Regularization for linear regression is implemented by modifying the loss function by adding a term to it. This term is the product of an hyperparameter that controls the strength of the regularization ant the regularization term. The regularization term is the sum of the squared values of the coefficients in the case of L2 regularization and the absolute values of the coefficients in the case of L1 regularization. Minimizing this loss function means that the value of the old loss goes up and that's the reason this additive term is also referred to as a penalty term.
+#+end_comment
