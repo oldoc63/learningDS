@@ -1,0 +1,149 @@
+
+* Wrapper Methods
+In this project, you'll analyze data from a survey conducted by Fabio Mendoza Palechor and Alexis de la Hoz Manotas that asked people about their eating habits and weight. The data was obtained from the UCI Machine Learning Repository. Categorical variables were changed to numerical ones in order to facilitate analysis.
+
+First, you'll fit a logistic regression model to try to predict whether survey respondents are obese based on their answers to questions in the survey. After that, you'll use three different wrapper methods to choose a smaller feature subset.
+
+You'll use sequential forward selection, sequential backward floating selection, and recursive feature elimination. After implementing each wrapper method, you'll evaluate the model accuracy on the resulting smaller feature subsets and compare that with the model accuracy using all available features.
+
+** Evaluating a Logistic Regression Model
+The data set obesity contains 18 predictor variables. Here's a brief description of them.
+
+    - Gender is 1 if a respondent is male and 0 if a respondent is female.
+    - Age is a respondent's age in years.
+    - ~family_history_with_overweight~ is 1 if a respondent has family member who is or was overweight, 0 if not.
+    - FAVC is 1 if a respondent eats high caloric food frequently, 0 if not.
+    - FCVC is 1 if a respondent usually eats vegetables in their meals, 0 if not.
+    - NCP represents how many main meals a respondent has daily (0 for 1-2 meals, 1 for 3 meals, and 2 for more than 3 meals).
+    - CAEC represents how much food a respondent eats between meals on a scale of 0 to 3.
+    - SMOKE is 1 if a respondent smokes, 0 if not.
+    - CH2O represents how much water a respondent drinks on a scale of 0 to 2.
+    - SCC is 1 if a respondent monitors their caloric intake, 0 if not.
+    - FAF represents how much physical activity a respondent does on a scale of 0 to 3.
+    - TUE represents how much time a respondent spends looking at devices with screens on a scale of 0 to 2.
+    - CALC represents how often a respondent drinks alcohol on a scale of 0 to 3.
+    - Automobile, Bike, Motorbike, Public_Transportation, and Walking indicate a respondent's primary mode of transportation. Their primary mode of transportation is indicated by a 1 and the other columns will contain a 0.
+
+The outcome variable ~NObeyesdad~, is 1 if a patient is obese and a 0 if not.
+
+Use the .head() method and inspect the data.
+
+*** Split the data into X and y
+In order to use a linear regression model, you'll need to split the data into two parts: the predictor variables and an outcome variable. Do this by splitting the data into a DataFrame of predictor variables called ~X~ and a Series of outcome variables ~y~.
+
+*** Logistic regression model
+Create a logistic regresion model called lr. Include the parameter ~max_iter=1000~ to make sure that the model will converge when you try to fit it.
+
+Logistic regression models give a probability that an observation belongs to a category. In the obesity dataset, probabilities greater than 0.5 are considered predictions that the subject will be obese.
+
+*** Fit the model
+Use the .fit() method on lr to fit the model to X and y.
+
+*** Model accuracy
+A model's accuracy is the proportion of classes that the model correctly predicts. Compute and print the accuracy of lr by using the ~.score()~ method. What percentage of respondents did the model correctly predict as being either obese or not obese?
+
+** Sequential Forward Selection
+Sequential forward selection is a wrapper method that builds a feature set by starting with no features and then adding one feature at a time until a desired number of features is reached. In the first step, the algorithm will train and test a model using only one feature at a time. The algorithm keeps the feature that performs best.
+
+In each subsequent step, the algorithm will test the model on each possible new feature addition. Whichever feature improves model performance the most is then added to the feature subset. This process stops once we have the desided number of features.
+
+Sequential forward selection is a greedy algorithm: instead of checking every possible feature set by brute force, it add whichever feature gives the best inmediate performance gain.
+
+Now that you've created a logistic regression model and evaluated its performance, you're ready to do some feature selection.
+
+Our model was 0.7664613927048792 accurate at predicting obesity with all the features. Is it possible that the model could make accurate predictions with fewer features? That would make the model easier to understand, and it could simplify diagnosis.
+
+We will use the SFS class form Python's mlxtend library to implement sequential forward selection and choose a subset of nine features for the logistic regression model.
+
+Create a sequential forward selection model called sfs.
+
+    - Be sure to set the estimator parameter to lr and set the forward and floating parameters to the appropriate values.
+    - Also use the parameters ~k_features=9~, scoring='accuracy', and cv=0.
+    - ~cv~ allows you to do k-fold cross-validation. We'll leave it at 0 and only evaluate performance on the training set.
+
+*** Fit the model
+Use the .fit() method on sfs to fit the model to X and y. This step will take some time (not more than a minute) to run.
+
+*** Inspect the results
+The sfs object that you fit in the previous exercise contains information about the sequential forward selection that was applied to your feature set. The subsets_ atribute allows you to see much of that information, including which feature was chosen at each step and the model's accuracy after each feature addition.
+
+The keys in this dictionary are the numbers of features at each step in the sequential forward selection algorithm. The values in the dictionary are dictionaries with information about the feature set at each step. 'avg_score' is the accuracy of the model with the specified number of features.
+
+In this particular example, the model had an accuracy of about 63.5% after family_history_with_overweight was added.
+
+Now that you've run the sequential forward selection algorithm on the logistic regression model with X and y you can see what features were chosen and check the model accuracy on the smaller feature set. Print sfs.subsets_[9] to inspect the results of sequential forward selection.
+
+*** Chosen features and model accuracy
+Use the dictionary `sfs.subsets_[9]` to print a tuple of chosen feature names. Then use it to print the accuracy of the model after doing sequential forward selection. How does this compare to the model's accuracy on all available features?
+
+*** Visualize model accuracy
+It can be helpful to visualize the results of sequential forward selection and see how accuracy is affected as each feature is added.
+
+The mlxtend library also makes it easy to visualize how the accuracy of a model changes as sequential forward selection adds features. Use the code `plot_sfs(sfs.get_metric_dict())` to plot the model accuracy as a function of the number of features used. Make sure to show your plot as well.
+
+
+* Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+  from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+  import matplotlib.pyplot as plt
+  from sklearn.preprocessing import StandardScaler
+  from sklearn.feature_selection import RFE
+
+  # https://archive.ics.uci.edu/ml/datasets/Estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition+
+
+  #Load the data
+  obesity = pd.read_csv("obesity.csv")
+
+  #Inspect the data
+  print(obesity.head())
+
+  #Split the data into X and y
+  X = obesity.drop(['NObeyesdad'], axis=1)
+  y = obesity['NObeyesdad']
+
+  #Create a logistic regression model called lr
+  lr = LogisticRegression(max_iter=1000)
+
+  #Fit the model
+  lr.fit(X, y)
+
+  #Compute and print the accuracy
+  print(lr.score(X, y))
+
+  #Set up SFS parameters
+  sfs = SFS(lr,
+            k_features=9,
+            forward=True,
+            floating=False,
+            scoring='accuracy',
+            cv=0)
+
+  #Fit the model
+  sfs.fit(X, y)
+
+  #Print sfs.subsets_
+  #print(sfs.subsets_)
+
+  #Print(sfs.subsets_[9])
+  print(sfs.subsets_[9])
+
+  #Print a tuple of feature names after 9 features are added
+  print(sfs.subsets_[9]['feature_names'])
+  print(sfs.subsets_[9]['avg_score'])
+
+  #Plot the accuracy of the model as a function of the number of features
+  plot_sfs(sfs.get_metric_dict())
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
+:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
+:   ret = ret.dtype.type(ret / rcount)
+: [ Babel evaluation exited with code 0 ]
