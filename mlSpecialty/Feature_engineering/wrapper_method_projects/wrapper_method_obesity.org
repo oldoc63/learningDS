@@ -81,8 +81,32 @@ It can be helpful to visualize the results of sequential forward selection and s
 
 The mlxtend library also makes it easy to visualize how the accuracy of a model changes as sequential forward selection adds features. Use the code `plot_sfs(sfs.get_metric_dict())` to plot the model accuracy as a function of the number of features used. Make sure to show your plot as well.
 
+** Sequential Backward Selection
+Sequential forward selection was able to find a feature subset that performed marginally better than the full feature set. Let's use a different sequential method and see how it compares.
 
-* Script.py
+Sequential backward selection is another wrapper method for feature selection. It is very similar to sequential forward selection, but there is one key difference. Instead of starting with no features and adding one feature at a time, sequential backward selection starts with all of the available features and removes one feature at a time. The algorithm will stop when it arrives at the desired number of features.
+
+To implement sequential backward selection in mlxtend you can use the same SFS class you used for sequential forward selection. The only difference is that you have to set the parameter forward to False.
+
+Create a sequential backward selection model called sbs.
+
+    - Be sure to set the estimator parameter to lr and set the forward and floating parameters to the appropriate values.
+    - Also use the parameters k_features=7, scoring='accuracy', and cv=0.
+
+*** Fit the model
+Use the .fit() method on sbs to fit the model to X and y.
+
+*** Inspect the results
+Now that you've run the sequential backward selection algorithm on the logistic regression model with `X` and `y` you can see what features were chosen and check the model accuracy on the smaller feature set. Print `sbs.subsets_[7]` to inspect the results of sequential backward selection.
+
+*** Chosen features and model accuracy
+Use the dictionary `sbs.subsets_[7]` to print a tuple of chosen feature names. Then use it to print the accuracy of the model after doing sequential backward selection. How does this compare to the model's accuracy on all available features?
+
+*** Visualize model accuracy
+You can visualize the results of sequential backward floating selection just as you did with sequential forward selection. Use the code `plot_sfs(sbs.get_metric_dict())` to plot the model accuracy as a function of the number of features used.
+
+
+* SFS.py
 
 #+begin_src python :results output
   import pandas as pd
@@ -137,6 +161,69 @@ The mlxtend library also makes it easy to visualize how the accuracy of a model 
 
   #Plot the accuracy of the model as a function of the number of features
   plot_sfs(sfs.get_metric_dict())
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:206: RuntimeWarning: Degrees of freedom <= 0 for slice
+:   ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
+:   ret = ret.dtype.type(ret / rcount)
+: [ Babel evaluation exited with code 0 ]
+
+* SBS.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.linear_model import LogisticRegression
+  from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+  from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
+  import matplotlib.pyplot as plt
+  from sklearn.preprocessing import StandardScaler
+  from sklearn.feature_selection import RFE
+
+  # https://archive.ics.uci.edu/ml/datasets/Estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition+
+
+  #Load the data
+  obesity = pd.read_csv("obesity.csv")
+
+  #Inspect the data
+  print(obesity.head())
+
+  #Split the data into X and y
+  X = obesity.drop(['NObeyesdad'], axis=1)
+  y = obesity['NObeyesdad']
+
+  #Create a logistic regression model called lr
+  lr = LogisticRegression(max_iter=1000)
+
+  #Fit the model
+  lr.fit(X, y)
+
+  #Compute and print the accuracy
+  print(lr.score(X, y))
+
+  ##Sequential Backward Selection
+  sbs = SFS(lr,
+            k_features=3,
+            forward=False,
+            floating=False,
+            scoring='accuracy',
+            cv=0)
+
+  #Fit sbs to X and y
+  sbs.fit(X, y)
+
+  #Print(sfs.subsets_[9])
+  print(sbs.subsets_[7])
+
+  #Print a tuple of feature names after 9 features are added
+  print(sbs.subsets_[9]['feature_names'])
+  print(sbs.subsets_[9]['avg_score'])
+
+  #Plot the accuracy of the model as a function of the number of features
+  plot_sfs(sbs.get_metric_dict())
   plt.show()
 
 #+end_src
