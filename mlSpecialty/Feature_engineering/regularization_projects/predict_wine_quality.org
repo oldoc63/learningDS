@@ -1,0 +1,99 @@
+
+* Predict Wine Quality with Regularization
+The data you're going to be working with is from the Wine Quality Dataset in the UCI Machine Learning Repository. We're looking at the red wine data in particular and while the original dataset has a 1-10 rating for each wine, we've made it a classification problem with a wine quality of good (>5 rating) or bad (<= 5 rating). The goals of this project are to:
+
+    1. implement different logistic regression classifiers
+
+    2. find the best ridge-regularized classifier using hyperparameter tuning
+
+    3. implement a tuned lasso-regularized feature selection method
+
+ What we're working with:
+
+     - 11 input variables (based on physicochemical tests): 'fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates' and 'alcohol'.
+
+     - An output variable, 'quality' (0 for bad and 1 for good)
+
+** Logistic Regression Classifier without Regularization
+
+*** Task 1
+If a model is able to represent a particular set of data points effectively but is not able to fit new data well, it is overfitting the data.
+
+In practice, we often catch overfitting by comparing the model performance on the training data versus test data.
+
+The coefficients (or parameters) of a linear regression are obtained by the method of Ordinary Least Squares (OLS) and for larger datasets, the gradient descent algorithm. This is also referred as the *loss function*. However, the best fit as obtained by minimizing the loss function might not be the fit that generalizes well to new data. Regularization modifies the loss function in a way that might help with this.
+
+Before we begin modeling, let's scale our data using StandardScaler(). Use StandardScaler().fit() to fit the variable features and then use transform() to get X to get the transformed input to our model.
+
+*** Task 2
+Perform an 80:20 train-test split on the data. Set the random_state to 99 for reproducibility.
+
+*** Task 3
+Define a classifier, ~clf_no_reg~, a logistic regression model without regularization and fit it to the training data.
+
+*** Task 4
+We're now going to plot the coefficients obtained from fitting the Logistic Regression model.
+
+*** Task 5
+You're now ready to evaluate this classifier! In the case of linear regression, we evaluated our models using mean-squared-error. For classifiers, it is important that the classifier not only has high accuracy, but also high precision and recall, i.e., a low false positive and false negative rate.
+
+A metric known as f1 score, which is the weighted mean of precision and recall, captures the performance of a classifier holistically. It takes values between 0 and 1 and the closer it is to 1, the better the classifier. Use f1_score() to calculate the f1 score for the training and test data.
+
+* Script.py
+
+#+begin_src python :results output
+  import numpy as np
+  import pandas as pd
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  df = pd.read_csv('wine_quality.csv')
+  print(df.columns)
+  y = df['quality']
+  features = df.drop(columns = ['quality'])
+
+  ## 1. Data transformation
+  from sklearn.preprocessing import StandardScaler
+
+  standard_scaler_fit = StandardScaler().fit(features)
+  X = standard_scaler_fit.transform(features)
+
+  ## 2. Train-test split
+  from sklearn.model_selection import train_test_split
+
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=99)
+
+  # 3. Fit a logistic regression classifier without regulatization
+  from sklearn.linear_model import LogisticRegression
+
+  #Remember to set the penalty to 'none'!
+  clf_no_reg = LogisticRegression(penalty = None)
+  clf_no_reg.fit(X_train, y_train)
+
+  ## 4. Plot the coefficients
+  predictors = features.columns
+  coefficients = clf_no_reg.coef_.ravel()
+  coef = pd.Series(coefficients, predictors).sort_values()
+  coef.plot(kind='bar', title='Coefficients (no regularization)')
+  plt.tight_layout()
+  plt.show()
+  plt.clf()
+
+  ## 5. Training and test performance
+  from sklearn.metrics import f1_score
+
+  y_pred_test = clf_no_reg.predict(X_test)
+  y_pred_train = clf_no_reg.predict(X_train)
+
+  print('Training Score', f1_score(y_train, y_pred_train))
+  print('Testing Score', f1_score(y_test, y_pred_test))
+
+#+end_src
+
+#+RESULTS:
+: Index(['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
+:        'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density',
+:        'pH', 'sulphates', 'alcohol', 'quality'],
+:       dtype='object')
+: Training Score 0.7727598566308242
+: Testing Score 0.7266666666666667
