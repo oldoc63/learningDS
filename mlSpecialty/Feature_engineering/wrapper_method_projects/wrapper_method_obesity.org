@@ -105,6 +105,37 @@ Use the dictionary `sbs.subsets_[7]` to print a tuple of chosen feature names. T
 *** Visualize model accuracy
 You can visualize the results of sequential backward floating selection just as you did with sequential forward selection. Use the code `plot_sfs(sbs.get_metric_dict())` to plot the model accuracy as a function of the number of features used.
 
+** Recursive Feature Elimination
+So far you've tried two different sequential feature selection methods. Let's try one more: recursive feature elimination.
+
+Recursive feature elimination starts by training a model with all available features. It then ranks each feature according to an importance metric and removes the least important feature. The algorithm then trains the model on the smaller feature set, ranks those features, and removes the least important one. The process stops when the desired number of features is reached.
+
+In regression problems, features are ranked by the size of the absolute value of their coefficients.
+
+It's important to note that you might need to standardize data before doing recursive feature elimination. In regression problems in particular, it's necessary to standardize data so that the scale of features doesn't affect the size of the coefficients.
+
+Note that recursive feature elimination is different from sequential backward selection. Sequential backward selection removes features by training a model on a collection of subsets (one for each possible feature removal) and greedily proceeeding with whatever subset performs best. Recursive feature elimination, on the other hand, only trains a model on one feature subset before deciding which feature to remove next.
+
+This is one advantage of recursive feature elimination. Since it only needs to train and test a model on one feature subset per feature removal, it can be much faster than the sequential selection methods that we've covered.
+
+First you'll standardize the data, then you'll fit the RFE model and inspect the results.
+
+At a later step of this project, you'll need to be able to access feature names. Enter the code features = X.columns for use later.
+
+*** Standardize the data
+Before doing applying recursive feature elimination it is necessary to standardize the data. Standardize X and save it as a DataFrame by creating a StandardScaler() object and using the .fit_transform() method.
+
+*** Recursive feature elimination model
+Create a RFE() object that selects 8 features. Be sure to set the stimator parameter to lr.
+
+*** Fit the model
+Fit the recursive feature elimination model to X and y.
+
+*** Inspect chosen features
+Now that you've fit the RFE model you can evaluate the results. Create a list of chosen feature names and call it ~rfe_features~. You can use a list comprehension and filter the features in ~zip(features, rfe.support_)~ based on whether their support is ~True~ (meaning the model kept them) or ~False~ (meaning the model eliminated them).
+
+*** Model Accuracy
+Use the .score() method on rfe and print the model accuracy after doing recursive feature elimination. How does this compare to the model's accuracy on all available features?
 
 * SFS.py
 
@@ -234,3 +265,61 @@ You can visualize the results of sequential backward floating selection just as 
 : /home/oldoc/OpenAI/lib/python3.12/site-packages/numpy/core/_methods.py:198: RuntimeWarning: invalid value encountered in scalar divide
 :   ret = ret.dtype.type(ret / rcount)
 : [ Babel evaluation exited with code 0 ]
+
+* RFE.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.feature_selection import RFE
+  from sklearn.preprocessing import StandardScaler
+
+  # https://archive.ics.uci.edu/ml/datasets/Estimation+of+obesity+levels+based+on+eating+habits+and+physical+condition+
+
+  #Load the data
+  obesity = pd.read_csv("obesity.csv")
+
+  #Inspect the data
+  print(obesity.head())
+
+  #Split the data into X and y
+  X = obesity.drop(['NObeyesdad'], axis=1)
+  y = obesity['NObeyesdad']
+
+  #Because you'll need to be able to acces feature names
+  features = X.columns
+
+  #Standardize the data
+  X = StandardScaler().fit_transform(X)
+
+  #Logistic Regression model
+  lr = LogisticRegression(max_iter=1000)
+
+  #Create a RFE() object that selects 8 features
+  rfe = RFE(lr, n_features_to_select=8)
+  rfe.fit(X, y)
+
+  #Inspect chosen features
+  rfe_features = [f for (f, support) in zip(features, rfe.support_) if support]
+
+  print(rfe_features)
+
+  #Print the accuracy of the model with features chosen by recursive feature elimination
+  print('RFE score: ', rfe.score(X, y))
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   Gender   Age  ...  Walking  NObeyesdad
+0       0  21.0  ...        0           0
+1       0  21.0  ...        0           0
+2       1  23.0  ...        0           0
+3       1  27.0  ...        1           0
+4       1  22.0  ...        0           0
+
+[5 rows x 19 columns]
+['Age', 'family_history_with_overweight', 'FAVC', 'FCVC', 'CAEC', 'SCC', 'Automobile', 'Walking']
+RFE score:  0.7678825201326386
+#+end_example
