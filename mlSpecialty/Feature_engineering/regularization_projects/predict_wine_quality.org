@@ -39,6 +39,25 @@ You're now ready to evaluate this classifier! In the case of linear regression, 
 
 A metric known as f1 score, which is the weighted mean of precision and recall, captures the performance of a classifier holistically. It takes values between 0 and 1 and the closer it is to 1, the better the classifier. Use f1_score() to calculate the f1 score for the training and test data.
 
+** Logistic Regression with L2 Regularization
+
+*** Task 6
+We've seen in the previous article that the default implementation of logistic regression in scikit-learn is ridge-regularized! Use the default implementation to implement a classifier ~clf_default~ that is L2-regularized.
+
+*** Task 7
+Obtain the training and test f1_score for the ridge-regularized classifier using code similar to what we have in Task 5. Notice if either score goes up or down.
+
+*** Task 8
+The scores remain the same! Does this mean that regularization did nothing? Indeed! This mean that the constrain boundary for the regularization we performed is large enough to hold the original loss function minimum, thus rendering our model the same as the unregularized one.
+
+How can we tune up the regularization? Recall that C is the inverse of the regularization strength (alpha), meaning that smaller values of C correspond to more regularization. The scikit-learn default for C is 1; therefore, in order to increase the amount of regularization, we need to consider values of C that are less than 1. But how far do we need to go? Let's try a coarse-grained search before performing a fine-grained one.
+
+Define an array, ~C_array~ that takes the values ~C_array~ = [0.0001, 0.001, 0.01, 1]. Get an array each for the training and test scores corresponding to these values of C.
+
+*** Task 9
+Use the following plotting code to plot the training and test scores as a function of C. Does this clarify the range of C's we need to be doing a fine-grained search for?
+
+
 * Script.py
 
 #+begin_src python :results output
@@ -88,6 +107,40 @@ A metric known as f1 score, which is the weighted mean of precision and recall, 
   print('Training Score', f1_score(y_train, y_pred_train))
   print('Testing Score', f1_score(y_test, y_pred_test))
 
+  ## 6. Default implementation (L2-regularized)
+  clf_default = LogisticRegression()
+  clf_default.fit(X_train, y_train)
+
+  ## 7. Ridge Scores
+  y_pred_train_ridge = clf_default.predict(X_train)
+  y_pred_test_ridge = clf_default.predict(X_test)
+
+  print('Ridge-regularized Training Score', f1_score(y_train, y_pred_train_ridge))
+
+  print('Ridge-regularized Testing Score', f1_score(y_test, y_pred_test_ridge))
+
+  ## 8. Coarse-grained hyperparameter tuning
+  training_array = []
+  test_array = []
+  C_array = [0.0001, 0.001, 0.01, 0.1, 1]
+
+  for x in C_array:
+      clf = LogisticRegression(C = x)
+      clf.fit(X_train, y_train)
+      y_pred_test = clf.predict(X_test)
+      y_pred_train = clf.predict(X_train)
+      training_array.append(f1_score(y_train, y_pred_train))
+      test_array.append(f1_score(y_test, y_pred_test))
+
+  ## 9. Plot training and test scores as a function of C
+  plt.plot(C_array,training_array, label='Training Score')
+  plt.plot(C_array, test_array, label='Test Score')
+  plt.xscale('log')
+  plt.xlabel('C')
+  plt.legend()
+  plt.show()
+  plt.clf()
+
 #+end_src
 
 #+RESULTS:
@@ -97,3 +150,5 @@ A metric known as f1 score, which is the weighted mean of precision and recall, 
 :       dtype='object')
 : Training Score 0.7727598566308242
 : Testing Score 0.7266666666666667
+: Ridge-regularized Training Score 0.7727598566308242
+: Ridge-regularized Testing Score 0.7266666666666667
