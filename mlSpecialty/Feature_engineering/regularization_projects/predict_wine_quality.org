@@ -57,6 +57,23 @@ Define an array, ~C_array~ that takes the values ~C_array~ = [0.0001, 0.001, 0.0
 *** Task 9
 Use the following plotting code to plot the training and test scores as a function of C. Does this clarify the range of C's we need to be doing a fine-grained search for?
 
+** Hyperparameter Tuning for L2 Regularization
+
+*** Task 10
+We're now ready to perform hyperparameter tuning using GridSearchCV. Looking at the plot, the optimal C seems to be somewhere around 0.001 so a search window between 0.0001 and 0.01 is not a bad idea here.
+
+Let's first get setup with the right inputs for this. Use np.logspace() to obtain 100 values between $10^{-4}$ and $10^{-2}$ and define a dictionary of c values named ~tuning_c~ that can function as an input to GridSearchCV's parameter grid.
+
+*** Task 11
+Define a grid search model on the parameter grid defined above for a logistic regression model with ridge regularization. Set the scoring metric to 'f1' and the number of folds to 5. Fit this to the training data.
+
+*** Task 12
+Obtain the best C value from this search and the score corresponding to it using the best_params_ and best_score attributes respectively.
+
+*** Task 13
+The score you got above reflects the mean f1-score on the 5 folds corresponding to the best classifier. Notice however that we haven't yet used the test data, ~X_test~, ~y_test~ form our original train-test split! this was done with good reason: the original test data can now be used as our validation dataset to validate whether our "best classifier" is doing as well as we'd like it to on essentially unknown data.
+
+Define a new classifier ~clf_best_ridge~ that corresponds to the best C value you obtained in the previous task. Fit it to the training data an obtain the ~f1_score~ on the test data to validate the model.
 
 * Script.py
 
@@ -141,14 +158,41 @@ Use the following plotting code to plot the training and test scores as a functi
   plt.show()
   plt.clf()
 
+  ## 10. Making a parameter grid for GridSearchCV
+  C_array = np.logspace(-4, -2, 100)
+
+  #Making a dict to enter as an input to param_grid
+  tuning_C = {'C':C_array}
+
+  ## 11. Implementing GridSearchCV with 12 penalty
+  from sklearn.model_selection import GridSearchCV
+
+  clf_gs = LogisticRegression()
+  gs = GridSearchCV(clf_gs, param_grid=tuning_C, scoring='f1', cv=5)
+  gs.fit(X_train, y_train)
+
+  ## 12. Optimal C value and the score corresponding to it
+  print(gs.best_params_, gs.best_score_)
+
+  ## 13. Validating the "best classifier"
+  clf_best = LogisticRegression(C=gs.best_params_['C'])
+  clf_best.fit(X_train, y_train)
+  y_pred_best = clf_best.predict(X_test)
+
+  print(f1_score(y_test, y_pred_best))
+
 #+end_src
 
 #+RESULTS:
-: Index(['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
-:        'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density',
-:        'pH', 'sulphates', 'alcohol', 'quality'],
-:       dtype='object')
-: Training Score 0.7727598566308242
-: Testing Score 0.7266666666666667
-: Ridge-regularized Training Score 0.7727598566308242
-: Ridge-regularized Testing Score 0.7266666666666667
+#+begin_example
+Index(['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
+       'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density',
+       'pH', 'sulphates', 'alcohol', 'quality'],
+      dtype='object')
+Training Score 0.7727598566308242
+Testing Score 0.7266666666666667
+Ridge-regularized Training Score 0.7727598566308242
+Ridge-regularized Testing Score 0.7266666666666667
+{'C': 0.0019630406500402726} 0.7723336222647887
+0.7407407407407408
+#+end_example
