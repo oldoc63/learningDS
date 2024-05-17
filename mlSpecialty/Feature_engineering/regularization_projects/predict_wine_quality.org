@@ -75,6 +75,32 @@ The score you got above reflects the mean f1-score on the 5 folds corresponding 
 
 Define a new classifier ~clf_best_ridge~ that corresponds to the best C value you obtained in the previous task. Fit it to the training data an obtain the ~f1_score~ on the test data to validate the model.
 
+** Feature Selection using L1 Regularization
+
+*** Task 14
+We're now going to use a grid search cross-validation method to regularize the classifier, but with L1 regularization instead. Instead of using GridSearchCV, we're going to use LogisticRegressionCV. The syntax here is a little different. The arguments to LogisticRegressionCV that are relevant to us:
+
+    - ~Cs~: A list/array of C values to check; choose values between 0.01 and 100 here.
+    - ~cv~: Number of folds (5 is a good choice here!)
+
+    - ~penalty~: Remember to choose 'l1' for this!
+
+    - ~solver~: Recall that L1 penalty requires that we specify the solver to be 'liblinear'.
+
+    - ~scoring~: 'f1' is still a great choice for a classifier.
+
+Using the above, define a cross-validated classifier, clf_l1 and fit (X, y) here. (Note that we're not doing a train-test- validation split like last time!)
+
+*** Task 15
+The classifier has the attribute ~C_~ which print the optimal C value. The attribute ~coef_~ gives us the coefficients of the best lasso-regularized classifier. Print both of these.
+
+*** Task 16
+We can now reproduce the coefficient plot we'd produced for the unregularized scenario. Use the following lines of code to plot the sorted values of the coeffiecients as a bar plot:
+
+*** Task 17
+Notice how our L1 classifier has set one of the coefficients to zero! We’ve effectively eliminated one feature, density, from the model, thus using Lasso regularization as a feature selection method here.
+
+
 * Script.py
 
 #+begin_src python :results output
@@ -181,6 +207,27 @@ Define a new classifier ~clf_best_ridge~ that corresponds to the best C value yo
 
   print(f1_score(y_test, y_pred_best))
 
+  ## 14. Implement L1 hyperparameter tuning with LogisticRegressionCV
+  from sklearn.linear_model import LogisticRegressionCV
+
+  C_array = np.logspace(-2,2,100)
+  clf_l1 = LogisticRegressionCV(Cs=C_array, cv=5, penalty='l1', scoring='f1', solver='liblinear')
+  clf_l1.fit(X, y)
+
+  ## 15. Optimal C value and corresponding coefficients
+  print('Best C value', clf_l1.C_)
+  print('Best fit coefficients', clf_l1.coef_)
+
+  ## 16. Plotting the tuned L1 coefficients
+  coefficients = clf_l1.coef_.ravel()
+  coef = pd.Series(coefficients,predictors).sort_values()
+
+  plt.figure(figsize = (12,8))
+  coef.plot(kind='bar', title = 'Coefficients for tuned L1')
+  plt.tight_layout()
+  plt.show()
+  plt.clf()
+
 #+end_src
 
 #+RESULTS:
@@ -195,4 +242,7 @@ Ridge-regularized Training Score 0.7727598566308242
 Ridge-regularized Testing Score 0.7266666666666667
 {'C': 0.0019630406500402726} 0.7723336222647887
 0.7407407407407408
+Best C value [0.25950242]
+Best fit coefficients [[ 0.11644422 -0.55633337 -0.17265161  0.0312297  -0.17327501  0.20052805
+  -0.50584765  0.         -0.07046216  0.43222987  0.94103179]]
 #+end_example
