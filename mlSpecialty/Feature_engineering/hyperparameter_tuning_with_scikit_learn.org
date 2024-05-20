@@ -1,0 +1,21 @@
+
+* Hyperparameter tunning with scikit-learn
+
+** Introduction
+In this lesson you will learn about the different methods one can use to tune hyperparameters in machine learning models and how to implement  them in Python. Specifically we will be diving deep into two methods: grid search (Grid SearchCV) and random search (RandomizedSearchCV).
+
+To understand the implementation of different methods of hyperparameter tuning, we need to choose a dataset, a classification or regression problem we'd like to solve, and a machine learning model to solve it with. The image on the right-hand side lists some of the commolnly used machine learning models and their corresponding hyperparameters. Our choices for the rest of the lesson are as follows:
+
+    - *Dataset and Model*: We're going to work with the commoly used breast cancer dataset that is available with scikit-learn. The prediction task is to classify tumors as bening or malignant and the data has 30 numeric predictor variables. We're goin to use logistic regression to perform this task.
+    - *Hyperparameters*: So, which hyperparameters do we tune? There are many arguments to scikit-learn's logistic regression function and many of them can be treated as hyperparameters and tuned. However, we're specifically going to focus on the hyperparameters pertaining to regularization in this exercise.
+
+This lesson assumes familiarity with the implementation of logistic regression models and regularizations techniques.
+
+[[./sklearn_parameters.png]]
+
+The terminology here between the words 'parameters' and 'hyperparameters' can be confusing, even in the table. There is a rather circular ezplanation for this:
+
+    - In machine learning theory, the *only* parameters of a logistic regression model are its *coefficients* and the *intercept*. Subsequently, the inputs/arguments of a function are the hyperparameters (e.g. type of regularization, number of iterations).
+    - In Python code and scikit-learn however, the inputs/arguments to a function are often referred to as parameters (instead of hyperparameters).
+
+For this reason, we'll continue to use the term hyperparameters in the lesson except when tuning the models in scikit-learn, we'll use the term parameters. This is an unfortunate convention that has persisted so there's no way around it -but we hope this explanation clarifies it!
