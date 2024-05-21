@@ -19,3 +19,64 @@ The terminology here between the words 'parameters' and 'hyperparameters' can be
     - In Python code and scikit-learn however, the inputs/arguments to a function are often referred to as parameters (instead of hyperparameters).
 
 For this reason, we'll continue to use the term hyperparameters in the lesson except when tuning the models in scikit-learn, we'll use the term parameters. This is an unfortunate convention that has persisted so there's no way around it -but we hope this explanation clarifies it!
+
+** An Introduction to the Grid Search Method
+We'll start with the grid search algorithm. Grid search works by testing a model on a list of hyperparameter values deciden upon beforehand. Suppose we had two hperparameters we wanted to tune and we wanted to choose between  6 values for the first one and 5 values of the second, we'd be searching a grid of thirty values as shown below. Grid search would fit the model and evaluate its performance for each of the values represented by these points. We can then coose the hyperparameter values corresponding to the best performance and conclude our hyperparameter search!
+
+[[./grid.png]]
+
+In our case, where we're using a logistic regression model with regularization ([[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html][LogisticRegression]]), we might want to make decisions on the following using hyperparameter tuning:
+
+    1. *The type of regularization to use*: The ~penalty~ parameter in scikit-learn represents this and let's say we'd like to figure out if Lasso ('l1') or Ridge regression ('l2') is the better choice here.
+    2. *The strength of regularization to use*: The scikit-learn parameter ~C~ represents the inverse of regularization strength and let's say we'd like to test 3 possible values of C here: 1, 10 and 100.
+
+This means we have to search a grid of 2*3 = 6 values. ~GridSearchCV~ in scikit_learn let us do this! It test the model performance at each of these values to come up with the best possible set of hyperparameters from the list given.
+
+The two most important parameters in GridSearchCV that need to be specified are:
+the /name of the model/ that we are testing and the name of a /dictionary of hyperparameters/ that we would initialize, represented by the argument parameters. To tune the hyperparameters, we can use ~.fit()~,  just as we would for a regular machine learning model.
+
+We're going to be working with scikit-learn's breast cancer dataset that has already been loaded in the jupyter notebook. We've also performed a train-test-split. Run the setup cell.
+
+*** Task 1
+After running the setup cell, create a LogisticRegression model called lr. Since we want to use a solver that is compatible with both L1 and L2 regularization, set the parameter ~solver~ to ~'liblinear'~ (the default solver does not support L1 regularization!). To ensure that the model converges, set ~max_iter=1000~.
+
+*** Task 2
+Define a dictionary ~parameters~ that you will be performing the grid search over. The dictionary should have two keys:
+
+    - ~'penalty'~, corresponding to the two regularization types, ['l1', 'l2'] (use a lowercase "L" with the number 1 and 2)
+
+    - ~'C'~, the regularization strength to be set to [1, 10, 100]
+
+*** Task 3
+We can now set up grid search! Define a GridSearchCV() object named ~clf~. The first argument is ~estimator~, which corresponds to the logistic regression model you've created and the second argument is ~param_grid~, which corresponds to the dictionary you're performing the hyperparameter search on.
+
+*** Script.py
+
+#+begin_src python :results output
+  from sklearn.datasets import load_breast_cancer
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.model_selection import GridSearchCV
+
+  # Load the dataset
+  cancer = load_breast_cancer()
+
+  # Split into training and testing data
+  X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target)
+
+  ## Initializing model for grid search
+  lr = LogisticRegression(solver='liblinear', max_iter=1000)
+
+  #check output
+  #print(lr.get_params())
+
+  ## Initializing grid search dictionary parameters of hyperparameters search from
+  parameters = {'penalty':['l1', 'l2'],
+                'C':[1, 10, 100]}
+
+  ## Set up grid search using GridSearchCV
+  clf = GridSearchCV(lr, parameters)
+
+#+end_src
+
+#+RESULTS:
