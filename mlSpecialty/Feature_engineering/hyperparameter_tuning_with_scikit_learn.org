@@ -80,3 +80,104 @@ We can now set up grid search! Define a GridSearchCV() object named ~clf~. The f
 #+end_src
 
 #+RESULTS:
+
+** Evaluating the Results of GridSearchCV
+The CV in GridSearchCV is an acronym for *cross-validation*. It's best practice in machine learning to go beyond the usual train-test-split and have a holdout or validation dataset. Specifically, GridSearchCV uses a technique known as k-fold cross-validation. This works as follows.
+
+*** Cross-validation in GridSearchCV
+GridSearchCV subdivides the training data further into /another training and test data set./ It fits the model on this new training data and evaluates the model on the new test data. But to make sure that we don't accidentally have good performance in only one part of our dataset, GridSearchCV will do this process multiple times on different cross-validation splits so that every point in the data gets to be tested on at least once! The number of times this split happens is the "k" in "k-fold". For instance, in a 10-fold cross-validation, our data would be split into a 90:10 train-test split 10 times and GridSearchCV would evaluate the model on each fold.
+
+[[./ten_fold.png]]
+
+In scikit-learn, cv argument in GridSearchCV allows us to decide on the number of cross-validation splits we'd like. The default setting for this is 5.
+
+*** Evaluating GridSearchCV results
+After fitting a GridSearchCV model we can find out the results using the following attributes of the clf argument:
+
+    - ~.best_estimator_~ gives us the best estimator
+
+    - ~.best_score_~ gives us the mean cross-validated score corresponding to the best estimator
+
+    - ~.best_params_~ gives us the set of hyperparameters that correspond to the best estimator
+
+Additionally, the ~.cv_results_~ attribute gives us the scores for each hyperparameter combination in the grid. We're now ready to evaluate the grid search we set up earlier and we've preloaded the code from the previous exercise in the setup cell.
+
+*** Task 1
+After running the setup cell, fit the grid search classifier, clf to the training data. Set the best estimator to a variable best_model and print it to see which model performed best.
+
+Uncomment the line that prints the best parameters to check if they match up!
+
+*** Task 2
+    - Set the score corresponding to the best estimator to a variable ~best_score~ and print it.
+
+    - Calculate the accuracy of the best estimator on the test data and store it as the variable ~test_score~.
+*** Task 3
+We've successfully performed a grid search over a 2 by 3 grid of hyperparameters! Using the ~.cv_results_~ attribute, we can look at the scores for each of the values in the hyperparameters grid.
+
+clf.cv_results_ is a dictionary of values.
+
+    1. Use the key argument 'params' to get the list of parameters. Convert this to a pandas DataFrame named ~hyperparameter_grid~.
+
+    2. Use the key argument 'mean_test_score' to get the list of mean test scores corresponding to the parameter values. Convert this to a single column pandas DataFrame named ~grid_scores~ and set the argument columns to ['score'].
+
+ Uncomment the lines pertaining to concatenating the two dataframes and printing it to view the results of the grid search for each hyperparameter pair!
+
+*** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.datasets import load_breast_cancer
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.model_selection import GridSearchCV
+
+  # Load the dataset
+  cancer = load_breast_cancer()
+
+  # Split into training and testing data
+  X_train, X_test, y_train, y_test = train_test_split(cancer.data, cancer.target)
+
+  ## Initializing model and dictionary of hyperparameters
+  lr = LogisticRegression(solver='liblinear', max_iter=1000)
+  parameters = {'penalty':['l1', 'l2'], 'C':[1, 10, 100]}
+
+  ## Setting up Grid Search
+  clf = GridSearchCV(lr, parameters)
+
+  ## Fit clf to training data and get best hyperparameters
+  clf.fit(X_train, y_train)
+  best_model = clf.best_estimator_
+
+  print(best_model)
+  print(clf.best_params_)
+
+  ## Calculate training and test scores of the best estimator
+  best_score = clf.best_score_
+  test_score = clf.score(X_test, y_test)
+
+  print(best_score)
+  print(test_score)
+
+  ## Viewing grid search results
+  hyperparameter_grid = pd.DataFrame(clf.cv_results_['params'])
+  grid_scores = pd.DataFrame(clf.cv_results_['mean_test_score'], columns = ['score'])
+
+  df = pd.concat([hyperparameter_grid, grid_scores], axis=1)
+  print(df)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+LogisticRegression(C=10, max_iter=1000, penalty='l1', solver='liblinear')
+{'C': 10, 'penalty': 'l1'}
+0.9577291381668948
+0.972027972027972
+     C penalty     score
+0    1      l1  0.946019
+1    1      l2  0.946019
+2   10      l1  0.957729
+3   10      l2  0.950725
+4  100      l1  0.957729
+5  100      l2  0.953078
+#+end_example
