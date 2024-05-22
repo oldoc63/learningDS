@@ -181,3 +181,20 @@ LogisticRegression(C=10, max_iter=1000, penalty='l1', solver='liblinear')
 4  100      l1  0.957729
 5  100      l2  0.953078
 #+end_example
+
+** An introduction to the Random Search Method
+We're now going to look at an alternate method to tune hyperparameters, the random search method. With grid search, we made a list of different hyperparameter values and tested each combination of them. What if instead of a pre-selected list, we tested some random values? A random search method that does this might look like the top half of the image as oppossed to an orderly grid like in grid search, (which is shown in the bottom half of the image for contrast).
+
+To implement this, one needs to search over hyperparameters by drawing a list of random values from /distributions./ What would this mean for say, the hyperparameter C in logistic regression that we've been working with so far? Instead of selecting from a pre-determined list (like [1, 10, 100] which we've been using for grid search in previous exercises), we would draw 3 random values between say 0 and 100.
+
+In scikit-learn, the [[https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html][RandomSearchCV]] function implements random search with cross-validation. RandomSearchCV requires three arguments to be specified:
+
+    1. ~estimator~: the machine learning model whose hyperparameters we're tuning; this is exactly the same for GridSearchCV
+
+    2. ~param_distributions~: a dictionary which specifies the hyperparameters as keys and corresponding distributions to draw lists of values from for each hyperparameter. In GridSearchCV, we instead had param_grid, a dictionary representing the grid of hyperparameters to search from
+
+    3. ~n_iter~: the number of times the algorithm needs to randomly draw from the distributions. The default value for this is 10.
+
+  We're now ready to dive into implementing the random search method!
+
+  [[./Random_Grid.png]]
