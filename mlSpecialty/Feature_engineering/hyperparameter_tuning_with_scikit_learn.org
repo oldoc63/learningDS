@@ -198,3 +198,83 @@ In scikit-learn, the [[https://scikit-learn.org/stable/modules/generated/sklearn
   We're now ready to dive into implementing the random search method!
 
   [[./Random_Grid.png]]
+
+** Using RandomizedSearchCV
+When we used grid search, we made a list of different hyperparameter values. With random search, we don't have to make a list, but we still have to provide some information about how we want to select random numbers. Do we want random numbers between 0 and 100? Between -10 and 10? Do we want the same chance of picking small numbers and picking large numbers?
+
+We can do this by specifying a probability distribution for each hyperparameter.
+#+begin_src python
+  from scipy.stats import uniform
+  distributions = {'penalty': ['l1', 'l2'], 'C': uniform(loc=0, scale=100)}
+#+end_src
+
+Let's take a closer look at each distribution:
+
+    - The ~penalty~ hyperparameter of scikit-learn's LogisticRegression model has only two possible values: ~l1~ and ~l2~. We list them both. RandomizedSearchCV will treat this as a /discrete uniform distribution./ This just means that every item in the list has an equal chance of being selected. In this case, there's a 50% chance of drawing l1 and a 50% chance of drawing l2.
+
+    - The hyperparameter ~C~ is the inverse of regularization strength. It can be any positive number, so we have to specify a probability distribution that allows us to randomly select a positive number. The scipy library has many probability distributions to choose from (you can see a list of them [[https://docs.scipy.org/doc/scipy/reference/stats.html][here]]). For this example, we're using the /uniform distribution/. This allow us to randomly select numbers between loc and loc + scale (in this case, between 0 and 100).
+
+      Run the code under the setup cell to import libraries, load the breast cancer data set, and split the data into training and testing sets.
+
+*** Task 1
+Create a dictionary called distributions that contains the keys 'penalty' and 'C'. The values should be:
+
+    - ['l1', 'l2'] for 'penalty'
+
+    - uniform(loc=0, scale=100) for 'C'
+
+*** Task 2
+Let's do a couple of draws from the distribution for 'C' to make sure we do get numbers between 0 and 100.
+
+    - Create an array first_draw to use .rvs() to generate 10 random variable values for 'C' from the distributions dictionary.
+
+    - Repeat the same process but with an array named second_draw.
+
+Print first_draw and second_draw to view the outcomes of these draws!
+
+*** Task 3
+We're now ready to create a RandomizedSearchCV model. To do so:
+
+    - First, define a logistic regression model like we've done in the previous exercises, setting solver to 'liblinear' and max_iter to 1000.
+
+    - Initialize a random search model clf using the parameters lr, distributions, and  n_iter, in that order. Set n_iter to 8 to test 8 hyperparameters combinations.
+
+*** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.datasets import load_breast_cancer
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.model_selection import RandomizedSearchCV
+  from scipy.stats import uniform
+
+  # Load the dataset
+  cancer = load_breast_cancer()
+
+  # Split the data into training and testing sets
+  X = cancer.data
+  y = cancer.target
+  X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+  ## Create distributions to draw hyperparameters from
+  distributions = {'penalty': ['l1', 'l2'], 'C': uniform(loc=0, scale=100)}
+
+  ## Check Distributions
+  first_draw = distributions['C'].rvs(10)
+  second_draw = distributions['C'].rvs(10)
+  print(first_draw, second_draw)
+
+  ## Define model and initialize random search
+  # The logistic regression model
+  lr = LogisticRegression(solver = 'liblinear', max_iter = 1000)
+
+  # Create a RandomizedSearchCV model
+  clf = RandomizedSearchCV(lr, distributions, n_iter=8)
+
+#+end_src
+
+#+RESULTS:
+: [ 0.95151198 18.17832879 98.29225059 98.63309585 64.87990249 54.72965383
+:  79.61273531 97.34706443  1.81621269 14.69381351] [54.68761162 27.23025496  7.84063553 57.73277895 67.43024428 33.60107592
+:   2.43227937 70.81002413 17.63107877 43.62842266]
