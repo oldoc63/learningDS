@@ -162,7 +162,7 @@ clf.cv_results_ is a dictionary of values.
   hyperparameter_grid = pd.DataFrame(clf.cv_results_['params'])
   grid_scores = pd.DataFrame(clf.cv_results_['mean_test_score'], columns = ['score'])
 
-  df = pd.concat([hyperparameter_grid, grid_scores], axis=1)
+  best  df = pd.concat([hyperparameter_grid, grid_scores], axis=1)
   print(df)
 
 #+end_src
@@ -278,3 +278,125 @@ We're now ready to create a RandomizedSearchCV model. To do so:
 : [ 0.95151198 18.17832879 98.29225059 98.63309585 64.87990249 54.72965383
 :  79.61273531 97.34706443  1.81621269 14.69381351] [54.68761162 27.23025496  7.84063553 57.73277895 67.43024428 33.60107592
 :   2.43227937 70.81002413 17.63107877 43.62842266]
+
+** Evaluating the Results of RandomizedSearchCV
+We can now follow a similar process to what we did with GridSearchCV to evaluate the results of RandomizedSearchCV.
+
+After fitting a RandomizedSearchCV model we can find out the results using the following attributes of the clf argument:
+
+    - .best_estimator_ gives us the best estimator
+
+    - .best_score_ gives us the mean cross-validated score corresponding to the best estimator
+
+    - .best_params_ gives us the set of hyperparameters that correspond to the best estimator
+
+Additionally, the .cv_results_ attribute gives us the scores for each hyperparameter combination in the grid. We're now ready to evaluate the random search we set up earlier.
+
+*** Task 1
+Fit the random search classifier, clf to the training data. Set the best estimator to a variable best_model and print it to see which model performed best.
+
+Uncomment the line that prints the best parameters to check if they match up!
+
+*** Task 2
+     - Set the score corresponding to the best esimator to a variable best_score and print it.
+
+     - Calculate the accuracy of the best estimator on the test data and store it as the variable test_score.
+
+How do the scores of the best model compare to the training and test data?
+
+It is common to have different accuracy scores for the training and testing data sets. A small difference can be expected but a large difference may be from overfitting the training data (e.g. if the training score is significantly higher than the testing score).
+
+*** Task 3
+We have succesfully performed a random search over the two regularization options and 8 randomly chosen regularization strength values! Let's view the results of the random search and verify that our previous checkpoint gave the right values:
+
+    - Use the attribute ~.cv_results_~ and the key argument ~'params'~ to get the list of parameters. Convert this to a pandas DataFrame named ~hyperparameters_values~.
+
+    - Use the attribute .cv_results_ and the key argument ~'mean_test_score'~ to get the list of mean test scores corresponding to the parameter values. Convert this to a single column pandas DataFrame named randomsearch_scores and set the argument columns to ['score'].
+
+Uncomment the lines pertaining to concatenating the two data frames and print it to view the results of the grid search for each parameter pair!
+
+
+*** Scritp.py
+
+#+begin_src python :results output
+  import pandas as pd
+  from sklearn.datasets import load_breast_cancer
+  from sklearn.model_selection import train_test_split
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.model_selection import RandomizedSearchCV
+  from scipy.stats import uniform
+
+  # Load the dataset
+  cancer = load_breast_cancer()
+
+  # Split the data into training and testing sets
+  X = cancer.data
+  y = cancer.target
+  X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+  # Create distributions to draw hyperparameters from
+  distributions = {'penalty':['l1', 'l2'], 'C':uniform(loc=0, scale=100)}
+
+  # The logistic regression model
+  lr = LogisticRegression(solver='liblinear', max_iter=1000)
+
+  # Create a RandomizedSearchCV model
+  clf = RandomizedSearchCV(lr, distributions, n_iter=8)
+
+  # Fit clf to training data and get best hyperparameters
+  clf.fit(X_train, y_train)
+  best_model = clf.best_estimator_
+
+  print(best_model)
+  print(clf.best_params_)
+
+  # Calculate training and test scores of the best estimator
+  best_score = clf.best_score_
+  test_score = clf.score(X_test, y_test)
+
+  print(best_score)
+  print(test_score)
+
+  # Viewing random search results
+  hyperparameter_values = pd.DataFrame(clf.cv_results_['params'])
+  randomsearch_scores = pd.DataFrame(clf.cv_results_['mean_test_score'], columns = ['score'])
+
+  df = pd.concat([hyperparameter_values, randomsearch_scores], axis = 1)
+  print(df)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+LogisticRegression(C=45.50673040064779, max_iter=1000, penalty='l1',
+                   solver='liblinear')
+{'C': 45.50673040064779, 'penalty': 'l1'}
+0.9671135430916553
+0.958041958041958
+           C penalty     score
+0  36.879496      l2  0.962435
+1  51.729072      l2  0.964761
+2  99.524521      l2  0.960082
+3  45.506730      l1  0.967114
+4  24.166957      l2  0.964788
+5  33.082236      l1  0.962408
+6   0.493598      l2  0.960082
+7  17.894889      l1  0.967114
+#+end_example
+
+** Hyperparameter Tuning Review
+You've learned how to tune the hyperparameters in a machine learning model! Let's go over some of the key points to take away.
+
+    - In machine learning, hyperparameter tuning is altering the hyperparameter values of the model to get the model that's most suited to answering a question about the data.
+
+    - Examples of hyperparameters: the learning rate, regularization penalty, number of neighbors (in a k-means model), tree depth (decision tree model), and minimum number of samples to split (decision tree model).
+
+    - Grid Search is a method of hyperparameter tuning. It works bu testing a model on a list of hyperparameter values decided upon beforehand.
+
+    - With a grid search, if we want to test 2 different types of regularization penalties and 3 different regularization strengths, this would give us 6 different combination of hyperparameters on our grid to test (2*3=6).
+
+    - The Random Search method is an opposing method to grid search. In a random search model, a dictionary is given that specifies the distributions from which the model will randomly draw values for each hyperparameter. Additonally, the number of times the algorithm should randomly draw from these distributions is also specified.
+
+    - Both GridSearchCV() and RandomSearchCV() use a technique known as *k-fold cross-validation*. This is when new combinations of the training and testing sets are created (using the same data) to conclude the most accurate model. This ensures a less biased model.
+
+    - We used the following attributes to evaluate both the GridSearchCV() and RandomSearchCV() models; .best_estimator_, .best_score_, .best_params_, and the .cv_results_.
