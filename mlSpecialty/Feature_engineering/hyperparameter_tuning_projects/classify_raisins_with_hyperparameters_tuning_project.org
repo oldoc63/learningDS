@@ -1,0 +1,151 @@
+
+* Classify Raisins with Hyperparameter Tuning Project
+In this project, you'll use the different techniques you have learned in this unit to classify different types of raisins. The dataset has been posted on [[https://www.kaggle.com/datasets/muratkokludataset/raisin-dataset][Kaggle]] by [[https://www.muratkoklu.com/datasets/][Murat Koklu]], a researcher who has studied different raisin grain types [[https://dergipark.org.tr/tr/download/article-file/1227592][using machine learning methods]].
+
+There are two raisin grain types in this dataset, Kecimen and Besni and seven numerical predictor variables associated with each of the 900 samples in the data. You're going to use this dataset to implement the two hyperparameter tuning methods we've covered in this module thus far:
+
+    1. *Grid Search* method to tune a Decision Tree Classifier
+
+    2. *Random Search* method to tune a Logistic Regression Classifier
+
+You'll be using a Jupyter notebook to implement the project. At any point if you're away from the screen for too long, the Jupyter kernel might reset -so be sure to press Save on top of the notebook before taking a break!
+
+** Explore the Dataset
+
+*** Task 1
+The dataset and some of the libraries you'll use have been loaded on the setup cell. Run the setup cell to get started!
+
+*** Task 2
+Create the predictor and target variables and label them X and y respectively.
+
+*Hint*
+The column ~'Class'~ represents the target variable ~y~ and the rest of the columns together compose the predictor variable matrix ~X~.
+
+*** Task 3
+Examine the dataset by printing the
+
+    - total number of features
+    - total number of samples
+    - samples belonging to class '1'
+
+*Hint*
+    - The number of columns in X corresponds the number of features
+    - The length of ~X~ or ~y~ give us the total number of raisins in the dataset
+    - The sum of the target variable column is an easy way to get the number of samples belonging to class '1'
+
+*** Task 4
+Split the training data into train and test data with a random_state of 19 (if you want to match the solution code -you're welcome to use your preferred random_state too! Label the training data X_train and y_train and test data, X_test and y_test.
+
+** Grid Search with Decision Tree Classifier
+
+*** Task 5
+A decision tree classifier works well for a binary balanced class classification problem. Initialize a decision tree classifier named ~tree~.
+
+*Hint*
+Use scikit-learn's DecisionTreeClassifier().
+
+*** Task 6
+The DecisionTreeClassifier() implementation in scikit-learn has many parameters.
+
+Create a dictionary parameters to set up grid search to explore three values each for the followin 2 hyperparameters:
+
+    - ~'max_depth'~ : The maximum tree depth; explore the values 3, 5 and 7 for this.
+
+    - ~'min_samples_split'~ : The minimum number of samples to split at each node; explore the values 2, 3 and 4 for this.
+
+*** Task 7
+Create a grid search classifier ~grid~ with ~tree~ and ~parameters~ as inputs. Fit the grid search classifier to the training data.
+
+*** Task 8
+Use the ~.best_estimator_~ attribute to see what hyperparameters grid chose. Print the result. Print the best score and the score on the test data to examine the performance of the best estimator.
+
+*** Task 9
+Use ~.cv_results_['mean_test_score']~ to get the score for each hyperparameter combination. Get the corresponding hyperparameters with ~.cv_results_['params']~.
+
+Convert the two arrays to DataFrames, concatenate them using ~pd.concat~ and print it to view the score for each hyperparameter combination.
+
+
+** Script.py
+
+#+begin_src python :results output
+  # 1. Setup
+  import pandas as pd
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.model_selection import GridSearchCV
+  from sklearn.model_selection import RandomizedSearchCV
+
+  # Load data as xlsx
+  raisins = pd.read_excel('Raisin_Dataset.xlsx')
+  print(raisins.head())
+
+  # Recode class to binary
+  raisins['Class'] = raisins['Class'].replace({'Kecimen': 0, 'Besni': 1})
+
+  # 2. Create predictor and target variables, X and y
+  y = raisins['Class']
+  X = raisins.drop(columns = ['Class'], axis = 1)
+
+  # 3. Examine the dataset
+  print('Number of features:', X.shape[1])
+  print('Number of samples:', len(y))
+  print("Samples belonging to class '1':", y.sum())
+
+  # 4. Split the data into training and testing sets
+  X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=19)
+
+  # 5. Create a Decision Tree model
+  tree = DecisionTreeClassifier()
+
+  # 6. Dictionary of parameters for GridSearchCV
+  parameters = {'max_depth': [3, 5, 7], 'min_samples_split': [2, 3, 4]}
+
+  # 7.1 Create a GridSearchCV model
+  grid = GridSearchCV(tree, parameters)
+
+  # 7.2 Fit the GridSearchCV model to the training data
+  grid.fit(X_train, y_train)
+
+  # 8.1 Print the model and hyperparameters obtained by GridSearchCV
+  print(grid.best_estimator_)
+
+  # 8.2 Print best score
+  print(grid.best_score_)
+
+  # 8.3 Print the accuracy of the final model on the test data
+  print(grid.score(X_test, y_test))
+
+  # 9. Print a table summarizing the results of GridSearchCV
+  df = pd.concat([pd.DataFrame(grid.cv_results_['params']), pd.DataFrame(grid.cv_results_['mean_test_score'], columns=['score'])], axis=1)
+  print(df)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    Area  MajorAxisLength  MinorAxisLength  ...    Extent  Perimeter    Class
+0  87524       442.246011       253.291155  ...  0.758651   1184.040  Kecimen
+1  75166       406.690687       243.032436  ...  0.684130   1121.786  Kecimen
+2  90856       442.267048       266.328318  ...  0.637613   1208.575  Kecimen
+3  45928       286.540559       208.760042  ...  0.699599    844.162  Kecimen
+4  79408       352.190770       290.827533  ...  0.792772   1073.251  Kecimen
+
+[5 rows x 8 columns]
+Number of features: 7
+Number of samples: 900
+Samples belonging to class '1': 450
+DecisionTreeClassifier(max_depth=5)
+0.8696296296296296
+0.8177777777777778
+   max_depth  min_samples_split     score
+0          3                  2  0.860741
+1          3                  3  0.860741
+2          3                  4  0.859259
+3          5                  2  0.869630
+4          5                  3  0.865185
+5          5                  4  0.868148
+6          7                  2  0.844444
+7          7                  3  0.845926
+8          7                  4  0.844444
+#+end_example
