@@ -64,6 +64,32 @@ Use ~.cv_results_['mean_test_score']~ to get the score for each hyperparameter c
 
 Convert the two arrays to DataFrames, concatenate them using ~pd.concat~ and print it to view the score for each hyperparameter combination.
 
+** Random Search with Logistic Regression
+
+*** Task 10
+Define a logistic regression model, ~lr~, with ~solver~ set to ~'liblinear'~ and ~max_iter = 1000~.
+
+*** Task 11
+To perform random search we need to specify the parameters and the distributions to draw from. Define a dictionary ~distributions~ with the keys
+
+    - ~'penalty'~ : corresponding to the type of regularization to apply. Choose a discrete distribution with 'l1' and 'l2'.
+
+    - ~'C'~ : corresponding to the regularization strength. Choose a uniform distribution here between 0 and 100.
+
+*Hint*
+Import uniform from scipy.stats to access a uniform distribution. You can use parameters loc and scale to obtain a uniform distribution on [loc, loc+scale].
+
+*** Task 12
+Create a model named ~clf~ to perform random search with the logistic regression model you've defined, over the distribution space specified by ~distributions~ and for eight random draws. Fit the model to the training data.
+
+*Hint*
+Use scikit-learn's RandomizedSearchCV model with parameters lr, distributions and n_iter=8.
+
+*** Task 13
+Print the best estimator and score from the random search you've performed. Print a table summarizing the results using .cv_results_ similar to the way you did for grid search!
+
+
+
 
 ** Script.py
 
@@ -120,6 +146,27 @@ Convert the two arrays to DataFrames, concatenate them using ~pd.concat~ and pri
   df = pd.concat([pd.DataFrame(grid.cv_results_['params']), pd.DataFrame(grid.cv_results_['mean_test_score'], columns=['score'])], axis=1)
   print(df)
 
+  # 10. The logistic regression model
+  lr = LogisticRegression(solver='liblinear', max_iter=1000)
+
+  # 11. Define distributions to choose hyperparameters from
+  from scipy.stats import uniform
+  distributions = {'penalty':['l1', 'l2'], 'C':uniform(loc=0, scale=100)}
+
+  # 12.1 Create a RandomizedSearchCV model
+  clf = RandomizedSearchCV(lr, distributions, n_iter=8)
+
+  # 12.2 Fit the model to the training data
+  clf.fit(X_train, y_train)
+
+  # 13.1 Print best estimator and best score
+  print(clf.best_estimator_)
+  print(clf.best_score_)
+
+  # 13.1 Print a table summarizing the results of RandomSearchCV
+  df = pd.concat([pd.DataFrame(clf.cv_results_['params']), pd.DataFrame(clf.cv_results_['mean_test_score'], columns=['Accuracy'])] ,axis=1)
+  print(df.sort_values('Accuracy', ascending = False))
+
 #+end_src
 
 #+RESULTS:
@@ -136,16 +183,28 @@ Number of features: 7
 Number of samples: 900
 Samples belonging to class '1': 450
 DecisionTreeClassifier(max_depth=5)
-0.8696296296296296
+0.8681481481481482
 0.8177777777777778
    max_depth  min_samples_split     score
-0          3                  2  0.860741
-1          3                  3  0.860741
-2          3                  4  0.859259
-3          5                  2  0.869630
-4          5                  3  0.865185
-5          5                  4  0.868148
-6          7                  2  0.844444
-7          7                  3  0.845926
-8          7                  4  0.844444
+0          3                  2  0.859259
+1          3                  3  0.862222
+2          3                  4  0.860741
+3          5                  2  0.868148
+4          5                  3  0.868148
+5          5                  4  0.866667
+6          7                  2  0.845926
+7          7                  3  0.842963
+8          7                  4  0.842963
+LogisticRegression(C=45.62459801640283, max_iter=1000, penalty='l1',
+                   solver='liblinear')
+0.8755555555555556
+           C penalty  Accuracy
+0  45.624598      l1  0.875556
+4  47.723666      l1  0.875556
+3  15.215743      l2  0.875556
+5  22.865003      l2  0.875556
+1  98.354423      l1  0.874074
+2   4.214664      l2  0.874074
+6  93.751095      l2  0.874074
+7  39.587819      l2  0.874074
 #+end_example
