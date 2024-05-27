@@ -240,3 +240,106 @@ Adding alpha=0.5 makes some points look darker than others. The darker spots are
 #+end_src
 
 #+RESULTS:
+
+** Implementing K-Means: Step 1
+The K-Means algorithm:
+
+    1. *Place ~k~ random centroids for the initial clusters.*
+
+    2. Assign data samples to the nearest centroid.
+
+    3. Update centroids based on the above-assigned data samples.
+
+    4. Repeat Steps 2 and 3 until convergence.
+
+After looking at the scatter plot and having a better understanding of the Iris data, let's start implementing the k-means algorithm.
+
+In this exercise, we will implement Step 1.
+
+Because we expect there to be three clusters (for the three species of flowers), let's implement k-means where the ~k~ is 3. In real-life situations you won't always know how many clusters to look for. We'll learn more about how to choose k later.
+
+Using the NumPy library, we will create three /random/ initial centroids and plot them along with our samples.
+
+*** Task 1
+First, create a variable named k and set it to 3.
+
+*** Task 2
+Then, use NumPy's ~random.uniform()~ function to generate random values in two lists:
+
+    - a ~centroids_x~ list that will have ~k~ random values between ~min(x)~ and ~max(x)~
+
+    - a ~centroids_y~ list that will have ~k~ random values between ~min(y)~ and ~max(y)~
+
+The random.uniform() function looks like:
+
+#+begin_src python
+  np.random.uniform(low, high, size)
+#+end_src
+
+The ~centroids_x~ will have the x-values for our initial random centroids and the ~centroids_y~ will have the y-values for our initial random centroids.
+
+*Hint*
+Use the lower and upper  bounds of the x and y values.
+
+You can also use NumPy's ~random.randint()~ function, but it will generate random ~int~ s instead of ~float~ s.
+
+*** Task 3
+Create an array named centroids and use the ~zip()~ function to add ~centroids_x~ and ~centroids_y~ to it.
+
+Then print centroids.
+
+The ~centroids~ list should now have all the initial centroids.
+
+*** Task 4
+Make a scatter plot of y vs x. (Remember that you’re only looking at two out of four dimensions of the data set. Based on that it might not look like there are three distinct clusters, but since we are missing two dimensions this plot won’t tell the whole story.)
+
+Make a scatter plot of centroids_y vs centroids_x.
+
+Show the plots to see your centroids!
+
+Adding alpha=0.5 makes the points look darker than others. This is because some of the points might have the exact the same values. The dots are darker because they are stacked!
+
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from sklearn import datasets
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  x = samples[:, 0]
+  y = samples[:, 1]
+
+  # Number of clusters
+  k = 3
+
+  # X coordinates of random centroids
+  centroids_x = np.random.uniform(min(x), max(x), size=k)
+
+  centroids_y = np.random.uniform(min(y), max(y), size=k)
+
+  # Create centroids array
+  centroids = np.array(list(zip(centroids_x, centroids_y)))
+
+  print(centroids)
+
+  # Make a scatter plot of y and x
+  plt.scatter(x, y, alpha=0.5)
+
+  # Make a scatter plot of centroids_y, centroid_x
+  plt.scatter(centroids_x, centroids_y)
+
+  plt.xlabel('sepal length (cm)')
+  plt.ylabel('sepal width (cm)')
+
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: [[4.89566089 3.01716756]
+:  [6.97357791 2.47696023]
+:  [6.23522749 2.62739094]]
