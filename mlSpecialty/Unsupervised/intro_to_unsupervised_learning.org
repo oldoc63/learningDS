@@ -35,7 +35,7 @@ Often, the data you encounter in the real world won't be sorted into categories 
 
     - *Text clustering:* group similar texts together based on word usage
 
-The /Iris/ data set is a famous example of unlabeled data. It consist of measurements of sepals and petals on 50 different iris flowers. Here you can see a visualization of this data set that shows how the flowers naturally form three distinct clusters. We'll learn how to find those clusters in this lesson.
+The /Iris/ data set is a famous example of unlabeled data. It consist of measurements of sepals and petals on 50 different iris flowers. Here you can see a visualization of this data set that shows how the flowers naturally form three distinct clusters. We'll learn how to find those clusters in this lesson.\\
 
       [[./k_means_clustering.gif]]
 
@@ -81,7 +81,7 @@ The Iris dataset consist of measurements of sepals and petals of 3 different pla
 
     - /Iris virginica/
 
-The sepal is the part that encases and protects the flower when it is in the bud stage. A petal is a leaflike part that is often colorful.
+The sepal is the part that encases and protects the flower when it is in the bud stage. A petal is a leaflike part that is often colorful.\\
 
 From sklearn library, import the datasets module:
 
@@ -178,7 +178,7 @@ Suppose we only want to retrieve the values that are in column ~0~ of a matrix, 
 matrix[:, 0]
 #+end_src
 
-[:, 0] can be translated to [all_rows, column_0]
+~[:, 0]~ can be translated to ~[all_rows, column_0]~
 
 Once you have the measurements we need, we can make a scatter plot like this:
 
@@ -208,7 +208,7 @@ Use the ~.scatter()~ function to create a scatter plot of ~x~ and ~y~.
 Because some of the data samples have the exact same features, let's add ~alpha=0.5~.
 
 *** Task 4
-Call the .show() function to display the graph.
+Call the ~.show()~ function to display the graph.
 
 We've also included x-axis label and y-axis label.
 
@@ -252,6 +252,7 @@ The K-Means algorithm:
 
     4. Repeat Steps 2 and 3 until convergence.
 
+
 After looking at the scatter plot and having a better understanding of the Iris data, let's start implementing the k-means algorithm.
 
 In this exercise, we will implement Step 1.
@@ -276,10 +277,10 @@ The random.uniform() function looks like:
   np.random.uniform(low, high, size)
 #+end_src
 
-The ~centroids_x~ will have the x-values for our initial random centroids and the ~centroids_y~ will have the y-values for our initial random centroids.
+The ~centroids_x~ will have the x-values for our initial random centroids and the ~centroids_y~ will have the y-values for our initial random centroids.\\
 
 *Hint*
-Use the lower and upper  bounds of the x and y values.
+Use the lower and upper  bounds of the x and y values.\\
 
 You can also use NumPy's ~random.randint()~ function, but it will generate random ~int~ s instead of ~float~ s.
 
@@ -291,9 +292,9 @@ Then print centroids.
 The ~centroids~ list should now have all the initial centroids.
 
 *** Task 4
-Make a scatter plot of y vs x. (Remember that you’re only looking at two out of four dimensions of the data set. Based on that it might not look like there are three distinct clusters, but since we are missing two dimensions this plot won’t tell the whole story.)
+Make a scatter plot of ~y~ vs ~x~. (Remember that you’re only looking at two out of four dimensions of the data set. Based on that it might not look like there are three distinct clusters, but since we are missing two dimensions this plot won’t tell the whole story.)
 
-Make a scatter plot of centroids_y vs centroids_x.
+Make a scatter plot of ~centroids_y~ vs ~centroids_x~.
 
 Show the plots to see your centroids!
 
@@ -343,3 +344,125 @@ Adding alpha=0.5 makes the points look darker than others. This is because some 
 : [[4.89566089 3.01716756]
 :  [6.97357791 2.47696023]
 :  [6.23522749 2.62739094]]
+
+** Implementing K-Means: Step 2
+The k-means algorithm:
+
+    1. Place ~k~ random centroids for the initial clusters.
+
+    2. *Assign data samples to the nearest centroid.*
+
+    3. Update centroids based on the above-assigned data samples.
+
+    4. Repeat Steps 2 and 3 until convergence.
+
+
+In this exercise, we will implement Step 2.
+
+Now we have the three random centroids. Let's assign data points to their nearest centroids.
+
+To do this we're going to use a distance formula to write a distance() function.
+
+There are many different kinds of distance formulas. The one you're probably most familiar with is called /Euclidean distance./ To find the Euclidean distance between two points on a 2-d plane, make a right triangle so that the hypotenuse connects the points. The distance between them is the length of the hypotenuse.
+
+[[./Distancia_Euclidiana.jpg]]
+
+Another common distance formula is the /taxicab distance./ The taxicab distance between two points on a 2-d plane is the distance you would travel if you took the long way around the right triangle via the two shorter sides, just like a taxicab would have to do if it wanted to travel to the opposite corner of a city block.
+
+[[./taxicab.png]]
+
+Different distance formulas are useful in different situations. If you're curious, yor can learn more about various distance formulas [[https://machinelearningmastery.com/distance-measures-for-machine-learning/][here]]. For this lesson, we'll use Euclidean distance.
+
+After we write  the ~distance()~ function, we are going to iterate through our data samples and compute the distance from each data point to each of the 3 centroids.
+
+Suppose we have a point and a list of three distances in ~distances~
+and it looks like ~[15, 20, 5]~, then we would want to assign the data point, then we would want to assign the data point to the 3rd centroid. The ~argmin(distances)~ would return the index of the lowest corresponding distance, ~2~, because the index 2 contains the minimum value.
+
+*** Task 1
+Write a ~distance()~ function.
+
+It should be able to take in a and b and return the distance between the two points.
+
+*** Task 2
+Create an array called labels that will hold the cluster labels for each data point. Its size should be the length of the data sample.
+
+It should look something like:
+
+#+begin_src python
+[ 0.  0.  0.  0.  0.  0.  ...  0.]
+
+#+end_src
+
+*** Task 3
+Create a function called ~assign_to_centroid()~ that assigns the nearest centroid to a sample. You'll need to compute the distance to each centroid to find the closest one.
+
+Then, assign the ~cluster~ to each index of the ~labels~ array.
+
+*** Task 4
+Write a loop that iterates through the whole data sample and assigns each sample's closest centroid to the corresponding index of the ~labels~ array. Use the function you created in the previous exercise.
+
+*** Task 5
+Then print ~labels~ (outside of the ~for~ loop).
+
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from sklearn import datasets
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  x = samples[:,0]
+  y = samples[:,1]
+
+  sepal_length_width = np.array(list(zip(x, y)))
+
+  # Step 1: Place K random centroids
+  k = 3
+
+  centroids_x = np.random.uniform(min(x), max(x), size=k)
+  centroids_y = np.random.uniform(min(y), max(y), size=k)
+
+  centroids = np.array(list(zip(centroids_x, centroids_y)))
+
+  ## Step 2: Assign samples to nearest centroid
+
+  # Distance formula
+  def distance(a, b):
+      one = (a[0] - b[0]) ** 2
+      two = (a[1] - b[1]) ** 2
+      distance = (one + two) ** 0.5
+      return distance
+
+  # Cluster labels for each point (either 0, 1, or 2)
+  labels = np.zeros(len(samples))
+
+  # A function that assigns the nearest centroid to a sample
+  def assign_to_centroid(sample, centroids):
+      k = len(centroids)
+      distances = np.zeros(k)
+      for i in range(k):
+          distances[i] = distance(sample, centroids[i])
+      closest_centroid = np.argmin(distances)
+      return closest_centroid
+
+  # Assign the nearest centroid to each sample
+  for i in range(len(samples)):
+      labels[i] = assign_to_centroid(samples[i], centroids)
+
+  # Print labels
+  print(labels)
+
+#+end_src
+
+#+RESULTS:
+: [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 2. 2. 1. 1. 2. 1. 1. 1. 1. 1.
+:  1. 1. 1. 1. 1. 1. 1. 1. 1. 2. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+:  1. 1. 0. 0. 0. 0. 0. 0. 2. 1. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 2. 0.
+:  0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 2. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0.
+:  0. 0. 1. 0. 2. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+:  0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 2. 0. 0. 0. 0. 0. 0. 0.
+:  0. 0. 0. 0. 2. 0.]
