@@ -466,3 +466,125 @@ Then print ~labels~ (outside of the ~for~ loop).
 :  0. 0. 1. 0. 2. 0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
 :  0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 2. 0. 0. 0. 0. 0. 0. 0.
 :  0. 0. 0. 0. 2. 0.]
+
+** Implementing K-Means: Step 3
+The k-means algorithm:
+
+    1. Place ~k~ random centroids for the initial clusters.
+
+    2. Assign data samples to the nearest centroid.
+
+    3. *Update centroids based on the above-assigned data samples.*
+
+    4. Repeat Steps 2 and 3 until convergence.
+
+
+In this exercise, we will implement Step 3.
+
+Find new cluster centers by taking the average of the assigned points. To find the average of the assigned points, we can use the .mean() function.
+
+*** Task 1
+Save the old ~centroids~ value before updating.
+
+We have already imported ~deepcopy~ for you:
+
+#+begin_src python
+from copy import deepcopy
+#+end_src
+
+Store ~centroids~ into ~centroids_old~ using ~deepcopy()~:
+
+#+begin_src python
+centroids_old = deepcopy(centroids)
+#+end_src
+
+*** Task 2
+Then, create a for loop that iterates k times.
+
+Since ~k = 3~, as we are iterationg through the ~for~ loop each time, we can calculate the mean of the points that have te same cluster label.
+
+Inside the ~for~ loop, create an array named ~points~ where we get all the data points that have the cluster label ~i~.
+
+*** Task 3
+Now that we have assigned each input to its closest centroid, we can update the position of that centroid to the true center. Inside the ~for~ loop, calculate the mean of those points using ~.mean()~ to get the new centroid.
+
+Store the new centroid in ~centroids[i]~.
+
+If you don't have ~axis=0~ parameter, the default is to compute the mean of the flattened array. We need the ~axis=0~ here to specify that we want to compute the means along the rows.
+
+
+
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from sklearn import datasets
+  from copy import deepcopy
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  x = samples[:,0]
+  y = samples[:,1]
+
+  sepal_length_width = np.array(list(zip(x, y)))
+
+  # Step 1: Place K random centroids
+
+  k = 3
+
+  centroids_x = np.random.uniform(min(x), max(x), size=k)
+  centroids_y = np.random.uniform(min(y), max(y), size=k)
+
+  centroids = np.array(list(zip(centroids_x, centroids_y)))
+
+  # Step 2: Assign samples to nearest centroid
+
+  # Distance formula
+  def distance(a, b):
+      one = (a[0] - b[0]) ** 2
+      two = (a[1] - b[1]) ** 2
+      distance = (one + two) ** 0.5
+      return distance
+
+  # Cluster labels for each point (either 0, 1, 2)
+  labels = np.zeros(len(samples))
+
+  # A function that assigns the nearest centroid to a sample
+  def assign_to_centroid(sample, centroids):
+      k = len(centroids)
+      distances = np.zeros(k)
+      for i in range(k):
+          distances[i] = distance(sample, centroids[i])
+      closest_centroid = np.argmin(distances)
+      return closest_centroid
+
+  # Assign the nearest centroid to each sample
+  for i in range(len(samples)):
+      labels[i] = assign_to_centroid(samples[i],centroids)
+
+  # Step 3: Update centroids
+  centroids_old = deepcopy(centroids)
+
+  for i in range(k):
+      points = []
+      for j in range(len(sepal_length_width)):
+          if labels[j] == i:
+              points.append(sepal_length_width[j])
+      centroids[i] = np.mean(points, axis=0)
+
+  print(centroids_old)
+  print("- - - - - - - - - - - - - -")
+  print(centroids)
+#+end_src
+
+#+RESULTS:
+: [[4.97875027 3.72468597]
+:  [4.93845799 3.9059884 ]
+:  [7.53011417 2.85974837]]
+: - - - - - - - - - - - - - -
+: [[5.29204545 3.08522727]
+:  [5.46666667 4.23333333]
+:  [6.68474576 2.9559322 ]]
