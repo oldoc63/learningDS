@@ -753,3 +753,78 @@ plt.show()
 #+end_src
 
 #+RESULTS:
+
+** Implementing K-Means: Scikit-Learn
+Awesome, you have implemented k-means clustering from scratch!
+
+Writing an algorithm whenever you need it can be very time-consuming and you might make mistakes and typos along the way. We will now show you how to implement k-means more efficiently -using the scikit-learn library.
+
+There are many advantages to using scikit-learn. It can run k-means on datasets with as many features as your computer can handle, so it will be easy for us to use all four features of the iris data set instead of the two features that we used in the previous exercises.
+
+Another big advantage of scikit-learn is that it is a widely-used open-source library. It is very well-tested, so it is much less likely to contain mistakes. Since so many people use it, there are many online resources that can help you if you get stuck. If you have a specific question about scikit-learn, it's very likely that other users have already asked and answered your question on public forums.
+
+To import ~KMeans~ from ~sklearn.cluster~:
+
+#+begin_src python
+from sklearn.cluster import KMeans
+#+end_src
+
+For Step 1, use the ~KMeans()~ method to build a model that finds ~k~ clusters. To specify the number of clusters (k), use the ~n_clusters~ keyword argument:
+
+#+begin_src python
+model = KMeans(n_clusters = k)
+#+end_src
+
+For Steps 2 and 3, use the ~.fit()~ method to compute k-means clustering:
+
+#+begin_src python
+model.fit(X)
+#+end_src
+
+After k-means, we can now predict the closest cluster each sample in X belongs to. Use the ~.predict()~ method to compute cluster centers and predict cluster index for each sample.
+
+*** Task 1
+First, import KMeans from sklearn.cluster
+
+*** Task 2
+Somewhere after ~samples = iris.data~, use KMeans() to create an instance called ~model~ to find 3 clusters.
+
+*** Task 3
+Next, use the .fit() method of model to fit the model tho the array of points samples.
+
+*** Task 4
+After you have the "fitted" model, determine the cluster labels of ~samples~.
+
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  from sklearn import datasets
+
+  # From sklearn.cluster, import Kmeans class
+  from sklearn.cluster import KMeans
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  # Use KMeans() to create a model that finds 3 clusters
+  model = KMeans(n_clusters=3, n_init='auto')
+
+  # Use .fit() to fit the model to samples
+  model.fit(samples)
+
+  # Use .predict() to determine the labels of samples
+  labels = model.predict(samples)
+
+  # Print the labels
+  print(labels)
+
+#+end_src
+
+#+RESULTS:
+: [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+:  1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+:  0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 2 2 2 2 0 2 2 2 2
+:  2 2 0 0 2 2 2 2 0 2 0 2 0 2 2 0 0 2 2 2 2 2 0 2 2 2 2 0 2 2 2 0 2 2 2 0 2
+:  2 0]
