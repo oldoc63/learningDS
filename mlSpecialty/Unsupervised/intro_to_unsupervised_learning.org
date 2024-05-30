@@ -588,3 +588,168 @@ If you don't have ~axis=0~ parameter, the default is to compute the mean of the 
 : [[5.29204545 3.08522727]
 :  [5.46666667 4.23333333]
 :  [6.68474576 2.9559322 ]]
+
+** Implementing K-Means: Step 4
+The k-means algorithm:
+
+    1. Place k random centroids for the initial clusters.
+
+    2. Assign data samples to the nearest centroid.
+
+    3. Update centroids based on the above-assigned data samples.
+
+    4. *Repeat Steps 2 and 3 until convergence.*
+
+
+In this exercise, we will implement Step 4.
+
+This is the part of the algorithm where we repeatedly execute Step 2 and 3 until the centroids stabilize (convergence).
+
+We can do this using a ~while~ loop. And everything from Step 2 and 3 goes inside the loop.
+
+For the condition of the ~while~ loop, we need to create an array named ~errors~. In each error index, we calculate the difference between the updated centroid (~centroids~) and the old centroid (~centroids_old~).
+
+The loop ends when all three values in errors are 0.
+
+*** Task 1
+On line 49 of script.py initialize error:
+
+#+begin_src python
+error = np.zeros(3)
+#+end_src
+
+Then, use the distance() function to calculate the distance between the updated centroids and the old centroids and put them in error. Here's how to calculate the error for entry '0'. You can write a loop to compute each distance.
+
+#+begin_src python
+error[0] = distance(centroids[0], centroids_old[0])
+#+end_src
+
+*** Task 2
+After that, add a ~while~ loop:
+
+#+begin_src python
+while error.all() !=0:
+#+end_src
+
+And move ~everything~ below (from Step 2 and 3) inside.
+
+And recalculate ~error~ again at the end of each iteration of the while loop. You can put this line inside the 'for' loop tha computes the new centroids:
+
+#+begin_src python
+error[i] = distance(centroids[i], centroids_old[i])
+#+end_src
+
+*** Task 3
+Awesome, now you have everything, let’s visualize it.
+
+After the while loop finishes, let’s create an array of colors:
+
+#+begin_src python
+colors = ['r', 'g', 'b']
+#+end_src
+
+Then, create a for loop that iterates ~k~ times.
+
+Inside the for loop (similar to what we did in the last exercise), create an array named points where we get all the data points that have the cluster label i.
+
+Then we are going to make a scatter plot of points[:, 0] vs points[:, 1] using the scatter() function:
+
+#+begin_src python
+plt.scatter(points[:, 0], points[:, 1], c=colors[i], alpha=0.5)
+#+end_src
+
+*** Task 4
+Then, paste the following code at the very end. Here, we are visualizing all the points in each of the labels a different color.
+
+#+begin_src python
+plt.scatter(centroids[:, 0], centroids[:, 1], marker='D', s=150)
+
+plt.xlabel('sepal length (cm)')
+plt.ylabel('sepal width (cm)')
+
+plt.show()
+#+end_src
+
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from sklearn import datasets
+  from copy import deepcopy
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  x = samples[:,0]
+  y = samples[:,1]
+
+  sepal_length_width = np.array(list(zip(x, y)))
+
+  # Step 1: Place K random centroids
+  k = 3
+
+  centroids_x = np.random.uniform(min(x), max(x), size=k)
+  centroids_y = np.random.uniform(min(y), max(y), size=k)
+
+  centroids = np.array(list(zip(centroids_x, centroids_y)))
+
+  def distance(a, b):
+      one = (a[0] - b[0]) ** 2
+      two = (a[1] - b[1]) ** 2
+      distance = (one + two) ** 0.5
+      return distance
+
+  # A function that assigns the nearest centroid to a sample
+  def assign_to_centroid(sample, centroids):
+      k = len(centroids)
+      distances = np.zeros(k)
+      for i in range(k):
+          distances[i] = distance(sample, centroids[i])
+      closest_centroid = np.argmin(distances)
+      return closest_centroid
+
+  # To store the value of centroids when it updates
+  centroids_old = np.zeros(centroids.shape)
+
+  # Cluster labeles (either 0, 1, 2)
+  labels = np.zeros(len(samples))
+
+  distances = np.zeros(3)
+
+  # Initialize error:
+  error = np.zeros(3)
+
+  for i in range(k):
+      error[i] = distance(centroids[i], centroids_old[i])
+
+  # Repeat Steps 2 and 3 until convergence:
+
+  while error.all() !=0:
+      # Step 2: Assign samples to nearest centroid
+      for i in range(len(samples)):
+          labels[i] = assign_to_centroid(samples[i], centroids)
+      # Step 3: Update centroids
+      centroids_old = deepcopy(centroids)
+
+      for i in range(k):
+          points = [sepal_length_width[j] for j in range(len(sepal_length_width)) if labels[j] == i]
+          centroids[i] = np.mean(points, axis=0)
+          error[i] = distance(centroids[i], centroids_old[i])
+
+  colors = ['r', 'g', 'b']
+
+  for i in range(k):
+      points = np.array([sepal_length_width[j] for j in range(len(samples)) if labels[j] == i])
+      plt.scatter(points[:, 0], points[:, 1], c=colors[i], alpha=0.5)
+
+  plt.scatter(centroids[:, 0], centroids[:, 1], marker='D', s=150)
+
+  plt.xlabel('sepal length (cm)')
+  plt.ylabel('sepal width (cm)')
+
+  plt.show()
+#+end_src
+
+#+RESULTS:
