@@ -828,3 +828,96 @@ After you have the "fitted" model, determine the cluster labels of ~samples~.
 :  0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 2 2 2 2 0 2 2 2 2
 :  2 2 0 0 2 2 2 2 0 2 0 2 0 2 2 0 0 2 2 2 2 2 0 2 2 2 2 0 2 2 2 0 2 2 2 0 2
 :  2 0]
+
+** New Data?
+You used k-means and found three clusters of the samples data. But it gets cooler!
+
+Since you have created a model that computed k-means clustering, you can now feed new data samples into it and obtain the cluster labels using the ~.predict()~ method.
+
+So, suppose we went to the florist and bought 3 more Irises with the measurements:
+
+#+begin_src python
+[[ 5.1  3.5  1.4  0.2 ]
+ [ 3.4  3.1  1.6  0.3 ]
+ [ 4.9  3.   1.4  0.2 ]]
+#+end_src
+
+We can feed this new data into the model and obtain the labels for them.
+
+*** Task 1
+First, store the 2D matrix:
+
+#+begin_src python :results output
+  import numpy as np
+
+  new_samples = np.array([[5.7, 4.4, 1.5, 0.4],
+     [6.5, 3. , 5.5, 0.4],
+     [5.8, 2.7, 5.1, 1.9]])
+
+  print(new_samples)
+#+end_src
+
+#+RESULTS:
+: [[5.7 4.4 1.5 0.4]
+:  [6.5 3.  5.5 0.4]
+:  [5.8 2.7 5.1 1.9]]
+
+*** Task 2
+Use the model to predict labels for the new_samples, and print the predictions.
+
+The output might look like:
+
+#+begin_src python
+[0 2 2]
+#+end_src
+
+Those are the predicted labels for our three new flowers. If you are seeing different labels, don't worry! Since the cluster centroids are randomly initialized, running the model repeatedly can produce different clusters with the same input data.
+
+*** Task 3
+You may want to see the names of the predicted classes instead of just the numerical targets. Create a list called ~new_names~. Use ~iris.target_names~ to convert the target numbers to text names and print the result.
+
+You can use a list comprehension something like this:
+
+#+begin_src python
+new_names = [iris.target_names[label] for label in labels]
+#+end_src
+
+The output might look like:
+
+#+begin_src python
+['setosa', 'virginica', 'virginica']
+#+end_src
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from sklearn import datasets
+  from sklearn.cluster import KMeans
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  model = KMeans(n_clusters=3, n_init='auto')
+
+  model.fit(samples)
+
+  # Store the new Iris measurements
+  new_samples = np.array([[5.7, 4.4, 1.5, 0.4],
+   [6.5, 3. , 5.5, 0.4],
+   [5.8, 2.7, 5.1, 1.9]])
+
+  # Predict labels for the new samples
+  new_labels = model.predict(new_samples)
+
+  print(new_labels)
+
+  new_names = [iris.target_names[label] for label in new_labels]
+
+  print(new_names)
+#+end_src
+
+#+RESULTS:
+: [1 2 2]
+: ['versicolor', 'virginica', 'virginica']
