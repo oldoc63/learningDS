@@ -994,3 +994,131 @@ Make a scatter plot of x and y, using labels to define the colors.
 :  2 2 2 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 2 1 1 1 1 2 1 1 1 1
 :  1 1 2 2 1 1 1 1 2 1 2 1 2 1 1 2 2 1 1 1 1 1 2 1 1 1 1 2 1 1 1 2 1 1 1 2 1
 :  1 2]
+
+** Evaluation
+At this point, we have clustered the Iris data into 3 different groups (implemented using Python and using scikit-learn). But do the clusters correspond to the actual species? Let's find out!
+
+First, remember that the Iris dataset comes with target values:
+
+#+begin_src python
+target = iris.target
+#+end_src
+
+It looks like:
+
+#+begin_src python
+[ 0 0 0 0 0 ... 2 2 2]
+#+end_src
+
+According to the metadata:
+
+    - All the 0's are /Iris-setosa/
+
+    - All the 1's are /Iris-versicolor/
+
+    - All the 2's are /Iris-virgínica/
+
+Let's change these values into the corresponding species using the following code:
+
+#+begin_src python
+  species = [iris.target_names[t] for t in list(target)]
+#+end_src
+
+Then we are going to use the Pandas library to perform a /cross-tabulation./
+
+Cross-tabulations enable you to examine relationships within the data that might not be readily apparent when analyzing total survey responses.
+
+The result should look something like:
+
+#+begin_src python
+labels    setosa    versicolor    virginica
+0             50             0            0
+1              0             2           36
+2              0            48           14
+#+end_src
+
+The first column has the cluster labels. The second to fourth columns have the Iris species that are clustered into each of the labels.
+
+By looking at this, you can conclude that:
+
+    - /Iris-setosa/ was clustered with 100% accuracy.
+
+    - /Iris-versicolor/ was clustered with 96% accuracy.
+
+    - /Iris-virgínica/ didn't do so well.
+
+Follow the instruction below to learn how to do a cross-tabulation.
+
+*** Task 1
+Pandas is already imported for you:
+
+#+begin_src python
+import pandas as pd
+#+end_src
+
+Add the code from the narrative to get the ~species~ list.
+
+*** Task 2
+Create and print a DataFrame.
+
+*** Task 3
+Next, use the ~crosstab()~ method to perform cross-tabulation:
+
+How accurate are the clusters?
+*** Script.py
+
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from sklearn import datasets
+  from sklearn.cluster import KMeans
+  import pandas as pd
+
+  iris = datasets.load_iris()
+
+  samples = iris.data
+
+  target = iris.target
+
+  model = KMeans(n_clusters=3, n_init='auto')
+
+  model.fit(samples)
+
+  labels = [iris.target_names[s] for s in model.predict(samples)]
+
+  species = [iris.target_names[t] for t in list(target)]
+
+  # Create and print a DataFrame
+  df = pd.DataFrame({'labels': labels, 'species': species})
+
+  print(df)
+
+  # Use the crosstab() method to perform cross-tabulation
+  ct = pd.crosstab(df['labels'], df['species'])
+
+  print(ct)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+         labels    species
+0        setosa     setosa
+1        setosa     setosa
+2        setosa     setosa
+3        setosa     setosa
+4        setosa     setosa
+..          ...        ...
+145  versicolor  virginica
+146   virginica  virginica
+147  versicolor  virginica
+148  versicolor  virginica
+149   virginica  virginica
+
+[150 rows x 2 columns]
+species     setosa  versicolor  virginica
+labels
+setosa          50           0          0
+versicolor       0           3         36
+virginica        0          47         14
+#+end_example
