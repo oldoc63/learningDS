@@ -1195,3 +1195,72 @@ Plot the ~inertias~ vs ~num_clusters~:
 #+end_src
 
 #+RESULTS:
+
+** Quiz
+
+*** Question 1
+Which of the following lines of code creates a K-means model where the ~k~ is 3?
+
+    - model = KMeans(n_clusters=3)
+
+*** Question 2
+What is *inertia* in the context of clustering?
+
+    - Inertia is the distance from each sample to the centroid of its cluster. The lower the better.
+
+*** Question 3
+For Step 1 of K-means, how do we place the ~k~ centroids for the initial clusters?
+
+    - Place ~k~ random centroids.
+
+*** Question 4
+Fill in the blank: K-Means algorithm stops when:
+
+    - centroids stabilize (convergence)
+
+*** Question 5
+What is the purpose of the *elbow method*?
+
+    - To find the best number of clusters.
+      Correct! Choosing an "elbow" in the inertia plot, when inertia begins to decrease more slowly, finds the optimal number of clusters.
+
+*** Question 6
+The sklearn library comes with a breast cancer dataset with characteristics of breast cancer cell nuclei: mean radious, mean texture, mean perimeter, mean area, etc. What is a *sample* and what is a *feature* in this dataset?
+
+#+begin_src python
+[[ 1.7990e+01  1.0380e+01  ...  2.6540e-01 ]
+ [ 2.0570e+01  1.7770e+01  ...  8.9020e-02 ]
+#+end_src
+
+Each cell nuclei (row) is a sample and the mean radius (column) is a feature.
+
+*** Question 7
+How many clusters are likely in this dataset?
+
+[[./dataset.png]]
+
+    - Probably two.
+
+*** Question 8
+Find the error in the code below:
+
+#+begin_src python
+  import matplotlib.pyplot as plt
+  from sklearn import datasets
+  from sklearn.cluster import KMeans
+
+  boston = datasets.load_boston()
+
+  samples = boston.data
+
+  model = KMeans(n_clusters=3)
+
+  labels = model.predict(samples)
+
+  model.fit(samples)
+
+  print(labels)
+
+#+end_src
+
+     - You can't use ~.predict()~ before fitting.
