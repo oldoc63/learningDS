@@ -1,0 +1,132 @@
+
+* What is PCA?
+Learn how, when, and why to use Principal Component Analysis (PCA) as part of the Machine Learning lifecicle.
+
+** Introduction to PCA
+In the world of Machine Learning, any model that we implement will be more valuable when the features are engineered to suit the question we're trying to answer. With many datasets, we can simply include all available features, which give us the full picture about our observations. For example, it's straightforward to see a correlation between height and weight for a patient dataset. Some datasets, however, have very large numbers of features. If our example patient dataset expanded to include 20 different features, how would we visualize and correlate this data? When it comes time to actually process the data and train the model, we often hit computational or complexity limits. How do we leverage correlations within the data to make fewer, better features without losing the information included in the dataset?
+
+Situations like this are a great use case for implementing Principal Component Analysis. PCA is a technique where we can reduce the number of features in a dataset without losing any of the information we have. Sounds pretty great right? This article will cover various aspects of PCA, so let's dive in.
+
+** Laying the groundwork for PCA
+Before we dive into the specifics of PCA, we need to understand the importance of information. In particular, we need to understand how variance plays into the level of information in a dataset. For the purposes of this article, we will be looking at a synthetic dataset about local pizza stores. Let's see what data we have:
+
+#+begin_src python
+  import pandas as pd
+  import matplotlib.pyplot as plt
+
+  df = pd.read_csv('pizza.csv')
+
+  print(df.columns)
+#+end_src
+
+Output:
+
+#+begin_src python
+Index(['revenue', 'total_customers', 'amt_flour', 'amt_tomatoes',
+       'amt_cheese'],
+      dtype='object')
+#+end_src
+
+Each row of data pertains to an individual store, and gives information about how the store is doing overall with inventory and sales. Suppose we look at just ~revenue~ and ~total_customers~, and we see the following information:
+
+revenue 	total_customers
+12345 	500
+13425 	500
+10872 	500
+9561 	500
+
+In this scenario, the value for ~total_customers~ has a value of 500 for every row. While every row has a value, an therefore has /data/, this column does not provide a lot of /information/, due to the lack of variance in the values. While we could include this feature in our downstream analytics, it doesn't provide any additional value, because each row would have the same data.
+
+Now let's look at what the real data shows us for these two columns:
+
+#+begin_src python
+df[['revenue', 'total_customers']].head()
+#+end_src
+
+Output:
+
+#+begin_src python
+    revenue      total_customers
+0   9931.860710     615.336682
+1   12397.798907    725.440590
+2   11983.079340    630.987797
+3   13910.984353    746.264763
+4   13083.859701    689.060436
+
+#+end_src
+
+As we can see, the real dataset has far more variance in these two columns. Since each feature has significant variance, these features provide valuable information about our observations, and should therefore be included in our analysis.
+
+Variance alone is one indicator of the level of information in a dataset, but is not he only factor. To expand on the idea of variance within a dataset, we will look at the /Coefficient of Variance/, or /CV/ for short. The premise here is that variance must be taken into context with the central tendencies of that dataset. For example, if a dataset has a variance of 5, that will mean very different things if the mean is 2 vs. a dataset with a mean of 100.
+
+Now, let's actually calculate the Coefficient of Variance for each of our columns.
+
+#+begin_src python
+  import numpy as np
+
+  #define function to calculate cv
+  cv = lambda x: np.std(x, ddof=1) / np.mean(x) * 100
+
+  print(df.apply(cv))
+#+end_src
+
+Output:
+
+#+begin_src python
+revenue            10.001034
+total_customers     5.138628
+amt_flour           9.128946
+amt_tomatoes        9.926973
+amt_cheese          6.401035
+dtype: float64
+#+end_src
+
+All of the features in this dataset have enough variance where they will be useful in analysis. Since variance is an important factor to PCA, these features will ultimately be ordered by the level of information (i.e. variance) they have. For this dataset, that means, in order of importance, PCA will look at revenue, ~amt_tomatoes~, ~amt_flour~, ~amt_cheese~, ant then ~total_customers~. While the results of PCA won't resemble our original features, they will be a mathematical representation of the information contained in the original features, which has value for analytical purposes.
+
+*** Coding Question
+The kind of information we have can vary from dataset to dataset, and thus can the Coefficient of Variance. Use what you just learned on a new set of synthetic pizza store data, pizza_new.csv. Calculate the Coefficients of Variance for each feature in the dataset. Then, create a ranked order Python list for the features in the dataset in terms of information for PCA, from most important to least important.
+
+#+begin_src python
+  import numpy as np
+  import pandas as pd
+
+  # Load in new pizza dataset
+  df = pd.read_csv('pizza_new.csv')
+  df.head()
+
+  # Calculate coefficient of variance for every feature
+  for col in df.columns[1:]:
+      cv = df[col].std() / df[col].mean() * 100
+      print(f'Coefficient of Variation for {col}:{cv:.2f}%')
+
+  # Rank order of importance from highest to lowest (in a list)
+
+  # Create a dictionary to store feature: CV pairs
+  cv_dict = {}
+  for col in df.columns[1:]:
+      cv = df[col].std() / df[col].mean()
+      cv_dict[col] = cv
+
+  # Sort the dictionary in descending order of CV values
+  ranked_features = sorted(cv_dict, key=cv_dict.get, reverse=True)
+
+  print("\nRanked Features for PCA (most to least important):")
+  for feature in ranked_features:
+      print(f"- {feature}")
+#+end_src
+
+Output:
+
+#+begin_src python
+Coefficient of Variation for total_customers: 0.27%
+Coefficient of Variation for amt_flour: 7.66%
+Coefficient of Variation for amt_tomatoes: 0.76%
+Coefficient of Variation for amt_cheese: 1.10%
+
+Ranked Features for PCA (most to least important):
+- amt_flour
+- amt_cheese
+- amt_tomatoes
+- total_customers
+
+#+end_src
