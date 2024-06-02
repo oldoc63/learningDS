@@ -130,3 +130,54 @@ Ranked Features for PCA (most to least important):
 - total_customers
 
 #+end_src
+
+** The Math Behind PCA
+At this point, we need to address how we can actually take information from multiple features and distill it down into a smaller number of features. Let's dive deeper into [[https://youtu.be/FgakZw6K1QQ?si=WBdpS3Fx6P_BB5gM][each of the steps that lead to PCA]].
+
+*** Data Matrix
+First, we need to isolate a /Data Matrix/, another name for a dataset. This data matrix holds all of the features and information that we are interested in. Many datasets will have columns that hold information (i.e. features), and other columns taht we want to predict (i.e. labels). Using our previous pizza dataset, we have 5 featrues in our data matrix.
+
+|      ~revenue~ | ~total_customers~ | ~amt_flour~ | ~amt_tomatoes~ | ~amt_cheese~ |
+|--------------+-----------------+-----------+--------------+------------|
+|  9931.860710 |      615.336682 | 37.662830 |   174.102712 | 139.402208 |
+| 12397.798907 |      725.440590 | 44.424509 |   239.119556 | 168.425842 |
+| 11983.079340 |      630.987797 | 40.259276 |   224.084121 | 146.612426 |
+| 13910.984353 |      746.264763 | 43.633485 |   227.096619 | 170.726464 |
+| 13083.859701 |      689.060436 | 48.964844 |   221.383478 | 154.786070 |
+
+*** Covariance Matrix
+From here, the next step of PCA is to calculate a /covariance matrix/. Essentially, a covariance matrix is calculatin how much a feature changes with changes in every other feature, i.e., we're looking at the relative variance between any two features. Mathematically, the formula for covariance between two features ~x~ and ~y~ is:
+
+$$
+Cov(X, Y) = \frac{1}{n - 1} \sum_{i = 1}^n (X_i - \bar{X})(Y_i - \bar{Y})
+$$
+
+We will do this equation for the relationship between each of our features, ultimately resulting in a covariance matrix that shows relationships for the entire dataset. Simplifying our example dataset, we could think about our pizza dataset having five individual features with the names a, b, c, d, and e. Our ultimate covariance matrix, thus, would end up looking like this:
+
+[[./covariance_matrix.png]]
+
+Luckily, with the pandas package, we can calculate a covariance matrix with the .cov() method. For our pizza dataset, this results in the following:
+
+#+begin_src python
+    revenue     total_customers amt_flour   amt_tomatoes    amt_cheese
+revenue     1.563517e+06    31853.053820    3713.664277 19980.869509    9152.568482
+total_customers 3.185305e+04    1295.096885 105.909335  577.443015  256.641069
+amt_flour   3.713664e+03    105.909335  16.894551   66.165738   29.130750
+amt_tomatoes    1.998087e+04    577.443015  66.165738   500.715936  162.221734
+amt_cheese  9.152568e+03    256.641069  29.130750   162.221734  105.370280
+#+end_src
+
+One importan point to note is that along the primary diagonal (from top-left to bottom-right), we see the same variance values that we calculated for each individual column earlier on.
+
+*** Matrix Factorization, Eigenvalues, and Eigenvectors
+We now have a matrix of variance values for our features. The next step in PCA revolves around /matrix factorization/. Without going into too much detail, our goal with matrix factorization is to find a pair of smaller matrices whose product would equal our covariance matrix. Another way of thinking about it: we want to find a smaller matrix that captures the majority of our information.
+
+An important part of this matrix factorization are /Eigenvectors./ Eigenvectors are vectors (mathematical concepts that have direction and magnitude) that do not change direction when a transformation is applied to them, In the context of data matrices, these eigenvectors give us a direction to "rotate" the dataset in n-dimensional space so we can look at the entire dataset from a simplified perspective. The /eigenvalues/ are related to the relative variation described by each principal component.
+
+For a matrix A, the eigenvectors and eigenvalues are the solution to the following equation:
+
+$$
+det(A - \lambda I)
+$$
+
+After some linear algebra, for our covariance matrix, we are looking for the solution to the matrix, which will be our eigenvectors and eigenvalues.
