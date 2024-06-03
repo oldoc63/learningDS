@@ -181,3 +181,80 @@ det(A - \lambda I)
 $$
 
 After some linear algebra, for our covariance matrix, we are looking for the solution to the matrix, which will be our eigenvectors and eigenvalues.
+
+** Principal Components
+All of the underlying math behind PCA results in /principal components/, but what exactly are they? Principal components are a linear combination of all the input features from the original dataset. By using the eigenvectors we calculated earlier, we can "rotate" our dataset features from an n-dimensional space into a 2-dimensional space, which is easier for us to understand and analyse.
+
+To illustrate this point, let's return to our pizza dataset. We can observe the correlation between our ~revenue~ and ~total_customers features~.
+
+#+begin_src python
+sns.scatterplot(x='total_customers', y='revenue', data=df)
+#+end_src
+
+[[./revenue_total_customers.png]]
+
+We can see a positive correlation between these two features, and could use that information to guide any analysis we perform. We can also do correlation plots for every combination of features, like so:
+
+#+begin_src python
+sns.pairplot(df)
+#+end_src
+
+[[./correlation_pair_plot.png]]
+
+Each individual combination of features will have its own correlation and variance, both of which provide valuable information about that relationship. When comparing two features at a time, these relationships are more understandable. If we wanted to, however, look at all of the feature relationships and information at once, it would be very difficult to decipher, as we cannot visualize data in a 5-dimensional space.
+
+By using PCA, however, we can reduce the dimensionality of our dataset into a 2-dimensional dataset, allowing for better visualization. Let's see the result.
+
+#+begin_src python
+  from sklearn.decomposition import PCA
+
+  pca = PCA(n_components=2)
+  pca_array = pca.fit_transform(df)
+#+end_src
+
+Output:
+
+#+begin_src python
+array([[-2572.64663126,   -37.43225524],
+       [ -104.21066949,    31.54952593],
+       [ -521.0563251 ,   -54.19045713],
+       ...,
+       [ 1429.58053669,    -5.98229122],
+       [-3550.23561932,    23.8935932 ],
+       [ -481.85213117,   -34.14891261]])
+
+#+end_src
+
+As we can see, by running PCA on our original dataset, we were able to take our 5 features and reduce the dimensions down to 2 principal components. With 2 dimensions, we can now plot the data on a single scatterplot:
+
+#+begin_src python
+sns.scatterplot(pca_array[:,0], pca_array[:,1])
+#+end_src
+
+[[./PCA_2D_plot.png]]
+
+While it can be difficult to interpret what this new data matrix is showing us, it does hold valuable information that can be used in a variety of contexts. The axes of this chart are the two most impactful principal components as part of our analysis, and were the two that we decided to keep.
+
+*** Fill in the blank
+
+The below statements outline the overall process of PCA. Fill in the blanks with the correct terms to validate your understanding.
+
+For a given dataset, we start by calculating a covariance matrix for all of our features.
+
+Afterwards, we perform matrix factorization, which will separate out the dataset and give us two results:
+
+    1) Eigenvectors, also known as Principal Components, which define the direction, or "rotation", of our new data space
+
+    2) Eigenvalues, which determine the magnitude of that new data space
+
+** The How, Where, and Why of PCA
+PCA serves an important role in many different parts of data science and analytics in general, as this process allows us to maximize the amount of information we can extract from data while reducing computational time down the line. We just saw a common use case for PCA with our pizza dataset. We took a higher dimensional dataset (5 dimensions in our case), and reduced it down to 2 dimensions, This two-dimensional dataset can now be an input to a variety of Machine Learning models. For example, we could use this new dataset as part of a forecasting model, or perform linear regression. These techniques would have been much more difficult prior to performing PCA.
+
+PCA is also inherently an unsupervised learning algorithm and can be used to identify clusters in data on its own. Very similar to the popular k-means algorithms, PCA will look at overall similarities between the different features in a dataset. When we set the number of principal components to keep, we are defining the number of similar "rotations" of our dataset, which will act very much like a cluster of their own. Typically, many practitioners will implement PCA as a precursor to other clustering algorithms to augment the accuracy, but it is an interesting application to do clustering with PCA alone!
+
+Another, very powerful, application of PCA is with image processing. Images hold a vast amount of information in each file, and analyzing this information can have very useful applications. Image classification, for example, uses algorithms to detect the subject of an image, or find a particular object within the image. Overall, it can be very costly to process image data, due to the high dimensionality it has. By applying PCA, however, practioners can reduce the number of features for the image with minimal information loss and continue their processing.
+
+** Summary
+In this article, you learned the underlying mathematics behind Principal Component Analysis (PCA) and got a bird's eye view of how, when, and where to implement PCA. Principal Component Analysis is a powerful tool that provides a mechanism to reduce dimensionality and simplify datasets without losing the valuable information they inherently contain. The following image summarizes the different applications of PCA and we are now ready to delve into these in detail.
+
+[[./PCA_Summary.png]]
