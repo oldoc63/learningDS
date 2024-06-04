@@ -258,3 +258,65 @@ Another, very powerful, application of PCA is with image processing. Images hold
 In this article, you learned the underlying mathematics behind Principal Component Analysis (PCA) and got a bird's eye view of how, when, and where to implement PCA. Principal Component Analysis is a powerful tool that provides a mechanism to reduce dimensionality and simplify datasets without losing the valuable information they inherently contain. The following image summarizes the different applications of PCA and we are now ready to delve into these in detail.
 
 [[./PCA_Summary.png]]
+
+** Quiz
+
+*** Question 1
+What is the main goal of PCA?
+
+    - To get better features without losing information
+
+*** Question 2
+Principal Components, or eigenvectors, determine:
+
+    - the direction/rotation for a data space
+      Principal components define the new dimensions for a dataset after PCA
+
+*** Which of the following is not a good use case for PCA?
+
+    - Image Processing
+
+    - Dimensionality Reduction
+
+    - *Dimensionality Expansion*
+
+    - Cluster Analysis
+
+*** Which of these statistical concepts is the foundation for PCA?
+
+    - Covariance
+
+*** Which of the following shows the correct format for a covariance matrix for a dataset with three features: x, y, and z?
+
+    - A covariant matrix starts with variance in relation to the first feature, then continues from left to right, top to bottom with the other features.
+
+
+*** We have a dataset called data, and would like to perform PCA on it. Fill in the code to reduce our dataset down to 3 dimensions, and then have the PCA model modify the dataset.
+
+#+begin_src python
+  pca = PCA(n_components=3)
+  new_data = pca.fit_transform(data)
+#+end_src
+
+*** For a given dataset, we can calculate the following Coefficients of Variance:
+
+#+begin_src python
+price            1.034042
+units     2.216437
+unit_cost           1.040315
+unit_profit        1.608712
+
+#+end_src
+
+Determine the most important and least important features for PCA.
+
+#+begin_src python
+  Most important: units
+
+  Least importan: price
+#+end_src
+
+When using PCA, you can only produce a resulting dataset with two dimensions.
+
+False
+PCA allows for dimension reduction to any number of dimensions. 2 dimensions is the most common, as it allows for standard plotting techniques, but it does not restrict that capability.
