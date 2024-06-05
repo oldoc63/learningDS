@@ -1,0 +1,76 @@
+
+* Introduction to Implementing PCA
+In this lesson, we will be implementing Principal Component Analysis (PCA) using the Python libraries NumPy and scikit-learn.
+
+The motivation of Principal Component Analysis (PCA) is to find a new set of features that are oredered by the amount of variation (and therefore, information) they contain. We can then select a subset of these PCA features. This leaves us with lower-dimensional data that still retains most of the information contained in the larger dataset.
+
+In this lesson, we will:
+
+    - Implement PCA in Numpy step-by-step
+
+    - Implement PCA in scikit-learn using only a few lines of code
+
+    - Use principal components to train a machine learning model
+
+    - Visualize principal components using image data
+
+For the next few exercises, we will use a dataset that describes several types of dry beans separated into seven categories.
+
+We will begin by taking a look at the features that describe different categories of beans.
+
+** Task 1
+A file named ~Dry_Bean.csv~ is loaded for you as a Pandas DataFrame named ~df~. Print the head of the DataFrame. Note that all the columns are numerical except for the ~Class~ column.
+
+** Task 2
+Extract the numerical features from ~df~ by dropping the ~'Class'~ column, and save them as a new DataFrame called ~data_matrix~.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+
+  # Read de csv data as a DataFrame
+  df = pd.read_csv('Dry_Bean.csv')
+
+  # Remove null and na values
+  df.dropna()
+
+  # Print the DataFrame head
+  print(df.head())
+
+  # Extract the numerical columns
+  data_matrix = df.drop(columns='Class')
+
+  # Extract the classes
+  classes = df['Class']
+
+  # Print data_matrix
+  print(data_matrix)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+    Area  Perimeter  MajorAxisLength  ...  ShapeFactor3  ShapeFactor4  Class
+0  28395    610.291       208.178117  ...      0.834222      0.998724  SEKER
+1  28734    638.018       200.524796  ...      0.909851      0.998430  SEKER
+2  29380    624.110       212.826130  ...      0.825871      0.999066  SEKER
+3  30008    645.884       210.557999  ...      0.861794      0.994199  SEKER
+4  30140    620.134       201.847882  ...      0.941900      0.999166  SEKER
+
+[5 rows x 17 columns]
+        Area  Perimeter  ...  ShapeFactor3  ShapeFactor4
+0      28395    610.291  ...      0.834222      0.998724
+1      28734    638.018  ...      0.909851      0.998430
+2      29380    624.110  ...      0.825871      0.999066
+3      30008    645.884  ...      0.861794      0.994199
+4      30140    620.134  ...      0.941900      0.999166
+...      ...        ...  ...           ...           ...
+13606  42097    759.696  ...      0.642988      0.998385
+13607  42101    757.499  ...      0.676099      0.998219
+13608  42139    759.321  ...      0.676884      0.996767
+13609  42147    763.779  ...      0.668237      0.995222
+13610  42159    772.237  ...      0.616221      0.998180
+
+[13611 rows x 16 columns]
+#+end_example
