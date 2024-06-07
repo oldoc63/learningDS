@@ -239,11 +239,139 @@ Then, generate a plot of the cumulative proportion of information explained. Not
   plt.vlines(x=3, ymin=0, ymax=1)
   plt.title('Cumulative Information percentages')
   plt.xlabel('Principal Axes')
-  plt.xticks(np.arange(1,len(info_prop)+1))
+  plt.xticks(np.range(1,len(info_prop)+1))
   plt.ylabel('Cumulative Proportion of Variance Explained')
   plt.show()
-
 
 #+end_src
 
 #+RESULTS:
+
+* Implementing PCA using Scikit-Learn
+Another way to perform PCA is using the scikit-learn module ~sklearn.decomposition.PCA~.
+
+The steps to perform PCA using this method are:
+
+    - Standardize the data matrix. This is done by subtracting the mean and dividing by the standard deviation of each column vector.
+
+    #+begin_src python
+      mean = data.mean(axis=0)
+      sttd = data.std(axis=0)
+      data_standardized = (data - mean) / sttd
+    #+end_src
+
+    - Perform eigendecomposition by fitting the standardized data. We can access the eigenvectors using the ~components_~ attribute an the proportional sizes of the eigenvalues using the ~explained_variance_ratio_~ attribute.
+
+    #+begin_src python
+      pca = PCA()
+
+      components = pca.fit(data_standardized).components_
+
+      components = pd.DataFrame(components).transpose()
+
+      components.index = data_matrix.columns
+
+      print(components)
+
+    #+end_src
+
+    #+begin_src python
+      var_ratio = pca.explained_variance_ratio_
+
+      var_ratio = pd.DataFrame(var_ratio).transpose()
+
+      print(var_ratio)
+
+    #+end_src
+
+This module has many advantages over the NumPy method, including a number of different solvers to calculate the principal axes. This can greatly improve the quality of the results.
+
+** Task 1
+The data matrix is loaded for you as ~data_matrix~. Standardize all of the columns in the data matrix asn save  the result as ~data_matrix_standardized~, then print out the first 5 rows to inspect it.
+
+*Hint*
+Standardize the ~data_matrix~ by subtracting the mean and dividing by the standard deviation, (~data_matrix - mean / sttd~).
+
+** Task 2
+Will we now use the ~PCA~ module from ~sklearn.decomposition.PCA~ to calculate the principal components (eigenvectors) for the standardized data matrix.
+
+Fit and calculate the principal components using the ~fit()~ method and ~components_~ attribute. Save the results as components and then uncomment the code to transpose, index, and print the components/eigenvectors.
+
+You should see 16 eigenvectors. Each one should have a value (or weight) for the each of the 16 original features.
+
+*Hint*
+Use ~pca.fit(data_matrix_standardized)~ to calculate principal components for the standardized data. Then use the ~.components_~ attribute to extract the components.
+
+** Task 3
+Using the same ~pca~ object from the previous checkpoint, we can retrieve the variance (information) ratios for each principal component using the ~explained_variance_ratio_~ property.
+
+Save the variance ratios as ~var_ratio~ and then save the values as DataFrame and print them out.
+
+Are they consistent with our original finding that the first four components account for about 95% of the information un the data?
+
+*Hint*
+The ~explained_variance_ratio~ is the percentage of variance explained by each of the selected components.
+
+** Script.py
+
+#+begin_src python :results output
+  import numpy as np
+  import pandas as pd
+  from sklearn.decomposition import PCA
+
+  data_matrix = pd.read_csv('data_matrix.csv')
+
+  # 1. Standardize the data matrix
+  mean = data_matrix.mean(axis=0)
+  sttd = data_matrix.std(axis=0)
+  data_matrix_standardized = (data_matrix - mean) / sttd
+  print(data_matrix_standardized.head())
+
+  # 2. Find the principal components
+  pca = PCA()
+  components = pca.fit(data_matrix_standardized).components_
+  components = pd.DataFrame(components).transpose()
+  components.index = data_matrix.columns
+  print(components)
+
+  # 3. Calculate the variance/info ratios
+  var_ratio = pca.explained_variance_ratio_
+  var_ratio = pd.DataFrame(var_ratio).transpose()
+  print(var_ratio)
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+       Area  Perimeter  ...  ShapeFactor3  ShapeFactor4
+0 -0.840718  -1.143277  ...      1.925653      0.838340
+1 -0.829157  -1.013887  ...      2.689603      0.771110
+2 -0.807128  -1.078789  ...      1.841288      0.916721
+3 -0.785712  -0.977179  ...      2.204169     -0.197978
+4 -0.781210  -1.097344  ...      3.013352      0.939605
+
+[5 rows x 16 columns]
+                       0         1         2   ...        13        14        15
+Area             0.282458  0.245882 -0.061447  ... -0.655728  0.133190  0.231436
+Perimeter        0.310891  0.179303 -0.018853  ... -0.081390  0.012658  0.014614
+MajorAxisLength  0.325824  0.100757 -0.084692  ...  0.186251  0.174432  0.346019
+MinorAxisLength  0.236199  0.343461  0.007500  ...  0.183096  0.155445  0.331749
+AspectRation     0.229298 -0.330844 -0.169058  ... -0.026666  0.102810 -0.123576
+Eccentricity     0.231526 -0.319434 -0.163042  ... -0.000046 -0.042306  0.014793
+ConvexArea       0.283200  0.244630 -0.053649  ...  0.648622 -0.130974 -0.224753
+EquivDiameter    0.297484  0.222802 -0.049914  ... -0.266409 -0.332488 -0.675589
+Extent          -0.059808  0.220619 -0.085258  ...  0.000057 -0.000001 -0.000005
+Solidity        -0.143016  0.103322 -0.738670  ...  0.007671 -0.001387 -0.002115
+roundness       -0.248165  0.214805 -0.163325  ... -0.014669  0.002375  0.001894
+Compactness     -0.238378  0.328914  0.149701  ... -0.002026  0.652516 -0.372516
+ShapeFactor1    -0.221319 -0.332549 -0.032623  ... -0.004011 -0.005468 -0.011285
+ShapeFactor2    -0.314625  0.129419  0.120077  ...  0.018504  0.005545  0.014668
+ShapeFactor3    -0.238983  0.327522  0.149570  ... -0.046184 -0.601335  0.234065
+ShapeFactor4    -0.198009  0.100061 -0.536903  ...  0.004297  0.000616  0.010377
+
+[16 rows x 16 columns]
+         0        1         2   ...            13            14            15
+0  0.554664  0.26431  0.080066  ...  6.256417e-07  1.341321e-07  1.115495e-07
+
+[1 rows x 16 columns]
+#+end_example
