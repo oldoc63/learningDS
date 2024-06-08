@@ -530,3 +530,68 @@ Notice that the score for the model using the first 4 principal components is hi
 #+RESULTS:
 : Score for model with 4 PCA features: 0.8472840605520926
 : Score for the model with original features: 0.9171861086375779
+
+* PCA for images 1
+Another way to show the inner workings of PCA is to use an image dataset. An image can be represented as a row in a data matrix, where each feature corresponds to the intensity of a pixel.
+
+In this and the following exercise, we will be using the Olivetti Faces image dataset. We will begin by standardizing the images, and then observing the images of faces themselves.
+
+In the next exercise, we will then transform the original data using PCA and re-plot the images using a subset of the principal components. This will allow us to visualize the mechanism by which PCA retains information in the data while reducing the dimensionality.
+
+** Task 1
+Let's start by downloading the Olivetti Faces dataset from scikit-learn. Standardize the image dataset by subtracting the mean and dividing by the standard deviation.
+
+*Hint*
+Standardize a matrix or DataFrame by subtracting the mean and dividing by the standard deviation, (a_matrix - mean) / sttd.
+
+** Task 2
+Each row from the faces dataset is a flattened image. Each feature is a pixel in the image. Find the side length of each square image by taking the square root of the number of features (pixels). Print the number of pixels per image and per side-length.
+
+*Hint*
+Use the NumPy method of ~np.sqrt~ to find the square root of a number.
+
+** Task 3
+Plot the faces
+
+** Script.py
+
+#+begin_src python :results output
+  import numpy as np
+  from sklearn import datasets
+  import matplotlib.pyplot as plt
+
+  # Download the data from sklearn's datasets
+  faces = datasets.fetch_olivetti_faces()['data']
+
+  # 1. Standardize the images using the mean and standard deviation
+  faces_mean = faces.mean(axis=0)
+  faces_std = faces.std(axis=0)
+  faces_standardized = (faces - faces_mean) / faces_std
+
+  # 2. Find the side length of a square image
+  n_images, n_features = faces_standardized.shape
+  side_length = int(np.sqrt(n_features))
+  print(f'Number of features(pixels) per image: {n_features}')
+  print(f'Square image side length: {side_length}')
+
+  # Create an empty 10x8 plot
+  fig = plt.figure(figsize=(10, 8))
+
+  # Observe the first 15 images
+  for i in range(15):
+      # Create subplot, remove x and y ticks, and add title
+      ax = fig.add_subplot(3, 5, i + 1, xticks=[], yticks=[])
+      ax.set_title(f'Image of Face: #{i}')
+      # Get an image from a row based on the current value of i
+      face_image = faces_standardized[i]
+      # Reshape this image into side_length x side_length
+      face_image_reshaped = face_image.reshape(side_length, side_length)
+      # Show the image
+      ax.imshow(face_image_reshaped, cmap=plt.cm.bone)
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+: Number of features(pixels) per image: 4096
+: Square image side length: 64
