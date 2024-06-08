@@ -595,3 +595,80 @@ Plot the faces
 #+RESULTS:
 : Number of features(pixels) per image: 4096
 : Square image side length: 64
+
+* PCA for images 2
+Now that we have cleaned up the data, we can perform PCA to retrieve the eigenvalues and eigenvectors.
+
+This can be useful in understanding how PCA works! We can visualize the eigenvectors by plotting them. They actually have a name: ~eigenfaces~. The eigenfaces are the building blocks for all the other faces in te data.
+
+We can also visualize the dimensionality reduction that occurs when we transform the original data using a smaller number of principal components. In the code editor, we've provided you with code to:
+
+    - Plot the eigenfaces
+
+    - Plot the reconstructed faces using a smaller number of transformed features. To start, we've used 400 principal components -only 0.9% of the original number of features (pixels)!
+
+** Task 1
+First, inspect the eigenfaces. Notice how they each depict some of the common distintive features in the various faces.
+
+Now, scroll down in the plotting output to view the reconstructed faces. These were constructed using only 400 transformed features. Notice that they look almost identical to the original faces, depite requiring only .9% as much data to store them!
+
+** Task 2
+Now, change the number of components to 40 instead of 400 and press "Run". Scroll down to vier the reconstructed faces. Notice how we get a decent reconstruction, but lose some detail and clarity by reducing the feature space this much (only 0.09% of the original).
+
+** Script.py
+
+#+begin_src python :results output
+  import numpy as np
+  import pandas as pd
+  from sklearn.decomposition import PCA
+  import matplotlib.pyplot as plt
+
+  faces_standardized = pd.read_csv('./faces_standardized.csv').values
+
+  # 1. Instantiate a PCA object and fit the standardized faces dataset
+  pca = PCA(n_components=400)
+  pca.fit(faces_standardized)
+
+  # 2. Retrieve and plot eigenvectors (eigenfaces)
+  eigenfaces = pca.components_
+
+  fig = plt.figure(figsize=(10, 8))
+  fig.suptitle('Eigenvectors of Images (Eigenfaces)')
+
+  for i in range(15):
+      # Create subplot, remove x and y ticks, and add title
+      ax = fig.add_subplot(3, 5, i + 1, xticks=[], yticks=[])
+      ax.set_title(f'Eigenface: #{i}')
+
+      # Get an eigenvector from the curren value of i
+      eigenface = eigenfaces[i]
+
+      # Reshape this image into 64x64 since flattened shape was 4096
+      eigenface_reshaped = eigenface.reshape(64, 64)
+
+      # Show the image
+      ax.imshow(eigenface_reshaped, cmap=plt.cm.bone)
+  plt.show()
+
+  # 3. Reconstruct images from the compressed principal components
+  # The principal components are usually calculated using `faces_standardized @ principal_axes` or the `.transform` method
+  principal_components = pca.transform(faces_standardized)
+
+  # The `inverse_transform` method allows for reconstruction of images in the original size
+  faces_reconstructed = pca.inverse_transform(principal_components)
+
+  # Plot the reconstructed images
+  fig = plt.figure(figsize=(10, 8))
+  fig.suptitle('Reconstructed Images from Principal Components')
+  for i in range(15):
+      ax = fig.add_subplot(3, 5, i + 1, xticks=[], yticks=[])
+      ax.set_title(f'Reconstructed: {i}')
+
+      reconstructed_face = faces_reconstructed[i]
+      reconstructed_face_reshaped = reconstructed_face.reshape(64, 64)
+      ax.imshow(reconstructed_face_reshaped, cmap=plt.cm.bone)
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
