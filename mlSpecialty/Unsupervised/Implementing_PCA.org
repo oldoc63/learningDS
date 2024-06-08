@@ -375,3 +375,84 @@ ShapeFactor4    -0.198009  0.100061 -0.536903  ...  0.004297  0.000616  0.010377
 
 [1 rows x 16 columns]
 #+end_example
+
+* Projecting the data onto the principal axes
+Once we have performed PCA and obtained the eigenvectors, we can use them to project the data onto the first principal axes. We can do this by taking the dot product of the data and eigenvectors, or by using the ~sklearn.decomposition.PCA~ module as follows:
+
+#+begin_src python
+  from sklearn.decomposition import PCA
+
+  # only keep 3 PCs
+  pca = PCA(n_components = 3)
+
+  # transform the data using the first 3 PCs
+  data_pcomp = pca.fit_transform(data_standardized)
+
+  # transform into a dataframe
+  data_pcomp = pd.DataFrame(data_pcomp)
+
+  # rename columns
+  data_pcomp.columns = ['PC1', 'PC2', 'PC3']
+
+  # print the transformed data
+  print(data_pcomp.head())
+#+end_src
+
+[[./PCs.png]]
+
+Once we have the transformed data, we can look at a scatter plot of the first two transformed features using seaborn or matplotlib. This allows us to view relationships between multiple features at once in 2D or 3D space. Often, the first 2-3 principal components result in clustering of the data.
+
+Below, we've plotted the first two principal components for a dataset of measurements for three different penguin species:
+
+#+begin_src python
+  sns.lmplot(x='PC1', y='PC2', data=data_pcomp, hue='species', fit_reg=False)
+  plt.show()
+#+end_src
+
+[[./PCs_penguin_species.png]]
+
+** Task 1
+Let's only keep the first four principal components because they account for 95% of the information in the data.
+
+Use the ~.fit_transform()~ method to transform the standardized data matrix into the new features and save the result as ~data_pcomp~. Then save as a dataframe, re-label, and print the transformed data.
+
+*Hint*
+To specify the number of principal axes, you can use the ~n_components~ argument when initializing the ~sklearn.decomposition.PCA~ class, as in ~PCA(n_components=2)~. Then use the ~.fit_transform()~ method to transform the data.
+
+** Task 2
+Create a seaborn scatter plot of the first two components. Do you notice any clustering occurring?
+
+** Script.py
+
+#+begin_src python :results output
+  import numpy as np
+  import pandas as pd
+  from sklearn.decomposition import PCA
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  data_matrix_standardized = pd.read_csv('./data_matrix_standardized.csv')
+
+  classes = pd.read_csv('./classes.csv')['Class']
+
+  # 1. Transform the data into 4 new features using the first PCs
+  pca = PCA(n_components=4)
+  data_pcomp = pca.fit_transform(data_matrix_standardized)
+  data_pcomp = pd.DataFrame(data_pcomp)
+  data_pcomp.columns = ['PC1', 'PC2', 'PC3', 'PC4']
+  print(data_pcomp.head())
+
+  # 2. Plot the first two principal components by the bean classes
+  data_pcomp['bean_classes'] = classes
+  sns.lmplot(x='PC1', y='PC2', data=data_pcomp, hue='bean_classes', fit_reg=False)
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+:         PC1       PC2       PC3       PC4
+: 0 -4.981378  1.824630  0.748993 -0.390797
+: 1 -5.436593  2.932257  2.182294 -0.431944
+: 2 -4.757913  1.826817  0.514019 -0.125849
+: 3 -4.300383  2.003587  3.554316  0.082961
+: 4 -6.349107  4.088055  1.179156 -0.830327
