@@ -672,3 +672,16 @@ Now, change the number of components to 40 instead of 400 and press "Run". Scrol
 #+end_src
 
 #+RESULTS:
+
+* Review
+We have seen how PCA can be implemented using Numpy and scikit-learn. In particular, we have seen how:
+
+    - *Implementation*: scikit-learn provides a more in-depth set of methods and attributes that extend the number of ways to perform PCA or display the percentage of variance for each principal axis.
+
+    - *Dimensionality reduction*: We visualized the data projected onto the principal axes, known as principal components.
+
+    - *Image classification*: We performed PCA on images of faces to visually understand how principal components still retain nearly all the information in the original dataset.
+
+    - *Improve algorithmic speed/accuracy*: Using principal components as input to a classifier, we observed how we could achieve equal or better results with lower dimensional data. Having lower dimensionality also speeds the training.
+
+      [[./PCA_Review.png]]
