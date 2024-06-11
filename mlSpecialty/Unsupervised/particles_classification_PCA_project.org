@@ -39,6 +39,10 @@ Divide the eigenvalues by the sum of the eigenvalues to get the normalized propo
 *** Task 6
 Find the cumulative percentages of the ordered eigenvectors.
 
+*Hint*
+Use the NumPy method ~np.cumsum(information_percents)~ to find the cumulative percentages.
+
+
 *** Script_1.py
 
 #+begin_src python :results output
@@ -156,3 +160,25 @@ Task 4:
 Eigenvalues length: 10, Original Number of Features: 10
 (10,) (10, 10)
 #+end_example
+
+** Performing PCA
+
+*** Task 7
+Recall that PCA uses the standardized matrix, which scales for the mean and standard deviation. Calculate the standardized data matrix.
+
+
+*** Script_2.py
+
+#+begin_src python :results output
+  import numpy as np
+  import pandas as pd
+  from sklearn.decomposition import PCA
+  from sklearn.svm import LinearSVC
+  from sklearn.model_selection import train_test_split
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+
+#+end_src
+
+#+RESULTS:
