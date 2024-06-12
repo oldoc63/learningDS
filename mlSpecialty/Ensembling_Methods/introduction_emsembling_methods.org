@@ -1,0 +1,38 @@
+
+* Introduction to Ensembling Methods
+An introduction to Ensembling Methods in Machine Learning.
+
+** Introduction
+Why use one machine learning model to solve a problem when you can use many at the same time? *Ensemble learning* is the process of building a complex machine learning model by combining multiple base estimators as building bloks. The main goals for employing ensemble methods are to end up with a resultan machine learnining model that is more performant and more robuts than its components.
+
+** Base estimators
+In ensembling, often the base models that are chosen tend to underachieve on their own and are typically referred to as *weak learners*. The reason this is preferable is to have the model implementation be computationally efficient. Combining strong learners doesn't necessarily make the resultant ensembled model more performant so one might as well choose learners that cost less computationally.
+
+What makes a model a weak learner? There are many ways in which a base model can be considered weak. For example, it can have high bias or high variance. The nature of the weakness of the base model is typically taken into consideration and is a design choice when determining the best ensembling method to use.
+
+The basic components of ensemble learning are:
+
+    - Base models that are weak learners
+
+    - An ensembling method that combines the base models to improve performance and robustness
+
+It is possible to have an ensemble model that performs worse than any one of its contributing base estimators. To circunvent this outcome it is important that the base estimators are uncorrelated and independent. Having a higher diversity among the trained base estimators leads to a stronger ensemble model.
+
+Three common ensembling methods in machine learning that will be covered briefly in this article and later on in separate modules are Bagging, Boosting, and Stacking.
+
+[[./Bagging_Boosting.png]]
+
+** Bagging
+As the name suggest, *B* ootstrap **AGG* regat *ING* (also known as Bagging) is an ensemble method that combines the concepts of bootstrapping and aggregation. Bagging can be used for both classification and regression problems. Bagging methods use weak learners as base models that are complex and tend to suffer from high variance. Their weakness as models is due to the fact that they are built with only a subset of the available features and on a subset of the training data due to bootstrapping.
+
+Bootstrapping is a method for assessing confidence in nodes of a tree. Create a new data set by resampling characters randomly with replacement. New data set is the same size as the original. Variation found from this method is similar to what would be found by collecting new data sets. Assumes characters evolve independently.
+
+[[./bootstrap.png]]
+
+If the full dataset is represented by the larger cookie in the figure above, each of the candies atop the cookie represents and individual training data instance. The smaller cookies in the Bagging panel represent a bootstrapped sample of the full training dataset. Bootstrapping refers to the method of sampling data with replacement.
+
+Bagging is a learning technique that is done in parallel. Each of the base models is trained independently of the others. Additionally, each base model is trained using only a subset of the original features. Even though the base models tend to be complex, they  overfit to both a subset of the available training data and a subset of the available features. This allows them to be diverse from one another, often leading to a very strong ensemble model when aggregated. In the Bagging panel of the figure, the base models are decision trees that are relatively large and overfit to the bootstrapped subset of data provided to each of them.
+
+Once each of the base models is trained, the method for ensembling tends to be a simple aggregation technique over each of the models; a majority vote for classification problems and averaging for regression problems.
+
+A common implementation of a bagging algorithm that uses decision trees as their base model is the Random Forest. You can learn more about Bagging and Random Forests in the [[https://www.codecademy.com/content-items/8673d2edb2f34e03a2a976adf30d0805/exercises/basics-of-a-random-forest][Random Forest module]].
