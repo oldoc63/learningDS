@@ -36,3 +36,20 @@ Bagging is a learning technique that is done in parallel. Each of the base model
 Once each of the base models is trained, the method for ensembling tends to be a simple aggregation technique over each of the models; a majority vote for classification problems and averaging for regression problems.
 
 A common implementation of a bagging algorithm that uses decision trees as their base model is the Random Forest. You can learn more about Bagging and Random Forests in the [[https://www.codecademy.com/content-items/8673d2edb2f34e03a2a976adf30d0805/exercises/basics-of-a-random-forest][Random Forest module]].
+
+** Boosting
+*Boosting* is an ensemble learning technique where the weak learners are too simple and tend to suffer from high bias.  In the Boosting panel of the figure above, the base model are decision trees with only one level, a decision stump. Decision stumps can only make a decision based off of one feature at a time, causing them to underfit the data substantially.
+
+Boosting is a sequential learning technique where each of the base models builds off the previous model. Each subsequent model aims to improve the performance of the final ensembled model by attempting to fix the errors in the previous stage.
+
+In the Boosting panel of the figure, you may notice that some of the candies atop the cookies are larger than the others. These particular training instances were misclassified by the previous decision stump and are therefore given more weight by the next decision stump. This is one method in which boosting methods may learn from their mistakes.
+
+Two common implementations of the boosting algorithm are Adaptative Boosting and Gradient Boosting. You can learn more about Boosting, including these two implementations, in the [[https://www.codecademy.com/content-items/4803fa74f7484f368527f9f4092a1fff/exercises/boosting?bypass_cache=true&draft=true][Boosting module]].
+
+** Stacking
+
+*Staking* is an extremely flexible ensembling technique where a final model is trained to learn how to best combine a set of base models to make strong predictions. In constrast to bagging and boosting, the base models in stacking do not need to be the same type of learning algorithm.
+
+While bagging and boosting are built with base models that are weak learners, thah does not necessarily have to be the case for stacking. A stacking algorithm can be used to combine decently performing learners as well.
+
+You can learn more about Stacking in the Stacking article.
