@@ -1,0 +1,131 @@
+
+* Bootstrapping
+You might be wondering how the trees in the random forest get created. After all, right now, our algorithm for creating a decision tree is deterministic -given a trainin set, the same tree will be made every time. To make a random forest, we use a technique callled /bagging/ which is short for /bootstrap aggregating/. This exercise will explain bootstrapping, which is a type of sampling method done with *replacement*.
+
+How it works is as follows: every time a decision tree is made, it is created using a different subset of the points in the training set. For example, if our training set had ~1000~ rows in it, we could make a decision tree by picking ~100~ of those rows at random to build the tree. This way, every tree is different, but all trees will still be created from a portion of the training data.
+
+In bootstrapping, we're doing this process /with replacement./ Picture putting all 100 rows in a bag and reaching in and grabbing one row at random. After writing down what row we picked, we put that row back in our bag. This means that when we're picking our 100 random rows, we could pick the same row more than once. In fact, it's very unlikely, but all 100 randomly picked rows could all be the same row! Because we're picking these rows with replacement, there's no need tho shrink our bagged training set from 1000 rows to 100. We can pick 1000 at random, and because we can get the same row more than once, we'll still end up with a unique data set.
+
+We've loaded a dataset about cars here. An important field within the dataset is the safety rating, which tells us how crash/rollover resistant a car is, in other words, how safe the car is. The safety variable can be either "low", "med", or "high". We're going to implement bootstrapping and estimate the average safety rating across the different bootstrapped samples.
+
+Here a list of the variables in the car evaluation dataset.
+
+*Variable*            *Description*
+~safety~ 	     estimated safety of the car (low, med, or high)
+~buying~ 	     buying price
+~maint~ 	             price of the maintenance
+~doors~ 	             number of doors
+~persons~          capacity in terms of persons to carry
+~lug_boot~       the size of luggage boot
+~accep~ 	             evaluation level (unacceptable, acceptable, good, very good)
+
+** Task 1
+We've written some code to print the number of rows in the data set and the distribution of safety ratings of the entire database.
+
+*Hint*
+The safety variable has the same number of observations for each of the three classes.
+
+** Task 2
+Now that we know the safety variable classes are equally distributed, we're going to create a bootstrapped sample using ~.sample()~.
+
+~.sample()~ takes two arguments:
+
+    - number of rows: which is the same size as the dataset
+
+    - ~replace~: set to True because bootstrapping is sampling with replacement
+
+Print the distribution of safety ratings of the new sampled dataset.
+
+What is the safety ratings distribution of the bootstrapped data?
+
+*Hint*
+Use ~.value_counts()~ with the parameter ~normalize=True~ to get the distribution.
+
+The new ~safety~ ratings distribution should not be perfectly equal this time!
+
+** Task 3
+Note that the distribution has now shifted! Using the same process, write a for loop to create 1000 bootstrapped samples of the same size as the original dataset. Save the percentage of "low" ratings into an array called ~low_perc~.
+
+** Task 4
+We've written some code to plot a histogram of the low percentage values.
+
+We see that the average value of the low safety proportion of vehicles spans a range centered around the true mean.
+
+** Task 5
+Now print the average low percentage and the 95% confidence range.
+
+*Hint*
+We are 95% confident that the “low” ratings will make up between 31.08% and 35.65% of the total observations. NOTE: Your range may vary depending on your model.
+
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  # Models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.ensemble import RandomForestClassifier
+
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 if not acceptable
+  X = pd.get_dummies(df.iloc[:,0:6], drop_first=True)
+  y = df['accep']
+
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.25)
+  nrows = df.shape[0]
+
+  ## 1. Print number of rows and distribution of safety ratings
+  print(nrows)
+  print(f'Distribution of safety ratings in (nrows) of data:')
+  print(df.safety.value_counts(normalize=True))
+
+  ## 2. Create bootstrapped sample
+  boot_sample = df.sample(nrows, replace=True)
+  print(f'Distribution of safety ratings in bootstrapped sample data:')
+  print(boot_sample.safety.value_counts(normalize=True))
+
+  ## 3. Create 1000 bootstrapped samples
+  low_perc = []
+  for i in range(1000):
+      boot_sample = df.sample(nrows, replace=True)
+      low_perc.append(boot_sample.safety.value_counts(normalize=True)['low'])
+
+  ## 4. Plot a histogram of the low percentage values
+  mean_lp = np.mean(low_perc)
+  print(mean_lp)
+  plt.hist(low_perc, bins=20)
+  plt.xlabel('Low Percentage')
+  plt.show()
+
+  ## 5. What are the 2.5 and 97.5 percentiles?
+  print(f'Average low percentage: {np.mean(low_perc).round(4)}')
+
+  low_perc.sort()
+  print(f'95% Confidence Interval for low percengage: ({low_perc[25].round(4)},{low_perc[975].round(4)})')
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+1728
+Distribution of safety ratings in (nrows) of data:
+safety
+low     0.333333
+med     0.333333
+high    0.333333
+Name: proportion, dtype: float64
+Distribution of safety ratings in bootstrapped sample data:
+safety
+low     0.355903
+med     0.335069
+high    0.309028
+Name: proportion, dtype: float64
+0.33347685185185183
+Average low percentage: 0.3335
+95% Confidence Interval for low percengage: (0.3108,0.3565)
+#+end_example
