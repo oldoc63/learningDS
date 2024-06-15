@@ -6,7 +6,7 @@ We've seen that decision trees can be powerful supervised machine learning model
 
 A random forest is an /ensemble machine learning technique./ A random forest contains many decision trees that all work together to classify new points. When a randon forest is asked to classify a new point, the random forest gives that point to each of the decision trees. Each of those trees reports their classification and the random forest returns the most popular classification. It's like every tree gets a vote, and the most popular classification wins. Some of the trees in the random forest may be overfit, but by making the prediction based on a large number of trees, overfitting will have less of an impact.
 
-The ilustration below depicts a ranodm forest used to predict if a student will get an A un a test or not based on an anonymous survey. The survey fields (the features here!) include hours the student slept, whether they expressed an intention to chear or not, hours studied and their average grade so far. Here, the random forest is made up of eleven decision trees -the prediction outcome A is outvoted 6:5!
+The ilustration below depicts a random forest used to predict if a student will get an A un a test or not based on an anonymous survey. The survey fields (the features here!) include hours the student slept, whether they expressed an intention to chear or not, hours studied and their average grade so far. Here, the random forest is made up of eleven decision trees -the prediction outcome A is outvoted 6:5!
 
 [[./tree_election.png]]
 
@@ -140,3 +140,93 @@ Name: proportion, dtype: float64
 Average low percentage: 0.3335
 95% Confidence Interval for low percengage: (0.3108,0.3565)
 #+end_example
+
+* Bagging
+Random forest create different trees using a process known as bagging, which is short for bootstrapped aggregating. As we already covered bootstrapping, the process starts with creating a single decision tree on a bootstrapped sample of data points in the training set. Then after many trees have been made, the results are "aggregated" together. In the case of a classification task, often the aggregation is taking the majority vote of the individual classifiers. For regression tasks, often the aggregation is the average of the individual regressors.
+
+We will dive into this process for the cars dataset we used in the previous exercise. The dataset has six features:
+
+    - ~buying~ : car price as a categorical variable: “vhigh”, “high”, “med”, or “low”
+
+    - ~maint~ : cost of maintaining the car; can be “vhigh”, “high”, “med”, or “low”.
+
+    - ~doors~ : number of doors; can be “2”, “3”, “4”, “5more”.
+
+    - ~persons~ : number of people the car can hold; can be “2”, “4”, or “more”.
+
+    - ~lugboot~ : size of the trunk; can be “small”, “med”, or “big”.
+
+    - ~safety~ : safety rating of the car; can be “low”, “med”, or “high”
+
+Load the dataset and do the train-test split. Our target variable for prediction is an acceptability rating, accep, that's either ~True~ or ~False~.
+
+** Task 1
+Train a decision tree with ~max_depth~  set to 5. Evaluate the ~accuracy_score~ on the ~test~ data.
+
+** Task 2
+We've written some code to get a new set of indices, ~ids~, to generate a bootstrapped set of row indices. We've set the ~random_state~ argument to ~0~ for reproducibility. Using these indices, fit another decision tree to training data pertaining to these rows. What is the accuracy score on the test set for the new classifier?
+
+** Task 3
+Repeat a decision tree build on 10 different bootstrapped samples using a for loop. Save the results, ~y_pred~ of all 10 predictions on the test set in an array,  ~preds~. Take the average of the 10 results and save it as ~ba_pred~.
+
+** Task 4
+We have just performed bagging! Calculate the accuracy score on the bagged predictions and save it as ~ba_accuracy~. (Note that the predictions are averaged and will no longer be binary as a bunch of zeroes and ones have been averaged.)
+
+*Hint*
+Threshold the ~ba_pred~ array to get a binary classification and then compute the accuracy.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn import tree
+  from sklearn.metrics import accuracy_score
+
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+
+  df['accep'] = ~(df['accep'] == 'unacc') #1 is acceptable, 0 is unacceptable
+
+  X = pd.get_dummies(df.iloc[:,0:6], drop_first=True)
+  y = df['accep']
+
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.25)
+
+  # 1. Decision tree trained on training set
+  dtree = DecisionTreeClassifier(max_depth=5)
+  dtree.fit(x_train, y_train)
+  print(f'Accuracy score of DT on test set (trained using full set): {dtree.score(x_test, y_test).round(4)}')
+
+  # 2. New decision tree trained on bootstrapped sample
+  dt2 = DecisionTreeClassifier(max_depth=5)
+
+  # ids are the indices of the bootstrapped sample
+  ids = x_train.sample(x_train.shape[0], replace=True, random_state=0).index
+  dt2.fit(x_train.loc[ids], y_train[ids])
+
+  print(f'Accuracy score of DT on test set (trained using bootstrapped sample): {dt2.score(x_test, y_test).round(4)}')
+
+  # 3.Bootstrapping ten samples and aggregating the results:
+  preds = []
+  random_state = 0
+
+  for i in range(10):
+      ids = x_train.sample(x_train.shape[0], replace=True, random_state=random_state+i).index
+      dt2.fit(x_train.loc[ids], y_train[ids])
+      preds.append(dt2.predict(x_test))
+
+  ba_pred = np.array(preds).mean(0)
+
+  # 4. Calculate accuracy of the bagged sample
+  ba_accuracy = accuracy_score(ba_pred>=0.5, y_test)
+
+  print(f'Accuracy score of aggregated 10 bootstrapped samples: {ba_accuracy.round(4)}')
+
+#+end_src
+
+#+RESULTS:
+: Accuracy score of DT on test set (trained using full set): 0.8588
+: Accuracy score of DT on test set (trained using bootstrapped sample): 0.8912
+: Accuracy score of aggregated 10 bootstrapped samples: 0.9097
