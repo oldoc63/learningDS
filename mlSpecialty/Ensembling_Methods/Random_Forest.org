@@ -68,7 +68,6 @@ Now print the average low percentage and the 95% confidence range.
 *Hint*
 We are 95% confident that the “low” ratings will make up between 31.08% and 35.65% of the total observations. NOTE: Your range may vary depending on your model.
 
-
 ** Script.py
 
 #+begin_src python :results output
@@ -230,3 +229,114 @@ Threshold the ~ba_pred~ array to get a binary classification and then compute th
 : Accuracy score of DT on test set (trained using full set): 0.8588
 : Accuracy score of DT on test set (trained using bootstrapped sample): 0.8912
 : Accuracy score of aggregated 10 bootstrapped samples: 0.9097
+
+* Randon Feature Selection
+In addition to using bootstrapped samples of our dataset, we can continue to add variety to the ways our trees are created by randomly selecting the features that are used.
+
+Recall that for our car data set, the original features were the following:
+
+    - The price of the car which can be “vhigh”, “high”, “med”, or “low”.
+
+    - The cost of maintaining the car which can be “vhigh”, “high”, “med”, or “low”.
+
+    - The number of doors which can be “2”, “3”, “4”, “5more”.
+
+    - The number of people the car can hold which can be “2”, “4”, or “more”.
+
+    - The size of the trunk which can be “small”, “med”, or “big”.
+
+    - The safety rating of the car which can be “low”, “med”, or “high”
+
+Our target variable for prediction is an acceptability rating, ~accep~, that's either ~True~ or ~False~. For our final features sets, ~x_train~ and ~x_test~, the categorical features have been dummy encoded, giving us 15 features in total.
+
+When we use a decision tree, all the features are used and the split is chosen as the one that increases the information gain the most. While it may seem counter-intuitive, selecting a random subset of features can help in the performance of an ensemble model. In the following example, we will use a random selection of features prior to model building to add additional variance to the individual trees. While an individual tree may perform worse, sometimes the increases in variance can help model performance of the ensemble model as a whole.
+
+** Task 1
+We've written some code that create a random sample of 10 features, ~rand_features~ from the 15 original features by using NumPy's ~random.choice~ method and defined a decision tree classifier ~dt2~.
+
+Train the new decision tree model (without specifying any pre-selected parameters!), ~dt2~ on training data /that contains only these ten columns./ Calculate the new accuracy on the test set, store it as ~accuracy_dt2~ and print it to compare it to the tree built using the entire training set.
+
+*Hint*
+Remember to calculate accuracy score only on ~x_test[rand_features]~ and not the whole test data.
+
+** Task 2
+Every time we use ~np.random.choice~, we can generate a new subset of random features. We're now going to obtain predictions from ten decision tree classifiers by doing the following. We've initialized an empty array called ~predictions~ and created a ~for~ loop with ten iterations with the following steps:
+
+    - The first line selects ten random features using ~rand_features = np.random.choice(x_train.columns, 10)~
+
+    - Fit the decision tree ~dt2~ to training data pertaining to these features
+
+    - Append the predictions on test data (with only rand_features columns!) to the array ~predictions~
+
+** Task 3
+We have ter decision trees' worth of predictions now! To meningfully combine their predictions, let's use the following system. If more than 5 classifiers predict that a datapoint belong to a certain class, we assign an aggregate prediction to that class. To do this:
+
+    - Create an array ~prob_predictions~ that is the mean value of the predictions stored in ~predictions~. This is similar to a probability on each datapoint since this is a binary classification problem.
+
+    - Create an array ~agg_predictions~ that assigns a value of False or True to each element in ~prob_predictions~ based on whether the value is <= 0.5 or >0.5. This gives us the aggregate prediction from the 10 decision tree classifiers.
+
+    - Calculate the accuracy score on this aggregate prediction array. Store it as ~agg_accuracy~ and print it to compare it to the previous accuracy scores.
+
+      *Hint*
+
+      Use ~np.array.mean()~ to calculate the mean of the array predictions. Remember to specify the right axis! (We want the average in each column and not the rows!)
+
+      To get ~agg_predictions~, you can apply the inequality ~(prob_predictions>0.5)~ to obtain True/False values.
+
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.metrics import accuracy_score
+
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 if not acceptable
+
+  X = pd.get_dummies(df.iloc[:,0:6], drop_first=True)
+  y = df['accep']
+
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.25)
+  dt = DecisionTreeClassifier()
+  dt.fit(x_train, y_train)
+  print("Accuracy score of DT on test set (trained using full feature set):")
+  accuracy_dt = dt.score(x_test, y_test)
+  print(accuracy_dt)
+
+  # 1. Create rand_features, random samples from the set of features
+  rand_features = np.random.choice(x_train.columns, 10)
+
+  # Make new decision tree trained on random sample of 10 features and calculate the new accuracy score
+  dt2 = DecisionTreeClassifier()
+  dt2.fit(x_train[rand_features], y_train)
+
+  print("Accuracy score of DT on test set (trained using random feature sample):")
+  print(dt2.score(x_test[rand_features], y_test))
+
+  # 2. Build decision trees on 10 differents random samples
+  predictions = []
+  for i in range(10):
+      rand_features = np.random.choice(x_train.columns, 10)
+      dt2.fit(x_train[rand_features], y_train)
+      predictions.append(dt2.predict(x_test[rand_features]))
+
+  # 3. Get aggregate predictions and accuracy score
+  prob_predictions = np.array(predictions).mean(0)
+  agg_predictions = (prob_predictions>0.5)
+  agg_accuracy = accuracy_score(agg_predictions, y_test)
+  print('Accuracy score of aggregated 10 samples:')
+  print(agg_accuracy)
+
+#+end_src
+
+#+RESULTS:
+: Accuracy score of DT on test set (trained using full feature set):
+: 0.9490740740740741
+: Accuracy score of DT on test set (trained using random feature sample):
+: 0.6805555555555556
+: Accuracy score of aggregated 10 samples:
+: 0.7546296296296297
