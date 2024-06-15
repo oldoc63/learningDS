@@ -1,4 +1,15 @@
 
+* Basics of Random Forest
+In this lesson, you'll learn what random forest are, how the random forest algorithm works and how to implement it in ~scikit-learn~.
+
+We've seen that decision trees can be powerful supervised machine learning models. However, they're not without their weaknesses -decision trees are often prone to overfitting. We've discussed some strategies to minimize this problem, like pruning, but sometimes that isn't enough. We need to find another way to generalize our trees. This is where the concept of a random forest comes in handy.
+
+A random forest is an /ensemble machine learning technique./ A random forest contains many decision trees that all work together to classify new points. When a randon forest is asked to classify a new point, the random forest gives that point to each of the decision trees. Each of those trees reports their classification and the random forest returns the most popular classification. It's like every tree gets a vote, and the most popular classification wins. Some of the trees in the random forest may be overfit, but by making the prediction based on a large number of trees, overfitting will have less of an impact.
+
+The ilustration below depicts a ranodm forest used to predict if a student will get an A un a test or not based on an anonymous survey. The survey fields (the features here!) include hours the student slept, whether they expressed an intention to chear or not, hours studied and their average grade so far. Here, the random forest is made up of eleven decision trees -the prediction outcome A is outvoted 6:5!
+
+[[./tree_election.png]]
+
 * Bootstrapping
 You might be wondering how the trees in the random forest get created. After all, right now, our algorithm for creating a decision tree is deterministic -given a trainin set, the same tree will be made every time. To make a random forest, we use a technique callled /bagging/ which is short for /bootstrap aggregating/. This exercise will explain bootstrapping, which is a type of sampling method done with *replacement*.
 
