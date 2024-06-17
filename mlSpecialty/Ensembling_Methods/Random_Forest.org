@@ -283,7 +283,6 @@ We have ter decision trees' worth of predictions now! To meningfully combine the
 
       To get ~agg_predictions~, you can apply the inequality ~(prob_predictions>0.5)~ to obtain True/False values.
 
-
 ** Script.py
 
 #+begin_src python :results output
@@ -340,3 +339,89 @@ We have ter decision trees' worth of predictions now! To meningfully combine the
 : 0.6805555555555556
 : Accuracy score of aggregated 10 samples:
 : 0.7546296296296297
+
+* Baggin in scikit-learn
+The two steps we walked through above created trees on bootstrapped samples and randomly selecting features. These can be combined together and implemented at the same time! Combining them adds an additional variation to the base learners for the ensemble model. This in turn increases the ability of the model to generalize to new and unseen data, i.e., it minimizes bias and increases variance. Rather than re-doing this process manually, we will use ~scikit-learn~'s bagging implementation, ~BaggingClassifier()~, to do so.
+
+Much like other models we have used in ~scikit-learn~, we instantiate a instance of ~BaggingClassifier()~ and specify the parameters. The first parameter, ~base_estimator~ refers to the machine learning model that is being bagged. In the case of random forest, the base estimator would be a decision tree. We are going to use a decision tree classifier *with* a ~max_depth~ of 5, this will be instantiated with ~BaggingClassifier(DecisionTreeClassifier(max_depth=5))~.
+
+After the model has been defined, methods ~.fit()~, ~.predict()~, ~.score()~ can be used as expected. Additional hyperparameters specific to bagging include the number of estimators (~n_estimators~) we want to use and the maximum number of features we'd like to keep (~max_features~).
+
+*Note*:
+While we have focused on decision tree classifiers (as this is the base learner for a random forest classifier), this procedure of bagging is not specific to decision trees, and in fact can be used for any base classifier or regression model. The ~scikit-learn~ implementation is generalizable and can be used for other base models!
+
+** Task 1
+Create an instance of ~BaggingClassifier~, ~bag_dt~ with the following arguments:
+
+    - ~DecisionTreeClassifier~ (with ~max_depth=5~) base estimator
+
+    - ~n_estimators=10~
+
+Fit the model on the training set and evaluate the model on the test set by calculating the accuracy score. Save the score as ~bag_accuracy~ and print it.
+
+*Hint*
+You can use the ~.score()~ method on ~bag_dt~ to get the accuracy. Alternately you can also use ~accuracy_score~ from ~scikit-learn~'s ~metrics~ module.
+
+** Task 2
+Create a different bagging classifier, ~bag_dt_10~ that includes the parameter ~max_features=10~ over and above the parameters in ~bag_dt~. Fit the model on the training set and evaluate the model on the test set by calculating the accuracy score. Save the score as ~bag_accuracy_10~ and print it.
+
+** Task 3
+Change the base estimator of the bagged classifier to be logistic regression and call this instance ~bag_lr~ as follows:
+
+    - Set ~base_estimator~ to be ~LogisticRegression()~
+
+    - Set ~n_estimators~ and ~max_features~ to be 10 like in the previous checkpoint
+
+Refit on the training set and calculate the accuracy on the test set. Store this as ~bag_accuracy_lr~ and print it.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.ensemble import RandomForestClassifier, BaggingClassifier,RandomForestRegressor
+  from sklearn.metrics import accuracy_score
+
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 if not acceptable
+  X = pd.get_dummies(df.iloc[:,0:6], drop_first=True)
+  y = df['accep']
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.25)
+
+  # 1. Bagging classifier with 10 Decision Tree base estimators
+  bag_dt = BaggingClassifier(estimator=DecisionTreeClassifier(max_depth=5), n_estimators=10)
+  bag_dt.fit(x_train, y_train)
+
+  print('Accuracy score of Bagged Classifier, 10 estimators:')
+  bag_accuracy = bag_dt.score(x_test, y_test)
+  print(bag_accuracy)
+
+  # 2. Set max_features to 10
+  bag_dt_10 = BaggingClassifier(estimator=DecisionTreeClassifier(max_depth=5), n_estimators=10, max_features=10)
+  bag_dt_10.fit(x_train, y_train)
+
+  print('Accuracy score of Bagged Classifier, 10 estimators, 10 max features:')
+  bag_accuracy_10 = bag_dt_10.score(x_test, y_test)
+  print(bag_accuracy_10)
+
+  # 3. Change base estimator to Logistic Regression
+  from sklearn.linear_model import LogisticRegression
+
+  bag_lr = BaggingClassifier(estimator=LogisticRegression(), n_estimators=10, max_features=10)
+  bag_lr.fit(x_train, y_train)
+
+  print('Accuracy score of Logistic Regression, 10 estimators:')
+  bag_accuracy_lr = bag_lr.score(x_test, y_test)
+  print(bag_accuracy_lr)
+
+#+end_src
+
+#+RESULTS:
+: Accuracy score of Bagged Classifier, 10 estimators:
+: 0.9328703703703703
+: Accuracy score of Bagged Classifier, 10 estimators, 10 max features:
+: 0.9375
+: Accuracy score of Logistic Regression, 10 estimators:
+: 0.8981481481481481
