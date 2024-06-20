@@ -578,3 +578,90 @@ Avg Price Train/Test: 36702.550871382286
 Train Set MAE: 1663.9768046983374
 Test Set MAE: 4588.38588177549
 #+end_example
+
+* Review
+Here are some of the major takeaways about random forests:
+
+    - A random forest is an *ensemble machine learning model*. It makes a classification by aggregating the classifications of many decision trees.
+
+    - Random forest are used to *avoid overfitting*. By aggregating the classification of multiple trees, having overfitted trees in a random forest is less impactful.
+
+    - Every decision tree in a random forest is created by using a *different subset* of data points from the training set. Those data points are chosen at random with replacement, which means a single data point can be chosen more than once. This process is known as bagging.
+
+    - When creating a tree in random forest, a *randomly selected subset of features* are considered as candidates for the best splitting feature. If your dataset has n features, it is common practice to randomly select the square root of n features.
+
+* Quiz
+
+** Question 1
+How does a random forest regressor make predictions?
+
+    - A random forest regressor uses the average prediction from its decision trees as the final predictions.
+
+      Correct! For regression, the average value of all the decision trees is used.
+
+** Question 2
+What does ~scikit-learn~'s ~RandonForestClassifier~'s ~.fit()~ method do?
+
+    - The ~.fit()~ method creates the model according to the training data and training labels
+
+      Correct! This is where the model gets created based on the training set.
+
+** Question 3
+How does a random forest classifier make predictions?
+
+    - A random forest classifier uses the most common classification from its decision trees as the final classification
+
+      Correct! The classification wiht the most votes wins!
+
+** Question 4
+Fill in the code to fit a ~RandonForestClassifier~ with ~n_estimators=50~ on the training data (x_train, y_train) and score on the test data (x_test, y_test).
+
+#+begin_src python :results output
+  from sklearn.ensemble import RandomForestClassifier
+
+  rf = RandomForestClassifier(n_estimators=50)
+
+  rf.fit(x_train, y_train)
+
+  rf.score(x_test, y_test)
+
+#+end_src
+
+#+RESULTS:
+
+** Question 5
+How is a random forest model related to a decision tree model?
+
+     - A random forest is an ensemble model that makes a classification by aggregating the results of multiple decision trees.
+
+** Question 6
+When creating a RandomForestClassifier from ~scikit-learn~, what does the ~n_estimators~ parameter represent and what is it's default value?
+
+The number of trees in the forest, ant the default value is ~100~.
+
+Correct! If you don't include this parameter, the default is 100.
+
+** Question 7
+A decision tree regressor was built to predict the selling price of a house and was shown to be overfit. The data has 100 features and 10,000 rows. Fill in the code to train the best new model with appropriate hyperparameters to reduce the overfitting and evaluate the model on the test set.
+
+#+begin_src python
+  from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+  from sklearn import tree
+  from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+
+  model = RandomForestRegressor(n_estimators=100, max_features=10)
+  model.fit(x_train, y_train)
+  model.score(x_test, y_test)
+#+end_src
+
+** Question 8
+Which statement best describes a bootstrapped sample and how is it used in creating a random forest model?
+
+    - Bootstrapped samples are obtained by taking samples with replacement. Each decision tree is built on a bootstrapped sample.
+
+** Question 9
+If your dataset has n features, what is the default value for the number of features considered at each split in scikit-learn's RandomForestClassifier?
+
+    - sqrt(n)
+
+      Correct! This number can be tuned, but ~sqrt(n)~ is the default value.
