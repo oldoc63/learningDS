@@ -425,3 +425,156 @@ Refit on the training set and calculate the accuracy on the test set. Store this
 : 0.9375
 : Accuracy score of Logistic Regression, 10 estimators:
 : 0.8981481481481481
+
+* Train and Predict using scikit-learn
+Now that we have covered two major ways to combine trees, both in terms of samples and features, we are ready to get to the implementation of random forest! This will be similar to what we covered in the previous exercises, but the random forest algorithm has a slightly different way of randomly choosing features. Rather than choosing a single random set at the onset, each split chooses a different random set.
+
+For example, when finding which feature to split the data on the first time, we might randomly choose to only consider the price of the car, the number of doors, and the safety rating. After splitting the data on the best feature from that subset, we'll likely want to split again. For this next split, we'll randomly select three features again to consider. This time those features might be the cost of maintenance, the number of doors, and the size of the trunk. We'll continue this process until the tree is complete.
+
+One question to consider is how to choose the number of features to randomly select. Why did we choose 3 in this example? A good rule of thumb is select as many features as /the square root of the total number of features./ Our car dataset doesn't have a lot of features, so in this example, it's difficult to follow this rule. But if we had a dataset with 25 features, we'd want to randomly select 5 features to consider at every split point.
+
+You now have the ability to make a random forest using your own decision trees. However, ~scikit-learn~ has a ~RandomForestClassifier()~ class that will do all this work for you! RandomForestClassifier is in the ~sklearn.ensemble~ module.
+
+~RandomForestClassifier()~ works almost identically to DecisionTreeClassifier() -the ~.fit()~, ~.predict()~, and ~.score()~ methods work in the exact same way.
+
+** Task 1
+Create a random forest classification model defined as ~rf~ with default parameters. Use the ~.get_params()~ method to get the parameters of the random forest. Store it as ~rf_params~ and print it.
+
+** Task 2
+Fit ~rf~ using the training data set and labels. Predict the classes of the test data set (~x_test~) and save this as an array ~y_pred~. Calculate the accuracy of model on the test set (either using ~.score()~ or ~accuracy_score()~) and save it as ~rf_accuracy~.
+
+** Task 3
+Implement additional classification evaluation metrics -calculate and print the precision, recall, and confusion matrix on the test set. Store them as ~rf_precision~, ~rf_recall~ and ~rf_confusion_matrix~ respectively.
+
+** Scrip.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.model_selection import train_test_split
+  from sklearn.ensemble import RandomForestClassifier
+  from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
+
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 if not acceptable
+  X = pd.get_dummies(df.iloc[:,0:6], drop_first=True)
+  y = df['accep']
+  x_train, x_test, y_train, y_test = train_test_split(X,y, random_state=0, test_size=0.25)
+
+  # 1. Create a Random Forest Classifier and print its parameters
+  rf = RandomForestClassifier()
+  rf_params = rf.get_params()
+
+  print('Random Forest parameters:')
+  #print(rf_params)
+
+  # 2. Fit the Random Forest Classifier training data and calculate accuracy score on the test data
+  rf.fit(x_train, y_train)
+  y_pred = rf.predict(x_test)
+  rf_accuracy = rf.score(x_test, y_test)
+
+  print('Test set accuracy:')
+  print(rf_accuracy)
+
+  # 3. Calculate Precision and Recall scores and the Confusion Matrix
+  rf_precision = precision_score(y_test, y_pred)
+  print(f'Test set precision: {rf_precision}')
+
+  rf_recall = recall_score(y_test, y_pred)
+  print(f'Test set recall: {rf_recall}')
+
+  rf_confusion_matrix = confusion_matrix(y_test, y_pred)
+  print(f'Test set confusion matrix:\n {rf_confusion_matrix}')
+
+#+end_src
+
+#+RESULTS:
+: Random Forest parameters:
+: Test set accuracy:
+: 0.9537037037037037
+: Test set precision: 0.953125
+: Test set recall: 0.8970588235294118
+: Test set confusion matrix:
+:  [[290   6]
+:  [ 14 122]]
+
+* Randon Forest Regressor
+Just like in decision trees, we can use random forest for regression as well. It is important to know when to use regression or classification -this usually comes down to what type of variable your target is. Previously, we were using a binary categorical variable (acceptable versus not), so a classification model was used.
+
+We will now consider a hypothetical new target variable, price, for this data set, which is a continous variable. We've generated some fake prices in the dataset so that we have numerical values instead of the previous categorical variables. (Please note that these are not reflective of the previous categories of high and low prices - we just wanted some numeric values so we can perform regression! :) )
+
+Now, instead of a classification task, we will use ~scikit-learn~'s ~RandomForestRegressor()~ to carry out a regression task.
+
+*Note*
+Recall that the default evaluation score for regressors in scikit-learn is the R-squared score.
+
+** Task 1
+Initialize and fit a RandomForestRegressor() model named ~rfr~ on the training data. Calculate the default scores (the ~R^2~ values here) on the train and test sets, store them as ~r_squared_train~ and ~r_squared_test~ respectively, and print them.
+
+** Task 2
+Calculate the average price of a car, store it as ~avg_price~. Calculate the MAE (Mean Absolute Error) for the train and test sets and store the values as ~mae_train~ and ~mae_test~. Print all three values to see how the errors compare to the mean.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.ensemble import RandomForestRegressor
+  from sklearn.metrics import mean_absolute_error
+
+  df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep'])
+  df['accep'] = ~(df['accep']=='unacc') #1 is acceptable, 0 if not acceptable
+  X = pd.get_dummies(df.iloc[:,0:6], drop_first=True)
+
+  ## Generating some fake prices for regression! :)
+  fake_prices = (15000 + 25*df.index.values) + np.random.normal(size=df.shape[0])*5000
+  df['price'] = fake_prices
+  print(df.price.describe())
+  y = df['price']
+
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=0, test_size=0.25)
+
+  # 1. Create a Random Regressor and print R^2 scores on training and test data
+  rfr = RandomForestRegressor()
+  rfr.fit(x_train, y_train)
+  r_squared_train = rfr.score(x_train, y_train)
+  r_squared_test = rfr.score(x_test, y_test)
+
+  print(f'Train set R^2: {r_squared_train}')
+  print(f'Test set R^2: {r_squared_test}')
+
+  # 2. Print Mean Absolute Error on training and test data
+  avg_price = y.mean()
+  print(f'Avg Price Train/Test: {avg_price}')
+
+  y_pred_train = rfr.predict(x_train)
+  y_pred_test = rfr.predict(x_test)
+
+  mae_train = mean_absolute_error(y_train, y_pred_train)
+  print(f'Train Set MAE: {mae_train}')
+
+  mae_test = mean_absolute_error(y_test, y_pred_test)
+  print(f'Test Set MAE: {mae_test}')
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+count     1728.000000
+mean     36702.550871
+std      13458.824713
+min       5537.045255
+25%      26142.533383
+50%      36402.770260
+75%      47412.013446
+max      71126.772771
+Name: price, dtype: float64
+Train set R^2: 0.9751293337158969
+Test set R^2: 0.8257021485249421
+Avg Price Train/Test: 36702.550871382286
+Train Set MAE: 1663.9768046983374
+Test Set MAE: 4588.38588177549
+#+end_example
