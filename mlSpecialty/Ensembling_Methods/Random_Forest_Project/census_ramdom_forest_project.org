@@ -1,0 +1,76 @@
+
+* Random Forest Project
+In this project, we will be using a dataset containing census information from UCI's Machine Learning Repository.
+
+By using this census data with a random forest, we will try to predict whether or not a person makes more than $50,000.
+
+** Datasets
+The original data set is available at the UCI Machine Learning Repository:
+
+    - https://archive.ics.uci.edu/ml/datasets/census+income
+
+The dataset has been loaded in scritp.py and save as a dataframe named ~df~. Some of the imput and output features of interest are:
+
+    - ~age~: continuous
+
+    - ~workclass~: Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked
+
+    - ~education~: Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool
+
+    - ~race~: White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black
+
+    - ~sex~: Female, Male
+
+    - ~capital-gain~: continuous
+
+    - ~capital-loss~: continuous
+
+    - ~hours-per-week~: continuous
+
+    - ~native country:~ discrete
+
+    - ~income~: discrete, >50K, <=50K
+
+** Investigate the data
+
+*** Task 1
+We will build a *random forest classifier* to predict the income category. First, take a look at the distribution of income values -what percentage of samples have incomes less than 50k and greater than 50k?
+
+*Hint*
+Use
+#+begin_src python
+df['income'].value_counts(normalize=True)
+#+end_src
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+
+  # Import models from scikit learn module:
+  from sklearn.model_selection import train_test_split
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.ensemble import RandomForestClassifier, BaggingClassifier, RandomForestRegressor
+  from sklearn import tree
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+
+  col_names = ['age', 'workclass', 'fnlwgt','education', 'education-num',
+  'marital-status', 'occupation', 'relationship', 'race', 'sex',
+  'capital-gain','capital-loss', 'hours-per-week','native-country', 'income']
+
+  df = pd.read_csv('adult.data', header=None, names=col_names)
+
+  # Distribution of income
+  print(df['income'].value_counts(normalize=True))
+
+#+end_src
+
+#+RESULTS:
+: income
+:  <=50K    0.75919
+:  >50K     0.24081
+: Name: proportion, dtype: float64
