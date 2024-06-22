@@ -42,6 +42,33 @@ Use
 df['income'].value_counts(normalize=True)
 #+end_src
 
+*** Task 2
+There's a small problem with our data that is a little hard to catch -every string has an extra space at the start. For example, the first row's native-country is "  United-States". One way to fix this is to select all columns of type ~object~ and use the string method ~.str.strip()~.
+
+*Hint*
+Update each object columns with ~df[c].str.strip()~.
+
+*** Task 3
+Create a features dataframe X. This should include only features in the list ~feature_cols~ and convert categorical features to dummy variables using ~pd.get_dummies()~. Include the parameter ~drop_first=True~ to eliminate redundant features.
+
+*Hint*
+Use ~pd.get_dummies(df[feature_cols], drop_first=True)~.
+
+*** Task 4
+Create the output variable ~y~, which is binary. It should be 0 when income is less than 50k and 1 when it is greater than 50k.
+
+*Hint*
+Try using np.where()
+
+*** Task 5
+Split the data into a train and test set with a test size of 20%.
+
+** Build and Tune Random Forest Classifiers by Depth
+
+*** Task 6
+
+
+
 ** Script.py
 
 #+begin_src python :results output
@@ -66,6 +93,19 @@ df['income'].value_counts(normalize=True)
 
   # Distribution of income
   print(df['income'].value_counts(normalize=True))
+
+  # Clean columns by stripping extra whitespace for columns of type "object"
+  for c in df.select_dtypes(include=['object']).columns:
+      df[c] = df[c].str.strip()
+
+  # Create feature dataframe X with feature columns and dummy variables for categorical features
+  X = pd.get_dummies(df[col_names], drop_first=True)
+
+  # Create output variable y which is binary, 0 when income is less than 50k, 1 when it is greater than 50k
+  y = np.where(df['income']=='<=50K', 0, 1)
+
+  # Split the data into train and test set
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=1, test_size=0.20)
 
 #+end_src
 
