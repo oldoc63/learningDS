@@ -1,0 +1,19 @@
+
+* Boosting
+In this module we will cover a powerful ensemble method called Boosting. Boosted ensemble methods use weak learners as base models that are simple and tend to suffer from high bias. The weak learners underfit the data.
+
+Boosting is a sequential learning technique where each of the base models builds off of the previous models. Each subsequent model aims to improve the performance of the final ensemble model by attempting to fix the errors in the previous stage.
+
+There are two important decisions that need to be made to perform boosted ensembling:
+
+    1. Sequential Fitting Method
+
+    2. Aggregation Method
+
+Two boosting algorithms that will be covered in detail in this module are *Adaptive Boosting* and *Gradient Boosting*.
+
+While boosting can be applied to any base machine learning algorithm, we will demonstrate with and extremely popular choice as a base estimator, the decision tree. Recall that Decision Trees are a commonly used and powerful machine learning algorithm because they are easy to interpret. Additionally, the training data requires very little manipulation (no need standardization, removal of collinearity, etc).
+
+The major limitation to decision trees is that they tend to suffer from high variance and are therefore prone to overfitting. They are good at making a series of decisions which cause them to memorize the training data, so they do not generalize well to unseen data. In the following exercises we will explore how to work past these limitations while using decision trees for boosting.
+
+[[./base_models_bagging_boosting.png]]
