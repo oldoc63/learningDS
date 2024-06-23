@@ -95,6 +95,34 @@ Refit the random forest model using the ~max_depth~ from above; save the feature
 *Hint*
 Update the ~max_depth=best_depth~ in the random forest classifier.
 
+** Create Additional Features and ReTune
+
+*** Task 11
+Looking at the education feature, there are 16 unique values -from preschool to profesional school. Rather than adding dummy variables for each value, it makes sense to bin some of these values together. While there are many ways to do this, we will take the approach of combining the values into 3 groups: ~High school and less~, ~Collegue to Bachelors~ and ~Masters and more~. Create a new column in df for this new features called ~education_bin~.
+
+*** Task 12
+Like we did previously, we will now add this new feature into our feature list and recreate ~X~.
+
+*** Task 13
+As we did before, we will tune the random forest classifier model by testing the performance over a range of ~max_depth~ values. Fit a random forest classifier for ~max_depth~ from 1-25. Save the accuracy score for the train and test sets in the lists ~accuracy_train, accuracy_test~.
+
+*** Task 14
+Find the largest accuracy and the depth this occurs on the test data. Compare the results from the previous model tuned.
+
+*** Task 15
+Plot the training and test accuracy of the models versus the max_depth. Compared the results from the previous model tuned.
+
+*** Task 16
+Refit the random forest model using the ~max_depth~ from above; save the feature importances in a dataframe. Sort the results and print the top five features. Compare the results from the previous model tuned.
+
+*** Task 17
+Not that the accuracy of our final model increased and one of our added features is now in the top 5 based on importance!
+
+There are a few different ways to extend this project:
+
+    - Are there other features that may lead to an even better performance? Consider creating new ones or adding additional features not part of the original feature list
+    - Consider tuning hyperparameters based on a different evaluation metric -our classes are fairly imbalanced, AUC of F1 may lead to a different result
+    - Tune more parameters of the model. You can find a description of all the parameters you can tune in the Random Forest Classifier documentation. For example, see what happens if you tune ~max_features~ or ~n_estimators~.
 
 ** Script.py
 
@@ -177,7 +205,45 @@ Update the ~max_depth=best_depth~ in the random forest classifier.
   print(feature_imp_df.sort_values('importance', ascending=False).iloc[0:5])
 
   # Create two new features, based on education and native country
+  df['education_bin'] = pd.cut(df['education-num'], [0,9,13,16], labels=['HS or less', 'College to Bachelors', 'Masters or more'])
 
+  feature_cols = ['age', 'capital-gain', 'capital-loss', 'hours-per-week', 'sex', 'race', 'education_bin']
+
+  # Use these two new additional features and recreate X and test/train split
+  X = pd.get_dummies(df[feature_cols], drop_first=True)
+
+  x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=1, test_size=0.2)
+
+  # Find the best max depth now with the additional two features
+  np.random.seed(0)
+  accuracy_train = []
+  accuracy_test = []
+  depths = range(1,10)
+  for i in depths:
+      rf = RandomForestClassifier(max_depth=i)
+      rf.fit(x_train, y_train)
+      y_pred = rf.predict(x_test)
+      accuracy_test.append(accuracy_score(y_test, rf.predict(x_test)))
+      accuracy_train.append(accuracy_score(y_train, rf.predict(x_train)))
+
+  best_acc = np.max(accuracy_test)
+  best_depth = depths[np.argmax(accuracy_test)]
+  print(f'The highest accuracy on the test is achieved when depth: {best_depth}')
+  print(f'The highest accuracy on the test set is: {round(best_acc*100,3)}%')
+
+  plt.figure(2)
+  plt.plot(depths, accuracy_test, 'bo--', depths, accuracy_train, 'r*:')
+  plt.legend(['test accuracy', 'train accuracy'])
+  plt.xlabel('max depth')
+  plt.ylabel('accuracy')
+  plt.show()
+
+  # Save the best model and print the two features with the new feature set
+  best_rf = RandomForestClassifier(max_depth=best_depth)
+  best_rf.fit(x_train, y_train)
+  feature_imp_df = pd.DataFrame(zip(x_train.columns, best_rf.feature_importances_), columns=['feature', 'importance'])
+  print('Top 5 random forest features:')
+  print(feature_imp_df.sort_values('importance', ascending=False).iloc[0:5])
 
 #+end_src
 
@@ -197,4 +263,13 @@ Top 5 random forest features:
 3  hours-per-week    0.140480
 2    capital-loss    0.140439
 4        sex_Male    0.078258
+The highest accuracy on the test is achieved when depth: 9
+The highest accuracy on the test set is: 84.431%
+Top 5 random forest features:
+                          feature  importance
+1                    capital-gain    0.326836
+0                             age    0.201973
+10  education_bin_Masters or more    0.130849
+3                  hours-per-week    0.102162
+2                    capital-loss    0.095188
 #+end_example
