@@ -158,3 +158,12 @@ Confusion Matrix:
 actual yes            129            25
 actual no              49           316
 #+end_example
+
+* Gradient Boosting Overview
+*Gradient Boosting* is a sequential ensembling method that can be used for both classification and regression. It can use any base machine learning model, though it is most commonly used with decision trees, known as Gradient Boosted Trees.
+
+For Gradient Boost, the *Sequential Fitting Method* is accomplished by fitting a base model to the negative gradient of the error in the previous stage. The *Aggregation Method* is a weighted sum of those base models where the model weight is constant.
+
+The training of a Gradient Boosted model is the process of determining the base model error at each step and using those to determine how to best formulate the subsequent base model.
+
+[[./GradientBoostedTreesTheory.png]]
