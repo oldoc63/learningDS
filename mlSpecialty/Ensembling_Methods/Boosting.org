@@ -167,3 +167,100 @@ For Gradient Boost, the *Sequential Fitting Method* is accomplished by fitting a
 The training of a Gradient Boosted model is the process of determining the base model error at each step and using those to determine how to best formulate the subsequent base model.
 
 [[./GradientBoostedTreesTheory.png]]
+
+* Gradient Boosting Implementation
+Now that we have taken a look at what is going on under the hood, we are ready to implement Gradient Boosting on a real dataset and solve a classification problem.
+
+We will be using a dataset from [[https://archive.ics.uci.edu/dataset/19/car+evaluation][UCI's Machine Learning Repository]] to evaluate the acceptability of a car based on a set of features that encompasses their price and technical characteristics.
+
+** Task 1
+Create a Gradient Boosted Trees classification model using ~GradientBoostingClassifier()~ with ~n_estimators~ set to ~15~. Leave all other parameters to their default values. Store the model in a variable named ~grad_classifier~.
+
+Print the parameters of the GradientBoostedTrees model using the ~.get_params()~ method.
+
+** Task 2
+Fit ~grad_classifier~ using the training features (~X_train~) and corresponding labels (~y_train~).
+
+Predict the classes of the testing dataset (~X_test~) and store them as an array in a variable named ~y_pred~.
+
+** Task 3
+Now we will explore some of the most common evaluation metrics for classification on our trained Gradient Boosted Trees model.
+
+    - Calculate the accuracy and store it in a variable named ~accuracy~.
+
+    - Calculate the precision and store it in a variable named ~precision~.
+
+    - Calculate the recall and store it in a variable named ~recall~.
+
+    - Calculate the f1-score and store it in a variable named ~f1~.
+
+Print the evaluation metrics you just stored.
+
+** Script.py
+
+#+begin_src python :results output
+  import pandas as pd
+  import numpy as np
+  from sklearn.model_selection import train_test_split
+  from sklearn.ensemble import GradientBoostingClassifier
+  from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+
+  # Load dataset to a pandas DataFrame
+  path_to_data ='https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data'
+
+  column_names = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'accep']
+
+  df = pd.read_csv(path_to_data, names=column_names)
+  target_column = 'accep'
+  raw_feature_columns = [col for col in column_names if col != target_column]
+
+  # Create dummy variables from the feature columns
+  X = pd.get_dummies(df[raw_feature_columns], drop_first=True)
+
+  # Convert target column to binary variable; 0 if 'unacc', 1 otherwise
+  df[target_column] = np.where(df[target_column] == 'unacc', 0, 1)
+  y = df[target_column]
+
+  # Split the full dataset into training and testing sets
+  X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=123, test_size=0.30)
+
+  # 1. Create a Gradient Boosting Classifier adn print its parameters
+  grad_classifier = GradientBoostingClassifier(n_estimators=15)
+  print(grad_classifier.get_params())
+
+  # 2. Fit the Gradient Boosted Trees Classifier to the training data and get a list of predictions
+  grad_classifier.fit(X_train, y_train)
+  y_pred = grad_classifier.predict(X_test)
+
+  # 3. Calculate the accuracy, precision, recall, and f1-score on the testin data
+  accuracy = accuracy_score(y_test, y_pred)
+  precision = precision_score(y_test, y_pred)
+  recall = recall_score(y_test, y_pred)
+  f1 = f1_score(y_test, y_pred)
+
+  print(f'Test set accuracy:\t{accuracy}')
+  print(f'Test set precision:\t{precision}')
+  print(f'Test set recall:\t{recall}')
+  print(f'Test set f1:\t{f1}')
+
+  # 4. Code and print the confusion matrix
+  test_conf_matrix = pd.DataFrame(
+      confusion_matrix(y_test, y_pred, labels=[1, 0]),
+      index=['actual yes', 'actual no'],
+      columns=['predicted yes', 'predicted no']
+  )
+
+  print(f'Confusion Matrix:\n{test_conf_matrix.to_string()}')
+
+#+end_src
+
+#+RESULTS:
+: {'ccp_alpha': 0.0, 'criterion': 'friedman_mse', 'init': None, 'learning_rate': 0.1, 'loss': 'log_loss', 'max_depth': 3, 'max_features': None, 'max_leaf_nodes': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'n_estimators': 15, 'n_iter_no_change': None, 'random_state': None, 'subsample': 1.0, 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': 0, 'warm_start': False}
+: Test set accuracy:	0.8978805394990366
+: Test set precision:	0.7885714285714286
+: Test set recall:	0.8961038961038961
+: Test set f1:	0.8389057750759877
+: Confusion Matrix:
+:             predicted yes  predicted no
+: actual yes            138            16
+: actual no              37           328
