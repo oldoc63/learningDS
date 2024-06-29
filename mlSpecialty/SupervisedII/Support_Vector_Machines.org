@@ -1,0 +1,79 @@
+
+* Supervised Learning Part II
+You've already built a foundation in supervised machine learning, now it's time to go deeper and learn about another set of algorithms that built on the algorithms you've already learned about!
+
+** What will Supervised Learning for Data Science (Part II) Cover?
+After this unit, you will be able to use and apply:
+
+    - Support Vector Machines (SVMs)
+
+    - Recommender Systems
+
+    - Naive Bayes Classification
+
+** Support Vector Machines
+A *Support Vector Machine* (SVM) is a powerful supervised machine learning model used for classification. An SVM makes classifications by defining a decision boundary and then seeing what side of the boundary an unclassified point falls on. In the next few exercises, we'll learn how these decision boundaries get defined, but for now, know that they're defined by using a training set of classified points. That's why SVMs are /supervised/ machine learning models.
+
+Decision boundaries are easiest to wrap your head around when the data has two features. In this case, the decision boundary is a line. Take a look at the example below.
+
+[[./decision_boundary.png]]
+
+This SVM is using data about fictional games of Quidditch from the Harry Potter universe! The classifier is trying to predict whether a team will make the playoffs or not. Every point in the training set represents a "historical" Quidditch team. Each point has two features -the average number of goals the team scores and the average number of minutes it takes the team to catch the Golden Snitch.
+
+After finding a decision boundary using the training set, you could give the SVM an unlabeled data point, ant it will predict whether or not that team will make tha playoffs.
+
+Decision boundaries exist even when your data has more than two features. If there are three features, the decision boundary is now a plane rather than a line.
+
+[[./three_features_svm.png]]
+
+As the number of dimensions grows past 3, it becomes very difficult to visualize these points in space. Nonetheless, SVMs can still find a decision boundary. However, rather than being a separating line, or separating plane, the decision boundary is called a /separating hyperplane./
+
+*** Task 1
+Run the code to see two graphs appears. Right now they should be identical. We're going to fix the bottom graph so it has a good decision boundary. Why is this decision boundary bad?
+
+*** Task 2
+Let's shift the line on the bottom graph to make it separate the two clusters. The slope of the line looks pretty good, so let's keep that at -2.
+
+We want to move the boundary up, so change ~intercept_two~ so the line separates the two clusters.
+
+** Script.py
+
+#+begin_src python
+  import codecademylib3_seaborn
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from graph import ax, x_1, y_1, x_2, y_2
+
+  #Top graph intercept and slope
+  intercept_one = 8
+  slope_one = -2
+
+  x_vals = np.array(ax.get_xlim())
+  y_vals = intercept_one + slope_one * x_vals
+  plt.plot(x_vals, y_vals, '-')
+
+  #Bottom Graph
+  ax = plt.subplot(2, 1, 2)
+  plt.title('Good Decision Boundary')
+  ax.set_xlim(0, 10)
+  ax.set_ylim(0, 16)
+
+  plt.scatter(x_1, y_1, color = "b")
+  plt.scatter(x_2, y_2, color = "r")
+
+  #Change the intercept to separate the clusters
+  intercept_two = 15
+  slope_two = -2
+
+  x_vals = np.array(ax.get_xlim())
+  y_vals = intercept_two + slope_two * x_vals
+  plt.plot(x_vals, y_vals, '-')
+
+  plt.tight_layout()
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
+
+[[./good_bad_decision_boundary.png]]
