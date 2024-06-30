@@ -145,3 +145,26 @@ Next, we want the slope to be pretty flat. Change the value of ~slope_two~. The 
 #+end_src
 
 [[./optimal_intercept_slope.png]]
+
+** Support Vectors and Margins
+We now know that we want our decision boundary to be as far away form our training points as possible. Let's introduce some new terms that can help explain this idea.
+
+The /support vectors/ are the points in the training set closest to the decision boundary. In fact, these vectors are what define the decision boundary. In fact, these vectors are what define the decision boundary. But why are they called vectors? Instead of thinking about the training data as points, we can think of then as vectors coming from the origin.
+
+[[./vectors_define_decision_boundary.png]]
+
+These vectors are crucial in defining the decision boundary -that's where the "support" comes from. If you are using ~n~ features, there are at least ~n+1~ support vectors.
+
+The distance between a support vector and the decision boundary is called the /margin/. We want to make the margin as large as possible. The support vectors are highlighted in the image below:
+
+[[./support_vector_margin.png]]
+
+Because the support vectors are so critical in defining the decision boundary, many of the other training points can be ignored. This is one of the advantages od SVMs. Many supervised machine learning algorithms use every training point in order to make a prediction, even though many of those training points aren't relevant. SVMs are fast because they only use the support vectors!
+
+*** Task 1
+What are the support vectors for the SVM pictured below? There should be 2 blue support vectors and 1 red support vector.
+
+*** Task 2
+What is the size of the marging?
+
+** Support Vector Machines: scikit-learn
