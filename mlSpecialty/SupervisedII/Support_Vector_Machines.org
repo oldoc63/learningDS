@@ -293,3 +293,50 @@ Play around with the ~C~ variable to see how the decision boundary changes with 
 [[./outliers_graph_hard_margins.png]]
 
 [[./outliers_graph_soft_margins.png]]
+
+** Kernels
+Up to this point, we have been using data sets that are linearly separable. This means that it's possible to draw a straight decision boundary between the two classes. However, what would happen if an SVM came along a data set that wasn't linearly separable?
+
+[[./non_linearly_separable.png]]
+
+It's impossible to draw a straight line to separate the red points from the blue points!
+
+Luckily, SVMs have a way of handling these data sets. Remember when we set ~kernel='linear'~ when creating our SVM? Kernels are the key to creating a decision boundary between data points that are not linearly separable.
+
+Note that most machhine learning models should allow for some error. For example, the image below shows data that isn't linearly separable. However, it is not linearly separable due to a few outliers. We can still draw a straight line that, for the most part, separates the two classes. You shouldn't need to create a non-linear decision boundary just to fit some outliers. Drawing a line that correctly separates every point would be drastically overfitting the model to the data.
+
+[[./non_linearly_separable_data_due_to_outliers.png]]
+
+*** Task 1
+Let's take a look at the power of kernels. We've created a dataset that isn't linearly separable and split it into a training set and a validation set.
+
+Create an ~SVC~ named ~classifier~ with a ~'linear'~ kernel.
+
+*** Task 2
+Call the ~.fit()~ method using ~training_data~ and ~training_labels~ as parameters.
+
+*** Task 3
+Let's see how accurate our classifier is using a linear kernel.
+
+Call ~classifier~'s ~.score()~ function using ~validation_data~ and ~validation_labels~ as parameters. Print the results.
+
+This will print the average accuracy of the model.
+
+*** Task 4
+That's pretty bad! The classifier is getting it right less than 50% of the time! Change ~'linear'~ to ~'poly'~ and add the parameter ~degree=2~. Run the program again and see what happens to the score.
+
+*** Script.py
+
+#+begin_src python
+  import codecademylib3_seaborn
+  from sklearn.svm import SVC
+  from graph import points, labels
+  from sklearn.model_selection import train_test_split
+
+  training_data, validation_data, training_labels, validation_labels = train_test_split(points, labels, train_size=0.8, test_size=0.2, random_state=100)
+
+  classifier = SVC(kernel='poly', degree=2)
+  classifier.fit(training_data, training_labels)
+  (classifier.score(validation_data, validation_labels))
+
+#+end_src
