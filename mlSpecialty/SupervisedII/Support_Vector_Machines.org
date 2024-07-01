@@ -340,3 +340,93 @@ That's pretty bad! The classifier is getting it right less than 50% of the time!
   (classifier.score(validation_data, validation_labels))
 
 #+end_src
+
+** Polynomial Kernel
+That kernel seems pretty magical. It is able to correctly classify every point! Let's take a deeper look at what it was really doing.
+
+We start with a group of non-linearly separable points that looked like this:
+
+[[./non_linearly_separable.png]]
+
+The kernel transforms the data in a clever way to make it linearly separable. We used a polynomial kernel which transform every point in the following way:
+
+$$
+(x, y) \rightarrow (\sqrt{2} \  \cdot \  x \ \cdot \ y, \  x^2, \ y^2)
+$$
+
+The kernel has added a new dimension to each point! For example, the kernel transforms the point ~[1, 2]~ like this:
+
+$$
+(1, 2) \rightarrow (2 \sqrt{2}, 1, 4)
+$$
+
+If we plot these new three dimensional points, we get the following graph:
+
+[[./twod_data_projected_into_threed.png]]
+
+Look at that! All of the blue points have scooted away from the red ones. By projecting the data into a higher dimension, the two classes are now linearly separable by a plane.
+
+*** Task 1
+In this exercise, we will be using a non-linearly separable dataset similar to the concentric circles above.
+
+Rather than using a polynomial kernel, we're going to stick with a linear kernel and do the transformation ourselves. The SVM running a linear kernel on the transformed points should perform identically to the SVM running a polynomial kernel on the original points.
+
+To begin, at the bottom of your code, print  ~training_data[0]~ to see the first data point. You will also see the accuracy of the SVM when the data is not projected into 3 dimensions.
+
+*Hint*
+The SVM is pretty bad! Because it is using a linear kernel, it is trying to draw a straight decision boundary.
+
+*** Task 2
+Let's transform the data into three dimensions! Begin by creating two empty lists called ~new_training~ and ~new_validation~.
+
+*** Task 3
+Loop through every point in ~training_data~ and ~validation_data~. For every ~point~, ~append~ a list to ~new_training~. The list should contain three numbers:
+
+    - The square root of ~2~ times ~point[0]~ times ~point[1]~
+
+    - ~point[0]~ squared
+
+    - ~point[1]~ squared
+
+Remember, to square a number in Python do ~number ** 2~. To take the square root, do ~number ** 0.5~.
+
+*** Task 4
+Retrain ~classifier~ by calling the ~.fit()~ method using ~new_training~ and ~training_labels~ as parameters.
+
+*** Task 5
+Finally, run ~classifier~'s ~.score()~ method using ~new_validation~ and ~validation_labels~ as parameters. Print the results. How did the SVM do when the data was projected to three dimensions?
+
+*Hint*
+The classifier should be 100% accurate! Pretty cool! We didn't change anything about the classifier, *we just changed the data*.
+
+*** Script.py
+
+#+begin_src python :results output
+  from sklearn.datasets import make_circles
+  from sklearn.svm import SVC
+  from sklearn.model_selection import train_test_split
+
+  # Makes concentric circles
+  points, labels = make_circles(n_samples=300, factor=.2, noise=.05, random_state=1)
+
+  # Makes training set and validation set
+  training_data, validation_data, training_labels, validation_labels = train_test_split(points, labels, train_size=0.8, test_size=0.2, random_state=100)
+
+  classifier = SVC(kernel="linear", random_state=1)
+  classifier.fit(training_data, training_labels)
+  print(classifier.score(validation_data, validation_labels))
+
+  print(training_data[0])
+
+  new_training = [[2 ** 0.5 * pt[0] * pt[1], pt[0]**2, pt[1]**2] for pt in training_data]
+  new_validation = [[2 ** 0.5 * pt[0] * pt[1], pt[0]**2, pt[1]**2] for pt in validation_data]
+
+  classifier.fit(new_training, training_labels)
+  print(classifier.score(new_validation, validation_labels))
+
+#+end_src
+
+#+RESULTS:
+: 0.5666666666666667
+: [0.31860062 0.11705731]
+: 1.0
