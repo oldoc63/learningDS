@@ -430,3 +430,69 @@ The classifier should be 100% accurate! Pretty cool! We didn't change anything a
 : 0.5666666666666667
 : [0.31860062 0.11705731]
 : 1.0
+
+** Radial Basis Function Kernel
+The most commonly used kernel in SVMs is a radial basis function (*rbf*) kernel. This is the default kernel used in scikit-learn's ~SVC~ object. If you don't specifically set the kernel to ~"linear"~, ~"poly"~ the ~SVC~ object will use an rbf kernel. If you want to be explicit, you can set ~kernel = "rbf"~, although that is redundant.
+
+It is very tricky to visualize how an rbf kernel "transforms" the data. The polynomial kernel we used transformed two-dimensional points into three-dimensional points. An rbf kernel transforms two-dimensional points into points with an infinite number of dimensions!
+
+We won't get into how the kernel does this -it involves some fairly complicated linear algebra. However, it is important to know about the rbf kernel's ~gamma~ parameter.
+
+#+begin_src python
+classifier = SVC(kernel="rbf", gamma=0.5, C=2)
+#+end_src
+
+~gamma~ is similar to the ~C~ parameter. You can essentially tune the model to be more or less sensitive to the training data. A higher ~gamma~, say ~100~, will put more importance on the training data and could result in overfitting. Conversely, a lower ~gamma~ like ~0.01~ makes the points in the training data less relevant and can result in underfitting.
+
+*** Task 1
+We're going to be using a rbf kernel to draw a decision boundary for the following points:
+
+[[./rbf_non_linear_dataset.png]]
+
+We've imported the data and split it into ~training_data~, ~validation_data~, ~training_labels~, and ~validation_labels~.
+
+Begin by creating an ~SVC~ named ~classifier~ with an ~"rbf"~ kernel. Set the kernel's ~gamma~ equal to ~1~.
+
+*** Task 2
+Next, train the model using the ~.fit()~ method using ~training_data~ and ~training_labels~ as parameters.
+
+*** Task 3
+Let's test the classifier's accuracy when its ~gamma~ is ~1~. Print the result of the ~.score()~ function using ~validation_data~ and ~validation_labels~ as parameters.
+
+*Hint*
+The decision boundary when ~gamma = 1~ looks like this:
+
+[[./decision_boundary_gamma_1.png]]
+
+*** Task 4
+Let's see what happens if we increase ~gamma~. Change ~gamma~ to ~10~. What happens to the accuracy of our model?
+
+*Hint*
+The decision boundary when gamma = 10 looks like this:
+
+[[./decision_boundary_gamma_10.png]]
+
+*** Task 5
+The accuracy went down. We overfit our model. Change ~gamma~ to ~0.1~. What happens to the accuracy of our model this time?
+
+*Hint*
+Now we're underfitting. The decision boundary looks like this:
+
+[[./decision_boundary_gamma_01.png]]
+
+*** Script.py
+
+#+begin_src python
+  from data import points, labels
+  from sklearn.model_selection import train_test_split
+  from sklearn.smv import SVC
+
+  training_data, validation_data, training_labels, validation_labels = train_test_split(points, labels, train_size=0.08, test_size=0.2, random_state=100)
+
+  classifier = SVC(kernel="rbf", gamma=1)
+  classifier.fit(training_data, training_labels)
+  print(classifier.score(validation_data, validation_labels))
+
+#+end_src
+
+#+RESULTS:
