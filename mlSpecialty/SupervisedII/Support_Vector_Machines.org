@@ -468,7 +468,7 @@ The decision boundary when ~gamma = 1~ looks like this:
 Let's see what happens if we increase ~gamma~. Change ~gamma~ to ~10~. What happens to the accuracy of our model?
 
 *Hint*
-The decision boundary when gamma = 10 looks like this:
+The decision boundary when ~gamma = 10~ looks like this:
 
 [[./decision_boundary_gamma_10.png]]
 
@@ -496,3 +496,86 @@ Now we're underfitting. The decision boundary looks like this:
 #+end_src
 
 #+RESULTS:
+
+** Review
+Here are some of the major takeaways from this lesson on SVMs:
+
+    - SVM are supervised machine learning models uses for classification.
+
+    - An SVM uses support vectors to define a decision boundary. Classifications are made by comparing unlabeled points to that decision boundary.
+
+    - Support vectors are the points of each class closest to the decision boundary. The distance between the support vectors and the decision boundary is called the margin.
+
+    - SVMs attempt to create the largest margin possible while staying within an acceptable amount of error.
+
+    - The ~C~ parameter controls how much error is allowed. A large ~C~ allows for little error and creates a hard margin. A small ~C~ allows for more error and creates a soft margin.
+
+    - SVMs use kernels to classify points that aren't linearly separable.
+
+    - Kernels transform points into higher dimensional space. A polynomial kernel transforms points into three dimensions while an rbf kernel transforms points into infinite dimensions.
+
+    - An rbf kernel has a ~gamma~ parameter. If ~gamma~ is large, the training data is more relevant, and as a result overfitting can occur.
+
+** Quiz
+
+*** Question 1
+Which of the following SVMs with an rbf kernel has the largest ~gamma~ parameter?
+
+    - *C*
+
+      Correct! The highest ~gamma~ will be the graph that is most overfit to the data. The decision boundary will be very specific to the training set.
+
+*** Question 2
+What are the support vectors in an SVM?
+
+    - The points in the training set closest to the decision boundary.
+
+      Correct! These points help define the decision boundary.
+
+*** Question 3
+Why is it important for an SVM to maximize the size of its marging?
+
+    - A large margin prevents points in the training set form being close to the decision boundary.
+
+      Correct! We want these points as far away from the boundary as possible. There is less room for error if they are right next to the boundary.
+
+*** Question 4
+An SVM has a soft margin when:
+
+    - The marging is large and the decision boundary allows for many errors
+
+      Correct! A soft margin could result in underfitting.
+
+*** Question 5
+What happens to a Support Vector Machine if ~C~ is to large?
+
+    - Overfitting will occur due to the marging becoming too small
+
+      Correct! If C is large, the SVM will try to make the decision boundary work for every point, even if it is an outlier.
+
+*** Question 6
+What are the inputs of the ~.fit()~ method in scikit-learn's ~SVC~ class?
+
+    - A list of training points and a list of labels associated with those points.
+
+      Correct! These both have to be lists, even if you're only training with one data point (which you probably shouldn't do!)
+
+*** Question 7
+If your data is in three dimensions, the decision boundary will be a:
+
+    - Plane
+
+      Correct! A plane can separate points in three dimensions.
+
+*** Question 8
+Which of the following SVMs has an optimal decision boundary?
+
+    - *A*
+      Correct! That decision boundary is far away from both clusters.
+
+*** Question 9
+What is the role of a kernel in an SVM?
+
+    - A kernel transforms the data into a higher dimension so it can be linearly separable.
+
+      Correct! Kernels help make decision boundaries for points that are not linearly separable.
