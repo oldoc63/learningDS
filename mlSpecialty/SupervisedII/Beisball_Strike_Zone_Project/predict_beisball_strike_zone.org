@@ -43,6 +43,45 @@ Let's make sure that worked. Print the ~type~ column from the ~aaron_judge~ Data
 
 ** Plotting the pitches
 
+*** Task 6
+There were some ~NaN~'s in there. We'll take care of those in a second. For now, let's look at the other features we're interested in.
+
+We want to predict whether a pitch is a ball or a strike based on its location over the plate. You can find the ball's location in the columns ~plate_x~ and ~plate_z~.
+
+Print ~aaron_judge['plate_x']~ to see what that column looks like.
+
+~plate_x~ measures how far left or right the pitch is form the center of home plate. If ~plate_x = 0~, that means the pitch was directly in the middle of the home plate.
+
+*** Task 7
+We now have the three columns we want to work with: ~'plate_x', 'plate_z', and 'type'~.
+
+Let's remove every row that has a ~NaN~ in any of those columns.
+
+You can do this by calling the ~dropna~ function. This function can take a parameter named ~subset~ which should be a list of the columns you're interested in.
+
+For example, the following code drops all of the ~NaN~ values from the columns 'A', 'B', and 'C'.
+
+#+begin_src python
+  data_frame = data_frame.dropna(subset = ['A', 'B', 'C'])
+#+end_src
+
+*** Task 8
+We now have points to plot using Matplotlib. Call ~plt.scatter()~ using five parameters:
+
+    - The parameter ~x~ should be the ~plate_x~ column.
+
+    - The parameter ~y~ should be the ~plate_z~ column.
+
+    - To color the points correctly, the parameter ~c~ should be the ~type~ column.
+
+    - To make the strikes red and the balls blue, set ~cmap~ parameter to ~plt.cm.coolwarm~.
+
+    - To make the points slightly transparent, set the ~alpha~ parameter to ~0.25~.
+
+Call ~plt.show~ to see your graph.
+
+~plate_z~ measures how high off the ground the pitch was. If ~plate_z = 0~ that means the pitch was at ground level when it got to the home plate.
+
 ** Script.py
 #+begin_src python :results output
   import matplotlib.pyplot as plt
@@ -65,22 +104,48 @@ Let's make sure that worked. Print the ~type~ column from the ~aaron_judge~ Data
   jose_altuve['type'] = jose_altuve['type'].map({'S':1, 'B':0})
   david_ortiz['type'] = david_ortiz['type'].map({'S':1, 'B':0})
 
-  print(aaron_judge['type'])
+  #print(aaron_judge['type'])
+
+  #print(aaron_judge['plate_x'])
+
+  aaron_judge = aaron_judge.dropna(subset=['plate_x', 'plate_z', 'type'])
+  jose_altuve = jose_altuve.dropna(subset=['plate_x', 'plate_z', 'type'])
+  david_ortiz = david_ortiz.dropna(subset=['plate_x', 'plate_z', 'type'])
+
+  print(aaron_judge.type.unique())
+
+  plt.scatter(x = aaron_judge['plate_x'],
+              y = aaron_judge['plate_z'],
+              c = aaron_judge['type'],
+              cmap = plt.cm.coolwarm,
+              alpha = 0.5)
+  plt.title('Aaron Judge - tallest')
+  plt.xlabel('how far left or right from center')
+  plt.ylabel('how high off the ground')
+  plt.show()
+
+  plt.scatter(x = jose_altuve['plate_x'],
+              y = jose_altuve['plate_z'],
+              c = jose_altuve['type'],
+              cmap = plt.cm.coolwarm,
+              alpha = 0.5)
+  plt.title('Jose Altuve - shortest')
+  plt.xlabel('how far left or right from center')
+  plt.ylabel('how high off the ground')
+  plt.show()
+
+  plt.scatter(x = david_ortiz['plate_x'],
+              y = david_ortiz['plate_z'],
+              c = david_ortiz['type'],
+              cmap = plt.cm.coolwarm,
+              alpha = 0.5)
+  plt.title('David Ortiz - average')
+  plt.xlabel('how far left or right from center')
+  plt.ylabel('how high off the ground')
+  plt.show()
+
 
 #+end_src
 
 #+RESULTS:
-#+begin_example
-0       1.0
-1       1.0
-2       1.0
-3       0.0
-4       1.0
-       ...
-2984    1.0
-2985    NaN
-2986    0.0
-2987    0.0
-2988    NaN
-Name: type, Length: 2989, dtype: float64
-#+end_example
+: [1. 0.]
