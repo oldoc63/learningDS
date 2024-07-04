@@ -82,6 +82,50 @@ Call ~plt.show~ to see your graph.
 
 ~plate_z~ measures how high off the ground the pitch was. If ~plate_z = 0~ that means the pitch was at ground level when it got to the home plate.
 
+** Building the SVM
+
+*** Task 9
+Now that we've seen the location of every pitch, let's create an SVM to create a decision boundary. This decision boundary will be the /real/ strike zone for that player. For this section, make sure to write all of your code below the call to the ~scatter~ function but above the ~show~ function.
+
+To begin, we want to validate our model, so we need to split the data into a training set and a validation set.
+
+Call the ~train_test_split~ function using ~aaron_judge~ as a parameter.
+
+Set the parameter ~random_state~ equal to ~1~ to ensure your data is split in the same way as our solution code.
+
+This function returns two objects. Store the return values in variables named ~training_set~ and ~validation_set~.
+
+*** Task 10
+Next, create an ~SVC~ named ~classifier~ with ~kernel='rbf'~. For right now, don't worry about setting C or gamma parameters.
+
+*** Task 11
+Call ~classifier~'s ~.fit()~ method. This method should take two parameters:
+
+    - /The training data./ This is the ~plate_x~ column and the ~plate_z~ column in ~training_set~.
+
+    - /The labels./ This is the ~type~ column in ~training_set~.
+
+The code below shows and example of selecting two columns from a DataFrame:
+
+#+begin_src python
+  two_columns = data_frame[['A', 'B']]
+#+end_src
+
+*** Task 12
+To visualize the SVM, call the draw_boundary function. This is a function that we wrote ourselves -you won't find it in scikit-learn.
+
+This function takes two parameters:
+
+    - /The axes of your graph./ For us, this is the ~ax~ variable that we defined at the top of your code.
+
+    - The trained SVM. For us, this is ~classifier~. Make sure you've called ~.fit()~ before trying to visualize the decision boundary.
+
+Run your code to see the predicted strike zone!
+
+Note that the decision boundary will be drawn based on the size of the current axes. So if you call ~draw_boundary~ before calling ~scatter~ function, you will only see the boundary as a small square.
+
+To get around this, you could manually set the size of the axes by using something like ~ax.set_ylim(-2, 2)~ before calling ~draw_boundary~.
+
 ** Script.py
 #+begin_src python :results output
   import matplotlib.pyplot as plt
@@ -144,8 +188,22 @@ Call ~plt.show~ to see your graph.
   plt.ylabel('how high off the ground')
   plt.show()
 
+  plt.scatter(x = aaron_judge['plate_x'],
+              y = aaron_judge['plate_z'],
+              c = aaron_judge['type'],
+              cmap = plt.cm.coolwarm,
+              alpha = 0.5)
+  plt.title('Aaron Judge - tallest')
+  training_set, validation_set = train_test_split(aaron_judge, random_state=1)
+  classifier = SVC(kernel='rbf')
+  classifier.fit(training_set[['plate_x', 'plate_z']], training_set['type'])
+  draw_boundary(ax, classifier)
+
+  plt.show()
 
 #+end_src
 
 #+RESULTS:
-: [1. 0.]
+: /home/oldoc/OpenAI/lib/python3.12/site-packages/sklearn/base.py:465: UserWarning: X does not have valid feature names, but SVC was fitted with feature names
+:   warnings.warn(
+: [ Babel evaluation exited with code 0 ]
