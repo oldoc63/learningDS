@@ -1,0 +1,86 @@
+
+* Predict Baseball Strike Zones With Machine Learning
+Support Vector Machines are powerful machine learning models that can make complex decision boundaries. An SVM's decision boundary can twist and curve to accommodate the training data.
+
+In this project, we will use an SVM trained using a baseball dataset to find the decision boundary of the strike zone.
+
+[[./strike_zone.png]]
+
+The strike zone can be thouhgt of as a decision boundary that determines whether or not a pitch is a strike or a ball. There is a strict definition of the strike zone -in practice, however, it will vary depending on the unpire or the player at bat.
+
+Let's use our knowledge of SVMs to find the /real/ strike zone of several baseball players.
+
+** Create the labels
+
+*** Task 1
+We've imported several DataFrames related to some of baseball's biggest stars. We have data on Aaron Judge and Jose Altuve. Judge is one of the tallest players in the league and Altuve is one of the shortest. Their strike zones should be pretty different.
+
+Each row in these DataFrames corresponds to a single pitch that the batter saw in the 2017 season. To begin, let's take a look at all of the features of a pitch. Print ~aaron_judge.columns~.
+
+In this project, we'll ask you to print out a lot of information. To avoid clutter, feel free to delete the print statements once you understand the data.
+
+We used the [[https://github.com/jldbc/pybaseball][pybaseball]] Python package to get the data for this project. If you're interested in getting more data, the documentation for pybaseball can help you get data that you're interested onto your own computer.
+
+*** Task 2
+Some of these features have obscure names. Let's learn what the feature ~description~ means.
+
+Print ~aaron_judge.description.unique()~ to see the different values the description feature could have.
+
+*** Task 3
+We're interested in looking at whether a pitch was a ball or a strike. That information is stored in the ~type~ feature. Look at the unique values stored in the ~type~ feature. Look at the unique values stored in the ~type~ feature to get a sense of how balls and strikes are recorded.
+
+*** Task 4
+Great! We know every row's ~type~ features is either an ~'S'~ for a strike, a ~'B'~ for a ball, or an ~'X'~ for neither (for example, an ~'X'~ could be a hit or an out).
+
+We'll want to use this feature as the label of our data points. However, instead of using strings, it will be easier if we change every ~'S'~ to a ~1~ and every ~'B'~ to a ~0~.
+
+#+begin_src python
+  df['example_column'] = df['example_column'].map({'A':1, 'B':2})
+#+end_src
+
+*** Task 5
+Let's make sure that worked. Print the ~type~ column from the ~aaron_judge~ DataFrame.
+
+** Plotting the pitches
+
+** Script.py
+#+begin_src python :results output
+  import matplotlib.pyplot as plt
+  import pandas as pd
+  from sklearn.svm import SVC
+  from sklearn.model_selection import train_test_split
+  from svm_visualization import draw_boundary
+  from players import aaron_judge, jose_altuve, david_ortiz
+
+  fig, ax = plt.subplots()
+
+  #print(aaron_judge.head())
+
+  #print(aaron_judge.columns)
+
+  #print(aaron_judge.description.unique())
+  #print(aaron_judge.type.unique())
+
+  aaron_judge['type'] = aaron_judge['type'].map({'S':1, 'B':0})
+  jose_altuve['type'] = jose_altuve['type'].map({'S':1, 'B':0})
+  david_ortiz['type'] = david_ortiz['type'].map({'S':1, 'B':0})
+
+  print(aaron_judge['type'])
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+0       1.0
+1       1.0
+2       1.0
+3       0.0
+4       1.0
+       ...
+2984    1.0
+2985    NaN
+2986    0.0
+2987    0.0
+2988    NaN
+Name: type, Length: 2989, dtype: float64
+#+end_example
