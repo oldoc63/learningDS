@@ -24,3 +24,16 @@ Recommender systems also differ from traditional supervised learning in the spec
 | Suggesting shoes     | Shoes that will sell      |
 | Apply for a given CC | Transsaction is faudulent |
 | Users similar to you | Clustering                |
+
+** Properties of Good Recommender Systems
+When considering the performance of a recommender system, there are a couple of different dimensions we should consider:
+
+    - /Relevance:/ When a recommender system makes a recommendation, it should be relevant to the user. More specifically, these recommendations should be ones the user would likey rate highly. For example, a female user who only looks  at and buys women's shoes on an ecommerce website should generally only receive recommendations for women's shoes. For many data practitioners, this is the most obvious and important property to optimize. However, it is critical to understand this is not the only important property of a recommender system.
+
+    - /Novelty:/ Recommender systems should be ideally making recommendations the user has not seen before. For example, a recommender system that consistently recommends only the most popular women's shoes to a female user may be considered a poor recommender system.
+
+    - /Serendipity:/ Good recommender systems generally make recommendations that are somewhat unexpected. These sorts of recommendations (assuming they are relevant) can often delight users. Going back to our shoe ecommerce site example, a user that often purchases running shoes might get recommended sandals that are good for running from a serendipitous recommender system.
+
+    - /Recommendation Diversity:/ Recommender systems that recommend many different types of items are more likely to have at least one item liked by the user. Looking at our store site example, a recommender system that suggest to users not only shoes, but socks and shoe polish may be preferable to one that only recommends shoes.
+
+    - /Technical Complexity:/ Recommender systems may often consist of many complex algorithms and parts. As a result, these systems require maintenance and some level of interpretability by technical staff. Therefore, recommender systems that are less complex and easier to understand are preferable from a cost and risk perspective.
