@@ -1,0 +1,11 @@
+
+* Introduction to Recommender Systems
+
+** What are Recommender Systems?
+With the growth of the internet, the number of options people have for everything from watching videos, to buying clothes, to finding a date has increased dramatically. Having potentially thousands of options, how are we to find and choose the best options for us?
+
+Many internet companies have provided us tools to help us navigate these seemingly infinite number of choices. For example, when you visit a product page on an ecommerce site, you may have noticed a section of the page that suggests other products you might like based on things you have purchased in the past. Perhaps you have received a push notification on your mobile phone recommending a video to watch. The closer you look, the more likely you are to find all sorts of recommendations being made in the websites and mobile apps you use.
+
+All these tools are powered by recommender systems. Recommender systems are algorithms that use data about products and user's preferences to make recommendations to users about the best options to choose from a set of options.
+
+We will learn about the properties of recommender systems, the ways they differ from traditional supervised learning, and the different types of recommender systems.
