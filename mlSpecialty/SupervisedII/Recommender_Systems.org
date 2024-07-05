@@ -9,3 +9,18 @@ Many internet companies have provided us tools to help us navigate these seeming
 All these tools are powered by recommender systems. Recommender systems are algorithms that use data about products and user's preferences to make recommendations to users about the best options to choose from a set of options.
 
 We will learn about the properties of recommender systems, the ways they differ from traditional supervised learning, and the different types of recommender systems.
+
+** Recommender Systems versus Supervised Learning
+As you learned about recommender systems in the previous exercise, you may be wondering how recommender systems differ from traditional supervised learning techniques you have learned about in previous sections. In general, recommender systems do often utilize machine learning techniques. So what is the difference between the two terms?
+
+The difference is not in the technique, but in purpose. Recommender systems are built to address problems of determining the *best action* for a user to take given a set of options. Supervised learning is generally used to describe machine learning to predict *outcomes*.
+
+Let's take the example of an E-Commerce website selling shoes. If the website built a machine learning model that was designed to determine how much each user would like each shoe, that model would be considered a recommender system. However, if the purpose of the machine learning model is built to determine how many shoes the site would sell next month, that would be considered just an application of supervised learning.
+
+Recommender systems also differ from traditional supervised learning in the specific properties are important for measuring their performance, as we shall see in the following section.
+
+| Recommender Systems  | Machine Learning          |
+|----------------------+---------------------------|
+| Suggesting shoes     | Shoes that will sell      |
+| Apply for a given CC | Transsaction is faudulent |
+| Users similar to you | Clustering                |
