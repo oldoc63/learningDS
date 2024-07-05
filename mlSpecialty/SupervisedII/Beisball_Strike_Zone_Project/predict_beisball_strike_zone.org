@@ -126,6 +126,51 @@ Note that the decision boundary will be drawn based on the size of the current a
 
 To get around this, you could manually set the size of the axes by using something like ~ax.set_ylim(-2, 2)~ before calling ~draw_boundary~.
 
+** Optimizing the SVM
+
+*** Task 13
+We're now able to see the strike zone. But we don't know how accurate our classifier is yet. Let's find its accuracy by calling the ~.score()~ method and printing the results.
+
+~.score()~ takes two parameters -the points in the *validation set* and the labels associated with those points.
+
+These two parameters should be very similar to the parameters used in ~.fit()~.
+
+*** Task 14
+Let's change some of the SVM's parameter to see if we get better accuracy.
+
+Set the parameters of the SVM to be ~gamma=100~ and ~C=100~.
+
+This will overfit the data, but it will be a good place to start. Run the code to see the overfitted decision boundary. What's the new accuracy?
+
+*** Task 15
+Try to find a configuration of ~gamma~ and ~C~ that greatly improves the accuracy. You may want to use nested for loops.
+
+Loop through different values of ~gamma~ and ~C~ and print the accuracy using those parameters. Our best SVM had and accuracy of 83.41%. Can you beat ours?
+
+** Explore Other Players
+
+*** Task 16
+Finally, let's see how different players' strike zones change. Aaron Judge is the tallest player in the MLB. Jose Altuve is the shortest player. Instead of using the ~aaron_judge~ variable, use ~jose_altuve~.
+
+To make this easier, you might want to consider putting all of your code inside a function and using the dataset as a parameter.
+
+We've also imported ~david_ortiz~.
+
+Note that the range of the axes will change for these players. To really compare the strike zones, you may want to force the axes to be te same.
+
+Try putting ~ax.set_ylim(-2, 6)~ and ~ax.set_xlim(-3, 3)~ right before calling ~plt.show()~
+
+*** Task 17
+See if you can make an SVM that is more accurate by using more features. Perhaps the location of the ball isn't the only important feature!
+
+You can see the columns available to you by printing ~aaron_judge.columns~.
+
+For example, try adding the ~strikes~ column to your SVM — the number of strikes the batter already has might have an impact on whether the next pitch is a strike or a ball.
+
+Note that our ~draw_boundary~ function won’t work if you have more than two features. If you add more features, make sure to comment that out!
+
+Try to make the best SVM possible and share your results with us!
+
 ** Script.py
 #+begin_src python :results output
   import matplotlib.pyplot as plt
@@ -195,15 +240,39 @@ To get around this, you could manually set the size of the axes by using somethi
               alpha = 0.5)
   plt.title('Aaron Judge - tallest')
   training_set, validation_set = train_test_split(aaron_judge, random_state=1)
-  classifier = SVC(kernel='rbf')
+  classifier = SVC(kernel='rbf', gamma=100, C=100)
   classifier.fit(training_set[['plate_x', 'plate_z']], training_set['type'])
-  draw_boundary(ax, classifier)
 
   plt.show()
+
+  print(classifier.score(validation_set[['plate_x', 'plate_z']], validation_set['type']))
+
+  def strike_zone(player):
+      plt.scatter(x=player['plate_x'], y=player['plate_z'], c=player['type'], cmap= plt.cm.coolwarm, alpha=0.5)
+      plt.title('{}'.format(player.player_name.unique()))
+      training_set, validation_set = train_test_split(player, random_state=1)
+      largest = {'value':0, 'gamma':1, 'C':1}
+      for gamma in range(1, 5):
+          for C in range(1, 5):
+              classifier = SVC(kernel='rbf', gamma=gamma, C=C)
+              classifier.fit(training_set[['plate_x', 'plate_z']], training_set['type'])
+              score = classifier.score(validation_set[['plate_x', 'plate_z']], validation_set['type'])
+              if(score > largest['value']):
+                  largest['value'] = score
+                  largest['gamma'] = gamma
+                  largest['C'] = C
+      print(largest)
+      draw_boundary(ax, classifier)
+      ax.set_ylim(-2, 6)
+      ax.set_xlim(-3, 3)
+      plt.show()
+
+  #strike_zone(aaron_judge)
+  #strike_zone(jose_altuve)
+  #strike_zone(david_ortiz)
 
 #+end_src
 
 #+RESULTS:
-: /home/oldoc/OpenAI/lib/python3.12/site-packages/sklearn/base.py:465: UserWarning: X does not have valid feature names, but SVC was fitted with feature names
-:   warnings.warn(
-: [ Babel evaluation exited with code 0 ]
+: [1. 0.]
+: 0.7933634992458521
