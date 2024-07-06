@@ -37,3 +37,16 @@ When considering the performance of a recommender system, there are a couple of 
     - /Recommendation Diversity:/ Recommender systems that recommend many different types of items are more likely to have at least one item liked by the user. Looking at our store site example, a recommender system that suggest to users not only shoes, but socks and shoe polish may be preferable to one that only recommends shoes.
 
     - /Technical Complexity:/ Recommender systems may often consist of many complex algorithms and parts. As a result, these systems require maintenance and some level of interpretability by technical staff. Therefore, recommender systems that are less complex and easier to understand are preferable from a cost and risk perspective.
+
+** Types of Recommender Systems
+Recommender systems can generally be classified into one of three different groups depending on the algorithmic approach they take to make recommendations:
+
+    - /*Collaborative Filtering:*/ Collaborative filtering is a recommender system technique that makes recommendations for a target user by using ratings information from other users. The driving principle behind collaborative filtering is that users that have similar ratings for items have similar tastes.
+
+    - /*Content-based Filtering:*/ Content-based Filtering is a recommender system technique that uses data about user preferences and attributes of item to model the likelihood a given user will like a specific item. This type of recommender systems tends to look more like the traditional machine learning models used in supervised learning.
+
+    - /*Knoledge-Based:*/ Knowledge-based recommender systems are a class of recommender systems used when there is not a lot of data available. Rules are explicitly programmed based on user preferences and domain knowledge. While an important class of recommender systems, we will not be discussing them in detail in this module.
+
+We're primarily going to focus on collaborative filtering in the course of this module.
+
+[[./Types_of_recommender_systems.png]]
