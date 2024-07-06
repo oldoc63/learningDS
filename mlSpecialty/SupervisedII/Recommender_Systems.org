@@ -50,3 +50,14 @@ Recommender systems can generally be classified into one of three different grou
 We're primarily going to focus on collaborative filtering in the course of this module.
 
 [[./Types_of_recommender_systems.png]]
+
+** Ratings Matrix: Representing User Preferences
+The first step in building a recommender system is to have a mathematical representation of data relating to user's preferences. Often, the representation used is a matrix of numbers called a *ratings matrix*, where each row represents a user, each column represents an item, and the intersection of a row and a column contains the rating for an item given by a user. Ratings inside of a ratings matrix can generally be represented as either *explicit ratings* or *implicit ratings*.
+
+Explicit ratings involve using the ratings given by users for items they have rated. Items that are not rated by users are left blank. Often they are normalized to help model performance. The major downside of this representation is explicit data may be scarce. Often, users skip rating items in an application. Often, rating data is not available at all.
+
+On the other hand, implicit ratings do not require users to submit ratings. Instead, user events on the app or website are viewed as endorsements of an item. For example, purchasing an item on an E-commerce website could be viewed as an endorsement of an item. Any item that a user purchases could then be represented as a 1 in a ratings matrix, and anything they do not purchase can be represented as a 0. The main advantage of implicit ratings is that data is much more readily available. The major downside is the data is not as granular as that of explicit ratings, and therefore recommendations can degrade accordingly.
+
+And sometimes an implicit rating can be converted into an explicit rating according to the data scientis's discretion. For instance, a user may have listened to one song fifty times on an audio streaming service and another one, only five times. There is relative information here as regards the user's preference on two items that can be converted to explicit ratings.
+
+[[./explicit_implicit.png]]
