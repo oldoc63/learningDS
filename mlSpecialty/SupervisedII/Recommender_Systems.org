@@ -180,3 +180,77 @@ Now that we have proper datasets for training and testing, we will now train a b
 #+RESULTS:
 : Computing the msd similarity matrix...
 : Done computing similarity matrix.
+
+*** Evaluating Recommender System Performance
+Finally, we will evaluate the performance of the ~KNNBasic~ recommender system. First, let's create some predictions on the test set.
+
+#+begin_src python
+  predicions = movie_recommender.test(testset)
+#+end_src
+
+The ~predictions~ are a list of ~Prediction~ objects. Each Prediction object contains a user id (~uid~), and item id representing the movie (~iid~), and actual rating given by the user for that movie (~r_ui~), an estimated rating from the recommender system (~est~) and some additional metadata about each prediction (~details~). An example of a ~Prediction~ object from our ~predictions~ can be seen below.
+
+#+begin_src python :results output
+  import surprise
+  from surprise import Dataset
+  from surprise.model_selection import train_test_split
+  from surprise import KNNBasic
+
+  movie_data = Dataset.load_builtin('ml-100k')
+
+  trainset, testset = train_test_split(movie_data, test_size=.2, random_state=42)
+
+  #print(trainset.ur[590])
+
+  movie_recommender = KNNBasic()
+  movie_recommender.fit(trainset)
+
+  predictions = movie_recommender.test(testset)
+
+  print(predictions[0])
+
+#+end_src
+
+#+RESULTS:
+: Computing the msd similarity matrix...
+: Done computing similarity matrix.
+: user: 907        item: 143        r_ui = 5.00   est = 4.04   {'actual_k': 40, 'was_impossible': False}
+
+This Prediction object contains a prediction for the movie 'The Sound of Music' (to see which movie each id corresponds to, take a look at this [[https://files.grouplens.org/datasets/movielens/ml-100k/u.item][movie data file]]). As seen above, the recommender system predicted a rating of about 4 stars, which is not very far from the actual prediction on 5 stars.
+
+We can measure one aspect ot the model's performance by looking at the root-mean square error, or RMSE. The RMSE is an average measure of how far off predictions will be from their actual values. The closer the RMSE is to 0, the more accurate the model. The RMSE can also be thought of as a measure of *relevance*, or how likely the items recommended will be something the user would be interested in based on their previous behavior. It is important to note that while relevance is one important aspect of a recommender system, it is not the only important thing to optimize in a recommender system.
+
+As seen below, Surprise makes it very easy to measure model RMSE.
+
+#+begin_src python :results output
+  import surprise
+  from surprise import Dataset
+  from surprise.model_selection import train_test_split
+  from surprise import KNNBasic
+  from surprise import accuracy
+
+  movie_data = Dataset.load_builtin('ml-100k')
+
+  trainset, testset = train_test_split(movie_data, test_size=.2, random_state=42)
+
+  #print(trainset.ur[590])
+
+  movie_recommender = KNNBasic()
+  movie_recommender.fit(trainset)
+
+  predictions = movie_recommender.test(testset)
+
+  print(predictions[0])
+
+  print(accuracy.rmse(predictions))
+
+#+end_src
+
+#+RESULTS:
+: Computing the msd similarity matrix...
+: Done computing similarity matrix.
+: user: 907        item: 143        r_ui = 5.00   est = 4.04   {'actual_k': 40, 'was_impossible': False}
+: RMSE: 0.9802
+: 0.980150596704479
+
+As seen above, the trained recommender system has an RMSE of about 0.98. We can now use this number as a bseline to see if there is a gain or loss in model performance versus other algorithms.
