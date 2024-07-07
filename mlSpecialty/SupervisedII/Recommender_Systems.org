@@ -301,3 +301,28 @@ Now it's your turn! Using what you have learned, train a simple SVD recommender 
 : RMSE: 0.9802
 : 0.980150596704479
 : RMSE: 0.9394
+
+** Quiz
+
+*** Question 1
+Which of the following did NOT involve building a recommender system?
+
+    - *Predicting the cost of a house based on real-state data*
+
+      Yes, this is a regression problem or a more classical supervised learning problem and not a recommender system (even though recommender systems use similar methods to what might be used here!)
+
+*** Question 2
+Fill in the blanks in the following paragraph about the different types of recommender systems.
+
+#+begin_example
+Content-based filtering is a recommender system
+technique that uses data about user preferences and
+attributes of items to model the likelihood a given
+user will like a specific item.
+
+Knowledge-based filtering are a class of recommender
+systems used when there is not a lot of data available.
+Rules are explicitly programmed based on user preferences and domain knowledge.
+
+Collaborative filtering is a recommender system technique that makes recommendations for a target user by using ratings information from other users.
+#+end_example
