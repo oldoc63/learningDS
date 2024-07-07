@@ -254,3 +254,50 @@ As seen below, Surprise makes it very easy to measure model RMSE.
 : 0.980150596704479
 
 As seen above, the trained recommender system has an RMSE of about 0.98. We can now use this number as a bseline to see if there is a gain or loss in model performance versus other algorithms.
+
+** Conclusion
+And that's it! Wiht just 10 lines of code, Surprise allowed us to train and test a basic recommender system with ease. Surprise also has several other built-in recommender systems algorithms, including alternative forms of collaborative filtering, Singular Value Decomposition (SVD), and other algorithms that will be explored in the course. Additionally, much like ~scikit-learn~ models, each of these models have hyperparameters that can be adjusted to help further optimize the performance of recommender systems.
+
+This article has hopefully given you a taste of the power and usefulness of Surprise. While Surprise by itself is not sufficient to build a scalable and well-performing recommender system for large-scale use, it is an excellent starting point for developing recommender systems, and a powerful addition to a machine learning practitioner's toolkit.
+
+** Assessment
+Now it's your turn! Using what you have learned, train a simple SVD recommender system using Surprise's ~SVD~ algorithm (documentation can be found [[https://surprise.readthedocs.io/en/stable/matrix_factorization.html#surprise.prediction_algorithms.matrix_factorization.SVD][here]]) and the provided training data. Then calculate its RMSE. Is this an improvement over the ~KNNBasic~ algorithm above? How can you tell?
+
+#+begin_src python :results output
+  import surprise
+  from surprise import Dataset
+  from surprise.model_selection import train_test_split
+  from surprise import KNNBasic, SVD
+  from surprise import accuracy
+
+  movie_data = Dataset.load_builtin('ml-100k')
+
+  trainset, testset = train_test_split(movie_data, test_size=.2, random_state=42)
+
+  #print(trainset.ur[590])
+
+  movie_recommender = KNNBasic()
+  movie_recommender.fit(trainset)
+
+  predictions = movie_recommender.test(testset)
+
+  print(predictions[0])
+
+  print(accuracy.rmse(predictions))
+
+  svd_recommender = SVD()
+  svd_recommender.fit(trainset)
+
+  svd_predictions = svd_recommender.test(testset)
+
+  accuracy.rmse(svd_predictions)
+
+#+end_src
+
+#+RESULTS:
+: Computing the msd similarity matrix...
+: Done computing similarity matrix.
+: user: 907        item: 143        r_ui = 5.00   est = 4.04   {'actual_k': 40, 'was_impossible': False}
+: RMSE: 0.9802
+: 0.980150596704479
+: RMSE: 0.9394
