@@ -80,3 +80,17 @@ One such transformation is ratings normalization. Ratings normalization is a tec
 One of two approaches is usually used for normalizing ratings. The first, mean centering, involves subtracting the mean rating of a row from every value of the row. The other method, z-score normalization, involves using the mean and standard deviation of each row to calculate a z-score for each element of the row. Can you think of other ways to make sure that the ratings between different users and items can be meaningfully compared?
 
 [[./will_e_like_shoe_3.png]]
+
+** Review
+We learned about recommender systems. We learned about how they compare to traditional supervised learning and what are the properties of good recommender systems. We also discussed the different types of recommender systems, as well as how we can transform data for use in recommender systems. We are now ready to learn how we can use Python to implement and build recommender systems.
+
+* Simple Python Recommender Engine (Surprise!)
+Learn how to build a recommender system using the Python library surprise!
+
+** Introduction
+The engineering and development of a recommender system requires work across data science, software engineering, infrastructure, product, and design. With so many things that need to be executed in order to produce a good recommender system, having tools that make writing and testing the code for recommender systems is critical to success.
+
+In the specific case of machine learning engineering, one group of tools that makes development easier is open-source software libraries. These standardized and well-tested libraries that are shared across the machine learning community help increase the speed of writing code without an explicit need to develop and maintain one's own libraries. If you have worked with scikit-learn, then you are familiar with how this open-source library makes it very easy to built sophisticated machine learning models using only a few lines of code. It would be ideal to have a similar library for recommender systems. Surprise was designed to solve this problem.
+
+** What is Surprise?
+Surprise (an abbreviation of /Simple Python Recommendation System Engine/) is a  ~scikit~, a software library built as an add-on to the numerical computation library ~SciPy~. Much like how ~scikit-learn~ makes developing and testing different machine learning models easy, Surprise makes development and testing various recommender system algorithms easy. Surprise comes with several modules that make it easy to transform data, train recommender systems, and measure recommender system performance. It also comes with a solid base of documentation that makes it easy to understand and explore the library's capabilities.
