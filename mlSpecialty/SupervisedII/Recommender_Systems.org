@@ -94,3 +94,65 @@ In the specific case of machine learning engineering, one group of tools that ma
 
 ** What is Surprise?
 Surprise (an abbreviation of /Simple Python Recommendation System Engine/) is a  ~scikit~, a software library built as an add-on to the numerical computation library ~SciPy~. Much like how ~scikit-learn~ makes developing and testing different machine learning models easy, Surprise makes development and testing various recommender system algorithms easy. Surprise comes with several modules that make it easy to transform data, train recommender systems, and measure recommender system performance. It also comes with a solid base of documentation that makes it easy to understand and explore the library's capabilities.
+
+** Building a simple recommender system
+We're now going to use Surprise to built a basic recommender system. We will be using a classic dataset, the [[https://grouplens.org/datasets/movielens/][MovieLens Dataset]] , to built a recommender system that suggest movies to users based on the ratings they gave several movies. The MovieLens dataset is a set of 100,000 movie ratings for 9,000 movies provided by 600 users. The ratings come from the website [[https://movielens.org/][movielens.org]], a non-commercial site dedicated to giving users personalized movie recommendations. This data is very similar to the type of data your would find at large commercial streaming services.
+
+*** Installation
+To install Surprise on your computer, simply use the following pip command:
+
+#+begin_src python
+  pip install surprise
+#+end_src
+
+To test that the command worked, open up your terminal or Jupyter notebook or IDE and verify the following code runs:
+
+#+begin_src python :results output
+  import surprise
+#+end_src
+
+#+RESULTS:
+
+*** Loading Data
+Surprise comes preloaded with datasets for building and testing recommender systems, including the MovieLens dataset. To load the MovieLens dataset, run the following code:
+
+#+begin_src python :results output
+  from surprise import Dataset
+
+  movie_data = Dataset.load_builtin('ml-100k')
+#+end_src
+
+#+RESULTS:
+
+*** Train/Test Split of Data
+Like other machine learning problems, recommender systems can be modeled as a supervised machine learning problem where the movie ratings of users are being utilized as features ot predict ratings for movie users have not watched yet. Viewing recommender systems in this way, we can split the data into training and testing sets to help validate the performance of our recommender system. The code below will split the Movielens dataset into a 75%, 25% train and test set:
+
+#+begin_src python :results output
+  import surprise
+  from surprise import Dataset
+  from surprise.model_selection import train_test_split
+
+  movie_data = Dataset.load_builtin('ml-100k')
+
+  trainset, testset = train_test_split(movie_data, test_size=.2, random_state=42)
+#+end_src
+
+#+RESULTS:
+
+To understand what the data looks like, let's look at the ratings. To look at the ratings, we will use the ~ur~ method of ~trainset~. The method ~ur~ returns a dictionary where the keys are user ids, and the values are a list of tuples, where each tuple is in the form ~({item_id}, {rating})~. For example, to see the rating of user 590:
+
+#+begin_src python :results output
+  import surprise
+  from surprise import Dataset
+  from surprise.model_selection import train_test_split
+
+  movie_data = Dataset.load_builtin('ml-100k')
+
+  trainset, testset = train_test_split(movie_data, test_size=.2, random_state=42)
+
+  print(trainset.ur[590])
+
+#+end_src
+
+#+RESULTS:
+: [(699, 4.0), (114, 4.0), (339, 5.0), (769, 5.0), (230, 4.0), (212, 5.0), (21, 5.0), (33, 3.0), (94, 4.0), (74, 2.0), (22, 4.0), (471, 5.0), (8, 3.0), (305, 3.0), (645, 3.0), (558, 2.0), (166, 4.0), (129, 4.0), (100, 5.0), (232, 3.0), (391, 3.0), (204, 3.0), (508, 4.0), (79, 3.0), (83, 4.0), (426, 1.0), (6, 3.0), (58, 3.0), (1119, 5.0), (76, 5.0)]
