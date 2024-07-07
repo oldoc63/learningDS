@@ -61,3 +61,22 @@ On the other hand, implicit ratings do not require users to submit ratings. Inst
 And sometimes an implicit rating can be converted into an explicit rating according to the data scientis's discretion. For instance, a user may have listened to one song fifty times on an audio streaming service and another one, only five times. There is relative information here as regards the user's preference on two items that can be converted to explicit ratings.
 
 [[./explicit_implicit.png]]
+
+** Collaborative Filtering
+Previously, we introduced collaborative filtering. However collaborative filtering can be further classified into two major subclasses: *memory-based methods* (also called *neighborhood-based methods*) and *model-based methods*.
+
+Memory-based methods work through the concept of /similarity/. Fundamentally, memory-based methods work in one of two ways:
+
+    1. The algorithm finds similar users to the target users, and recommends items those similar users liked. This approach in known as *user-user collaborative filtering*.
+
+    2. The algorithm finds similar items to ones the target user liked by measuring the similarity of how users rated items. This approach is known as *item-item* collaborative filtering.
+
+In contrast, model-based methods work by building models that attempt to predict a rating for a user-item pair by using ratings as features. One particular method that is often used in practice is /matrix factorization./ This method model the user-item ratings matrix as the product of a set of users vector and product vectors. The rating of any user-item pair can then be predicted by multiplying the relevant user vector by the relevant product vector.
+
+After creating a ratings matrix, various data transformations may be performed on the ratings matrix. These transformations are done generally to improve model performance, similar to how normalizing features in a machine learning model can help improve performance.
+
+One such transformation is ratings normalization. Ratings normalization is a technique where the value of each rating for a given row is adjusted based on the statistical properties of that row. The primary reason this transformation is done is because different users may have different approaches to rating something. For example, some users may give a 5-star rating to any positive experience they have. Other users may be more selective, and only give 5 star ratings very rarely. Ratings normalization provides a way to control for these differences.
+
+One of two approaches is usually used for normalizing ratings. The first, mean centering, involves subtracting the mean rating of a row from every value of the row. The other method, z-score normalization, involves using the mean and standard deviation of each row to calculate a z-score for each element of the row. Can you think of other ways to make sure that the ratings between different users and items can be meaningfully compared?
+
+[[./will_e_like_shoe_3.png]]
