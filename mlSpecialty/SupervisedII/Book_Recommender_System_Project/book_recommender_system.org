@@ -12,6 +12,24 @@ Take a sneak peek into the dataset by printing the first five rows. How big is t
 *Hint*
 Use ~.head()~ to print the first 5 rows and ~.describe()~ or ~.info()~ to obtain a quick summary of the dataset.
 
+*** Task 2
+In order to understand these ratings, let's look at a count of all the ratings in the data. Examine the distribution of the ratings using ~value_counts~.
+
+*Hint*
+Use ~book_ratings['rating'].value_counts()~.
+
+*** Task 3
+Unfortunately, it appears we have some data where the ratings are 0. The ratings on the website only go from 1 to 5 inclusive. Filter out all ratings that are not in this range.
+
+*Hint*
+You can filter for ~book_ratings['rating']!=0~.
+
+*** Task 4
+We need to prepare this data for use in Surprise. First, build a Surprise ~reader~ Object that utilizes the rating scale established above. Look at the [[https://surprise.readthedocs.io/en/stable/index.html][Surprise documentation]] to help you out.
+
+*Hint*
+Documentation on the ~reader~ class is available [[https://surprise.readthedocs.io/en/stable/reader.html][here]].
+
 
 ** Script.py
 
@@ -25,6 +43,16 @@ Use ~.head()~ to print the first 5 rows and ~.describe()~ or ~.info()~ to obtain
   #1. Print dataset size and examine colum data types
   print(len(book_ratings))
   print(book_ratings.info())
+
+  #2. Distribution of ratings
+  print(book_ratings['rating'].value_counts())
+
+  #3. Filter ratings that are out of range
+  book_ratings = book_ratings['rating']!=0
+
+  #4. Prepare data for Surprise: build a Surprise reader object
+  from surprise import Reader
+  reader = Reader(rating_scale=(1, 5))
 
 #+end_src
 
@@ -58,4 +86,12 @@ Data columns (total 11 columns):
 dtypes: int64(4), object(7)
 memory usage: 300.9+ KB
 None
+rating
+4    1278
+5    1001
+3     707
+2     269
+1     125
+0     120
+Name: count, dtype: int64
 #+end_example
