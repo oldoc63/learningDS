@@ -324,7 +324,7 @@ $$
 Save your answer as ~p_spam_enhancement~.
 
 ** Task 6
-Print p_spam_enhancement. This is the probability that an email is spam given that it contains the word "enhancement".
+Print ~p_spam_enhancement~. This is the probability that an email is spam given that it contains the word "enhancement".
 
 Should we block all emails that contain "enhancement"?
 
@@ -349,3 +349,20 @@ How much non-spam email would we block?
 
 #+RESULTS:
 : 0.9259259259259259
+
+* Review
+In this course, we learned several new definitions:
+
+    - Two events are /independent/ if the occurrence of one event does not affect the probability of the second event
+
+    - If two events are independent then:
+
+      $$
+      P(A \cap B) = P(A) \times P(B)
+      $$
+
+    - Bayes' Theorem is the following:
+
+      $$
+      P(A \mid B) = \frac{P(B \mid A) \cdot P(A) }{P(B)}
+      $$
