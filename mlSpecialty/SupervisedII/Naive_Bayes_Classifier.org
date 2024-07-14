@@ -366,3 +366,16 @@ In this course, we learned several new definitions:
       $$
       P(A \mid B) = \frac{P(B \mid A) \cdot P(A) }{P(B)}
       $$
+
+* The Naive Bayes Classifier
+A Naive Bayes classifier is a supervised machine learning algorithm that leverages Bayes' Theorem to make predictions and classifications. Recall Bayes' Theorem:
+
+$$
+P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}
+$$
+
+This equation is finding the probability of A given B. This can be turned into a classifier if we replace B with a /data point/ and A with a /class./ For example, let's say we're trying to classify an email as either ~spam~ or ~not spam~. We could calculate $P(spam \mid email)$ and $P(not\ spam \mid email)$. /*Whichever probability is higher will be the classifier's prediction*./ Naive Bayes classifiers are often used for text classification.
+
+So why is this a supervised machine learning algorithm? In order to compute the probabilities used in Bayes' Theorem, we need previous data points. For example, in the spam example, we'll need to compute $P(spam)$. This can be found by looking at a tagged dataset of emails and finding the ratio of spam to non-spam emails.
+
+With the naive Bayes classifier, we are finding the probability that a data point d is a member of a class C using Bayes’ theorem: P(C|d) = P(C)*P(d|C) / P(d) . We can determine P(C) because this model is supervised and we have data. But what is P(d) ? How do we find the probability of a data point?
