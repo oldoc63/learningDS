@@ -254,3 +254,98 @@ Save your result as ~p_disease_given_positive~.
 
 #+RESULTS:
 : 0.0009890307498651321
+
+* Spam Filters
+Let's explore a different example. Email spam filters use Baye's Theorem to determine if certain words indicate that an email is spam.
+
+Let's take a word that often appears in spam: "enhancement".
+
+With just 3 facts, we can make some preliminary steps towards a good spam filter:
+
+    1. "enhancement" appears  in just 0.1% of non-spam emails
+
+    2. "enhancement" appears in 5% of spam emails
+
+    3. Spam emails make up about 20% of total emails
+
+Given that an email contains "enhancement" what is the probability that the email is spam?
+
+** Task 1
+In this example, we are dealing with two probabilities:
+
+    - ~P(enhancement)~ -the probability that the word "enhancement" appears in an email.
+
+    - ~P(spam)~ -the probability that an email is spam.
+
+Using Bayes' Theorem to answer our question means that we want to calculate $P(A \mid B)$.
+
+But what are A and B referring to in this case?
+
+Save the string 'spam' to the variable ~a~.
+
+Save the string 'enhancement' to the variable ~b~.
+
+** Task 2
+What is P(spam)?
+
+Save your answer to ~p_spam~.
+
+** Task 3
+What is $P(enhancement \mid spam)$?
+
+Save your answer to ~p_enhancement_given_spam~.
+
+** Task 4
+We want to know the overall probability that any email (spam or no spam) contains "enhancement".
+
+Because we know the probability of "enhancement" ocurring in both spam (0.05) and non-spam (0.001) emails, we can use a /weighted average/ to calculate the probability of "enhancement" occurring in an email:
+
+$$
+P(enhancement) = P(enhancement \mid spam)×P(spam)+P(enhacement \mid not\  spam)×P(not\ spam)
+$$
+
+Save your answer to ~p_enhancement~.
+
+** Task 5
+Now that we know:
+
+    - $P(spam)$
+
+    - $P(enhancement \mid spam)$
+
+    - $P(enhancement)$
+
+We can plug this into Bayes' Theorem:
+
+$$
+P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}
+$$
+
+Save your answer as ~p_spam_enhancement~.
+
+** Task 6
+Print p_spam_enhancement. This is the probability that an email is spam given that it contains the word "enhancement".
+
+Should we block all emails that contain "enhancement"?
+
+How much non-spam email would we block?
+
+** Script.py
+
+#+begin_src python :results output
+  import numpy as np
+
+  p_spam = 0.2
+
+  p_enhancement_given_spam = 0.05
+
+  p_enhancement = 0.05 * 0.2 + 0.001 * (1 - 0.2)
+
+  p_spam_enhancement = (p_enhancement_given_spam *  p_spam) / p_enhancement
+
+  print(p_spam_enhancement)
+
+#+end_src
+
+#+RESULTS:
+: 0.9259259259259259
