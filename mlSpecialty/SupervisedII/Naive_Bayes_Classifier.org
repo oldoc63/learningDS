@@ -416,3 +416,46 @@ Print the number of times the word "crib" was used in the positive and negative 
 :   File "<stdin>", line 2, in <module>
 : _pickle.UnpicklingError: invalid load key, '\xef'.
 : [ Babel evaluation exited with code 1 ]
+
+* Bayes Theorem I
+For the rest of this lesson, we're going to write a classifier that can predict whether the review "This crib was amazing" is a positive or negative review. We want to compute both $P(positive \mid review)$ and $P(negative \mid review)$ and find which probability is larger. To do this, we'll be using Bayes' Theorem. Let's look at Bayes' Theorem for $P(positive \mid review)$.
+
+$$
+P(positive \mid review) = \frac{P(review \mid positive) \cdot P(positive)}{P(review)}
+$$
+
+The first part of Bayes' Theorem that we are going to tackle is $P(positive)$. This is the probability that any review is positive. To find this, we need to look at all of our reviews in our dataset -both positive and negative- and find the percentage of reviews that are positive.
+
+We've bolded the part of Bayes' Theorem we're working on.
+
+$$
+P(positive \mid review) = \frac{P(review \mid positive) \cdot \textbf{P(positive)}}{P(review}
+$$
+
+** Task 1
+Find the total number of positive reviews by finding the length of ~pos_list~. Do the same for ~neg_list~.
+
+Add those two numbers together and save the sum in a variable called ~total_reviews~.
+
+** Task 2
+Create variables named ~percent_pos~ and ~percent_neg~. ~percent_pos~ should be the number of positive reviews divided by ~total_reviews~. Do the same for ~percent_neg~.
+
+** Task 3
+Print ~percent_pos~ and ~percent_neg~. They should add up to 1!
+
+** Script.py
+
+#+begin_src python
+  from reviews import neg_list, pos_list, neg_counter, pos_counter
+
+  number_positives_reviews = len(pos_list)
+  number_negatives_reviews = len(neg_list)
+  total_reviews = number_positives_reviews + number_negatives_reviews
+
+  percent_pos = number_positives_reviews / total_reviews
+
+  percent_neg = number_negatives_reviews / total_reviews
+
+  print(percent_pos)
+  print(percent_neg)
+#+end_src
