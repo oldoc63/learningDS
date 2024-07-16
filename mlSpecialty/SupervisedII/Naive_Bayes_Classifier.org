@@ -379,3 +379,40 @@ This equation is finding the probability of A given B. This can be turned into a
 So why is this a supervised machine learning algorithm? In order to compute the probabilities used in Bayes' Theorem, we need previous data points. For example, in the spam example, we'll need to compute $P(spam)$. This can be found by looking at a tagged dataset of emails and finding the ratio of spam to non-spam emails.
 
 With the naive Bayes classifier, we are finding the probability that a data point d is a member of a class C using Bayes’ theorem: P(C|d) = P(C)*P(d|C) / P(d) . We can determine P(C) because this model is supervised and we have data. But what is P(d) ? How do we find the probability of a data point?
+
+* Investigate the Data
+In this lesson, we are going to create a Naive Bayes classifier that can predict whether a review for a product is positive or negative. This type of classifier could be extremely helpful for a company that is curious about the public reaction to a new product. Rather than reading thousands of reviews or tweets about the product, you could feed those documents into the Naive Bayes classifier and instantly find out how many are positive and how many are negative.
+
+The dataset we will be using for this lesson contains Amazon product reviews for baby products. The original dataset contained many different features including the reviewer's name, the data the review was made, and the overall score. We've removed many of those features; the only features that we're interested in are the text of the review and whether the review was "positive" or "negative". We labeled all reviews with a score less than 4 as a negative review.
+
+Note that in the next two lessons, we've only imported a small percentage of the data to help the code run faster. We'll import the full dataset later when we put everything together!
+
+** Task 1
+Let's look at the data given to us. Print ~pos_list[0]~. Would you classify this review as positive or negative?
+
+** Task 2
+Take a look at the first review in ~neg_list[0]~ as well. Does that one look negative?
+
+** Task 3
+We've also created a [[https://docs.python.org/3/library/collections.html#collections.Counter][Counter object]] for all the positive reviews and one for all of the negative reviews. These counters are like Python dictionaries -you could find the number of times the word "baby" was used in the positive reviews by printing ~pos_counter['baby']~.
+
+Print the number of times the word "crib" was used in the positive and negative reviews. In which set was it used more often?
+
+** Script.py
+
+#+begin_src python
+  from reviews import neg_list, pos_list, neg_counter, pos_counter
+
+  print(pos_list[0])
+  print(neg_list[0])
+
+  print(pos_counter['crib'])
+  print(neg_counter['crib'])
+
+#+end_src
+
+#+RESULTS:
+: Traceback (most recent call last):
+:   File "<stdin>", line 2, in <module>
+: _pickle.UnpicklingError: invalid load key, '\xef'.
+: [ Babel evaluation exited with code 1 ]
