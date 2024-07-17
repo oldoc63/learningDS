@@ -624,3 +624,81 @@ Did smoothing fix the problem?
   print(pos_probability)
   print(neg_probability)
 #+end_src
+
+* Classify
+If we look back to Bayes' Theorem, we've now completed both parts of the numerator. We now need to multiply them together.
+
+$$
+P(positive \mid review) = \frac{\bf{P(review \mid positive) \cdot P(positive)}}{P(review)}
+$$
+
+Let's now consider the denominator $P(review)$. In our small example, this is the probability that "This", "crib", "was", and "amazing" are the only words in the review. Notice that this is extremely similar to $P(review \mid positive)$. The only difference is that we don't assume that the review is positive.
+
+However, before we start to compute the denominator, let's think about what our ultimate question is. We want to predict whether the review "This crib was amazing" is a positive or negative review. In other words, we're asking whether $P(positive \mid review)$ is greater than $P(negative \mid review)$. If we expand those two probabilities, we end up with the following equations:
+
+$$
+P(positive \mid review) = \frac{P(review \mid positive) \cdot P(positive)}{P(review}
+$$
+
+$$
+P(negative \mid review) = \frac{P(review \mid negative) \cdot P(negative)}{P(review)}
+$$
+
+Notice that P(review) is in the denominator of each. That value will be the same in both cases! Since we're only interested in comparing these two probabilities, there's no reason why we need to divide them by the same value. We can completely ignore the denominator!
+
+Let's see if our review was more likely to be positive or negative!
+
+** Task 1
+After the for loop, multiply ~pos_probability~ by ~percent_pos~ and ~neg_probability~ by ~percent_neg~. Store the two values in ~final_pos~ and ~final_neg~ and print both.
+
+** Task 2
+Compare ~final_pos~ to ~final_neg~:
+
+    - If final_pos was greater than final_neg, print "The review is positive"
+
+    - Otherwise print "The review is negative".
+
+Did our Naive Bayes Classifier get it right for the review "This crib was amazing"?
+
+** Task 3
+Replace the review "This crib was amazing" with one that you think should be classified as negative. Run your program again.
+
+Did your classifier correctly classify the new review?
+
+** Script.py
+
+#+begin_src python
+  from reviews import neg_counter, pos_counter
+
+  review = "This crib was amazing"
+
+  percent_pos = 0.5
+  percent_neg = 0.5
+
+  total_pos = sum(pos_counter.values())
+  total_neg = sum(neg_counter.values())
+
+  pos_probability = 1
+  neg_probability = 1
+
+  review_words = review.split()
+
+  for word in review_words:
+    word_in_pos = pos_counter[word]
+    word_in_neg = neg_counter[word]
+
+    pos_probability *= (word_in_pos + 1) / (total_pos + len(pos_counter))
+    neg_probability *= (word_in_neg + 1) / (total_neg + len(neg_counter))
+
+  final_pos = pos_probability * percent_pos
+  final_neg = neg_probability * percent_neg
+
+  print(final_pos)
+  print(final_neg)
+
+  if final_pos > final_neg:
+      print("The review is positive")
+  else:
+      print("The review is negative")
+
+#+end_src
