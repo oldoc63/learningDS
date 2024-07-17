@@ -654,7 +654,7 @@ After the for loop, multiply ~pos_probability~ by ~percent_pos~ and ~neg_probabi
 ** Task 2
 Compare ~final_pos~ to ~final_neg~:
 
-    - If final_pos was greater than final_neg, print "The review is positive"
+    - If ~final_pos~ was greater than ~final_neg~, print "The review is positive"
 
     - Otherwise print "The review is negative".
 
@@ -700,5 +700,85 @@ Did your classifier correctly classify the new review?
       print("The review is positive")
   else:
       print("The review is negative")
+
+#+end_src
+
+* Formatting the Data for scikit-learn
+Congratulations! You've made your own Naive Bayes text classifier. If you have a datset of text that has been tagged with different classes, you can give your classifier a brand new document and it will predict what class it belongs to.
+
+We're now goint to look at how Python's scikit-learn library can do all of that work for us!
+
+In order to use scikit-learn's Naive Bayes classifier, we need to first transform our data into a format that scikit-learn can use. To do so, we're going to use scikit-learn's ~CountVectorizer~ object.
+
+To begin, we need to create a ~CountVectorizer~ and teach it the vocabulary of the training set. This is done by calling the ~.fit()~ method.
+
+For example, in the code below, we've created a CountVectorizer that has been trained on the vocabulary ~"Training"~, ~"review"~, ~"one"~, and ~"Second"~.
+
+#+begin_src python
+  vectorizer = CountVectorizer()
+
+  vectorizar.fit(["Training review one", "Second review"])
+#+end_src
+
+After fitting the vectorizer, we can now call its .transform() method. The .transform() method takes a list of strings and will transform those strings into counts of the trained words. Take a look at the code below.
+
+#+begin_src python
+counts = vectorizer.transform(["one review two review"])
+#+end_src
+
+~counts~ now stores the array ~[[1 2 0 0]]~ . The word "review" appeared twice, the word "one" appeared twice, the word "one" appeared once, and neither "Training" nor "Second" appeared at all.
+
+But how did we know that the 2 corresponded to review? You can print ~vectorizer.vocabulary_~ to see the index that each word corresponds to. It might look something like this:
+
+#+begin_src python
+{'training': 3, 'review': 1, 'one': 0, 'second': 2}
+#+end_src
+
+Finally, notice that even though the word "two" was in our new review, there wasn't an index for it in the vocabulary. This is because "two" wasn't in any of the strings used in the .fit() method.
+
+We can now use ~counts~ as input to our Naive Bayes Classifier.
+
+Note that in the code in the editor, we've  imported only a small percentage of our review dataset to make load times faster. We'll import the full dataset later when we put all of the pieces together!
+
+** Task 1
+Create a ~CountVectorizer~ and name it ~counter~.
+
+** Task 2
+Call counter's ~.fit()~ method. ~.fit()~ takes a list of strings and it will learn the vocabulary of those strings. We want our counter to learn the vocabulary from both ~neg_list~ and ~pos_list~.
+
+Call ~.fit()~ using ~neg_list + pos_list~ as a parameter.
+
+** Task 3
+Print ~counter.vocabulary_~. This is the vocabulary that your counter just learned. The numbers associated with each word are the indices of each word when you ~transform~ a review.
+
+** Task 4
+Let's transform our brand new review. Create a variable named ~review_counts~ and set it equal to counter's ~.transform()~ function. Remember, ~.transform()~ takes a list of strings to transform. So call ~.transform()~ using ~[review]~ as a parameter.
+
+Print ~review_counts.toarray()~. If you don’t include the ~toarray()~, ~review_counts~ won’t print in a readable format.
+
+It looks like this is an array of all 0s, but the indices that correspond to the words ~"this"~, ~"crib"~, ~"was"~, and ~"amazing"~ should all be ~1~.
+
+** Task 5
+We'll use ~review_counts~ as the test point for our Naive Bayes Classifier, buy we also need to transform our training set.
+
+Our training set is ~neg_list + pos_list~. Call ~.transform()~ using that as a parameter. Store the results in a variable named ~training_counts~. We'll use these variables in the next exercise.
+
+** Script.py
+
+#+begin_src python
+  from reviews import neg_list, pos_list
+  from sklearn.feature_extraction.text import CountVectorizer
+
+  review = "This crib was amazing"
+
+  counter = CountVectorizer()
+
+  counter.fit(neg_list + pos_list)
+
+  print(counter.vocabulary_)
+
+  review_counts = counter.transform([review])
+
+  print(review_counts.toarray())
 
 #+end_src
