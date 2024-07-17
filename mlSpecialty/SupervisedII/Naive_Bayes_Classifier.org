@@ -429,7 +429,7 @@ The first part of Bayes' Theorem that we are going to tackle is $P(positive)$. T
 We've bolded the part of Bayes' Theorem we're working on.
 
 $$
-P(positive \mid review) = \frac{P(review \mid positive) \cdot \textbf{P(positive)}}{P(review}
+P(positive \mid review) = \frac{P(review \mid positive) \cdot \textbf{P(positive)}}{P(review)}
 $$
 
 ** Task 1
@@ -458,4 +458,97 @@ Print ~percent_pos~ and ~percent_neg~. They should add up to 1!
 
   print(percent_pos)
   print(percent_neg)
+#+end_src
+
+* Bayes Theorem II
+Let's continue to try to classify the review "This crib was amazing".
+
+The second part of Bayes' Theorem is a bit more extensive. We now want to compute $P(review \mid positive)$.
+
+$$
+P(positive \mid review) = \frac{\textbf{P(review} \mid \textbf{positive}) \cdot P(positive)}{P(review)}
+$$
+
+In other words, if we assume that the review is positive, what is the probability that the words "This", "crib", "was", and "amazing" are the only words in the review?
+
+To find this, we have to assume that each word is conditionally independent. This means hat one word appearing doesn't affect the probability of another word form showing up. This is a pretty big assumption!
+
+We now have this equation. You can scroll to the right to see the full equation.
+
+$$
+\begin{array}{c}
+P("This\ crib\ was\ amazing" \mid positive) = P("This" \mid positive) \cdot \\
+P("crib" \mid positive) \cdot \\
+P("was" \mid positive) \cdot \\
+P("amazing" \mid positive)
+\end{array}{c}
+$$
+
+Let's break this down even further by looking at one of these terms. $P("crib" \mid positive)$ is the probability that the word "crib" appears in a positive review. To find this, we need to count up the total number of times "crib" appeared in our dataset of positive reviews. If we take that number and divide it by the total number of words in our positive review dataset, we will end up with the probability of "crib" appearing in a positive review.
+
+$$
+P("crib" \mid positive) = \frac{#\ of\ "crib"\ in\ positive}{#\ of\ words\ in\ positive}
+$$
+
+If we do this for every word in our review and multiply the results together, we have $P(review \mid positive)$.
+
+** Task 1
+Let's first find the total number of words in all positive reviews and store that number in a variable named ~total_pos~.
+
+To do this, we can use the built-in Python ~sum()~ function. ~sum()~ takes a list as a parameter. The list that you want to sum is the ~values~ of the dictionary ~pos_counter~, which you can get by using ~pos_counter.values()~.
+
+Do the same for ~total_neg~.
+
+#+begin_src python
+  total_pos = sum(pos_counter.values())
+  total_neg = sum(neg_counter.values())
+#+end_src
+
+** Task 2
+Create two variables named ~pos_probability~ and ~neg_probability~. Each of these variables should start at 1. These are the variables we are going to use to keep track of the probabilities.
+
+** Task 3
+Create a list of the words in ~review~ and store it in a variable named ~review_words~. You can do this by using Python's ~.split()~ function.
+
+For example if the string ~test~ contained "Hello there", then ~test.split()~ would return ["Hello", "there"].
+
+** Task 4
+Loop through every ~word~ in review_words. Find the number of times ~word~ appears in ~pos_counter~ and ~neg_counter~. Store those values in variables named ~word_in_pos~ and ~word_in_neg~.
+
+In the next steps, we'll use this variable inside the for loop to do a series of multiplications.
+
+** Task 5
+Inside the for loop, set ~pos_probability~ to be ~pos_probability~ multiplied by ~word_in_pos / total_pos~.
+
+For example, when ~word~ is ~"crib"~, you’re calculating the following:
+
+$$
+P("crib" \mid positive) = \frac{#\ of\ "crib"\ in\ positive}{#\ of\ words\ in\ positive}
+$$
+
+** Script.py
+
+#+begin_src python
+  from reviews import neg_counter, pos_counter
+
+  review = "This crib was amazing"
+
+  percent_pos = 0.5
+  percent_neg = 0.5
+
+  total_pos = sum(pos_counter.values())
+  total_neg = sum(neg_counter.values())
+
+  pos_probability = 1
+  neg_probability = 1
+
+  review_words = review.split()
+
+  for word in review_words:
+      word_in_pos = pos_counter[word]
+      word_in_neg = neg_counter[word]
+      pos_probability = pos_probability * word_in_pos / total_pos
+      neg_probability = neg_probability * word_in_neg / total_neg
+
+
 #+end_src
