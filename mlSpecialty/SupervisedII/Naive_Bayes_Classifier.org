@@ -357,15 +357,15 @@ In this course, we learned several new definitions:
 
     - If two events are independent then:
 
-      $$
-      P(A \cap B) = P(A) \times P(B)
-      $$
+$$
+ P(A \cap B) = P(A) \times P(B)
+ $$
 
     - Bayes' Theorem is the following:
 
-      $$
-      P(A \mid B) = \frac{P(B \mid A) \cdot P(A) }{P(B)}
-      $$
+$$
+P(A \mid B) = \frac{P(B \mid A) \cdot P(A) }{P(B)}
+$$
 
 * The Naive Bayes Classifier
 A Naive Bayes classifier is a supervised machine learning algorithm that leverages Bayes' Theorem to make predictions and classifications. Recall Bayes' Theorem:
@@ -487,7 +487,7 @@ $$
 Let's break this down even further by looking at one of these terms. $P("crib" \mid positive)$ is the probability that the word "crib" appears in a positive review. To find this, we need to count up the total number of times "crib" appeared in our dataset of positive reviews. If we take that number and divide it by the total number of words in our positive review dataset, we will end up with the probability of "crib" appearing in a positive review.
 
 $$
-P("crib" \mid positive) = \frac{#\ of\ "crib"\ in\ positive}{#\ of\ words\ in\ positive}
+P("crib" \mid positive) = \frac{Number\ of\ "crib"\ in\ positive}{Number\ of\ words\ in\ positive}
 $$
 
 If we do this for every word in our review and multiply the results together, we have $P(review \mid positive)$.
@@ -523,7 +523,7 @@ Inside the for loop, set ~pos_probability~ to be ~pos_probability~ multiplied by
 For example, when ~word~ is ~"crib"~, you’re calculating the following:
 
 $$
-P("crib" \mid positive) = \frac{#\ of\ "crib"\ in\ positive}{#\ of\ words\ in\ positive}
+P("crib" \mid positive) = \frac{Number\ of\ "crib"\ in\ positive}{Number\ of\ words\ in\ positive}
 $$
 
 ** Script.py
@@ -550,5 +550,77 @@ $$
       pos_probability = pos_probability * word_in_pos / total_pos
       neg_probability = neg_probability * word_in_neg / total_neg
 
+#+end_src
 
+* Smoothing
+In the last exercise, one of the probabilities that we computed was the following:
+
+$$
+P("crib" \mid positive) = \frac{Number\ of\ "crib"\ in\ positive}{Number\ of\ words\ in\ positive}
+$$
+
+But what happens if "crib" was never in any of the positive reviews in our dataset? This fraction would then be 0, and since everything is multiplied together, the entire probability $P(review \mid positive)$ would become 0.
+
+This is especially problematic if there are typos in the review we are trying to classify. If the unclassified review has a typo in it, it is very unlikely that that same exact typo will be in the dataset, and the entire probability will be 0. To solve this problem, we will use a technique called /smoothing./
+
+In this case, we smooth by adding 1 to the numerator of each probability and ~N~ to the denominator of each probability. ~N~ is the number of unique words in oru review dataset.
+
+For example, $P("crib" \mid positive)$ goes from this:
+
+$$
+P("crib" \mid positive) = \frac{Number\ of\ "crib"\ in\ positive}{Number\ of\ words\ in\ positive}
+$$
+
+To this:
+$$
+P("crib" \mid positive) = \frac{Number\ of\ "crib"\ in\ positive + 1}{Number\ of\ words\ in\ positive + N}
+$$
+
+** Task 1
+Let's demonstrate how these probabilities break if there's a word that never appears in the given datasets.
+
+Change review to ~"This cribb was amazing"~. Notice the second ~b~ in cribb.
+
+** Task 2
+Inside your ~for~ loop, when you multiply ~pos_probability~ and ~neg_probability~ by a fraction, add ~1~ to the numerator.
+
+Make sure to include parentheses around the numerator!
+
+** Task 3
+In the denominator of those fractions, add the number of unique words in the appropriate dataset.
+
+For the positive probability, this should be the length of ~pos_counter~ which can be found using ~len()~.
+
+Again, make sure to put parentheses around your denominator so the division happens after the addition!
+
+Did smoothing fix the problem?
+
+
+** Script.py
+
+#+begin_src python
+  from reviews import neg_counter, pos_counter
+
+  review = "This crib was amazing"
+
+  percent_pos = 0.5
+  percent_neg = 0.5
+
+  total_pos = sum(pos_counter.values())
+  total_neg = sum(neg_counter.values())
+
+  pos_probability = 1
+  neg_probability = 1
+
+  review_words = review.split()
+
+  for word in review_words:
+      word_in_pos = pos_counter[word]
+      word_in_neg = neg_counter[word]
+
+      pos_probability *= word_in_pos / total_pos
+      neg_probability *= word_in_neg / total_neg
+
+  print(pos_probability)
+  print(neg_probability)
 #+end_src
