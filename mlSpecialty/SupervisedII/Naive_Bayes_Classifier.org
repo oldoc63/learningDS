@@ -781,4 +781,112 @@ Our training set is ~neg_list + pos_list~. Call ~.transform()~ using that as a p
 
   print(review_counts.toarray())
 
+  training_counts = counter.transform(neg_list + pos_list)
+
 #+end_src
+
+* Using scikit-learn
+Now that we've formatted our data correctly, we can use it using scikit-learn's ~MultinomialNB~ classifier.
+
+This classifier can be trained using the ~.fit()~ method. ~.fit()~ takes two parameters: The array of data points (which we just made) and an array of labels corresponding to each data point.
+
+Finally, once the model has been trained, we can use the ~.predict()~ method to predict the labels of new points. ~.predict()~ takes a list of points that you want to classify and it returns the predicted labels of those points.
+
+Finally, ~.predic_proba()~ will return the probability of each label given a point. Instead of just returning whether the review was good or bad, it will return the likelihood of a good or bad review.
+
+Note that in the code editor, we've imported some of the variables you created last time. Specifically, we've imported the ~counter~ object, ~training_counts~ and then make ~review_counts~. This means the program won't have to re-create those variables and should help the runtime of your program.
+
+** Task 1
+Begin by making a MultinomialNB object called ~classifier~.
+
+** Taks 2
+We now want to fir the classifier. We have the transformed points (found in ~training_counts~), but we don't have the labels associated with those points.
+
+We made the training points by combining ~neg_list~ and ~pos_list~. So the first half of the labels should be 0 (for negative) and the second half should be 1 (for positive).
+
+Create a list named ~training_labels~ that has 1000 0s followed by 1000 1s.
+
+Note that there are 1000 negative and 1000 positive revies. Normally you could find this out by asking for the length of your dataset -in this example we haven't included the dataset because it takes so long to load!
+
+*Hint*
+You can use the * operator to quickly make this list. We've shown you how to add the 0s. Add the 1s.
+
+#+begin_src python
+training_labels = [0] * 1000 + [1] * 1000
+#+end_src
+
+** Task 3
+Call classifier's ~.fit()~ function. Fit takes two parameters: the training set and the training labels.
+
+*Hint*
+Your training set is found in the variable ~training_counts~ and the training labels are found in ~training_labels~.
+
+** Task 4
+Call ~classifiers~'s ~.predict()~ method and print the results. This method takes a list of the points that you want to test.
+
+Was your review classified as a positive or negative review?
+
+*Hint*
+Your test points are found in the variable ~review_counts~.
+
+From the way we constructed our labels, 0 is bad and 1 is good.
+
+** Task 5
+After printing predict, print a call to the predict_proba method. The parameter to predict_proba should be the same as predict.
+
+The first number printed is the probability that the review was a 0 (bad) and the second number is the probability the review was a 1 (good).
+
+** Task 6
+Change the text review to see the probabilities change.
+
+Can you create a review that the algorithm is really confident about being positive?
+
+The review "This crib was great amazing and wonderful" had the following probabilities:
+
+~[[ 0.04977729 0.95022271]]~
+
+Can you create a review that is even more positive?
+
+Another interesting challenge is to create a clearly negative review that our classifier thinks is positive.
+
+** Script.py
+
+#+begin_src python
+  from reviews import counter, training_counts
+  from sklearn.feature_extraction.text import CountVectorizer
+  from sklearn.naive_bayes import MultinomialNB
+
+  review = "This crib was amazing"
+  review_counts = counter.transform([review])
+
+  classifier = MultinomialNB()
+
+  training_labels = [0] * 1000 + [1] * 1000
+
+  classifier.fit(training_counts, training_labels)
+
+  print(classifier.predict(review_counts))
+  print(classifier.predict_proba(review_counts))
+
+#+end_src
+
+* Review
+In this lesson, you've learned how to leverage Bayes' Theorem to create a supervised machine learning algorithm. Here are some of the major takeaways from the lesson:
+
+    - A tagged dataset is necessary to calculate the probabilities used in Bayes' Theorem.
+
+    - In this example, the features of our dataset are the words used in a product review. In order to apply Bayes' Theorem, we assume that these features are independent.
+
+    - Using Bayes' Theorem, we can find P(class | data point) for every possible class. In this example, there were two classes -positive and negative. The class with the highest probability will be the algorithm's prediction.
+
+Even though our algorithm is running smoothly, there's always more that we can add to try to improve performance. The following techniques are focused on ways in which we process data before feeding it into the Naive Bayes classifier:
+
+    - /Remove punctuation from the training set./ Right now in our dataset, there are 702 instances of "great!" and 2322 instances of "great." We should probably combine those into 3024 instances of "great".
+
+    - Lowercase every word in the training set. We do this for the same reason why we remove punctuation. We want "Great" and "great" to be the same.
+
+    - Use a bigram or trigram model. Right now, the features of a review are individual words. For example, the features of the point "This crib is great" are "This", "crib", "is", and "great". If we used a bigram model, the features would be "This crib", "crib is", and "is great". Using a bigram model makes the assumption of independence more reasonable.
+
+      These three improvements would all be considered part of the field /Natural Language Processing./
+
+      You can find the baby product review dataset, along with many others, on [[https://cseweb.ucsd.edu/~jmcauley/datasets.html#amazon_reviews][Dr. Julian McAuley's website.]]
