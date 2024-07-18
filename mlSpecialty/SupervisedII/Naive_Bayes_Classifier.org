@@ -925,3 +925,66 @@ Try changing review again and see how the different classifiers react!
   print("Amazon Instant Video training set: " + str(instant_video_classifier.predic_proba(instant_video_review_counts)))
   print("Video Games training set: " + str(video_game_classifier.predict_proba(video_game_review_counts)))
 #+end_src
+
+* Quiz
+
+** Question 1
+Given the following word counts for positive and negative reviews, what is P("great")?
+
+#+begin_src python
+pos = {
+  "great" : 2,
+  "crib": 1,
+  "this": 3,
+  "is": 2
+}
+
+neg = {
+  "great" : 1,
+  "horrible": 7,
+  "this": 2,
+  "is": 2
+}
+#+end_src
+
+    - 0.15
+
+      There are 20 words in the dataset, and 3 of them are "great".
+
+** Question 2
+Why is a Naive Bayes Classifier a supervised machine learning algorithm?
+
+    - You need labeled data in order to calculate the probabilities used in Bayes Theorem.
+
+** Question 3
+If the ~target_names~ of a Naive Bayes Classifier are ~[B, A, D, C]~, and the ~predic_proba~ function returns the list ~[.3, .1, .5, .1]~ for a given datapoint, what is the predicted class for that datapoint?
+
+    - D
+      Correct! The highest probability is .5, which corresponds to class D. (Both are the third item in each list).
+
+** Question 4
+The .predict() method in the MultinomialNB class takes ~a list of data points~ as a parameter and returns ~a list of classifications~.
+
+** Question 5
+Given the following word counts for positive and negative reviews, what is P("great"|positive)?
+
+    - 0.25
+      Correct! There are 8 words total in the positive review and 2 of them are "great".
+
+** Question 6
+Why can we ignore the denominator of Bayes Theorem when calculating the probabilities of each class?
+
+    - The denominator is the same for every class.
+      Correct! P(data) isn't dependent on the class, so it is the same for every calculation.
+
+** Question 7
+What is the purpose of smoothing in a Naive Bayes Classifier?
+
+    - To prevent a feature with a probability of 0 from ruining the total probability.
+      Correct! If any feature has a probability of 0, the multiplication will result in the total probability being 0.
+
+** Question 8
+Which of the following is not a Natural Language Processing technique that can improve performance of a Naive Bayes Classifier?
+
+    - Smoothing.
+      Correct! While smoothing is an important part of a Naive Bayes classifier, it has nothing to do with Natural Language Processing.
