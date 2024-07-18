@@ -883,10 +883,45 @@ Even though our algorithm is running smoothly, there's always more that we can a
 
     - /Remove punctuation from the training set./ Right now in our dataset, there are 702 instances of "great!" and 2322 instances of "great." We should probably combine those into 3024 instances of "great".
 
-    - Lowercase every word in the training set. We do this for the same reason why we remove punctuation. We want "Great" and "great" to be the same.
+    - /Lowercase every word in the training set./ We do this for the same reason why we remove punctuation. We want "Great" and "great" to be the same.
 
-    - Use a bigram or trigram model. Right now, the features of a review are individual words. For example, the features of the point "This crib is great" are "This", "crib", "is", and "great". If we used a bigram model, the features would be "This crib", "crib is", and "is great". Using a bigram model makes the assumption of independence more reasonable.
+    - /Use a bigram or trigram model./ Right now, the features of a review are individual words. For example, the features of the point "This crib is great" are "This", "crib", "is", and "great". If we used a bigram model, the features would be "This crib", "crib is", and "is great". Using a bigram model makes the assumption of independence more reasonable.
 
       These three improvements would all be considered part of the field /Natural Language Processing./
 
       You can find the baby product review dataset, along with many others, on [[https://cseweb.ucsd.edu/~jmcauley/datasets.html#amazon_reviews][Dr. Julian McAuley's website.]]
+
+** Task 1
+In the code editor, we've included three Naive Bayes classifiers that have been trained on different datasets. The training sets used are the baby product reviews, reviews for Amazon Instant Videos, and reviews about video games.
+
+Try changing review again and see how the different classifiers react!
+
+** Script.py
+
+#+begin_src python
+  from reviews import baby_counter, baby_training, instant_video_counter, instant_video_training, video_game_counter, video_game_training
+  from sklearn.feature_extraction.text import CountVectorizer
+  from sklearn.naive_bayes import MultinomialNB
+
+  review = "this game was violent"
+
+  baby_review_counts = baby_counter.transform([review])
+  instant_video_review_counts = instant_video_counter.transform([review])
+  video_game_review_counts = video_game_counter.transform([review])
+
+  baby_classifier = MultinomialNB()
+  instant_video_classifier = MultinomialNB()
+  video_game_classifier = MultinomialNB()
+
+  baby_labels = [0] * 1000 + [1] * 1000
+  instant_video_labels = [0] * 1000 + [1] * 1000
+  video_game_labels = [0] * 1000 + [1] * 1000
+
+  baby_classifier.fit(baby_training, baby_labels)
+  instant_video_classifier.fit(instant_video_training, instant_video_labels)
+  video_game_classifier.fit(video_game_training, video_game_labels)
+
+  print("Baby training set: " + str(baby_classifier.predict_proba(baby_review_counts)))
+  print("Amazon Instant Video training set: " + str(instant_video_classifier.predic_proba(instant_video_review_counts)))
+  print("Video Games training set: " + str(video_game_classifier.predict_proba(video_game_review_counts)))
+#+end_src
