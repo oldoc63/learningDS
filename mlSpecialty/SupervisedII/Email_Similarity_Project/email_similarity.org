@@ -33,6 +33,23 @@ Print ~emails.target_names~ to see what that number corresponds to.
 
 The target of email 5 is 1, which corresponds to ~rec.sport.hockey~.
 
+** Making the training and test sets
+
+*** Task 5
+We now want to split our data into training and test sets. Change the name of your variable from ~emails~ to ~train_emails~. Add these three parameters to the function call:
+
+    - ~subset = 'train'~
+
+    - ~shuffle = 'true'~
+
+    - ~random_state = 108~
+
+Adding the ~random_state~ parameter will make sure that every time you run the code, your dataset is split in the same way.
+
+*** Task 6
+Create another variable named ~test_emails~ and set it equal to ~fetch_20newsgroups~. The parameters of the function should be the same as before except subset should now be ~'test'~.
+
+
 ** Script.py
 
 #+begin_src python :results output
@@ -40,16 +57,16 @@ The target of email 5 is 1, which corresponds to ~rec.sport.hockey~.
   from sklearn.naive_bayes import MultinomialNB
   from sklearn.feature_extraction.text import CountVectorizer
 
-  emails = fetch_20newsgroups(categories = ['rec.sport.baseball', 'rec.sport.hockey'])
+  train_emails = fetch_20newsgroups(categories = ['rec.sport.baseball', 'rec.sport.hockey'], subset='train', shuffle=True, random_state=108)
 
-  print(emails.target_names)
+  test_emails = fetch_20newsgroups(categories = ['rec.sport.baseball', 'rec.sport.hockey'], subset='test', shuffle=True, random_state=108)
 
-  print(emails.data[5])
+  #print(emails.target_names)
 
-  print(emails.target[5])
+  #print(emails.data[5])
+
+  #print(emails.target[5])
 
 #+end_src
 
 #+RESULTS:
-: ['rec.sport.baseball', 'rec.sport.hockey']
-: 1
