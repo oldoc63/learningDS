@@ -1,0 +1,55 @@
+
+* Email Similarity
+In this project, you will use scikit-learn's  *Naive Bayes* implementation on several different datasets. By reporting the accuracy of the classifier, we can find which datasets are harder to distinguish. For example, how difficult do you think it is to distinguish the difference between emails about hockey and emails about soccer? How hard is it to tell the difference between emails about hockey and emails about tech? In this project, we'll find out exactly how difficult those two tasks are.
+
+** Exploring the Data
+
+*** Task 1
+We've imported a dataset of emails from scikit_learn's datasets. All of these emails are tagged based on their content.
+
+Print ~emails.target_names~ to see the different categories.
+
+*** Task 2
+We're interested in seeing how effective our Naive Bayes classifier is at telling the difference between a baseball email and a hockey email. We can select the categories of articles we want from ~fetch_20newsgroups~ by adding the parameter ~categories~.
+
+In the function call, set categories equal to the list ['rec.sport.baseball', 'rec.sport.hockey']
+
+*** Task 3
+Let's take a look at one of these emails.
+
+All of the emails are stored is a list called ~emails.data~. Print the email at index 5 in the list.
+
+*** Task 4
+All of the labels can be found in the list ~emails.target~. Print the label of the email at index ~5~.
+
+The labels themselves are numbers, but those numbers correspond to the label names found at ~emails.target_names~.
+
+Is this a baseball email or a hockey email?
+
+*Hint*
+Instead of printing index 5 from ~emails.data~, print it from ~emails.target~.
+
+Print ~emails.target_names~ to see what that number corresponds to.
+
+The target of email 5 is 1, which corresponds to ~rec.sport.hockey~.
+
+** Script.py
+
+#+begin_src python :results output
+  from sklearn.datasets import fetch_20newsgroups
+  from sklearn.naive_bayes import MultinomialNB
+  from sklearn.feature_extraction.text import CountVectorizer
+
+  emails = fetch_20newsgroups(categories = ['rec.sport.baseball', 'rec.sport.hockey'])
+
+  print(emails.target_names)
+
+  print(emails.data[5])
+
+  print(emails.target[5])
+
+#+end_src
+
+#+RESULTS:
+: ['rec.sport.baseball', 'rec.sport.hockey']
+: 1
