@@ -47,7 +47,27 @@ We now want to split our data into training and test sets. Change the name of yo
 Adding the ~random_state~ parameter will make sure that every time you run the code, your dataset is split in the same way.
 
 *** Task 6
-Create another variable named ~test_emails~ and set it equal to ~fetch_20newsgroups~. The parameters of the function should be the same as before except subset should now be ~'test'~.
+Create another variable named ~test_emails~ and set it equal to ~fetch_20newsgroups~. The parameters of the function should be the same as before except ~subset~ should now be ~'test'~.
+
+** Counting Words
+
+*** Task 7
+We want to transform these emails into lists of words counts. The CountVectorizer class makes this easy for us.
+
+Create a ~CountVectorizer~ object and name it ~counter~.
+
+*** Task 8
+We need to tell ~counter~ what possible words can exist in our emails. ~counter~ has a ~.fit()~ a function that takes a list of all your data.
+
+Call ~.fit()~ with ~test_emails.data + train_emails.data~ as a parameter.
+
+*** Task 9
+We can now make a list of the counts of our words in our training set.
+
+Create a variable named ~train_counts~. Set it equal to ~counter~'s transform function using ~train_emails.data~ as a parameter.
+
+*** Task 10
+Let's also make a variable named ~test_counts~. This should be the same function call as before, but use ~test_emails.data~ as the parameter of ~transform~.
 
 
 ** Script.py
@@ -66,6 +86,14 @@ Create another variable named ~test_emails~ and set it equal to ~fetch_20newsgro
   #print(emails.data[5])
 
   #print(emails.target[5])
+
+  counter = CountVectorizer()
+
+  counter.fit(test_emails.data + train_emails.data)
+
+  train_counts = counter.transform(train_emails.data)
+
+  test_counts = counter.transform(test_emails.data)
 
 #+end_src
 
