@@ -85,6 +85,42 @@ The two parameters to ~.score()~ should be ~test_counts~ and ~test_emails.target
 
 ~.score()~ will classify all the emails in the test set and compare the classification of each email to its actual label. After completing these comparisons, it will calculate and return the accuracy.
 
+** Testing Other Datasets
+
+*** Task 14
+Our classifier does a pretty good job distinguishing between soccer emails and hockey emails. But let's see how it does with emails about really different topics.
+
+Find where you create ~train_emails~ and ~test_emails~. Change the categories to be ~['comp.sys.ibm.pc.hardware', 'rec.sport.hockey']~.
+
+Did your classifier do a better or worse job on these two datasets?
+
+*** Task 15
+Play around with different sets of data. Can you find a set that’s incredibly accurate or incredibly inaccurate?
+
+The possible categories are listed below.
+
+    'alt.atheism'
+    'comp.graphics'
+    'comp.os.ms-windows.misc'
+    'comp.sys.ibm.pc.hardware'
+    'comp.sys.mac.hardware'
+    'comp.windows.x'
+    'misc.forsale'
+    'rec.autos'
+    'rec.motorcycles'
+    'rec.sport.baseball'
+    'rec.sport.hockey'
+    'sci.crypt'
+    'sci.electronics'
+    'sci.med'
+    'sci.space'
+    'soc.religion.christian'
+    'talk.politics.guns'
+    'talk.politics.mideast'
+    'talk.politics.misc'
+    'talk.religion.misc'
+
+
 ** Script.py
 
 #+begin_src python :results output
@@ -92,7 +128,7 @@ The two parameters to ~.score()~ should be ~test_counts~ and ~test_emails.target
   from sklearn.naive_bayes import MultinomialNB
   from sklearn.feature_extraction.text import CountVectorizer
 
-  train_emails = fetch_20newsgroups(categories = ['rec.sport.baseball', 'rec.sport.hockey'], subset='train', shuffle=True, random_state=108)
+  train_emails = fetch_20newsgroups(categories = ['comp.sys.ibm.pc.hardware', 'rec.sport.hockey'], subset='train', shuffle=True, random_state=108)
 
   test_emails = fetch_20newsgroups(categories = ['rec.sport.baseball', 'rec.sport.hockey'], subset='test', shuffle=True, random_state=108)
 
@@ -114,8 +150,9 @@ The two parameters to ~.score()~ should be ~test_counts~ and ~test_emails.target
 
   classifier.fit(train_counts, train_emails.target)
 
-  classifier.score(test_counts, test_emails.target)
+  print(classifier.score(test_counts, test_emails.target))
 
 #+end_src
 
 #+RESULTS:
+: 0.5515075376884422
