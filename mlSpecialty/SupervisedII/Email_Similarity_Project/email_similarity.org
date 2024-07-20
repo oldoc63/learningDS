@@ -69,6 +69,21 @@ Create a variable named ~train_counts~. Set it equal to ~counter~'s transform fu
 *** Task 10
 Let's also make a variable named ~test_counts~. This should be the same function call as before, but use ~test_emails.data~ as the parameter of ~transform~.
 
+** Making a Naive Bayes Classifier
+
+*** Task 11
+Let's now make a Naive Bayes classifier that we can train and test on. Create a ~MultinomialNB~ object named ~classifier~.
+
+*** Task 12
+Call ~classifier~'s ~.fit()~ function. ~.fit()~ takes two parameters. The first should be our training set, which for us is ~train_counts~. The second should be the labels associated with the training emails. Those are found in ~train_emails.target~.
+
+*** Task 13
+Test the Naive Bayes Classifier by printing ~classifier~'s ~score()~ function. ~.score()~ takes the test set and the test labels as parameters. ~.score()~ returns  the accuracy of the classifier on the test data. Accuracy measures the percentage of classifications a classifier correctly made.
+
+*Hint*
+The two parameters to ~.score()~ should be ~test_counts~ and ~test_emails.target~.
+
+~.score()~ will classify all the emails in the test set and compare the classification of each email to its actual label. After completing these comparisons, it will calculate and return the accuracy.
 
 ** Script.py
 
@@ -94,6 +109,12 @@ Let's also make a variable named ~test_counts~. This should be the same function
   train_counts = counter.transform(train_emails.data)
 
   test_counts = counter.transform(test_emails.data)
+
+  classifier = MultinomialNB()
+
+  classifier.fit(train_counts, train_emails.target)
+
+  classifier.score(test_counts, test_emails.target)
 
 #+end_src
 
