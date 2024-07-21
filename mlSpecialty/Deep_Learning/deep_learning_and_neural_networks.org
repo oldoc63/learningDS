@@ -222,3 +222,22 @@ By gradient, we mean the rate of change with respect to the parameters of our lo
 This is a [[https://content.codecademy.com/courses/deeplearning-with-tensorflow/deep-learning-math/interactives/index.html][conceptual overview]] of backpropagation. If you would like to engage with the gritty mathematics of it, you can do so [[https://en.wikipedia.org/wiki/Backpropagation][here]].
 
 Let's take a look at what happens with backpropagation and gradient descent on a neural network directly. In the applet in the learning enviroment, watch as weights are updated and error is decreased after each iteration. Without backpropagation, neural networks would be much less accurate.
+
+** Gradient Descent
+We have the overall process of backpropagation down! Now, let's zoom in on what is happening during gradient descent.
+
+If we think about the concept graphically, we want to look for the minimum point of our loss function because this will yield us the highest accuracy. If we start at a random point on our loss function, gradient descent will take "steps" in the "downhill direction" towards the negative gradient. The size of the "step" taken is depending on our learning rate. Choosing the optimal learning rate is important because it affects both the efficiency and accuracy of our results.
+
+The formula used with learning rate to update our weight parameters es the following:
+
+$$
+parameter\ new = parameter\ old + learning\ rate \cdot gradient(loss\ function(parameter\ old))
+$$
+
+The learning rate we choose affects how large the "steps" our pointer takes when trying to optimize our error function. Initial intuition might indicate that you should choose a large learning rate; however, as shown above, this can lead you to overshoot the value we are looking for and cause a divergent search.
+
+Now you might think that you should choose an incredibly small learning rate; however, if it is too small, it could cause your model to be unbearably inefficient or get stuck in a local minimun and never find the optimum value. It is a tricky game of finding the correct combination of efficiency and accuracy.
+
+Take a look at the graphs, which depict some common issues you may run into when selecting a learning rate. If you select a learning rate that is too small, it will take a very long time to find the minimum value. However, if you choose a learning rate that is too large, it might overshoot the minimum value an end up eith a divergent algorithm. Choosing an ideal learnign rate means it should find the ideal loss value efficiently and accurately.
+
+[[./Gradient_descent.gif]]
