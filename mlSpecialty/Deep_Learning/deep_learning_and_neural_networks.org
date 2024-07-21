@@ -164,3 +164,20 @@ Others commonly used, often for the output layer, are /sigmoid/ and /softmax/. Y
 In the diagram, we see a basic neural network with no hidden layers. Use your mouse to hover over each section of the image to get a feel for how each step of the neural network works. Each part of the diagram contains a description to indicate its role in a neural network.
 
 (Note: on some browsers, you may need to scroll down to see the descriptions)
+
+** The [[https://content.codecademy.com/courses/deeplearning-with-tensorflow/deep-learning-math/applet_2_new.html][Math Behind]] the Journey
+Let's bring all of these concepts together and see how they function in a neural network with one hidden layer. As you scroll over each section, you will see the inputs/weights/calculations associated with it and see how inputs get from the starting point and make their way to the end!
+
+The process we have been going through is known as /forward propagation./ Inputs are moved forward from the input layer through the hidden layer(s) until they reach the output layer.
+
+In the applet, you can scroll over each part of the neural network and observe the mathematics behind the diagram.
+
+When you scroll over the input section, you should see how the input is represented as a vector. Scrolling over the weights, we see how each set of weights (blue and yellow) is represented as a vector. When brought together, they make up the ~weights_matrix~ and ~weights_matrix_transpose~.
+
+When scrolling through the hidden nodes sections, you will notice that there are two parts. In the first step, we take the weighted sum of our data using the ~weights_matrix_transpose~. From this, we end up with a vector and apply our ReLU activation function to it.
+
+This takes us to our teal weights. These are represented as a vector. The ~weights_teal_transpose~ turns our /row vector/ into a /column vector/. Then we take another weighted sum in our output layer, this time between our ~hidden_nodes~ and our ~weights_teal_transpose~. Following this, we have a sigmoid activation function, which gives us our output.
+
+Feel free to open this applet in a separate window for a larger viewing screen.
+
+We now understand the adventure our data takes on one journey through our neural network. We are not quite finished yet, though. Let’s keep exploring!
