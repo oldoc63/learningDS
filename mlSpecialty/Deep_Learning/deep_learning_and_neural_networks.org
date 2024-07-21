@@ -85,3 +85,82 @@ To start, let us go over a couple of topics that will be integral to understandi
     #+begin_src python
     x = np.array([[1,2,3], [4,5,6], [7,8,9]])
     #+end_src
+
+[[./scalar_vector_matrix.png]]
+
+** Tensors
+/Scalars, vectors,/ and /matrices/ are foundational objects in linear algebra. Understanding the different ways they interact with each other and can be manipulated through matrix algebra is integral before diving into  deep learning. This is because the data structure we use in deep learning is called a /tensor,/ which is a generalized form of a vector and matrix: a multidimensional array.
+
+A tensor allows for more flexibility with the type of data you are using and how you can manipulate that data.
+
+[[./tensor-applet.svg]]
+
+Let's us visualize what they look like and how they can be represented using NumPy arrays. Use the applet on this page to get a feel for a tensor's structure and how it is represented.
+
+In this applet, you are given boxes where you can fill in negative and positive whole numbers. On the right side is a set of nested arrays. These nested arrays form a 3-dimensional tensor that can be viewed as a "stack" or "layer" of grids, as shown on the left.
+
+The shape of this tensor is (3, 2, 5), as outlined on the diagram. The shape of our data is an important factor when we are feeding it into our neural network. It affects the way our model interacts with our inputs. This is something you will see in future lessons!
+
+If you would like to see the applet in action, feel free to do so [[https://content.codecademy.com/courses/deeplearning-with-tensorflow/deep-learning-math/applet_3_new.html][here]]!
+
+If you would like to read more about tensors and see more ways to visualize tensors, feel free to do so [[https://www.tensorflow.org/guide/tensor][here]]!
+
+** Matrix Algebra
+The following gifs walkthrough matrix multiplication, addition and transpose. You can perform element-wise operations on tensors using matrix algebra as well, which you can read more about [[https://en.wikipedia.org/wiki/Matrix_(mathematics)#Addition,_scalar_multiplication,_and_transposition][here]].
+
+*** Matrix Addition:
+
+[[./matrix_addition.webp]]
+
+*** Scalar Multiplication:
+
+[[./scalar_multi.webp]]
+
+*** Matrix Multiplication:
+
+This is the [[https://content.codecademy.com/courses/deeplearning-with-tensorflow/deep-learning-math/matrix_interactive/index.html][most complicated]].
+
+*** Transpose:
+
+[[./transpose.webp]]
+
+This is all of the matrix algebra we need to proceed with the rest of our deep learning investigation! These concepts are the fundamental building blocks of why deep learning models are so powerful. When we are training our models, we are performing operations on tensors. This data is analyzed, manipulated, and shaped by the matrix algebra we have quickly gone over.
+
+** Neural Networks [[https://content.codecademy.com/courses/deeplearning-with-tensorflow/deep-learning-math/applet_1.html][Concept Overview]]
+Let's take a look at the journey our /inputs/ take inside of a neural network! By an input, we mean a data point from our dataset. Our input can have many different features, so in our /input layer,/ each node represents a different input feature. For example, if we were working with a dataset of different types of food, some of our features might be size, shape, nutrition, etc., where the value for each of these features would be held in an input node.
+
+Besides an input layer, our neural network has two other different types of layers:
+
+    /Hidden layers/ are layers that come between the input layer and the output layer. They introduce complexity into our neural network and help with the learning process. You can have as many hidden layers as you want in a neural network (including zero of them).
+
+    The /output layer/ is the final layer in our neural network. It produces the final result, so every neural network must have only one output layer.
+
+Each layer in a neural network contains nodes. Nodes between each layer are connected by /weights/. These are the learning parameters of our neural network, determining the strength of the connection between each linked node.
+
+The weighted sum between nodes and weights is calculated between each layer. For example, from our input layer, we take the weighted sum of the inputs and our weights with the following equation:
+
+$$
+weighted\ sum = (inputs \cdot weight\ transpose) + bias
+$$
+
+We then apply an activation function to it.
+
+$$
+Activation(weighted\ sum)
+$$
+
+The two formulas we have gone over take all the inputs through one layer of a neural network. Aside from the activation function, all of the transformations we have done so far are linear. Activation functions /introduce nonlinearity/ in our learning model, creating more complexity during the learning process.
+
+This is what makes activation functions important. A neural network with many hidden layers but no activation functions would just be a series of succesive layers that would be no more effective or accurate than simple linear regression.
+
+An activation function decides what is fired to the next neuron based on its calculation for the weighted sums. Various types of activation functions can be applied at each layer. The most popular one for hidden layers is /ReLU./
+
+[[./ReLU.png]]
+
+Others commonly used, often for the output layer, are /sigmoid/ and /softmax/. You will learn more about these functions as you use them later in this course.
+
+[[./sigmoid.png]]
+
+In the diagram, we see a basic neural network with no hidden layers. Use your mouse to hover over each section of the image to get a feel for how each step of the neural network works. Each part of the diagram contains a description to indicate its role in a neural network.
+
+(Note: on some browsers, you may need to scroll down to see the descriptions)
