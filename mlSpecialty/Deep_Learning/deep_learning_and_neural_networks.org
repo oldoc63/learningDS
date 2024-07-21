@@ -211,3 +211,14 @@ Play around with the interactive applet, and notice what method you use to minim
     - Do you first get the slope to where it produces lowest loss, and then move the intercept to where it produces lowest loss?
 
     - Do you create a rough idea in your mind where the line should be first, and then enter the parameters to match that image?
+
+** Backpropagation
+This all seems fine and dandy so far. However, what if our output values are inaccurate? Do we cry? Try harder next time? Well, we can do that, but the good news is that there is more to our deep learning models.
+
+This is where /backpropagation/ and /gradient descent/ come into play. Forward propagation deals with feeding the input values through hidden layers to the final output layer. Backpropagation refers to the computation of gradients with an algorithm known as gradient descent. This algorithm continuosly updates and refines the weights between neurons to minimize our loss function.
+
+By gradient, we mean the rate of change with respect to the parameters of our loss function. From this, backpropagation determines how much each weight is contributing to the error in our loss function, and gradient descent will update  our weight values accordingly to decrease this error.
+
+This is a [[https://content.codecademy.com/courses/deeplearning-with-tensorflow/deep-learning-math/interactives/index.html][conceptual overview]] of backpropagation. If you would like to engage with the gritty mathematics of it, you can do so [[https://en.wikipedia.org/wiki/Backpropagation][here]].
+
+Let's take a look at what happens with backpropagation and gradient descent on a neural network directly. In the applet in the learning enviroment, watch as weights are updated and error is decreased after each iteration. Without backpropagation, neural networks would be much less accurate.
