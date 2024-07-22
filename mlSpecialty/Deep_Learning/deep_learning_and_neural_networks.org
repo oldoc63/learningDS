@@ -241,3 +241,33 @@ Now you might think that you should choose an incredibly small learning rate; ho
 Take a look at the graphs, which depict some common issues you may run into when selecting a learning rate. If you select a learning rate that is too small, it will take a very long time to find the minimum value. However, if you choose a learning rate that is too large, it might overshoot the minimum value an end up eith a divergent algorithm. Choosing an ideal learnign rate means it should find the ideal loss value efficiently and accurately.
 
 [[./Gradient_descent.gif]]
+
+** Stochastic Gradient Descent
+This leads us to the final point about gradient descent. In deep learning models, we are often dealing with extremely large datasets. Because of this, performing backpropagation and gradient descent calculations on all of our data may be ineficient and computationally exhaustive no matter what learning rate we choose.
+
+To solve this problem, a variation of gradient descent known as /Scochastic Gradient Descent (SGD)/ was developed. Let's say we have 100,000 data points and 5 parameters. If we did 1000 iterations (also known as epochs in Deep Learning) we would end up with 100000 \cdot 5 \cdot 1000 = 500,000,000 computations. We do not want our computer to do that many computations on top of the rest of the learning model; it will take forever.
+
+This is where SGD comes to play. Instead of performing gradient descent on our entire dataset, we pick out a random data point to use at each iteration. This cuts back on computation time immensely while still yielding accurate results.
+
+The diagram below shows the performance differences between SGD and GD. You may notice that the SGD graph is a bit more sporadic. There is a reason for this, and we will address it in the next exercise.
+
+The main point is that both will reach the ideal parameters, and SGD will be easier and more efficient for your computer processor. Because of this, SGD is almost universally used in favor of normal GD.
+
+However, as well will see next, there are even more variants of gradient descent.
+
+[[./stochastic.svg]]
+
+** More variant of gradient descent
+Just when you thought SGD solved all our problems, even more options come into the picture!
+
+There are also other variants of gradient descent such as -Adam optimization algorithm- and /mini-batch gradient descent./ Adam is an adaptive learning algorithm that finds individuals learning rates for each parameter. Mini-batch gradient descent is similar to SGD except instead of iterating on one data point at a time, we iterate on small batches of fixed size.
+
+Adam optimizer's ability to have an adaptive learning rate has made it an ideal varian of gradient descent and is commonly used in deep learning models. Mini-batch gradient descent was developed as an ideal trade-off between GD and SGD. Since mini-batch does not depend on just one training sample, it has a much smoother curve and is less affected by outliers and noisy data making it a more optimal algorithm for gradient descent than SGD.
+
+These are just some quick notes! You can read more about Adam [[https://arxiv.org/abs/1412.6980][here]] and more about mini-batch [[https://arxiv.org/pdf/1609.04747][here]]. Experts in deep learning are constantly coming up with ways to improve these algorithms to make them more efficient and accurate, so the ability to adapt and build upon what you learn as you dive into this domain will be key!
+
+[[./GD_variants.webp]]
+
+This is a diagram you will become accustomed to in future lessons. It shows us our loss function performance over many /epochs/ (iterations) of our deep learning model with different types of gradient descent.
+
+These graphs are extremely useful when creating learning models because they offer us a detailed view of their performance.
