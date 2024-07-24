@@ -472,7 +472,7 @@ Our ~Perceptron~ class by default takes two inputs and a pre-defined weight for 
 
 Complete the ~__init__()~ method inside the ~Perceptron~ class by creating instance variables ~self.num_inputs~ and ~self.weights~ that represent the attributes of a ~Perceptron~ object.
 
-Assign the parameters num_inputs and weights to self.num_imputs and self.weights respectively.
+Assign the parameters ~num_inputs~ and ~weights~ to ~self.num_imputs~ and ~self.weights~ respectively.
 
 ** Task 2
 Create a ~Perceptron~ object called ~cool_perceptron~ (without any arguments) and print it out to see what it looks like.
@@ -492,3 +492,69 @@ Create a ~Perceptron~ object called ~cool_perceptron~ (without any arguments) an
 
 #+RESULTS:
 : <__main__.Perceptron object at 0x72585a1021e0>
+
+* Step 1: Weighted Sum
+Great! Now that you understand the structure of the perceptron, here's an important question -how are the inputs and weights magically turned into an output? This is a two-step process, and the first step is /finding the weighted sum of the inputs./
+
+What is the *weighted sum?* This is just a number that gives a reasonable representation of the inputs:
+
+$$
+weighted\ sum = x_1w_1 + x_2w_2 + \cdots + x_nw_n
+$$
+
+The x's are the inputs and the w's are the weights.
+
+Here's how we can implement it:
+
+    1. Start with a weighted sum of 0. Let's call it ~weighted_sum~.
+
+    2. Start with the first input and multiply it by its corresponding weight. Add this result to ~weighted_sum~.
+
+    3. Go to the next input and multiply it by its corresponding weight. Add this result to ~weighted_sum~.
+
+    4. Repeat this process for all inputs.
+
+** Task 1
+Create a variable called ~weighted_sum~ to hold the value of the weighted sum and set its starting value to ~0~.
+
+Return ~weighted_sum~ outside the for loop.
+
+** Task 2
+Let's go through each input-weight pair and find the weighted sum using indexing.
+
+Delete the ~pass~ statement inside the ~for~ loop. For each iteration in the loop. For each iteration in the loop, find the product of the input and weight at index ~i~, add the result to ~weighted_sum~, and store it back in ~weighted_sum~ to update the value of ~weighted_sum~.
+
+** Task 3
+Outside the Perceptron class, after the Perceptron object coo_perceptron has been created, print out the weighted sum for the inputs [24, 55].
+
+What is the weighted sum?
+
+*Hint*
+Pass the inputs into the ~.weighted_sum()~ method and call it on ~cool_perceptron~.
+
+The weighted sum should be 103 when the weights are [2, 1]:
+
+$$
+weighted\ sum = x_1w_1 + x_2w_2 = 24 \cdot 2 + 55 \cdot 1 = 103
+$$
+
+** Script.py
+
+#+begin_src python :results output
+  class Perceptron:
+      def __init__(self, num_inputs=2, weights=[2, 1]):
+          self.num_inputs = num_inputs
+          self.weights = weights
+
+      def weighted_sum(self, inputs):
+          weighted_sum = 0
+          for i in range(self.num_inputs):
+              weighted_sum += self.weights[i] * inputs[i]
+          return weighted_sum
+
+  cool_perceptron = Perceptron()
+  print(cool_perceptron.weighted_sum([24, 55]))
+#+end_src
+
+#+RESULTS:
+: 103
