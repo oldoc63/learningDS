@@ -558,3 +558,57 @@ $$
 
 #+RESULTS:
 : 103
+
+* Step 2: Activation Function
+After finding the weighted sum, the second step is to /constrain the weighted sum to produce a desired output./
+
+Why is that important? Imagine if a perceptron had inputs in the range of 100-1000 but the goal was to simply predict whether or not something would occur -1 for "Yes" and 0 for "No". This would result in a very large weighted sum.
+
+How can the perceptron produce a meaningful output in this case? This is exactly where *activation functions* come in! These are special functions that transform the weighted sum into a desired and constrained output.
+
+For example, if you want to train a perceptron to detect whether a point is above or below a line (which we will be doing in this lesson!), you might want the output to be a +1 or -1 label. For this task, you can use the "sign activation function" to help the perceptron make the decision:
+
+    - if weighted sum is positive, return ~+1~
+
+    - if weighted sum is negative, return ~-1~
+
+In this lesson, we will focus on using the sign activation function because it is the simplest way to get started with perceptrons and eventually visualize one in action.
+
+** Task 1
+Inside the ~.activation()~ method, return 1 if the ~weighted_sum~ is greater than or equal to 0.
+
+** Task 2
+Inside the ~.activation()~ method, return -1 if the ~weighted_sum~ is less than 0.
+
+** Task 3
+Print out the result of the method ~.activation()~ called on ~cool_perceptron~ if the weighted sum is 52.
+
+** Script.py
+
+#+begin_src python :results output
+  class Perceptron:
+      def __init__(self, num_inputs=2, weights=[1, 1]):
+          self.num_inputs = num_inputs
+          self.weights = weights
+
+      def weighted_sum(self, inputs):
+          weighted_sum = 0
+          for i in range(self.num_inputs):
+              weighted_sum += self.weights[i]*inputs[i]
+          return weighted_sum
+
+      def activation(self, weighted_sum):
+          if weighted_sum >= 0:
+              return 1
+          else:
+              return -1
+
+  cool_perceptron = Perceptron()
+  print(cool_perceptron.weighted_sum([24, 55]))
+  print(cool_perceptron.activation(52))
+
+#+end_src
+
+#+RESULTS:
+: 79
+: 1
