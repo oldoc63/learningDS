@@ -612,3 +612,64 @@ Print out the result of the method ~.activation()~ called on ~cool_perceptron~ i
 #+RESULTS:
 : 79
 : 1
+
+* Training the Perceptron
+Our perceptron can now make a prediction given inputs, but how do we know if it gets those predictions right?
+
+Right now we expect the perceptron to be very bad because it has random weights. We haven't taught it anything yet, so we can't expect it to get classifications correct! The good news is that we can train the perceptron to produce better and better results! In order to do this, we provide the perceptron a training set -a collection of random inputs with correctly predicted outputs.
+
+On the right, you can see a plot of scattered points with positive and negative labels. This is a simple training set.
+
+In the code, the training set has been represented as a dictionary with coordinates as keys and labels as values. For example:
+
+#+begin_src python
+training_set = {(18, 49): -1, (2, 17): 1, (24, 35): -1, (14, 26): 1, (17, 34): -1}
+#+end_src
+
+We can measure the perceptron's actual performance against this training set. By doing so, we get a sense  of "how bad" the perceptron is. The goal is to gradually nudge the perceptron -by slightly changing its weights- towards a better version of itself that correctly matches all the input-output pairs in the training set.
+
+We will use these points to train the perceptron to correctly separate the positive labels from the negative labels by visualizing the perceptron as a line.
+
+#+begin_src python
+import matplotlib.pyplot as plt
+import random
+
+def generate_training_set(num_points):
+	x_coordinates = [random.randint(0, 50) for i in range(num_points)]
+	y_coordinates = [random.randint(0, 50) for i in range(num_points)]
+	training_set = dict()
+	for x, y in zip(x_coordinates, y_coordinates):
+		if x <= 45-y:
+			training_set[(x,y)] = 1
+		elif x > 45-y:
+			training_set[(x,y)] = -1
+	return training_set
+
+training_set = generate_training_set(30)
+
+x_plus = []
+y_plus = []
+x_minus = []
+y_minus = []
+
+for data in training_set:
+	if training_set[data] == 1:
+		x_plus.append(data[0])
+		y_plus.append(data[1])
+	elif training_set[data] == -1:
+		x_minus.append(data[0])
+		y_minus.append(data[1])
+
+fig = plt.figure()
+ax = plt.axes(xlim=(-25, 75), ylim=(-25, 75))
+
+plt.scatter(x_plus, y_plus, marker = '+', c = 'green', s = 128, linewidth = 2)
+plt.scatter(x_minus, y_minus, marker = '_', c = 'red', s = 128, linewidth = 2)
+
+plt.title("Training Set")
+
+plt.show()
+#+end_src
+
+#+RESULTS:
+: None
