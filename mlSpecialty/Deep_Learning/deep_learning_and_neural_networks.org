@@ -981,3 +981,18 @@ plt.show()
 
 #+RESULTS:
 : 0
+
+* Finding a Linear Classifier
+Let's recap what you just learned!
+
+The perceptron has inputs, weights, and an output. The weights are parameters that define the perceptron and they can be used to represent a line. In other words, the perceptron can be visualized as a line.
+
+What does it mean for the perceptron to correctly classify every point in the training set?
+
+Theoretically, it means that the perceptron predicted every label correctly.
+
+Visually, it means that the perceptron found a linear classifier, or a decision boundary, that separates the two distinct set of points in the training set.
+
+In the plot, you should be able to see the linear classifier that was found by the perceptron in the last iteration ot the training process.
+
+[[./finding_a_linear_classifier.gif]]
