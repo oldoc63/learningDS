@@ -743,3 +743,12 @@ Create a variable called ~error~ and assign it the value of ~actual - prediction
 #+RESULTS:
 : 79
 : 1
+
+* Tweaking the weights
+What do we do once we have the errors for the perceptron? We slowly nudge the perceptron towards a better version of itself that eventually has zero error.
+
+The only way to do that is to change the parameters that define the perceptron. We can't change the inputs so the only thing that can be tweaked are the weights. As we change the weights, the outputs change as well.
+
+The goal is to find the optimal combination of weights that will produce the correct output for as many points as possible in the dataset.
+
+[[./tweaking_the_weights.webp]]
