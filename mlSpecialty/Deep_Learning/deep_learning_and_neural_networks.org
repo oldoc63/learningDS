@@ -673,3 +673,73 @@ plt.show()
 
 #+RESULTS:
 : None
+
+* Training Error
+Now that we have our training set, we can start feeding inputs into the perceptron and comparing the actual outputs against the expected labels!
+
+Every time the output mismatches the expected label, we say that the perceptron has made a *training error* -a quantity that measures "how bad" the perceptron is performing.
+
+As mentioned in the last exercise, the goal is to nudge the perceptron towards zero training error. The training error is calculated by subtracting the predicted label value form the actual label value.
+
+$$
+training\ error = actual\ label - predicted\ label
+$$
+
+For each point in the training set, the perceptron either produces a +1 or a -1 (as we are using the Sign Activation Function). Since the labels are also a +1 or a -1, there are four different possibilities for the error the perceptron makes:
+
+| actual | predicted | training error |
+|     +1 |        +1 |              0 |
+|     +1 |        -1 |              2 |
+|     -1 |        -1 |              0 |
+|     -1 |        +1 |            - 2 |
+
+These training error values will be crucial in improving the perceptron's performance as we will see in the upcoming exercises.
+
+** Task 1
+In the ~.training()~ method, let's find the perceptron's error on each ~inputs~ in ~training_set~.
+
+First, we need the perceptron's predicted output for a point. Inside the ~for~ loop, create a variable called ~prediction~ and assign it the correct label value using ~.activation()~, ~.weighted_sum()~, and ~inputs~ in a single statement.
+
+** Task 2
+Create a variable named ~actual~ and assign it the actual label for each ~inputs~ in ~training_set~.
+
+*Hint*
+You can access the actual label by indexing into ~training_set~ using ~inputs~.
+
+** Task 3
+Create a variable called ~error~ and assign it the value of ~actual - prediction~.
+
+** Script.py
+
+#+begin_src python :results output
+  class Perceptron:
+      def __init__(self, num_inputs=2, weights=[1,1]):
+          self.num_inputs = num_inputs
+          self.weights = weights
+
+      def weighted_sum(self, inputs):
+          weighted_sum = 0
+          for i in range(self.num_inputs):
+              weighted_sum += self.weights[i]*inputs[i]
+          return weighted_sum
+
+      def activation(self, weighted_sum):
+          if weighted_sum >= 0:
+              return 1
+          if weighted_sum < 0:
+              return -1
+
+      def training(self, training_set):
+          for inputs in training_set:
+              prediction = self.activation(self.weighted_sum(inputs))
+              actual = training_set[inputs]
+              error = actual - prediction
+
+  cool_perceptron = Perceptron()
+  print(cool_perceptron.weighted_sum([24, 55]))
+  print(cool_perceptron.activation(52))
+#+end_src
+
+#+RESULTS:
+: 79
+: 1
