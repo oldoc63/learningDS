@@ -1013,3 +1013,58 @@ By increasing the number of features and perceptrons, we can give rise to the Mu
 With a solid understanding of perceptrons, you are now ready to dive into the incredible world of Neural Networks!
 
 [[./neural-net-image.svg]]
+
+* Quiz
+
+** Question 1
+What was used to find slope and intercept of the line that the perceptron represents?
+
+    - A perceptron's weights are used to represent a line
+
+** Quesion 2
+What does the activation function below do?
+
+#+begin_src python
+  def activation(self, weighted_sum):
+      if weighted_sum >= 0:
+          return 1
+      if weighted_sum < 0:
+          return -1
+#+end_src
+
+    - If the weighted sum is positive, return 1 and if the sum is negative, return -1.
+
+** Question 3
+Suppose the actual label is ~4~ and the predicted label is ~-2~ for a data point, what is the training error?
+
+    - 6
+      Correct! 4 - (-2) = 6
+
+** Question 4
+*True/False:* An activation function is a special function that transforms the weighted sum into a desired and constrained output.
+
+    - True
+
+** Question 5
+What is the default input value for the bias weight?
+
+$$
+weight = x_1w_1 + x_2w_2 + \cdots + x_nw_n + ?w_b
+$$
+
+    - 1
+      Great job! The bias weight takes a default input value of 1 and some random weight value.
+
+** Question 6
+Which of the following is the correct weighted sum formula?
+
+$$
+x_1w_1 + x_2w_2 + \cdots + x_nw_n
+$$
+
+Correct! the weighted sum is a number that gives a reasonable representation of the inputs.
+
+** Question 7
+Which of the following is not a component of perceptron?
+
+    - Weights (w), Output (y) and Imputs (x) are components of perceptron
