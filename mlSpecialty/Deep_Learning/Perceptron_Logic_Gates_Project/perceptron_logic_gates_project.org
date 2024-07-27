@@ -80,6 +80,115 @@ Before running your code, predict what will happen. Is the data linearly separab
 
 The data is linearly separable because you can draw a straight line that completely separates the points of each class.
 
+** Visualizing the perceptron
+
+*** Task 9
+We know the perceptron has been trained correctly, but let's try to visualize what decision boundary it is making. Reset your labels to be representing and AND gate.
+
+Let's first investigate the classifier's ~.decision_function()~ method. Given a list of points, this method returns the distance those points are from the decision boundary. The closer the number is to ~0~, the closer that point is to the decision boundary.
+
+Try calling ~classifier~'s ~.decision_function()~ method using ~[[0, 0], [1, 1], [0.5, 0.5]]~ as a parameter. Print the results.
+
+Is the point ~[0, 0]~ or the point ~[1, 1]~ closer to the decision boundary?
+
+A decision boundary is the line that determines whether the output should be a ~1~ or a ~0~. Points that fall on one side of the line will be a ~0~ and points on the other side will be a ~1~.
+
+If your data is representing and AND gate, you should see that the point ~[1, 1]~ is closer to the decision boundary than ~[0, 0]~. The point at ~[0.5, 0.5]~ is pretty close to the decision boundary as well.
+
+*** Task 10
+Even though an input like ~[0.5, 0.5]~ isn't a /real/ input to an AND logic gate, we can still check to see how far it is from the decision boundary.
+
+We could also do this to the point [0, 0.1], [0, 0.2] and so on. If we do this for a grid of points, we can make a heat map that reveals the decision boundary.
+
+To begin, we need to create a list of the points we want to input to ~.decision_function()~.
+
+Begin by creating  a list named ~x_values~. This should be a list of 100 evenly spaced decimals between ~0~ and ~1~. ~np.linspace(0, 1, 100)~ will do this.
+
+Do the same for ~y_values~.
+
+*** Task 11
+We have a list of 100 x values and 100 y values. We now want to find every possible combination of those x and y values.
+
+The function product will do this for you. For example, consider the following code:
+
+#+begin_src python
+list(product([1, 2, 3], [4, 5, 6]))
+#+end_src
+
+This code will produces the following list:
+
+#+begin_src python
+[(1, 4), (1, 5), (1, 6), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6)]
+#+end_src
+
+Call ~product()~ using ~x_values~ and ~y_values~ as parameters. Don't forget to put ~list()~ around the call to ~product()~. Store the result in a variable named ~point_grid~.
+
+*** Task 12
+Call ~classifier~'s ~.decision_function()~ method using ~point_grid~ as a parameter. Store the results in a variable named distances.
+
+*** Task 13
+Right now ~distances~ stores positive and negative values. We only care about how far away a point is from the boundary - we don't care about the sign.
+
+Take the absolute value of every distance. Use list comprehension to call ~abs()~ on every point in the list and store it in a new variable called ~abs_distances~.
+
+*** Task 14
+We're almost ready to draw the heat map. We're going to be using Matplotlib's ~pcolormesh()~ function.
+
+Right now, ~abs_distances~ is a list of ~10000~ numbers. ~pcolormesh~ needs a two dimensional list. We need to turn ~abs_distances~ into a 100 by 100 two dimensional array.
+
+Numpy's ~reshape~ function does this for us. The code below turns list ~lst~ into a 2 by 2 list.
+
+#+begin_src python :results output
+  import numpy as np
+
+  lst = [1, 2, 3, 4]
+  new_lst = np.reshape(lst, (2, 2))
+  print(new_lst)
+#+end_src
+
+#+RESULTS:
+: [[1 2]
+:  [3 4]]
+
+Turn ~abs_distances~ into a 100 by 100 list and name it ~distances_matrix~.
+
+*** Task 15
+It's finally time to draw the heat map!
+
+Call ~plt.pcolormesh()~ with the following three parameters:
+
+    - x_values
+
+    - y_values
+
+    - distances_matrix
+
+Save the results in a variable named ~heatmap~.
+
+Then call ~plt.colorbar()~ using ~heatmap~ as a parameter. This will put a legend on the heat map.
+
+Make sure ~plt.show()~ is still below these function calls.
+
+*** Task 16
+You now have a great visualization of what the perceptron is doing. You should see a purple line where the distances are 0. That's the decision boundary!
+
+Change your labels back to representing an OR gate. Where does the decision boundary go?
+
+Change your labels to represent an XOR gate. Remember, this data is not linearly separable. Where does the decision boundary go?
+
+Perceptrons can't solve problems that aren't linearly separable. However, if you combine multiple perceptrons together, you now have a neural net that can solve these problems!
+
+This is incredibly similar to logic gates. AND gates and OR gates can't produce the output of XOR gates, but when you combine a few ANDs and ORs, you can make an XOR!
+
+*Hint*
+
+Change the values in ~labels~.
+
+For an OR gate, the label should be ~1~ if any input is a ~1~.
+
+For XOR, the label should be a ~1~ if only one input is a ~1~.
+
+
 ** Script.py
 
 #+begin_src python :results output
@@ -93,7 +202,7 @@ The data is linearly separable because you can draw a straight line that complet
   data = [[0, 0], [0, 1], [1, 0], [1, 1]]
 
   # Labels for AND
-  labels = [0, 1, 1, 1]
+  labels = [0, 0, 0, 1]
 
   plt.scatter([point[0] for point in data], [point[1] for point in data], c=labels)
 
@@ -104,7 +213,27 @@ The data is linearly separable because you can draw a straight line that complet
   classifier.fit(data, labels)
   print(classifier.score(data, labels))
 
+  print(classifier.decision_function([[0, 0], [1, 1], [0.5, 0.5]]))
+
+  x_values = np.linspace(0, 1, 100)
+  y_values = np.linspace(0, 1, 100)
+
+  point_grid = list(product(x_values, y_values))
+
+  distances = classifier.decision_function(point_grid)
+
+  abs_distances = [abs(pt) for pt in distances]
+
+  distances_matrix = np.reshape(abs_distances, (100, 100))
+
+  heatmap = plt.pcolormesh(x_values, y_values, distances_matrix)
+
+  plt.colorbar(heatmap)
+
+  plt.show()
+
 #+end_src
 
 #+RESULTS:
 : 1.0
+: [-4.   1.  -1.5]
