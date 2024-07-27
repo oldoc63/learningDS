@@ -23,3 +23,55 @@ We'll also investigate an XOR gate - a gate that outputs a 1 only if one of the 
 |       1 |       1 |      0 |
 
 We'll think about why an XOR gate isn't linearly separable and show how a perceptron fails to learn XOR.
+
+** Creating and visualizing AND Data
+
+*** Task 1
+To begin, let's think of an AND gate as a data set of four points. The four points should be the four possible inputs to the AND gate. For example, the first point in the dataset should be ~[0, 0]~.
+
+Create a variable named ~data~ that is a list that contains the four posible inputs to an AND gate.
+
+*** Task 2
+Each data point should have a label associated with it. The label will be the result of the AND gate given the input.
+
+Create a variable named ~labels~. This should be a list where each label corresponds to a point in ~data~. For example, if the last item in ~data~ is ~[1, 1]~, the last label should be ~1~.
+
+*** Task 3
+Let's plot these four points on a graph.
+
+Call ~plt.scatter()~ using three parameters:
+
+    - The first parameter should be a list of the $x$ values of each point. You can get this using list comprehension - ~[point[0] for point in data]~.
+
+    - The second parameter should be a list of the $y$ values of each point. You can get this using list comprehension - ~[point[1] for point in data]~.
+
+    - The third parameter should be ~c = labels~. This will make the points with label 1 a different color than points with label 0.
+
+After calling ~plt.scatter()~ call ~plt.show()~. As you continue to write your code, make sure ~plt.show()~ is always the last line of code.
+
+Why is this data linearly separable?
+
+The data is linearly separable because you can draw a straight line that completely separates the points of each class.
+
+** Script.py
+
+#+begin_src python :results output
+  import seaborn as sns
+  from sklearn.linear_model import Perceptron
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from itertools import product
+
+  # Inputs to AND
+  data = [[0, 0], [0, 1], [1, 0], [1, 1]]
+
+  # Labels for AND
+  labels = [0, 0, 0, 1]
+
+  plt.scatter([point[0] for point in data], [point[1] for point in data], c=labels)
+
+  plt.show()
+
+#+end_src
+
+#+RESULTS:
