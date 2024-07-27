@@ -53,6 +53,33 @@ Why is this data linearly separable?
 
 The data is linearly separable because you can draw a straight line that completely separates the points of each class.
 
+** Building the perceptron
+
+*** Task 4
+Now that we have our data, let's build a perceptron to learn AND. Create a ~Perceptron~ object named ~classifier~. For now, set the parameter ~max_iter~ to 40, and set ~random_state~ to 22.
+
+~max_iter~ set the number of times the perceptron loops through the training data. The default is ~1000~, so we're cutting the training pretty short! Let's see if our algorithm learns AND, even with very little training.
+
+*** Task 5
+We'll now train the model. Call the ~.fit()~ method using ~data~ and ~labels~ as parameters.
+
+*** Task 6
+Let's see if the algorithm learned AND. Call ~classifier~'s ~.score()~ method using ~data~ and ~labels~ as parameters. Print the results. This will print the accuracy of the model on the data points.
+
+Note that it is pretty unusual to train and test on the same dataset. In this case, since there are only four possible inputs to AND, we're stuck training on every possible input and testing on those same points.
+
+*** Task 7
+Your perceptron should have 100% accuracy! You just taught it an AND gate!
+
+Let's change the labels so your data now represents an XOR gate. The label should be a 1 only if one of the inputs is a 1. What is the accuracy of the perceptron now? Is the data linearly separable?
+
+*** Task 8
+Try changing the data to represent an OR gate. The label of a point should be a ~1~ if /any/ of the input values are a ~1~.
+
+Before running your code, predict what will happen. Is the data linearly separable? What do you expect the accuracy of the perceptron to be?
+
+The data is linearly separable because you can draw a straight line that completely separates the points of each class.
+
 ** Script.py
 
 #+begin_src python :results output
@@ -66,12 +93,18 @@ The data is linearly separable because you can draw a straight line that complet
   data = [[0, 0], [0, 1], [1, 0], [1, 1]]
 
   # Labels for AND
-  labels = [0, 0, 0, 1]
+  labels = [0, 1, 1, 1]
 
   plt.scatter([point[0] for point in data], [point[1] for point in data], c=labels)
 
   plt.show()
 
+  classifier = Perceptron(max_iter=40, random_state=22)
+
+  classifier.fit(data, labels)
+  print(classifier.score(data, labels))
+
 #+end_src
 
 #+RESULTS:
+: 1.0
