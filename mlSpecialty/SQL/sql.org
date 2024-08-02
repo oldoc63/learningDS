@@ -906,6 +906,103 @@ Let’s summarize:
 
     - CASE creates different outputs
 
+** Quiz
+
+*** Question 1
+What is the correct syntax to query both the name and date columns from the database?
+
+#+begin_src
+SELECT name, date
+  FROM album;
+#+end_src
+
+*** Question 2
+What is ORDER BY?
+
+    - A clause that sorts the result set alphabetically or numerically
+
+*** Question 3
+What is LIMIT?
+
+    - A clause that lets you specify the maximum number of rows the result set will have
+
+*** Question 4
+How would you query all the unique genres from the books table?
+
+#+begin_src
+SELECT DISTINC genres
+  FROM books;
+#+end_src
+
+Correct! DISTINCT filters out all duplicate values in the genres column
+
+*** Question 5
+IS NULL condition returns true if the field has no value.
+
+    - True
+
+*** Question 6
+Find the error in this code:
+
+#+begin_src
+SELECT name,
+  CASE
+  WHEN imdb_rating > 8 THEN 'Oscar'
+  WHEN imdb_rating > 7 THEN 'Good'
+  WHEN imdb_rating > 6 THEN 'Fair'
+  END
+  FROM movies;
+#+end_src
+
+    - Missing END statement
+
+*** Question 7
+What does the wildcard character % in the following SQL statement do?
+
+#+begin_src
+SELECT *
+  FROM sports
+  WHERE name LIKE '%ball';
+#+end_src
+
+    - It matches all sports that end with 'ball'.
+
+*** Question 8
+What code would you add to this query to place the colors in reverse alphabetical order (Z to A) by name?
+
+#+begin_src
+SELECT *
+  FROM colors
+  ORDER BY name DESC;
+#+end_src
+
+Correct! DESC sorts in a descending order (Z to A).
+
+*** Question 9
+Which operator would you use to query values that meet all conditions in a WHERE clause?
+
+    - AND
+      Correct! AND is used to /combine multiple conditions/ in a WHERE clause to make the result set more specific.
+
+*** Question 10
+What is LIKE?
+
+    - A special operator that can be used with the WHERE clause to search for a pattern
+
+*** Question 11
+Which of the following is NOT a comparison operator in SQL?
+
+    - Correct! Comparison operators are =, !=, >, <, >=, <=.
+
+*** Question 12
+What is the correct query to select only the cities with temperatures less than 35?
+
+#+begin_src
+SELECT *
+  FROM cities
+  WHERE temperature < 35;
+#+end_src
+
 * SQLite
 
 ** Main Features
