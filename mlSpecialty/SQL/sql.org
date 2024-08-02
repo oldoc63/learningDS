@@ -1,0 +1,1426 @@
+
+* SQL
+Like most organizations, Codecademy uses SQL (Structured Query Language) to access its database.
+
+A *database* is a set of data stored in a computer. This data is usually structured into /tables/. Tables can grow large and have a multitude of columns and records.
+
+Spreadsheets, like Microsoft Excel and Google Sheets, allow you to view and manipulate data directly: with selecting, filtering, sorting, etc. By applying a number of these operations you can obtain the subset of data you are seeking.
+
+SQL (pronounced “S-Q-L” or “sequel”) allows you to write queries which define the subset of data you are seeking. Unlike Excel and Sheets, your computer and SQL will handle how to get the data; you can focus on what data you would like. You can sabe these queries, refine them, share them, and run them on different databases.
+
+It is a great way to access data and a great entry point to programming because its syntax (the specific vocabulary that gives instructions to the computer) is very human-readable. Without knowing any SQL, you might still be able to guess what each command will do.
+
+* Relational Databases
+A relational database is a database that organizes information into one or more tables.
+
+A /table/ is a collection of data organized into rows and columns. Tables are sometimes referred to as /relations/.
+
+A /column/ is a set of data values of a particular type. By example id, name and age.
+
+A /row/ is a single record in a table.
+
+All data stored in a relational database is of a certain data type. Some of the most common data types are:
+
+    - INTEGER, a positive or negative whole number
+
+    - TEXT, a text string
+
+    - DATE, the date formatted as YYYY-MM-DD
+
+    - REAL, a decimal value
+
+* Statements
+The code below is a SQL statement. A /statement/ is text that the database recognizes as a valid command. Statements always end in a semicolon ~;~.
+
+#+begin_src
+CREATE TABLE table_name (
+  column_1 data_type,
+  column_2 data_type,
+  column_3 data_type
+  );
+#+end_src
+
+Let's break down the components of a statement:
+
+    1. ~CREATE TABLE~ is a /clause/. Clauses perform specific tasks in SQL. By convention, clauses are written in capital letters. Clauses can also be referred to as commands.
+
+    2. ~table_name~ refers to the name of the table that the command is applied to.
+
+    3. ~(column_1 data_type, column_2 data_type, column_3 data_type)~ is a /parameter/. A parameter is a list of columns, data types, or values that are passed to a clause as an argument. Here, the parameter is a list of column names and the associated data type.
+
+The structure od SQL statements vary. The number of lines used does not matter. A statement can be written all on one line, or split up across multiple lines if it makes it easier to read.
+
+** Create
+CREATE statements allow us to create a new table in the database. You can use the CREATE statement anytime you want to create a new table from scratch. The statement below creates a new table named ~celebs~.
+
+#+begin_src
+CREATE TABLE celebs (
+  id INTEGER,
+  name TEXT,
+  age INTEGER
+  );
+#+end_src
+
+1. ~CREATE TABLE~ is a clause that tells SQL you want to create a new table.
+
+2. ~celebs~ is the name of the table.
+
+3. ~(id INTEGER, name TEXT, age INTEGER)~ is a list of parameters defining each column, or attribute in the table and its data type:
+
+    ~id~ is the first column in the table. It stores values of data type INTEGER
+    ~name~ is the second column in the table. It stores values of data type TEXT
+    ~age~ is the third column in the table. It stores values of data type INTEGER
+
+** Insert
+The INSERT statement inserts a new row into a table.
+
+We can use the INSERT statement when you want to add new records.
+
+#+begin_src
+INSERT INTO celebs (id, name, age)
+VALUES (1, 'Justin Bieber', 22);
+INSERT INTO celebs (id, name, age)
+VALUES (2, 'Beyonce Knowles', 33);
+INSERT INTO celebs (id, name, age)
+VALUES (3, 'Jeremy Lin', 26);
+INSERT INTO celebs (id, name, age)
+VALUES (4, 'Taylor Swift', 26);
+#+end_src
+
+    - ~INSERT INTO~ is a clause that adds the specified row or rows.
+
+    - ~celebs~ is the table the row is added to.
+
+    - ~(id, name, age)~ is a parameter identifying the columns that data will be inserted into.
+
+    - ~(1, 'Justin Bieber', 29)~ is a parameter identifying the values being inserted.
+
+        - ~1~: an integer that will be added to id column
+        - ~'Justin Bieber'~: text that will be added to name column
+        - ~29~: an integer that will be added to age column
+
+** Select
+SELECT statements are used to fetch data from a database. In the statement below, SELECT returns all data in the ~name~ column of the ~celebs~ table.
+
+#+begin_src
+SELECT name FROM celebs;
+#+end_src
+
+1. SELECT is a clause that indicates that the statement is a query. You will use SELECT every time you query data from a database.
+
+2. ~name~ specifies the column to query data from.
+
+3. FROM celebs specifies the name of the table to query data from. In this statement, data is queried from the celebs table.
+
+You can also query data from all columns in a table with SELECT.
+
+#+begin_src
+SELECT * FROM celebs;
+#+end_src
+
+~*~ is a special wildcard character that we have been using. It allows you to select every column in a table without having to name each one individually. Here, the result set contains every column in the ~celebs~ table.
+
+SELECT statements always return a new table called the /result set./
+
+** Alter
+The ALTER TABLE statement add a new column to a table. You can use this command when you want to add columns to a table. The statement below add a new column twitter_handle to the celebs table.
+
+#+begin_src
+ALTER TABLE celebs
+  ADD COLUMN twitter_handle TEXT;
+#+end_src
+
+1. ALTER TABLE is a clause that lets you make the specified changes.
+
+2. celebs is the name of the table that is being changed.
+
+3. ADD COLUMN is a clause that lets you add a new column to a table:
+
+       - twitter_handle is the name of the new column being added
+
+       - TEXT is the data type for the new column
+
+4. NULL is a special value in SQL that represents missing or unknown data. Here, the rows that existed before the column was added have NULL ($\emptyset$) values for ~twitter_handle~.
+
+** Update
+The UPDATE statement edits a row in a table. You can use the UPDATE statement when you want to change existing records. The statement below updates the record with an ~id~ value of ~4~ to have the ~twitter_handle @taylorswift13~.
+
+#+begin_src
+UPDATE celebs
+  SET twitter_handle = '@taylorswift13'
+  WHERE id = 4;
+#+end_src
+
+1. UPDATE is a clause that edits a row in the table.
+2. ~celebs~ is the name of the table.
+3. SET is a clause that indicates the column to edit.
+
+       - ~twitter_handle~ is the name of the column that is going to be updated
+
+       - ~@taylorswift13~ is the new value that is going to be inserted into the ~twitter_handle~ column.
+
+4. WHERE is a clause that indicates which row(s) to update with the new column value. Here the row with a ~4~ in the ~id~ column is the row that will have the twitter_handle updated to @taylorswift13.
+
+** Delete
+The DELETE FROM statement deletes one or more rows from a table. You can use the statement when you want to delete existing records. The statement below deletes all records in the ~celebs~ table with no ~twitter_handle~:
+
+#+begin_src
+DELETE FROM celebs
+  WHERE twitter_handle IS NULL;
+#+end_src
+
+1. DELETE FROM is a clause that lets you delete rows from a table.
+
+2. ~celebs~ is the name of the table we want to delete rows from.
+
+3. WHERE is a clause that lets you select which rows you want to delete. Here we want to delete all of the rows where the ~twitter_handle~ column IS NULL.
+
+4. IS NULL is a condition in SQL that returns true when the value is NULL and false otherwise.
+
+** Constrains
+Constrains that add information about how a column can be used are invoked after specifying the data type for a column. They can be used to tell the database to reject inserted data that does not adhere to a certain restriction. The statement below sets /constrains/ on the ~celebs~ table.
+
+#+begin_src
+CREATE TABLE celebs (
+  id INTEGER PRIMARY KEY,
+  name TEXT UNIQUE,
+  date_of_birth TEXT NOT NULL,
+  data_of_death TEXT DEFAULT 'Not Applicable'
+  );
+#+end_src
+
+1. PRIMARY KEY columns can be used to uniquely identify the row. Attempts to insert a row with an identical value to a row already in the table will result in a /constrain violation/ which will not allow you to insert the new row.
+
+2. UNIQUE columns have a different value for every row. This is similar to PRIMARY KEY except a table can have many different UNIQUE columns.
+
+3. NOT NULL columns must have a value. Attempts to insert a row without a value for a NOT NULL column will result in a constrain violation and the new row will not be inserted.
+
+4. DEFAULT columns take an additional argument that will be the assumed value for an inserted row if the new row does not specify a value for that column.
+
+** Review
+SQL is a programming language designed to manipulate and manage data stored in relational databases.
+
+    - A /relational database/ is a database that organizes information into one or more tables.
+
+    - A /table/ is a collection of data organized into rows and columns.
+
+A /statement/ is a string of characters that the database recognizes as a valid command.
+
+    - CREATE TABLE creates a new table.
+
+    - INSERT INTO adds a new row to a table.
+
+    - SELECT queries data from a table.
+
+    - ALTER TABLE changes an existing table.
+
+    - UPDATE edits a row in a table.
+
+    - DELETE FROM deletes rows from a table.
+
+Constrains add information about how a column can be used.
+
+** Quiz
+
+*** Question 1
+What is the purpose of the * character?
+
+#+begin_src
+SELECT * FROM celebs;
+#+end_src
+
+    - It selects every column in a table.
+      Correct! It allows us to select /every/ column in a table without having to name each one individually.
+
+*** Question 2
+What does the INSERT statement do?
+
+    - Insert new rows into a table.
+
+*** Question 3
+What is a relational database?
+
+    - A relational database is a database that organizes information into one or more tables
+
+*** Question 4
+What is a NULL value?
+
+    - A value that represents missing or unknown data.
+
+*** Question 5
+What would be correct syntax for a CREATE TABLE statement?
+
+    #+begin_src
+    CREATE TABLE meals (
+      name TEXT,
+      rating INTEGER
+    );
+    #+end_src
+
+*** Question 6
+What is SQL?
+
+    - Structured Query Language
+      Correct! SQL is a programming language designed to manage data stored in relational databases.
+
+*** Question 7
+What would you need to complete the associated UPDATE statement?
+
+#+begin_src
+UPDATE table name
+SET height = 6
+WHERE id = 1;
+#+end_src
+
+*** Question 8
+Which of the following statements is correct and complete?
+
+#+begin_src
+DELETE FROM icecream
+  WHERE flavor IS NULL;
+#+end_src
+
+*** Question 9
+What clause is used with the ALTER TABLE statement?
+
+    - ADD COLUMN
+
+*** Question 10
+What are common data types in SQL?
+
+    - Integer, Text, Date, and Real
+      Integer - a whole number. Text - a text string. Date - a date. Real - a decimal number.
+
+* What is a Database Index?
+Learn how database indexes help us quickly query data.
+
+** What are indexes?
+/Indexes/ are a powerful tool used in the background of a database to speed up querying. Indexes power queries by providing a method to quickly lookup the requested data.
+
+Simply put, an index is a pointer to data in a table. An index in a database is very similar to an index in the back of a book.
+
+** Why are indexes needed?
+Imagine walking into the Library of Congress and being given the task to find a specific publishing within 10 minutes. Would you be able to complete this task within the given time frame? The Library of Congress is considered the largest library in the world and it houses approximately 170 million items.
+
+Now, the Library of Congress is not a regular library where the public can check out books at will, but if you are like us, you know the challenge should not be too difficult. In fact, the first thing we would do is ask for access to the library's index because indexes contain all the necessary information needed to access items quickly and efficiently.
+
+In the same manner, a database index contains all the necessary information to access data quickly and efficiently. In today's society, the business of data is rapidly advancing. In fact, some tech giants process several hundreds petabytes (1000⁵ bytes) of data per day. Storing all of this data in a database is great, but for a data company, being able to access that data efficiently is paramount to success. Just like the Library of Congress example, one way of solving the access issue when it comes to large amounts of data is through the use of indexes. Indexes serve as lookup tables that efficiently store data for quicker retrieval.
+
+** How are indexes created?
+In a database, data is stored in rows which are organized into tables. Each row has a unique key which distinguishes it from all other rows and those keys are stored in an index for quick retrieval.
+
+Since keys are stored in indexes, each time a new row with a unique key is added, the index is automatically updated. However, sometimes we need to be able to quickly lookup data that is not stored as a key. For example, we may need to quickly lookup customers by telephone number. It would not be a good idea to use a unique constraint because we can have multiple customers with the same phone number. In these cases, we can create our own indexes.
+
+The syntax for creating an index will vary depending on the database. However, the sintax typically includes a CREATE keyword followed by the INDEX keyword and the name we'd like to use for the index. Next should come the ON keyword followed by the name of the table that has the data we'd like to quickly access. Finally, the last part of the statement should be the name(s) of the columns to be indexed.
+
+#+begin_src
+CREATE INDEX <index_name>
+  ON <table_name> (column1, column2, ...)
+#+end_src
+
+For example, if we would like to index phone numbers from a ~customers~ table, we could use the following statement:
+
+#+begin_src
+CREATE INDEX customers_by_phone
+  ON customers (phone_number)
+#+end_src
+
+The users cannot see the indexes, they are just used to speed up searches/queries.
+
+*Note:* Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). So, only create indexes on columns that will be frequently searched against.
+
+** Summary
+This article was designed to give you an overview of database indexes, including how:
+
+    - Indexes are a powerful tool used in the background of a database to speed up querying.
+
+    - Indexes contain all the necessary information needed to access items quickly and efficiently.
+
+    - Indexes serve as lookup tables to efficiently store data for quicker retrieval.
+
+    - Table keys are stored in indexes.
+
+    - Indexes for non-key values can be created with a CREATE INDEX statement.
+
+* Writing Basic Queries
+In this lesson, we will be learning different SQL commands to *query* a single table in a database.
+
+One of the core purposes of the SQL language is to retrieve information stored in a database. This is commonly referred to as querying. Queries allow us to communicate with the database by asking questions and returning a result set with data relevant to the question.
+
+We will be querying a database with one table named movies.
+
+** Select
+Previously, we learned that SELECT is used every time you want to query data from a database and * means all columns.
+
+Suppose we are only interested in two of the columns. We can select individual columns by their names (separated by a comma):
+
+#+begin_src
+SELECT column1, column2
+  FROM table_name;
+#+end_src
+
+To make it easier to read, we moved FROM to another line.
+
+Line breaks don't mean anything specific in SQL. We could write this entire query in one line, and it would run just fine.
+
+*** Task 1
+Let's only select the name and genre columns of the table.
+
+#+begin_src
+SELECT name, genre
+  FROM movies;
+#+end_src
+
+*** Task 2
+Now we want to include a third column.
+
+Edit your query so that it returns the name, genre, and year columns of the table.
+
+#+begin_src
+SELECT column1, column2, column3
+  FROM table_name;
+#+end_src
+
+** As
+Knowing how SELECT works, suppose we have the code below:
+
+#+begin_src
+SELECT names AS 'Titles'
+  FROM movies;
+#+end_src
+
+Can you guess what AS does?
+
+AS is a keyword in SQL that allows you to /rename/ a column or table using an alias. The new name can be anything you want as long as you put it inside of single quotes. Here we renamed the name column as Titles.
+
+Some important things to note:
+
+    - Although it's not always necessary, it is considered best practice to surround your aliases with single quotes.
+
+          - Note that this practice is specific to SQLite, the RDBMS used in this exercise. When you work with other RDBMSs, notably PostgreSQL, no quotes or double quotes may be required in place of single quotes.
+
+          - When using AS, the columns are not being renamed in the table. The aliases only appear in the result.
+
+*** Task 1
+To showcase what the AS keyword does, select the name column and rename it with an alias of your choosing.
+
+Place the alias inside single quotes, like so:
+
+#+begin_src
+SELECT name AS '___'
+  FROM movies;
+#+end_src
+
+Note in the result, that the name of the column is now your alias.
+
+*** Task 2
+Edit the query so that instead of selecting and renaming the name column, select the imdb_rating column and rename it IMDb.
+
+#+begin_src
+SELECT imdb_rating AS 'IMDb'
+  FROM movies;
+#+end_src
+
+** Distinct
+When we are examining data in a table, it can be helpful to know what /distinct/ values exist in a particular column.
+
+DISTINCT is used to return unique values in the output. It filters out all duplicate values in the specified column(s).
+
+For instance,
+
+#+begin_src
+SELECT tools
+  FROM inventory;
+#+end_src
+
+might produce:
+
+tools
+Hammer
+Nails
+Nails
+Nails
+
+By adding DISTINCT before the column name,
+
+#+begin_src
+SELECT DISTINCT tools
+  FROM inventory;
+#+end_src
+
+The result would now be:
+
+tools
+Hammer
+Nails
+
+Filtering the results of a query is an important skill in SQL. It is easier to see the different possible genres in the movie table after the data has been filtered than to scan every row in the table.
+
+*** Task 1
+Let's try it out. In the code editor, type:
+
+#+begin_src
+SELECT DISTINCT genre
+  FROM movies;
+#+end_src
+
+*** Task 2
+Now, change the code so we return the unique values of the year column instead.
+
+#+begin_src
+SELECT DISTINCT year
+  FROM movies;
+#+end_src
+
+** Where
+We can restrict our query results using the WHERE clause in order to obtain only the information we want.
+
+Following this format, the statement below filters the result set to only include top rated movies (IMDb ratings greater than 8):
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE imdb_rating > 8;
+#+end_src
+
+How does it work?
+
+    1. The WHERE clause filters the result set to only include rows where the following /condition/ is true.
+
+    2. ~imdb_rating > 8~ is the condition. Here, only rows with a value greater than 8 in the imdb_rating column will be returned.
+
+The > is an /operator./ Operators create a condition that can be evaluated as either /true/ or /false./
+
+Comparison operators used with the WHERE clause are:
+
+    = equal to
+    != not equal to
+    > greater than
+    < less than
+    >= greater than or equal to
+    <= less than or equal to
+
+There are also some special operators that we will learn more about in the upcoming exercises.
+
+*** Task 1
+Suppose we want to take a peek at all the not-so-well-received movies in the database.
+
+In the code editor, type:
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE imdb_rating < 5;
+#+end_src
+
+*** Task 2
+Now retrieve all the recent movies, specifically those that were released after 2014.
+
+Select all the columns using *
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE > 2014;
+#+end_src
+
+** Like 1
+Like can be a useful operator when you want to compare similar values.
+
+The movies table contains two films with similar titles, 'Se7en' and 'Seven'.
+
+How could we select all movies that start with 'Se' and end with 'en' and have exactly one caracter in the middle?
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE name LIKE 'Se_en';
+#+end_src
+
+    - LIKE is a special operator used with the WHERE clause to search for a specific pattern in a column.
+
+    - ~name LIKE 'Se_ven'~ is a condition evaluating the name column for a specific pattern.
+
+    - ~Se_en~ represents a pattern with a /wildcard/ character.
+
+The _ means you can substitute any individual character here without breaking the pattern. The names Seven and Se7en both match this pattern.
+
+** Like II
+The percentage sign % is another wildcard character that can be used with LIKE.
+
+This statement below filters the result set to only include movies wit names that begin with the letter 'A':
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE name LIKE 'A%';
+#+end_src
+
+% is a wildcard character that matches zero or more missing characters in the pattern. For example:
+
+    - A% matches all movies with names that begin with letter 'A'
+
+    - %a matches all movies that end with 'a'
+
+We can also use % both before and after a pattern:
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE name LIKE '%man%';
+#+end_src
+
+Here, any movie that /contains/ the word 'man' in its name will be returned in the result.
+
+LIKE is not case sensitive. 'Batman' and 'Man of Steel' will both appear in the result of the query above.
+
+*** Task 1
+Edit the query so that it selects all the information about the movie titles that begin with the word 'The'.
+
+You might need a space in there!
+
+** Is Null
+By this point of the lesson, you might have noticed that there are a few missing values in the movies table. More often than not, the data you encounter will have missing values.
+
+Unknown values are indicated by NULL.
+
+It is not possible to test for NULL values with comparison operators, such as = and !=.
+
+Instead, we will have to use these operators:
+
+    - IS NULL
+
+    - IS NOT NULL
+
+To filter for all movies /with/ and IMDb rating:
+
+#+begin_src
+SELECT name
+  FROM movies
+  WHERE imdb_rating IS NOT NULL;
+#+end_src
+
+*** Task 1
+Now let's do the opposite.
+
+Write a query to find all the movies /without/ and IMDb rating.
+
+Select only the name column!
+
+#+begin_src
+SELECT name
+  FROM movies
+  WHERE imdb_rating IS NULL;
+#+end_src
+
+** Between
+The BETWEEN operator is used in a WHERE clause to filter the result set within a certain /range/. It accepts two values that are either numbers, text or dates.
+
+For example, this statement filter the result set to only include movies with years from 1990 up to, /and including/ 1999.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE year BETWEEN 1990 AND 1999;
+#+end_src
+
+When the values are text, BETWEEN filters the result set for within the alphabetical range.
+
+In this statement, BETWEEN filters the result set to only include movies with names that begin with the letter 'A' up to, /but not including ones that begin with 'J'./
+
+However, if a movie has a name of simply ‘J’, it would actually match. This is because BETWEEN goes up to the second value — up to ‘J’. So the movie named ‘J’ would be included in the result set but not ‘Jaws’.
+
+*** Task 1
+Using the BETWEEN operator, write a query that selects all information about movies whose name begins with the letters ‘D’, ‘E’, and ‘F’.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE name BETWEEN 'D' AND 'G';
+#+end_src
+
+*Hint*
+BETWEEN is case-sensitive. If the condition is BETWEEN 'a' AND 'z', it would only return lowercase (a-z) results and not uppercase (A-Z).
+
+*** Task 2
+Using the BETWEEN operator, write a new query that selects all information about movies that were released in the 1970's.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE year BETWEEN 1970 AND 1979;
+#+end_src
+
+** And
+Sometimes we want to /combine multiple conditions/ in a WHERE clause to make the result set more specific and useful.
+
+One way of doing this is to use the AND operator. Here, we use the AND operator to only return 90's romance movies.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE year BETWEEN 1990 AND 1999
+  AND genre = 'romance';
+#+end_src
+
+    - year BETWEEN 1990 AND 1999 is the 1st condition.
+
+    - genre = 'romance' is the 2nd condition.
+
+    - AND combines the two conditions.
+
+      [[./AND.svg]]
+
+With AND, /both/ conditions must be true for the row to be included in the result.
+
+*** Task 1
+In the previous exercise, we retrieve every movie released in the 1970's.
+
+Now, let's retrieve every movie released in the 70's that's also well received.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE year BETWEEN 1970 AND 1979
+  AND imdb_rating > 8;
+#+end_src
+
+*** Task 2
+Suppose we have a picky friend who only wants to watch old horror films.
+
+Using AND, write a new query that selects all movies made prior to 1985 that are also in the horror genre.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE year < 1985
+  AND genre = 'horror';
+#+end_src
+
+** Or
+Similar to AND, the OR operator can also be used to combine multiple conditions in WHERE, but there is a fundamental difference:
+
+    - AND operator displays a row if /all/ the conditions are true.
+
+    - OR operator displays a row if /any/ condition is true.
+
+Suppose we want to check out a new movie or something action-packed:
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE year > 2014
+  OR genre = 'action';
+#+end_src
+
+    - year > 2014 is the 1st condition
+
+    - genre = 'action' is the 2nd condition
+
+    - OR combines the two conditions
+
+[[./OR.svg]]
+
+With OR, if /any/ of the conditions are true, then the row is added to the result.
+
+*** Task 1
+Suppose we are in the mood for a good laugh or a good cry.
+
+Using OR, write a query that returns all movies that are either a romance or a comedy.
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE genre = 'romance'
+  OR genre = 'comedy';
+#+end_src
+
+** Order By
+It is often useful to list the data in our result set in a particular order.
+
+We can /sort/ the results using ORDER BY, either alphabetically or numerically. Sorting the results often makes the data more useful and easier to analyze.
+
+For example, if we want to sort everything by the movie's title from A through Z:
+
+#+begin_src
+SELECT *
+  FROM movies
+  ORDER BY name;
+#+end_src
+
+    - ORDER BY is a clause that indicates you want to sort the result set by a particular column.
+
+    - name is the specified column.
+
+Sometimes we want to sort things in a decreasing order. For example, if we want to select all of the well-received movies, sorted from highest to lowest by their year:
+
+#+begin_src
+SELECT *
+  FROM movies
+  WHERE imdb_rating > 8
+  ORDER BY year DESC;
+#+end_src
+
+    - DESC is a keyword used in ORDER BY to sort the results in /descending order/ (high to low or Z-A).
+
+    - ASC is a keyword used in ORDER BY to sort the results in /ascending/ order (low to high or A-Z).
+
+The column that we ORDER BY doesn't even have to be one of the columns that we're displaying.
+
+Note: ORDER BY always goes after WHERE (if WHERE is present).
+
+*** Task 1
+Suppose we want to retrieve the name and year columns of all the movies, ordered by their name alphabetically.
+
+Type the following code:
+
+#+begin_src
+SELECT name, year
+  FROM movies
+  ORDER BY name;
+#+end_src
+
+*Hint*
+We didn't add ASC here because ascending order is the default.
+
+If you run this code, the result will start with ‘1408’, ‘3 Men and a Baby’ and then A-Z.
+
+*** Task 2
+#+begin_src
+SELECT name, year, imdb_rating
+  FROM movies
+  ORDER BY imdb_rating DESC
+#+end_src
+
+Write a new query that retrieves the name, year, and imdb_rating columns of all the movies, ordered highest to lowest by their ratings.
+
+** Limit
+We've been working with a fairly small table (fewer than 250 rows), but most SQL tables contain hundreds of thousands of records. In those situations, it becomes important to cap the number of rows in the result.
+
+#+begin_src
+SELECT *
+  FROM movies
+  LIMIT 10;
+#+end_src
+
+LIMIT is a clause that lets you specify the maximun number of rows the result set will have. This saves space on our screen and makes our queries run faster.
+
+Here, we specify that the result set can't haave more than 10 rows.
+
+LIMIT always goes at the very end of the query. Also, it is not supported in all SQL databases.
+
+*** Task 1
+Combining your knowledge of LIMIT and ORDER BY, write a query that returns the top 3 highest rated movies.
+
+Select all the columns.
+
+#+begin_src
+SELECT *
+  FROM movies
+  ORDER BY imbd_rating DESC
+  LIMIT 3;
+#+end_src
+
+** Case
+A CASE statement allows us to create different outputs (usually in the SELECT statement). It is SQL's way of handling ~if-then~ logic.
+
+Suppose we want to condense the ratings in movies to three levels:
+
+    - If the rating is above 8, then it is Fantastic.
+
+    - If the rating is above 6, then it is Poorly Received.
+
+    - Else, Avoid at All Costs.
+
+      #+begin_src
+      SELECT name,
+        CASE
+        WHEN imdb_rating > 8 THEN 'Fantastic'
+        WHEN imdb_rating > 6 THEN 'Poorly Received'
+        ELSE 'Avoid at All Costs'
+        END
+        FROM movies;
+      #+end_src
+
+    - Each WHEN tests a condition and the following THEN gives us the string if the condition is true.
+
+    - The ELSE gives us the string if /all/ the above conditions are false.
+
+    - The CASE statement must end with END.
+
+In the result, you have to scroll right because the column name is very long. To shorten it, we can rename the column to 'Review' using AS:
+
+#+begin_src
+SELECT name,
+ CASE
+  WHEN imdb_rating > 8 THEN 'Fantastic'
+  WHEN imdb_rating > 6 THEN 'Poorly Received'
+  ELSE 'Avoid at All Costs'
+ END AS 'Review'
+FROM movies;
+#+end_src
+
+*** Task 1
+Let’s try one on your own.
+
+Select the name column and use a CASE statement to create the second column that is:
+
+    ‘Chill’ if genre = 'romance'
+    ‘Chill’ if genre = 'comedy'
+    ‘Intense’ in all other cases
+
+Optional: Rename the whole CASE statement to ‘Mood’ using AS.
+
+Give it your best shot! Check hint for the answer.
+
+#+begin_src
+SELECT name
+  CASE
+  WHEN genre = 'romance' THEN 'Chill'
+  WHEN genre = 'comedy' THEN 'Chill'
+  ELSE 'Intense'
+  END AS 'Mood'
+  FROM movies;
+#+end_src
+
+** Review
+We just learned how to query data from a database using SQL. We also learned how to filter queries to make the information more specific and useful.
+
+Let’s summarize:
+
+    - SELECT is the clause we use every time we want to query information from a database
+
+    - AS renames a column or table
+
+    - DISTINCT return unique values
+
+    - WHERE is a popular command that lets you filter the results of the query based on conditions that you specify
+
+    - LIKE and BETWEEN are especial operators
+
+    - AND and OR combines multiple conditions
+
+    - ORDER BY sorts the result
+
+    - LIMIT specifies the maximum number of rows that the query will return
+
+    - CASE creates different outputs
+
+* SQLite
+
+** Main Features
+SQLite is a software library that provides a *relational database management system*. The lite in SQLite means lightweight in terms of setup, database administration, and required resources.
+
+SQLite has the following noticeable features:
+
+    - Self-contained
+
+    - Serverless
+
+    - Zero-configuration
+
+    - Transaccional
+
+*** Serverless
+An RDBMS such as MySQL, PostgreSQL, etc., normally requires a separate server process to run. The applications that want to access the database server use TCP/IP protocol to send and receive requests. This is called client/server architecture.
+
+The following diagram illustrates the RDBMS client/server architecture:
+
+[[./RDBMS-Client-Server-Architecture.jpg]]
+
+SQLite does NOT work this way.
+
+SQLite does NOT require a server to run.
+
+SQLite database is integrated with the application that accesses the database.
+
+The applications interac with the SQLite database reading and writing directly from the database files stored on disk.
+
+The following diagram illustrates the SQLite server-less architecture:
+
+[[./What-is-SQLite.jpg]]
+
+*** Self-Contained
+SQLite is self-contained, which means it requires minimal support from the operating system or external library. This makes SQLite usable in any enviroment, especially in embedden devices like iPhones, Android phones, game consoles, handheld media players, etc.
+
+*** Zero-configuration
+Because of the serverless architecture, you don't need to install SQLite before using it. No server process needs to be configured, started, and stopped.
+
+In addition, SQLite does not use any configuration files.
+
+*** Transactional
+All transactions in SQLite are fully ACID-compliant, which means all queries and changes are Atomic, Consistent, Isolated, and Durable.
+
+In other words, all changes within a transaction take place completely or not at all even when an unexpected situation like an application crash, power failure, or operating system crash occurs.
+
+** SQLite distintive features
+SQLite uses dynamic types for tables. It means you can store any value in any column, regardless of the data type.
+
+SQLite allows a single database connection to access multiple database files simultaneously. This brings many nice features like joining tables in different databases or copying data between databases in a single command.
+
+SQLite is capable of creating in-memory databases that are very fast to work with.
+
+** SQLite Sample Database
+We provide you with the SQlite sample database named Chinook. The Chinook sample database is a good database for practicing SQL, especially SQLite.
+
+The following database diagram illustrates the Chinook database tables and their relationships.
+
+[[./sqlite-sample-database-diagram-color.pdf]]
+
+*** Chinook sample database tables
+The Chinook sample database has 11 tables as follows:
+
+    - ~employees~ table stores employee data such as id, last name, firs name, etc. It also has a field named ~ReportsTo~ to specify who reports to whom.
+
+    - ~customers~ table stores customer data
+
+    - ~invoices~ & ~invoice_items~ tables: these two tables store invoice data. The ~invoices~ table stores invoice header data and the ~invoice_items~ table stores the invoice line items data.
+
+    - ~artists~ table stores artist data. It is a simple table that contains the id and name.
+
+    - ~albums~ table stores data about a list of tracks. Each album belongs to one artist. However, one artist may have multiple albums.
+
+    - ~media_types~ table stores media types such as MPEG audio and AAC audio files.
+
+    - ~genres~ table stores music types such as rock, jazz, metal, etc.
+
+    - ~tracks~ table stores the data of songs. Each track belongs to one album.
+
+    - ~playlists~ & ~playlist_track~ tables: ~playlists~ table stores data about playlists. Each playlist contains a list of tracks. Each track may belong to multiple playlists. The relationship between the ~playlists~ and ~tracks~ tables is many-to-many. The ~playlist_track~ table is used to reflect this relationship.
+
+** SQLite Commands
+The SQLite project delivers a simple command-line tool named sqlite3 that allows you to interact with the SQLite databases using SQL statements and commands.
+
+*** Connect to an SQLite database
+To start the sqlite3, you type the sqlite3 as follows:
+
+#+begin_src
+>sqlite3
+#+end_src
+
+By default, an SQLite session uses the in-memory database, therefore, all changes will be gone when the sessions ends.
+
+To open a database file, you use the ~.open FILENAME~ command. The following statement opens the ~chinook.db~ database:
+
+#+begin_src
+sqlite> .open  /home/oldoc/learningDS/mlSpecialty/SQL/chinook.db
+#+end_src
+
+If you want to open a specific database file when you connect to the SQLite database, you use the following command:
+
+#+begin_src
+>sqlite3 /home/oldoc/learningDS/mlSpecialty/SQL/chinook.db
+#+end_src
+
+If you start a session with a database name that does not exist, the sqlite3 tool will create the database file.
+
+*** Show all available commands and their purposes
+To show all available commands and their purpose, you use the ~.help~ command as follows:
+
+#+begin_src
+.help
+#+end_src
+
+*** Show databases in the current database connection
+To show all databases in the current connection, you use the ~.databases~ command. The ~.databases~ command displays at least one database with the name: ~main~.
+
+For example, the following command shows all the databases of the current connection:
+
+#+begin_src
+sqlite> .database
+#+end_src
+
+To attach a database to the current connection, you use the statement ATTACH DATABASE. The following statement adds the chinook database to the current connection.
+
+#+begin_src
+sqlite> ATTACH DATABASE "/home/oldoc/learningDS/mlSpecialty/SQL/chinook.db" AS Chinook;
+#+end_src
+
+*** Exit sqlite3 tool
+To exit the sqlite3 program, you use the .exit command.
+
+#+begin_src
+sqlite> .exit
+#+end_src
+
+*** Show tables in a database
+To display all the tables in the current database, you use the .tables command. The following commands open a new database connection to the chinook database and display the tables in the database.
+
+#+begin_src
+> sqlite3 chinook.db
+#+end_src
+
+#+begin_src
+sqlite> .tables
+#+end_src
+
+If you want to find tables based on a specific pattern, you use the .table pattern command. The sqlite3 uses the LIKE operator for pattern matching.
+
+For example, the following statement returns the table that ends with the string ~es~.
+
+#+begin_src
+sqlite> .table '%es'
+#+end_src
+
+*** Show the structure of a table
+To display the structure of a table, you use the ~.schema TABLE~ command. The TABLE argument could be a pattern. If you omit it, the ~.schema~ command will show the structures of all the tables.
+
+#+begin_src
+sqlite> .schema albums
+#+end_src
+
+To show the schema and the content of the ~sqlite_stat~ tables, you use the .fullschema command.
+
+#+begin_src
+sqlite> .fullschema
+#+end_src
+
+*** Show indexex
+To show all indexes of the current database, you use ~.indexes~ command as follows:
+
+#+begin_src
+sqlite> .indexes
+#+end_src
+
+To show the indexes of a specific table, you use the ~.indexes TABLE~ command. For example, to show indexes of the ~albums~ table, you use the following command:
+
+#+begin_src
+sqlite> .indexes albums
+#+end_src
+
+To show indexes of the tables whose names end with es, you use a pattern of the LIKE operator.
+
+#+begin_src
+sqlite> .indexes %es
+#+end_src
+
+*** Save the result of a query into a file
+To save the result of a query into a file, you use the ~.output FILENAME~ command. Once you issue the ~.output~ command, all the results of the subsequent queries will be saved to the file that you specified in the ~FILENAME~ argument. If you want to save the results of the next single query only to the file, you issue the ~.once FILENAME~ command.
+
+To display the result od the query to the standard output again, you issue the ~.output~ command /without arguments./
+
+The following commands select the ~title~ form the ~albums~ table and write the result to the ~albums.txt~ file.
+
+#+begin_src
+sqlite> .output albums.txt
+sqlite> SELECT title FROM albums;
+#+end_src
+
+*** Execute SQL statements from a file
+Suppose we have a file named commands.txt in a directory folder with the following content:
+
+#+begin_src
+SELECT albumid, title
+FROM albums
+ORDER BY title
+LIMIT 10;
+#+end_src
+
+To execute the SQL statements in the commands.txt file, you use the .read FILENAME command as follows:
+
+#+begin_src
+sqlite> .mode column
+sqlite> .header on
+sqlite> .read commands.txt
+#+end_src
+
+** Basic SQLite tutorial
+This section presents basic SQL statements that you can use with SQLite. You will first start querying data from the sample database. If you are already familiar with SQL, you will notice the differences between SQL standard and the SQL dialect used in SQLite.
+
+*** SQLite Select
+The SELECT statement is one of the most commonly used statements in SQL. The SQLite SELECT statement provides all features of the SELECT statement in SQL standard.
+
+**** Simple uses of SELECT statement
+The following example show how to use the SELECT statement to perform a simple calculation:
+
+#+begin_src
+SELECT 1 + 1;
+#+end_src
+
+You can use multiple expressions in the  SELECT statement as follows:
+
+#+begin_src
+SELECT
+  10 / 5,
+  2 * 4;
+#+end_src
+
+**** Querying data from a table using the SELECT statement
+We often use the SELECT statement to query data from one or more tables.
+
+Here's the syntax of the SELECT statement:
+
+#+begin_src
+SELECT DISTINT column_list
+  FROM table_list
+  JOIN table ON join_condition
+  WHERE row_filter
+  ORDER BY column
+  LIMIT count OFFSET offset
+  GROUP BY column
+  HAVING group_filter;
+#+end_src
+
+The SELECT statement is the most complex statement in SQLite. To make it easier to understand each part, we will break the SELECT statement into multiple easy-to-understand tutorials.
+
+    - Use the ORDER BY clause to sort the result set.
+
+    - Use the DISTINCT clause to query unique rows in a table.
+
+    - Use the WHERE clause to filter rows in the result set.
+
+    - Use the LIMIT OFFSET clause to constrain the number of rows returned.
+
+    - Use the INNER JOIN or LEFT JOIN to query data from multiple tables using join.
+
+    - Use the GROUP BY clause to group rows into groups and apply aggregate functions to each group.
+
+    - Use the HAVING clause to filter groups.
+
+In this tutorial, we'll focus on the simplest form of the SELECT statement that allows you to query data from a single table:
+
+#+begin_src
+SELECT column_list
+  FROM table;
+#+end_src
+
+Even though the SELECT clause appears before FROM clause, SQLite evaluates the FROM clause first and then the SELECT clause, therefore:
+
+    - First, specify the table from which you want to get data in FROM clause. Notice that you can have more than one table in the FROM clause. We'll discuss it in the subsequent tutorial.
+
+    - Second, specify a column or a list of comma-separated columns in the SELECT clause.
+
+You use the semicolon (;) to terminate the statement.
+
+**** SQLite SELECT Examples
+Let's take a look at the ~tracks~ table in the sample database.
+
+The tracks table contains columns and rows. It looks like a spreadsheet.
+
+To get data from the tracks table such as trackid, track name, composer, and unit price, you use the following statement:
+
+#+begin_src
+SELECT
+  trackid,
+  name,
+  composer,
+  unitprice
+FROM
+  tracks;
+#+end_src
+
+You specify a list column names, from which you want to get data, in the SELECT clause and the tracks table in the FROM clause.
+
+#+begin_src
+SELECT
+  trackid,
+  name,
+  albumid,
+  mediatypeid,
+  genreid,
+  composer,
+  milliseconds,
+  bytes,
+  unitprice
+
+FROM
+  tracks;
+#+end_src
+
+For a table with many columns, the query would be so long that time-consuming to type. To avoid this, you can use the asterisk (*), which is the shorthand for all columns of the table as follows:
+
+#+begin_src
+SELECT * FROM tracks;
+#+end_src
+
+The query is shorter and cleaner now.
+
+However ...
+
+You should use the asterisk (*) for testing purposes only, not in the application development.
+
+Because ...
+
+When you develop an application, you should control what SQLite returns to your application. Suppose, a table has 3 columns, and you use the asterisk (*) to retrieve the data from all three columns.
+
+What if someone removes a column, your application would not be working properly, because it assumes that there are three columns returned, and the logic to process those three columns would be broken.
+
+If someone adds more columns, your application may work but it gets more data than needed, which creates more I/O overhead between the database and application.
+
+So try to avoid using the asterisk (*) as a good habit when you use the SELECT statement.
+
+*** SQLite Order By
+
+**** Introduction to SQLite ORDER BY clause
+SQLite stores rows in a table in an unspecified order. It means that the rows in the table may or may not be in the order they were inserted.
+
+If you use the SELECT statement to retrieve rows from a table, the order of rows in the result set is unspecified.
+
+To sort the rows in a result set, you add the ORDER BY clause to the SELECT statement as follows:
+
+#+begin_src
+SELECT
+  select_list
+FROM
+  table
+ORDER BY
+  colum_1 ASC,
+  colum_2 DESC;
+#+end_src
+
+The ORDER BY  clause comes after the FROM clause. It allows you to sort the result set based on one or more columns in ascending or descending order.
+
+In this syntax, you place the column name by which you want to sort after the ORDER BY clause followed by the ASC or DESC keyword.
+
+    - The ASC keyword means ascending.
+
+    - The DESC keyword means descending.
+
+If you don't specify the ASC or DESC keyword, SQLite sorts the result set using the ASC option. In other words, it sorts the result set in ascending order by default.
+
+If you want to sort the result set by multiple columns, you use a comma (,) to separate two columns.
+
+The ORDER BY clause sorts rows using columns or expressions from left to right. In other words, the ORDER BY clause sorts the rows using the first column in the list. Then, it sorts the sorted rows using the second column, and so on.
+
+SQLite allows you to sort the result set using columns that do not appear in the select list of the SELECT clause.
+
+**** SQLite ORDER BY clause examples
+Let's take the tracks table in the sample database for the demonstration.
+
+Suppose, you want to get data from name, milliseconds, and album id columns, you use the following statement:
+
+#+begin_src
+SELECT
+  Name,
+  Milliseconds,
+  AlbumId
+FROM
+  tracks;
+#+end_src
+
+The SELECT statement that does not use ORDER BY clause returns rows that are in an unspecified order.
+
+Suppose you want to sort the result set based on AlbumId column in ascending order, you use the following statement:
+
+#+begin_src
+SELECT
+  name,
+  milliseconds,
+  albumid
+FROM
+  tracks
+ORDER BY
+  albumid ASC;
+#+end_src
+
+The result set now is sorted by the AlbumId column in ascending order as shown in the screenshot.
+
+SQLite uses ASC by default so you can omit it in the above statement as follows:
+
+#+begin_src
+SELECT
+  name,
+  milliseconds,
+  albumid
+FROM
+  tracks
+ORDER BY
+  albumid;
+#+end_src
+
+Suppose you want to sort the sorted result (by AlbumId) above by the Milliseconds column in descending order. In this case, you need to add the Milliseconds column to the ORDER BY clause as follows:
+
+#+begin_src
+SELECT
+  name,
+  milliseconds,
+  albumid
+FROM
+  tracks
+ORDER BY
+  albumid ASC,
+  milliseconds DESC;
+#+end_src
+
+SQLite sorts rows by ~AlbumId~ in ascending order first. Then, it sorts the sorted result set by the ~Milliseconds~ column in descending order.
+
+If you look at the tracks of the album with AlbumId 1, you'll find that the order of tracks changes between the two statements.
+
+**** SQLite ORDER BY with the column position
+Instead of specifying the names of columns, you can use the column's position in the ORDER BY clause.
+
+For example, the following statement sorts the tracks by both AlbumId (3rd column) and Milliseconds (2nd column) in ascending order.
+
+#+begin_src
+SELECT
+  name,
+  milliseconds,
+  albumid
+FROM
+  tracks
+ORDER BY
+  3,
+  2;
+#+end_src
+
+The number 3 and 2 refers to the AlbumId and Milliseconds in the column list that appears in the SELECT clause.
+
+**** Sorting NULLs
+In the database world, NULL is special. It denotes that the information in missing or the data is not applicable.
+
+Suppose you want to store the birthday of an artist in a table. At the time of saving the artist's record, you don't have the birthday information.
+
+To represent the unknown birthday information in the database, you may use a special date like 01.01.1990 or an '' empty string. However, these values do not clearly show the birthday is unknown.
+
+NULL was invented to resolve this issue. Instead of using a special value to indicate that the information is missing, NULL is used.
+
+NULL is special because you cannot compare it with another value. Simply put, if the two pieces of information are unknown, you cannot compare them.
+
+NULL is even cannot be compared with itself; NULL is not equal to itself so NULL = NULL always results false.
+
+When it comes to sorting, SQLite considers NULL to be smaller than any other value.
+
+It means that NULLs will appear at the beginning of the result set if you use ASC or at the end of the result set when you use DESC.
+
+SQLite 3.30.0 added the NULLS FIRST and NULLS LAST options to the ORDER BY clause. The NULLS FIRST option specifies that the NULLs will appear at the beginning of the result set while the NULLS LAST option places NULLs at the end of the result set.
+
+The following example uses the ORDER BY clause to sort tracks by composers:
+
+#+begin_src
+SELECT
+  TrackId,
+  Name,
+  Composer
+FROM
+  tracks
+ORDER BY
+  Composer;
+#+end_src
+
+First, NULLs appear at the beginning of the result set because SQLite treats them as the lowest values. When you scroll down the result, you will see other values.
+
+The following example uses the NULLS LAST option to place NULLs after other values:
+
+#+begin_src
+SELECT
+  TrackId,
+  Name,
+  Composer
+FROM
+  tracks
+ORDER BY
+  Composer NULLS LAST;
+#+end_src
+
+If you scroll down the output, you will see that NULLs are placed at the end of the result set.
+
+**** Summary
+    - Use the SQLite ORDER BY clause to sort rows by one or more columns in ascending and descending orders.
+
+    - Use ASC to sort rows in ascending order.
+
+    - Use DESC to sort rows in descending order.
+
+    - Use the NULLS FIRST option to place NULLs before other non-null values.
+
+    - Use the NULLS LAST option to place NULL after other non-null values.
