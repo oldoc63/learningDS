@@ -1003,6 +1003,386 @@ SELECT *
   WHERE temperature < 35;
 #+end_src
 
+* Agregate Functions
+** Introduction
+SQL Queries don't just access raw data, they can also perform calculations on the raw data to answer specific data questions.
+
+Calculations performed on multiple rows of a table are called *aggregates*.
+
+In this lesson, we have given you a table named ~fake_apps~ which is made up of fake mobile applications data.
+
+Here is a quick preview of some important aggregates that we will cover in the next five exercises:
+
+    - COUNT(): count the number of rows
+
+    - SUM(): the sum of the values in a column
+
+    - MAX() / MIN(): the largest/smallest value
+
+    - AVG(): the average of the values in a column
+
+    - ROUND(): round the values in the column
+
+/Aggregate functions/ combine multiple rows together to form a single value of more meaningful information.
+
+    - GROUP BY is a clause used with aggregate functions to combine data from one or more columns.
+
+    - HAVING limit the results of a query based on an aggregate property.
+
+** Count
+The fastest way to calculate how many rows are in a table is to use the COUNT() function.
+
+COUNT() is a function that takes the name of a columm as an argument and counts the number of non-empty values in that column.
+
+#+begin_src
+SELECT COUNT(*)
+  FROM table_name;
+#+end_src
+
+Here, we want to count every row, so we pass * as an argument inside the parenthesis.
+
+*** Task 1
+Let's count how many apps are in the table.
+
+#+begin_src
+SELECT COUNT(*)
+  FROM fake_apps;
+#+end_src
+
+*** Task 2
+Add a WHERE clause in the previous query to count how many /free/ apps are in the table.
+
+*Hint*
+Remember the WHERE statement?
+
+The following code should go inside the previous query, before the semicolon:
+
+#+begin_src
+SELECT COUNT(*)
+FROM fake_apps
+WHERE price = 0;
+#+end_src
+
+    - WHERE indicates we want to only include rows where the following condition is true.
+
+    - price = 0 is the condition.
+
+** Sum
+SQL makes it easy to add all values in a particular column using SUM().
+
+SUM() is a function that takes the name of a column as an argument and returns the sum of all the values in that column.
+
+What is total number of downloads for all the apps combined?
+
+#+begin_src
+SELECT SUM(downloads)
+  FROM fake_apps;
+#+end_src
+
+This adds all values in the ~downloads~ column.
+
+** Max / Min
+The MAX() and MIN() functions return the highest and lowest values is a column respectively.
+
+How many downloads does the most popular app have?
+
+#+begin_src
+SELECT MAX(downloads)
+  FROM fake_apps;
+#+end_src
+
+The most popular app has 31090 downloads!
+
+MAX() takes the name of a column as an argument and returns the largest value in that column. Here, we returned the largest value in the downloads column.
+
+MIN() works the same way but it does the exact opposite; it returns the smallest value.
+
+*** Task 1
+What is the least number of times an app has been downloaded?
+
+#+begin_src
+SELECT MIN(downloads)
+  FROM fake_apps;
+#+end_src
+
+*** Task 2
+Write a new query that returns the price of the most expensive app.
+
+#+begin_src
+SELECT MAX(price)
+  FROM fake_apps;
+#+end_src
+
+** Average
+SQL uses  the AVG() function to quickly calculate the average value of a particular column.
+
+The statement below returns the average number of downloads for an app in our database:
+
+#+begin_src
+SELECT AVG(downloads)
+  FROM fake_apps;
+#+end_src
+
+The AVG() function works by taking a column name as an argument and returns the average value for that column.
+
+** Round
+By default, SQL tries to be as precise as possible without rounding. We can make the result table easier to read using the ROUND() function.
+
+ROUND() function takes two arguments inside the parenthesis:
+
+    1. a column name
+
+    2. an integer
+
+It rounds the values in te column to the number of decimal places specified by the integer.
+
+#+begin_src
+SELECT ROUND(price, 0)
+  FROM fake_apps;
+#+end_src
+
+Here, we pass the column price and integer 0 as arguments. SQL rounds the values in the column to 0 decimal places in the output.
+
+*** Task 1
+Let's return the name column and a rounded price column.
+
+#+begin_src
+SELECT name, ROUND (price, 0)
+  FROM fake_apps;
+#+end_src
+
+*Hint*
+We are selecting ROUND (price, 0) as the second column in this query.
+
+*** Task 2
+In the last exercise, we were able to get the average price of an app ($2.02365) using this query:
+
+#+begin_src
+SELECT AVG(price)
+  FROM fake_apps;
+#+end_src
+
+Now, let's edit this query so that it rounds this result to 2 decimal palces.
+
+#+begin_src
+SELECT ROUND(AVG(price), 2)
+  FROM fake_apps;
+#+end_src
+
+*Hint*
+You can treat AVG(price) just like any other value and place it inside the ROUND function like so:
+
+ROUND(AVG(price), 2)
+
+Here, AVG(price) is the 1st argument and 2 is the 2nd argument because we want to round it to two decimal places:
+
+SELECT ROUND(AVG(price), 2)
+FROM fake_apps;
+
+** Group By I
+Oftentimes, we will want to calculate an aggregate for data with certain characteristics.
+
+For instance, we might want to know the mean IMDb ratings for all movies each year. We could calculate each number by a series of queries with different WHERE statements, like so:
+
+#+begin_src
+SELECT AVG (imdb_rating)
+  FROM movies
+  WHERE year = 1999;
+
+SELECT AVG(imdb_rating)
+  FROM movies
+  WHERE year = 2000;
+
+SELECT AVG(imdb_rating)
+  FROM movies
+  WHERE year = 2001;
+#+end_src
+
+and so on.
+
+We can use GROUP BY to do this in a single step:
+
+#+begin_src
+SELECT year, AVG(imdb_rating)
+  FROM movies
+  GROUP BY year
+  ORDER BY year;
+#+end_src
+
+GROUP BY is a clause in SQL that is used with aggregate functions. It is used in collaboration with the SELECT statement to arrange identical data into /groups/.
+
+The GROUP BY statement comes after any WHERE statements, but before ORDER BY or LIMIT.
+
+*** Task 1
+In the code editor, type:
+
+#+begin_src
+SELECT price, COUNT(*)
+  FROM fake_apps
+  GROUP BY price;
+#+end_src
+
+Here, our aggregate function is COUNT()  and we arranged price into groups.
+
+What do you expect the result to be?
+
+*Hint*
+The result contains the total number of apps for each price.
+
+It is organized into two columns, making it very easy to see the number of apps at each price.
+
+*** Task 2
+In the previous query ,  add a WHERE clause to count the total number of apps that have been downloaded more than 20,000 times, at each price.
+
+*Hint*
+Remember, WHERE statement goes /before/ the GROUP BY statement:
+
+#+begin_src
+SELECT price, COUNT(*)
+  FROM fake_apps
+  WHERE downloads > 20000
+  GROUP BY price;
+#+end_src
+
+*** Task 3
+Write a new query that calculates the total number of downloads for each category.
+
+#+begin_src
+SELECT category, SUM(downloads)
+  FROM fake_apps
+  GROUP BY category;
+#+end_src
+
+** Group By II
+Sometimes, we want to GROUP BY calculation done on a column.
+
+For instance, we might want to know how many movies have IMDb ratings that round to 1, 2, 3, 4, 5. We could do this  using the following syntax:
+
+#+begin_src
+SELECT ROUND(imdb_rating),
+  COUNT(name)
+  FROM movies
+  GROUP BY ROUND(imdb_rating)
+  ORDER BY ROUND(imdb_rating);
+#+end_src
+
+However, this query may be time-consuming to write and more prone to error.
+
+SQL lets us use column reference(s) in our GROUP BY that will make our lives easier.
+
+    - 1 is the first column selected
+
+    - 2 is the second column selected
+
+    - 3 is the third column selected
+
+and so on.
+
+The following query is equivalent to the one above:
+
+#+begin_src
+SELECT ROUND(imdb_rating),
+  COUNT(name)
+  FROM movies
+  GROUP BY 1
+  ORDER BY 1;
+#+end_src
+
+*** Task 1
+Suppose we have the query below:
+
+#+begin_src
+SELECT category,
+  price,
+  AVG(downloads)
+FROM fake_apps
+GROUP BY category, price;
+#+end_src
+
+Write the exact query, but use column reference numbers instead of column names after GROUP BY.
+
+#+begin_src
+SELECT category,
+  price,
+  AVG(downloads)
+FROM fake_apps
+GROUP BY 1, 2;
+#+end_src
+
+** Having
+In addition to being able to group data using GROUP BY, SQL also allows you to filter which groups to include and which to exclude.
+
+For instance, imagine that we want to see how many movies of different genres were produced each year, but we only care about years and genres with al least 10 movies.
+
+We can't use WHERE here because we don't want to filter the rows; we want to /filter groups./
+
+This is where HAVING comes in.
+
+HAVING is very similar to WHERE. In fact, all types of WHERE clauses you learned about thus far can be used with HAVING.
+
+We can use the following for the problem:
+
+#+begin_src
+SELECT year,
+  genre,
+  COUNT(name)
+FROM movies
+GROUP BY 1, 2
+HAVING COUNT(name) > 10;
+#+end_src
+
+    - When we want to limit the results of a query based on values of the individual rows, use WHERE.
+
+    - When we want to limit the results of a query based on an aggregate property, use HAVING.
+
+HAVING statement always comes after GROUP BY, but before ORDER BY and LIMIT.
+
+*** Task 1
+Suppose we have the query below:
+
+#+begin_src
+SELECT price,
+  ROUND(AVG(downloads)),
+  COUNT(*)
+FROM fake_apps
+GROUP BY price;
+#+end_src
+
+It returns the average downloads (rounded) and the number of apps -at each price point.
+
+However, certain price points don't have very many apps, so their average dowloads are less meaningful.
+
+Add a HAVING clause to restrict the query to price points that have more than 10 apps.
+
+#+begin_src
+SELECT price,
+  ROUND(AVG(downloads)),
+  COUNT(*)
+FROM fake_apps
+GROUP BY price
+HAVING COUNT(*) > 30;
+#+end_src
+
+** Review
+You just learned how to use aggregate functions to perform calculations on your data. What can we generalize so far?
+
+    - COUNT(): count the number of rows
+
+    - SUM(): the sum of the values in a column
+
+    - MAX / MIN: the largest/smallest value
+
+    - AVG(): the average of the values in a column
+
+    - ROUND(): round the values in the column
+
+/Agreggate functions/ combine multiple rows together to form a single value of more meaningful information.
+
+    - GROUP BY is a clause used with aggregate functions to combine data from one or more columns.
+
+    - HAVING limit the results of a query based on an aggregate property.
+
+
 * SQLite
 
 ** Main Features
