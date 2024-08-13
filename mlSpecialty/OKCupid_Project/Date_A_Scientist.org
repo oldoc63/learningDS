@@ -23,6 +23,216 @@ This solution will use descriptive statistics and data visualization to find key
 ** Evaluation
 The project will conclude with the evaluation of the machine learning model selected with a validation data set. The output of the predictions can be ckecked through a confusion matrix, and metrics such as accuracy, precision, recall, F1 and Kappa scores.
 
+* Import Python Modules
+First import the modules being used for this project.
+
+* Loading the data
+To analyze the user profiles from OkCupid, pandas will be used to load the dataset into a ~DataFrame~ so that it can be explored and visualized with Python.
+
+Here profiles.csv is loaded into a DataFrame called profiles. The DataFrame is then briefly examined using .head() to check the contents.
+
+* Data Characteristics
+~profiles~ has 59,946 rows and 31 columns, this is a good sign since there seems to be enough data for machine learning.
+
+The columns in the dataset include:
+
+    - age: continuous variable of age user
+    - body_type: categorical variable of body type of user
+    - diet: categorical variable of dietary information
+    - drinks: categorical variable of alcohol consumption
+    - drugs: categorical variable of drug usage
+    - education: categorical variable of educational attainment
+    - ethnicity: categorical variable of ethnic backgrounds
+    - height: continuous variable of height of user
+    - income: continuous variable of income of user
+    - job: categorical variable of employment description
+    - offspring: categorical variable of children status
+    - orientation: categorical variable of sexual orientation
+    - pets: categorical variable of pet preferences
+    - religion: categorical variable of religious background
+    - sex: categorical variable of gender
+    - sign: categorical variable of astrological symbol
+    - smokes: categorical variable of smoking consumption
+    - speaks: categorical variable of language spoken
+    - status: categorical variable of relationship status
+    - last_online: date variable of last login
+    - location: categorical variable of user locations
+
+And a set of open short-answer responses to:
+
+    - essay0: My self summary
+    - essay1: What I'm doing with my life
+    - essay2: I'm really good at
+    - essay3: The first thing people usually notice about me
+    - essay4: Favorite books, movies, show, music, and food
+    - essay5: Ths six things I could never do without
+    - essay6: I spend a lot of time thinking about
+    - essay7: On a typical Friday night I am
+    - essay8: The most private thing I am willing to admit
+    - essay9: You should message me if ...
+
+* Explore the Data
+First to be explored is the number of unique signs, and the values. It seems that there are 48, but there should only be 12 signs. Upon closer inspection, there seems to be qualifiers attached with the signs.
+
+** Clean labels
+It is important that we clean the labels since this is what will be predicted and 48 will be quite difficult. By taking the first word of the column, the signs can be saved without the qualifiers. The qualifiers could be used for another problem down the line.
+
+* Continuous Variables
+
+** age
+The next plot shows the distribution of age in the group. It seems that most users are in their late 20s to early 30s.
+
+Plot the same chart but broken down by gender. It seems that there are proportionally similar break down of gender by age, but slightly fewer females overal.
+
+** height
+The next plot shows the height variable, most people look like they are between 5 feet tall and 6.5 feet tall.
+
+Plot the same height chart showing the break down by gender. It seems obvious, but females tend to be shorter than males and looks to have a normal distribution.
+
+** income
+In the data of income, it seems that the majority of the participants do not include their income figures.
+
+* Discrete Variables
+
+** Sex
+Previously it was identified that there are more males in the data, and it seems that there are ~35,000 men to ~25,000 women.
+
+** Body type
+The next chart shows the body type variable, and it seems that most users will describe themselves as average, fit, or athletic.
+
+Following we break down body type by gender and it seems that some of the body type descriptions are highly gendered. For example, "curvy" and "full figured" are highly female descriptions, while males use "a little extra", and "overwight" more often.
+
+** Diet
+Here is a chart of the dietary information for users. Most user eat "mostly anything", followed by "anything", and "strictly anything", being open-minded seems to be a popular signal to potential partners.
+
+** Drinks
+The next plot shows that the majority of the users drink "socially", then "rarely" and "often".
+
+** Drugs
+The vast majority of users "never" use drugs.
+
+** Education
+Below you can see the majority of users are graduate from college/university followed by master programs and those working and those working on college/university. Interestingly space camp related options are fairly a popular options.
+
+** Jobs
+Most users don't fit into the categories provided, but there are a fair share of students, artists, tech, and business folks.
+
+** Offspring
+The data suggest that most users do not have kids.
+
+** Orientation
+The majority of users are straight.
+
+Interestingly the majority of bisexual users are female.
+
+** Pets
+The chart shows that most users like or has dogs.
+
+** Religion
+Religion was similar to sign where there are a lot of qualifiers.
+
+Religion was cleaned to take the first word and distilled down to 9 groups. The majority was not very religious identifying as agnostic, other, or atheists.
+
+** Signs
+Here are the astrological signs of the users. There are mainly evenly distributed with Capricorns being the rarest and Leos being the most common.
+
+** Smoking
+Similarly for drugs the majority of users chose "no" for smoking.
+
+** Status
+The relationship status for a dating website is fairly predictable. One would assume that most people are single and available which is reflected in the data.
+
+* Data Preparation
+
+** Missing Data
+Missing data is often not handle by machine learning algorithms well and have to be checked so they may need to be imputed or removed. It seems that many of the columns do have missing values.
+
+** Preprocessing
+Preparing the data for modeling is important since it can speed up the process and produce better models. As the adage goes, "garbage in garbage out" so we want to make sure the data we are inputing into our modelling step is good enough tho share with others.
+
+The data for the model is going to be a subset of the variables. The variables were selected because they might be a good predictor for astrological signs, where some of the variables that were not selected such as age are probably not good indicators.
+
+** Dummy Variables
+In this next step, dummy variables are created to deal with the categorical variables. Dummy variables will turn the categories per variable into its own binary identifier. The data now has 81 columns to predict signs.
+
+#+begin_src python
+  for col in cols[:-1]:
+      df = pd.get_dummies(df, columns=[col], prefix=[col])
+#+end_src
+
+** Label Imbalance
+An imbalance in the prediction label needs to be checked. This is important since it's a multi-class problem where two or more outcomes can be had. An imbalance in a response variable is bad since it means that some labels only occur a few times. This is an issue for machine learning algorithms if there are not enough data to train with which will give bad predictions.
+
+In the given dataset, we observe that the counts of all the zodiac signs are more or less equal (i.e., without large deviations). Hence, we do not have to worry about imbalances and trying to address this problem.
+
+** Splitting Data
+Next the data needs to be split into train and validation sets. In this split 25% of the data is reserved for the final validation, while 75% is kept for training the model.
+
+* Prediction
+
+** model building
+Now it's time to create some models, here is a list of Multi class models available in scikit learn. For this project three common algorithms will be used to make predictions.
+
+Below, the respective modules for Logistic Regression, Decision Trees, and KNN are loaded.
+
+** evaluation metrics
+In the models, there will be several values that can be evaluated. Below is a quick diagram:
+
+[[./evaluation_metrics.png]]
+
+Here is a quick description of the metrics:
+
+    - Accuracy: correct values divided by total values
+
+    - Precision: true positives divided by TP + FN. So true positives divided by actual positives
+
+    - Recall: True Positives divided by True Positives and False Positives. So true positives divided by positive guesses
+
+    - F1-score: blended score of precision and recall which balances both values
+
+    - Macro Avg: is the unweighted mean value of precision and recall.
+
+    - Weighted Avg: is the weighted mean value of precision and recall by the support values for each class
+
+    - Support: is the number of observations in class to predict
+
+** Logistic Regression
+The first model is using logistic regression with the ~multi_class="multinomial"~ argument. ~lr_model~ predictions are created from the training dataset which is used to figure out how well the model performed.
+
+The final accuracy of the logistic regression model is 12% which is terrible considering a random guess should result in being correct ~8% of the time (1/12).
+
+** K Nearest Neighbor
+The next models is the ~KNeighborsClassifier~ which will take 20 of it's neighbors to predict the signs. The default value for ~n_neighbors~ is 5 which was kept. This number can be tuned later on if needed. This model had a 33% accuracy which is a good sign.
+
+** Decision Trees
+The last model is the decision tree, the default ~max_depth~ is ~none~ which means that it will "If None, then nodes are expandex until all leaves are pure or until all leaves contain less tah min_samples_split_samples." The results are very promising because it has a 78% accuracy with this model.
+
+Below is a confusion matrix of the results with the true values on the y axis and predicted values along the x axis. Since the diagonals are lighter in color and have higher numbers, the accuracy is going to be high since those are the true positives.
+
+Going back to the model, a quick analysis will show that this tree model has a depth of 49 branches, which will probably not generalize to another dataset. In this case this model has been "overfit" for this data.
+
+To make a point, a five fold cross validation is created with the same data. The results are worse than the KNN and about the Logistic Regression algorithms. The baseline was ~9%.
+
+The decision tree model will be made it again, but with a max_depth of 20 to stop the algorithm from reaching the stopping point. The new accuracy rate of ~41% is worse than the first iteration, but skightly better than the KNN model.
+
+If we check again with cross validation, the new model is still averaging ~8% which is not very good.
+
+** Final model
+So it seems that the `knn_model` might be the best model for OkCupid to use when users don't have their signs listed on their user profile. By using the hold out or validation set, we get ~8% accuracy which is not very good.
+
+So it seems that the `knn_model` might be the best model for OkCupid to use when users don't have their signs listed on their user profile. By using the hold out or validation set, we get ~8% accuracy which is not very good.
+
+* Conclusion
+
+** General Comments
+In this project machine learning was used to predict the astrological signs of OkCupid users. This is an important feature since many people believe in astrology and matches between compatible star signs. If users don't input their signs, an algorithmic solution could have generated a sign to impute missing data when making matches.
+
+Alas, the final selected algorithm did no better than basic guessing.
+
+** Next Steps
+Next steps will be to seriously consider whether it is possible to predict user's astrological signs period, or if there is a way to do with more data. Another possibility is to add additional models or tune the hyper parameters of the used models to see if any more predictive power could be squeezed out of the algorithms.
+
+
 * Scrip.py
 
 #+begin_src python :results output
@@ -40,14 +250,359 @@ The project will conclude with the evaluation of the machine learning model sele
   profiles = pd.read_csv('profiles.csv', encoding='utf-8')
   print(profiles.head())
 
+  print(list(profiles.columns))
+
+  #print("number of categories:", profiles.sign.nunique())
+  #print("categories:", profiles.sign.unique())
+
+  # Clean labels
+  profiles['signsCleaned'] = profiles.sign.str.split().str.get(0)
+
+  print("number of categories:", profiles.signsCleaned.nunique())
+
+  print(profiles.signsCleaned.value_counts())
+
+  #age
+  #sns.displot(data=profiles, x="age", kind="hist", binwidth =5)
+
+  # break down of gender by age
+  #sns.displot(data=profiles, x="age", hue="sex", kind="hist", binwidth=5)
+
+  #height
+  #sns.displot(data=profiles, x="height", kind="hist", binwidth=2)
+
+  # break down of gender by height
+  #sns.displot(data=profiles, x="height", hue="sex", kind="hist", binwidth=2, multiple="stack")
+
+  # income
+  #sns.displot(data=profiles, x="income", hue="sex", kind="hist", binwidth=50000, multiple="stack")
+
+  ## Categorical
+  # Sex
+  #sns.countplot(data=profiles, y="sex")
+
+  # Body type
+  #sns.countplot(data=profiles, y="body_type")
+
+  # Body type broke by sex
+  #sns.countplot(data=profiles, y="body_type", hue="sex")
+
+  #Diet
+  #sns.countplot(data=profiles, y="diet")
+
+  #Drinks
+  #sns.countplot(data=profiles, y="drinks")
+
+  #Drugs
+  #sns.countplot(data=profiles, y="drugs")
+
+  #Education
+  plt.figure(figsize=(6, 7))
+
+  #sns.countplot(data=profiles, y="education")
+
+  #Jobs
+  #sns.countplot(data=profiles, y="job")
+
+  #Offspring
+  #sns.countplot(data=profiles, y="offspring")
+
+  #Orientation
+  #sns.countplot(data=profiles, y="orientation")
+
+  #Orientation by gender
+  #sns.countplot(data=profiles, y="orientation", hue="sex")
+
+  #Pets
+  #sns.countplot(data=profiles, y="pets")
+
+  #Religion
+  # set figure size
+  plt.figure(figsize=(6, 7))
+  #sns.countplot(data=profiles, y="religion")
+
+  #Religion distilled down to 9 groups
+  profiles['religionCleaned'] = profiles.religion.str.split().str.get(0)
+  #sns.countplot(data=profiles, y="religionCleaned")
+
+  #Signs
+  #sns.countplot(data=profiles, y="signsCleaned")
+
+  #Smoking
+  #sns.countplot(data=profiles, y="smokes")
+
+  #Status
+  #sns.countplot(data=profiles, y="status")
+
+  #print(profiles.isnull().sum())
+
+  cols = ['body_type', 'diet', 'orientation', 'pets', 'religionCleaned', 'sex', 'job', 'signsCleaned']
+  df = profiles[cols].dropna()
+  print(df.shape)
+
+  for col in cols[:-1]:
+      df = pd.get_dummies(df, columns=[col], prefix=[col])
+
+  print(df.head())
+
+  # Check for imbalance
+  print(df.signsCleaned.value_counts())
+
+  ## Splitting the Data
+  col_length = len(df.columns)
+
+  #Y is the target column, X has the rest
+  X = df.iloc[:, 1:col_length]
+  Y = df.iloc[:, 0:1]
+
+  #Validation chunk size
+  val_size = 0.25
+
+  #Split the data into chunks
+  from sklearn.model_selection import train_test_split
+  X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=val_size, random_state=0)
+
+  #turn in to 1d arrays
+  Y_train = Y_train.to_numpy().ravel()
+  Y_val = Y_val.to_numpy().ravel()
+
+  ## Prediction
+
+  #Logistic Regression
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.tree import DecisionTreeClassifier
+  from sklearn.neighbors import KNeighborsClassifier
+
+  lr_model = LogisticRegression(multi_class="multinomial").fit(X_train, Y_train)
+  lr_predictions = lr_model.predict(X_train)
+
+  from sklearn.metrics import classification_report
+  print(classification_report(Y_train, lr_predictions))
+
+  #KNearest Neighbor
+  knn_model = KNeighborsClassifier(n_neighbors=5).fit(X_train, Y_train)
+  knn_predictions = knn_model.predict(X_train)
+
+  print(classification_report(Y_train, knn_predictions))
+
+  #Decision Trees
+  cart_model = DecisionTreeClassifier().fit(X_train, Y_train)
+  cart_predictions = cart_model.predict(X_train)
+
+  print(classification_report(Y_train, cart_predictions))
+
+  from sklearn.metrics import confusion_matrix
+  cart_cm = confusion_matrix(Y_train, cart_predictions)
+  cart_labels = cart_model.classes_
+
+  plt.figure(figsize=(10,7))
+
+  ax = plt.subplot()
+  sns.heatmap(cart_cm, annot=True, ax=ax, fmt="d")
+
+  #labels, title and ticks
+  ax.set_xlabel('Predicted labels')
+  ax.set_ylabel('True labels')
+  ax.set_title('Confusion Matrix')
+  ax.yaxis.set_tick_params(rotation=360)
+  ax.xaxis.set_tick_params(rotation=90)
+
+  ax.xaxis.set_ticklabels(cart_labels)
+  ax.yaxis.set_ticklabels(cart_labels)
+
+  print(cart_model.get_depth())
+
+  from sklearn.model_selection import KFold
+  from sklearn.model_selection import cross_val_score
+
+  kfold = KFold(n_splits=5, shuffle=True, random_state=0)
+  results = cross_val_score(cart_model, X_train, Y_train, cv=kfold, scoring='accuracy')
+
+  print(results)
+  print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+
+  cart_model20 = DecisionTreeClassifier(max_depth = 20).fit(X_train, Y_train) 
+  cart_predictions20 = cart_model20.predict(X_train)
+
+  print(classification_report(Y_train, cart_predictions20))
+
+  results20 = cross_val_score(cart_model20, X_train, Y_train, cv=kfold, scoring='accuracy')
+
+  print(results20)
+  print("Baseline: %.2f%% (%.2f%%)" % (results20.mean()*100, results.std()*100))
+
+  ## Final model
+  knn_predictionsVal = knn_model.predict(X_val)
+  print(classification_report(Y_val, knn_predictionsVal))
+
+  final_cm = confusion_matrix(Y_val, knn_predictionsVal)
+  knn_labels = knn_model.classes_
+
+  plt.figure(figsize=(10,7))
+
+  ax= plt.subplot()
+  sns.heatmap(final_cm, annot=True, ax = ax, fmt="d")
+
+  # labels, title and ticks
+  ax.set_xlabel('Predicted labels')
+  ax.set_ylabel('True labels')
+  ax.set_title('Confusion Matrix')
+  ax.yaxis.set_tick_params(rotation=360)
+  ax.xaxis.set_tick_params(rotation=90)
+
+  ax.xaxis.set_ticklabels(knn_labels)
+  ax.yaxis.set_ticklabels(knn_labels)
+
+  plt.show()
 #+end_src
 
 #+RESULTS:
-:    age  ...     status
-: 0   22  ...     single
-: 1   35  ...     single
-: 2   38  ...  available
-: 3   23  ...     single
-: 4   29  ...     single
-:
-: [5 rows x 31 columns]
+#+begin_example
+   age  ...     status
+0   22  ...     single
+1   35  ...     single
+2   38  ...  available
+3   23  ...     single
+4   29  ...     single
+
+[5 rows x 31 columns]
+['age', 'body_type', 'diet', 'drinks', 'drugs', 'education', 'essay0', 'essay1', 'essay2', 'essay3', 'essay4', 'essay5', 'essay6', 'essay7', 'essay8', 'essay9', 'ethnicity', 'height', 'income', 'job', 'last_online', 'location', 'offspring', 'orientation', 'pets', 'religion', 'sex', 'sign', 'smokes', 'speaks', 'status']
+number of categories: 12
+signsCleaned
+leo            4374
+gemini         4310
+libra          4207
+cancer         4206
+virgo          4141
+taurus         4140
+scorpio        4134
+aries          3989
+pisces         3946
+sagittarius    3942
+aquarius       3928
+capricorn      3573
+Name: count, dtype: int64
+(16453, 8)
+  signsCleaned  body_type_a little extra  ...  job_transportation  job_unemployed
+0       gemini                      True  ...                True           False
+1       cancer                     False  ...               False           False
+5       taurus                     False  ...               False           False
+7  sagittarius                     False  ...               False           False
+9       cancer                     False  ...               False           False
+
+[5 rows x 81 columns]
+signsCleaned
+leo            1516
+gemini         1496
+cancer         1457
+virgo          1451
+taurus         1390
+scorpio        1356
+libra          1354
+pisces         1334
+aries          1328
+sagittarius    1312
+aquarius       1262
+capricorn      1197
+Name: count, dtype: int64
+              precision    recall  f1-score   support
+
+    aquarius       0.13      0.07      0.09       968
+       aries       0.12      0.10      0.11       983
+      cancer       0.13      0.24      0.17      1129
+   capricorn       0.14      0.05      0.07       882
+      gemini       0.12      0.15      0.13      1130
+         leo       0.12      0.19      0.15      1121
+       libra       0.11      0.08      0.09      1028
+      pisces       0.11      0.09      0.10       997
+ sagittarius       0.13      0.09      0.11       965
+     scorpio       0.14      0.05      0.08      1001
+      taurus       0.13      0.12      0.12      1045
+       virgo       0.12      0.21      0.15      1090
+
+    accuracy                           0.12     12339
+   macro avg       0.12      0.12      0.11     12339
+weighted avg       0.12      0.12      0.12     12339
+
+              precision    recall  f1-score   support
+
+    aquarius       0.26      0.65      0.37       968
+       aries       0.27      0.50      0.35       983
+      cancer       0.27      0.41      0.33      1129
+   capricorn       0.34      0.32      0.33       882
+      gemini       0.37      0.34      0.35      1130
+         leo       0.38      0.29      0.33      1121
+       libra       0.39      0.26      0.31      1028
+      pisces       0.40      0.25      0.31       997
+ sagittarius       0.42      0.22      0.29       965
+     scorpio       0.41      0.23      0.30      1001
+      taurus       0.42      0.25      0.31      1045
+       virgo       0.42      0.24      0.31      1090
+
+    accuracy                           0.33     12339
+   macro avg       0.36      0.33      0.32     12339
+weighted avg       0.36      0.33      0.32     12339
+
+              precision    recall  f1-score   support
+
+    aquarius       0.67      0.94      0.78       968
+       aries       0.66      0.88      0.75       983
+      cancer       0.71      0.86      0.77      1129
+   capricorn       0.74      0.84      0.79       882
+      gemini       0.78      0.79      0.79      1130
+         leo       0.80      0.80      0.80      1121
+       libra       0.79      0.76      0.78      1028
+      pisces       0.82      0.74      0.78       997
+ sagittarius       0.91      0.70      0.79       965
+     scorpio       0.89      0.71      0.79      1001
+      taurus       0.93      0.70      0.80      1045
+       virgo       0.94      0.67      0.78      1090
+
+    accuracy                           0.78     12339
+   macro avg       0.80      0.78      0.78     12339
+weighted avg       0.80      0.78      0.78     12339
+
+49
+[0.08265802 0.09197731 0.09359806 0.09846029 0.08390758]
+Baseline: 9.01% (0.60%)
+              precision    recall  f1-score   support
+
+    aquarius       0.57      0.39      0.47       968
+       aries       0.43      0.43      0.43       983
+      cancer       0.37      0.50      0.43      1129
+   capricorn       0.53      0.42      0.47       882
+      gemini       0.40      0.44      0.42      1130
+         leo       0.36      0.48      0.41      1121
+       libra       0.29      0.42      0.34      1028
+      pisces       0.61      0.34      0.44       997
+ sagittarius       0.64      0.33      0.44       965
+     scorpio       0.37      0.39      0.38      1001
+      taurus       0.53      0.39      0.45      1045
+       virgo       0.32      0.40      0.36      1090
+
+    accuracy                           0.41     12339
+   macro avg       0.45      0.41      0.42     12339
+weighted avg       0.45      0.41      0.42     12339
+
+[0.07698541 0.08549433 0.08792545 0.08387358 0.08958249]
+Baseline: 8.48% (0.60%)
+              precision    recall  f1-score   support
+
+    aquarius       0.07      0.22      0.11       294
+       aries       0.09      0.15      0.11       345
+      cancer       0.08      0.13      0.10       328
+   capricorn       0.09      0.08      0.09       315
+      gemini       0.08      0.08      0.08       366
+         leo       0.08      0.06      0.07       395
+       libra       0.10      0.07      0.08       326
+      pisces       0.09      0.06      0.07       337
+ sagittarius       0.09      0.04      0.05       347
+     scorpio       0.10      0.05      0.07       355
+      taurus       0.11      0.07      0.08       345
+       virgo       0.10      0.06      0.07       361
+
+    accuracy                           0.09      4114
+   macro avg       0.09      0.09      0.08      4114
+weighted avg       0.09      0.09      0.08      4114
+
+#+end_example
