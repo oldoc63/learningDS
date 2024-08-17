@@ -1869,6 +1869,395 @@ Let's summarize what we've learned so far:
 
     - WITH allows us to define one or more temporary tables that can be used in the final query.
 
+* Aggregate Functions Challenge
+** Code Challenge 1
+The users table has the following columns:
+
+    - id
+
+    - first_name
+
+    - last_name
+
+    - email
+
+    - password
+
+[[./users_table.png]]
+
+*** Task 1
+Use COUNT() and a LIKE operator to determine the number of users that have an email ending in '.com'.
+
+#+begin_src
+SELECT COUNT(*)
+FROM users
+WHERE email LIKE '.com';
+#+end_src
+
+** Code Challenge 2
+
+*** Task 1
+What are the most popular first names on Codeflix?
+
+Use COUNT(), GROUP BY, and ORDER BY to create a list of first names and occurrences within the users table.
+
+#+begin_src
+  SELECT first_name, COUNT(*) AS 'count'
+  FROM users
+  GROUP BY first_name
+  ORDER BY COUNT(*) DESC;
+#+end_src
+
+** Code Challenge 3
+The ~watch_history~ table has the following columns:
+
+    - ~id~
+
+    - ~user_id~
+
+    - ~watch_date~
+
+    - ~watch_duration_in_minutes~
+
+      [[./users_table.png]]
+
+*** Task 1
+The UX Research Team wants to see a distribution of watch durations. They want the result to contain:
+
+    - ~duration~, which is the watch event duration, rounded to the closest minute
+
+    - ~count~, the number of watch events falling into this "bucket"
+
+Use ~COUNT()~, ~GROUP BY~, and ~ORDER BY~ to create this result and order this data by increasing ~duration~.
+
+#+begin_src
+ SELECT ROUND(watch_duration_in_minutes, 0) AS duration,
+  COUNT(*) AS 'count'
+  FROM watch_history
+  GROUP BY duration
+  ORDER BY duration ASC;
+#+end_src
+
+*Hint*
+Use ROUND() to create a column which is the watch duration rounded to the nearest minute. And return a second column that has the number of watch events falling into each duration.
+
+** Code Challenge 4
+The ~payments~ table has the following columns:
+
+    - ~id~
+
+    - ~user_id~
+
+    - ~amount~
+
+    - ~status~
+
+    - ~pay_date~
+
+*** Task 1
+Find all the users that have successfully made a payment to Codeflix and find their total amount paid.
+
+Sort them by their total payments (from high to low).
+
+Use SUM(), WHERE, GROUP BY, and ORDER BY.
+
+*Hint*
+
+Group the users and calculate their total payments by using SUM().
+
+Filter the successful payments by using WHERE with the condition status = 'paid'.
+
+Sort the total payments in a descending order using ORDER BY and DESC.
+
+#+begin_src
+  SELECT user_id, SUM(amount)
+  FROM payments
+  WHERE status = 'paid'
+  GROUP BY user_id
+  ORDER BY SUM(amount) DESC;
+#+end_src
+
+You can also rename the SUM(amount) column:
+
+#+begin_src
+  SELECT user_id, SUM(amount) AS 'total'
+  FROM payments
+  WHERE status = 'paid'
+  GROUP BY user_id
+  ORDER BY total DESC;
+#+end_src
+
+And add column reference numbers:
+
+#+begin_src
+  SELECT user_id, SUM(amount) AS 'total'
+  FROM payments
+  WHERE statuts = 'paid'
+  GROUP BY 1
+  ORDER BY 2 DESC;
+#+end_src
+
+** Code Challenge 5
+
+*** Task 1
+Generate a table of user ids and total watch duration for users who watched more than 400 minutes of content.
+
+Use SUM(), GROUP BY, and HAVING to achieve this.
+
+*Hint*
+Use SUM() and GROUP BY to calculate a total amount for each ~user_id~.
+
+#+begin_src
+  SELECT user_id,
+  SUM(watch_duration_in_minutes)
+  FROM watch_history
+  GROUP BY user_id
+  HAVING
+  SUM(watch_duration_in_minutes) > 400;
+#+end_src
+
+If you give the total amount an alias, you can use it in HAVING:
+
+#+begin_src
+  SELECT user_id,
+  SUM(watch_duration_in_minutes) AS 'total_duration'
+  FROM watch_history
+  GROUP BY 1
+  HAVING total_duration > 400;
+#+end_src
+
+** Code Challenge 6
+
+*** Task 1
+To the nearest minute, how many minutes of content were streamed on Codeflix?
+
+Use the SUM() and ROUND() functions with the watch_history table.
+
+Treat ~SUM(watch_duration_in_minutes)~ just like any other value and place it inside the ROUND() function like so:
+
+#+begin_src
+  SELECT ROUND(SUM(watch_duration_in_minutes), 0)
+  FROM watch_history;
+#+end_src
+
+Here, SUM(watch_duration_in_minutes) is the 1st argument and 0 is the 2nd argument because we want to round it to zero decimal places.
+
+** Code Challenge 7
+The payments table has the following columns:
+
+    - ~id~
+
+    - ~user_id~
+
+    - ~amount~
+
+    - ~status~
+
+    - ~pay_date~
+
+*** Task 1
+Which days in this period did Codeflix collect the most money?
+
+Your result should have two columns, ~pay_date~ and total ~amount~, sorted by the latter descending.
+
+This should only include successful payments (status = 'paid').
+
+Use SUM(), GROUP BY, and ORDER BY.
+
+#+begin_src
+  SELECT pay_date, SUM(amount)
+  FROM payments
+  WHERE status = 'paid'
+  GROUP BY pay_date
+  ORDER BY SUM(amount) DESC;
+#+end_src
+
+You can also rename ~pay_date~ → day and ~SUM(amount)~ → total using AS:
+
+#+begin_src
+  SELECT pay_date AS 'day',
+  SUM(amount) AS 'total'
+  FROM payments
+  WHERE status = 'paid'
+  GROUP BY day
+  ORDER BY total DESC;
+#+end_src
+
+** Code Challenge 8
+
+*** Task 1
+When users successfully pay Codeflix (status=''paid"), what is the average payment amount?
+
+#+begin_src
+  SELECT AVG(amount)
+  FROM payments
+  WHERE status = 'paid';
+#+end_src
+
+** Code Challenge 9
+
+*** Task 1
+Of all the events in the watch_history table, what is the duration of the longest individual watch event? What is the duration of the shortest?
+
+Use one query and rename the results to max and min.
+
+#+begin_src
+  SELECT MAX(watch_duration_in_minutes), MIN(watch_duration_in_minutes)
+  FROM watch_history;
+#+end_src
+
+* The Metropolitan Museum of Art
+The Metropolitan Museum of Art of New York is one of the world's largest and finest art museums.
+
+In this project, you will be working with a table named met that contains the museum's collection of American Decorative Arts.
+
+It has the following columns:
+
+    - ~id~ - the id of the art piece
+
+    - ~department~ - the department of the art piece
+
+    - ~category~ - the category of the art piece
+
+    - ~title~ - the title name of the art piece
+
+    - ~artist~ - the name of the artist
+
+    - ~date~ - the date(s) of the art piece
+
+    - ~medium~ - the medium of the art piece
+
+    - ~country~ - the country of the artist
+
+ This data was kindly made publicly available under the Open Access Policy.
+
+** Pre-Gaming for Aggregates
+
+*** Task 1
+Start by getting a feel for the met table:
+
+#+begin_src
+  SELECT *
+  FROM met
+  LIMIT 10;
+#+end_src
+
+What are the column names?
+
+*** Task 2
+How many pieces are in the American Decorative Art collection?
+
+#+begin_src
+  SELECT COUNT(*)
+  FROM met;
+#+end_src
+
+*** Task 3
+Celery was considered a luxurious snack in the Victorian era (around the 1800s). Wealthy families served stalks of it in intricate glass vases.
+
+Don't believed it? Count the number of pieces where the ~category~ includes 'celery'.
+
+#+begin_src
+  SELECT COUNT(*)
+  FROM met
+  WHERE category
+  LIKE '%celery%';
+#+end_src
+
+#+begin_src
+  SELECT DISTINCT category
+  FROM met
+  WHERE category LIKE '%celery%';
+#+end_src
+
+*** Task 4
+Find the title and medium of the oldest piece(s) in the collection.
+
+First, let's find the "lowest" year:
+
+#+begin_src
+  SELECT MIN(date)
+  FROM met;
+#+end_src
+
+The result is 1600-1700.
+
+Now, let's try this:
+
+#+begin_src
+  SELECT date, title, medium
+  FROM met
+  WHERE date LIKE '%1600%';
+#+end_src
+
+Woah! Betty Lamp, Candlestick, and Casement Window are among the oldest pieces in the collection.
+
+*** Task 5
+Not every American decoration is from the Americas... where are they are coming from?
+
+Find the top 10 countries with the most pieces in the collection.
+
+#+begin_src
+  SELECT country, COUNT(*)
+  FROM met
+  GROUP BY country
+  ORDER BY COUNT(*) DESC
+  LIMIT 10;
+#+end_src
+
+You can also use column reference numbers and remove NULL values:
+
+#+begin_src
+  SELECT country, COUNT(*)
+  FROM met
+  WHERE country IS NOT NULL
+  GROUP BY 1
+  ORDER BY 2 DESC
+  LIMIT 10;
+#+end_src
+
+*** Task 6
+There are all kinds of American decorative art in the Met's collection.
+
+Find the categories HAVING more than 100 pieces.
+
+#+begin_src
+  SELECT category, COUNT(*)
+  FROM met
+  GROUP BY category
+  HAVING COUNT(*) > 100;
+#+end_src
+
+*** Task 7
+Lastly, let’s look at some bling!
+
+Count the number of pieces where the medium contains ‘gold’ or ‘silver’.
+
+And sort in descending order.
+
+#+begin_src
+  SELECT medium, COUNT(*)
+  FROM met
+  WHERE medium LIKE '%gold%'
+  OR medium LIKE '%silver%'
+  GROUP BY 1
+  ORDER BY 2 DESC;
+#+end_src
+
+#+begin_src
+  SELECT CASE
+   WHEN medium LIKE '%gold%'   THEN 'Gold'
+   WHEN medium LIKE '%silver%' THEN 'Silver'
+   ELSE NULL
+  END AS 'Bling',
+  COUNT(*)
+  FROM met
+  WHERE Bling IS NOT NULL
+  GROUP BY 1
+  ORDER BY 2 DESC;
+#+end_src
+
+
 * SQLite
 
 ** Main Features
