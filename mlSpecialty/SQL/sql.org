@@ -2678,6 +2678,81 @@ Remember that ~play_count.song_id~ will match ~songs.id~.
   ON play_count.song_id = songs.id
 #+end_src
 
+* Subqueries
+** Introduction to Subqueries
+At this point in our SQL journey we know we can query a database to retrieve desired results. However, what happens when we query a database but we really only need a subset of the results returned? How is this situation handled when the subset of data needed spans across multiple tables?
+
+One option that may immediately come to mind could be the use of a join. However, in this lesson, we'll explore the use of something called a subquery that gives us the same functionality as a join, but with much more readability.
+
+*** Task 1
+We will use two tables throughout this lesson, ~band_students~ and ~drama_students~.
+
+Select the first 10 rows from each of the tables to get a feel for the data.
+
+What are the column names?
+
+#+begin_src
+SELECT *
+FROM band_students
+LIMIT 10;
+
+SELECT *
+FROM drama_students
+LIMIT 10;
+#+end_src
+
+The band_students has columns:
+
+    id
+    first_name
+    last_name
+    grade
+    instrument
+
+The drama_students has columns:
+
+    id
+    first_name
+    last_name
+    grade
+    interest
+
+** Subqueries
+As the name suggests, a subquery is an internal query nested inside of an external query. They can be nested inside of SELECT, INSERT, UPDATE, or DELETE statements. Anytime a subquery is present, it gets executed before the external statement is run.
+
+Subqueries are very similar to joins in terms of functionality; however, joins are more efficient and subqueries are typically more readable.
+
+For example, if we had two tables listing students in two different clubs, ~book_club~ and ~art_club~, we could find out which students are in both tables by using a join such as:
+
+#+begin_src
+  SELECT id, first_name, last_name
+  FROM book_club
+  JOIN art_club
+  ON book_club.id = art_club.id;
+#+end_src
+
+However, a subquery can be used to achieve the same result and is more readable:
+
+#+begin_src
+  SELECT id, first_name, last_name
+  FROM book_club
+  WHERE id IN (
+    SELECT id
+    FROM art_club);
+#+end_src
+
+In this statement, the subquery SELECT statement would be executed first, resulting in a list of student ids from the ~art_club~ table. Then, the outer query would run and select the student ids from ~book_club~ table which also appear in the subquery results.
+
+*** Task 1
+Complete the subquery to find students taking both band and drama.
+
+#+begin_src
+  SELECT first_name, last_name
+  FROM band_students
+  WHERE id IN (
+    SELECT id
+    FROM drama_students);
+#+end_src
 * SQLite
 
 ** Main Features
