@@ -2257,6 +2257,426 @@ And sort in descending order.
   ORDER BY 2 DESC;
 #+end_src
 
+* Cryptocurrency Exchange
+Fiddy Cent is a digital currency exchange headquartered in Neo Tokyo. They broker exchanges of Bitcoin, Bitcoin Cash, Ethereum, and Litecoin with fiat currencies in around 50 countries.
+
+Help them analyze their January ledger data using SQL aggregate functions! You are given the transactions table, which contains both money-in and money-out transactions.
+
+** Write the following queries:
+
+*** Task 1
+Let's start by checking out the whole transactions table:
+
+#+begin_src
+  SELECT *
+  FROM transactions;
+#+end_src
+
+What are the column names?
+
+*** Task 2
+The ~money_in~ column records the amount (in USD) the user bought.
+
+What is the total ~money_in~ in the table?
+
+#+begin_src
+  SELECT SUM(money_in)
+  FROM transactions;
+#+end_src
+
+*** Task 3
+The ~money_out~ column records the amount (in USD) the user sold.
+
+What is the total ~money_out~ in the table?
+
+#+begin_src
+  SELECT SUM(money_out)
+  FROM transactions;
+#+end_src
+
+*** Task 4
+It was reported that Bitcoin dominates Fiddy Cent's exchange. Let's see if it is true within these dates by answering two questions:
+
+    - How many ~money_in~ transactions are in this table?
+
+    - How many ~money_in~ transactions are in this table where 'BIT' is the ~currency~?
+
+#+begin_src
+SELECT COUNT(money_in)
+  FROM transactions
+
+SELECT COUNT(money_in)
+  FROM transactions
+  WHERE currency = 'BIT';
+#+end_src
+
+*** Task 5
+What was the largest transaction in this whole table?
+
+Was it ~money_in~ or ~money_out~?
+
+#+begin_src
+  SELECT MAX(money_in)
+  FROM transactions;
+
+  SELECT MAX(money_out)
+  FROM transactions;
+#+end_src
+
+*** Task 6
+What is the average money_in in the table for the currency ethereum ('ETH')?
+
+#+begin_src
+  SELECT AVG(money_in)
+  FROM transactions
+  WHERE currency = 'ETH';
+#+end_src
+
+*** Task 7
+Let's build a ledger for the different dates.
+
+Select date, average ~money_in~, and average ~money_out~ from the table.
+
+And group everything by ~date~.
+
+#+begin_src
+  SELECT date, AVG(money_in), AVG(money_out)
+  FROM transactions
+  GROUP BY date;
+#+end_src
+
+*** Task 8
+To make the previous query easier to read, round the averages to 2 decimal places.
+
+Give the column aliases using AS for readability.
+
+#+begin_src
+  SELECT date AS 'Date',
+  ROUND(AVG(money_in), 2) AS 'Average Buy',
+  ROUND(AVG(money_out), 2) AS 'Average Sell',
+  FROM transactions
+  GROUP BY date;
+#+end_src
+
+* Multiple Tables Challenge
+
+** Songify Introduction
+In this code challenge, you'll be performing analysis for Songify, a fictional music streaming service. Songify has a "freemium" model, meaning that it offers both a free product and a premium paid product.
+
+You'll be working with six tables:
+
+    - plans
+
+    - users
+
+    - premium_users
+
+    - songs
+
+    - months
+
+    - plays
+
+[[./SQL_diagram_v6.pdf]]
+
+** Code Challenge 1
+For this challenge, you'll use the following tables:
+
+~plans~
+
+| *Column*      | *Description*                      |
+| id          | A unique identifier for the plan |
+| price       | The monthly cost of the plan     |
+| description | A description of the plan        |
+
+~premiun_users~
+
+| *Column*             | *Description*                                            |
+| user_id            | A unique identifier for the user                       |
+| membership_plan_id | An ID for the user's payment plan (matches `plans.id`) |
+| purchase_date      | Date when the user purchased their premium plan        |
+| cancel_date        | Date when the user canceled (NULL if they haven't)     |
+
+*** Task 1
+Let's see which plans are used by which premium members!
+
+The column ~membership_plan_id~ in premium users should match the column ~id~ in plans.
+
+Join ~plans~ and ~premiun_users~ and select:
+
+    - ~user_id~ from ~premiun_users~
+
+    - ~description~ from ~plans~
+
+Be sure to select the columns in this order
+
+#+begin_src
+  SELECT premium_users.user_id, plans.description
+  FROM premium_users
+  JOIN plans
+  ON plans.id = premium_users.membership_plan_id;
+#+end_src
+
+** Code Challenge 2
+For this exercise, you will use the following tables:
+
+~songs~
+
+| *Column* | *Description*                       |
+| id     | A unique identifier for each song   |
+| title  | The title of the song               |
+| artist | The artist who recorded the song    |
+| year   | The year that the song was released |
+
+~plays~
+
+| Column    | Description                       |
+| user_id   | A unique identifier for each user |
+| song_id   | An id for which song  was played  |
+| play_date | The date the user played the song |
+| play_hour | The hour the user played the song |
+
+*** Task 1
+Let's see the titles of songs that were played by each user!
+
+The column ~song_id~ in plays should match the column ~id~ in songs.
+
+Join plays to songs and select:
+
+    - ~user_id~ from plays
+
+    - ~play_date~ from plays
+
+    - ~title~ from songs
+
+(Be sure to select the columns in this order)
+
+#+begin_src
+SELECT plays.user_id,
+       plays.play_date,
+       songs.title
+  FROM plays
+  JOIN songs
+  ON plays.song_id = songs.id;
+#+end_src
+
+** Code Challenge 3
+For this challenge, you'll use the following tables:
+
+~users~
+
+| *Column*    | *Description*                       |
+| id        | A unique identifier for each user |
+| firs_name | The first name of the user        |
+| last_name | The last name of the user         |
+| age       | The age name of the user          |
+| gender    | The gender name of the user       |
+
+~premium_users~
+
+| *Column*             | *Description*                       |
+| user_id            | A unique identifier for each user |
+| membership_plan_id | Id for user's pay plan            |
+| purchase_date      | Date user purchase premium        |
+| cancel_date        | Date user canceled                |
+
+*** Task 1
+Which users aren't premium users?
+
+Use a LEFT JOIN to combine ~users~ and ~premium_users~ and select ~id~ from users.
+
+A /left join/ will keep all rows from the first table, regardless of whether there is a matching row in the second table.
+
+#+begin_src
+  SELECT users.id
+  FROM users
+  LEFT JOIN premium_users
+  ON users.id = premium_users.user_id
+  WHERE premium_users.user_id IS NULL;
+#+end_src
+
+** Code Challenge 4
+We've used a WITH statement to create two temporary tables:
+
+    - ~january~ contains all song plays from January 2017
+
+    - ~february~ contains all song plays from February 2017
+
+*** WITH Clause
+The WITH clause stores the result of a query in a temporary table using an alias.
+
+Multiple temporary tables can be defined with one instance of the WITH keyword.
+
+*** Task 1
+Use a left join to combine january and february on user_id and select user_id from january.
+
+#+begin_src
+  WITH january AS (
+    SELECT *
+    FROM plays
+    WHERE strftime("%m", play_date) = '01'
+  ),
+  february AS (
+    SELECT *
+    FROM plays
+    WHERE strftime("%m", play_date) = '02'
+  )
+
+  SELECT january.user_id
+  FROM january
+  LEFT JOIN february
+  ON january.user_id = february.user_id
+  WHERE february.user_id IS NULL
+#+end_src
+
+** Code Challenge 5
+For this challenge, you'll use the following tables:
+
+~months~
+
+| column | description              |
+| months | First date of each month |
+
+~premium_users~
+
+| column        | description                 |
+| user_id       | Unique identifier for user  |
+| plan_id       | ID for user's payment plant |
+| purchase_date | Date user purchase premium  |
+| cancel_date  | Date user cancel premium    |
+
+*** Task 1
+For each month in months, we want to know if each user in premium_users was active or cancelled. Cross join months and premium_users and select:
+
+    - user_id from premium_users
+
+    - purchase_date from premiun_users
+
+    - cancel_date from premium_users
+
+    - months from months
+
+(Be sure to select the columns in this order)
+
+Cross Join combine all rows of one table with all rows of another table.
+
+#+begin_src
+  SELECT premium_users.user_id,
+    premium_users.purchase_date,
+    premium_users.cancel_date,
+    months.months
+  FROM premium_users
+  CROSS JOIN months;
+#+end_src
+
+** Code Challenge 6
+
+*** Task 1
+Replace the SELECT statement in your CROSS JOIN with the following statement:
+
+#+begin_src
+  SELECT premium_users.user_id,
+    months.months,
+    CASE
+      WHEN (
+        premium_users.purchase_date <= months.months
+        )
+        AND
+        (
+        premium_users.cancel_date >= months.months
+        OR
+        premium_users.cancel_date IS NULL
+        )
+      THEN 'active'
+      ELSE 'not_active'
+    END AS 'status'
+#+end_src
+
+This will tell us if a particular user is ~'active'~ or ~'not_active'~ each month.
+
+** Code Challenge 7
+
+*** Task 1
+Songify has added some new songs to their catalog.
+
+Combine ~songs~ and ~bonus_songs~ using UNION and select all columns from the result.
+
+When we just want to stack one dataset on top of the other, the UNION operator allow us to do that.
+
+The two tables must have the same columns and the same data types in the same order as the first table.
+
+Since the songs table is so big, just look at a sample by LIMITing the results to 10 rows.
+
+#+begin_src
+  SELECT *
+  FROM songs
+  UNION
+  SELECT *
+  FROM bonus_songs
+  LIMIT 10;
+#+end_src
+
+** Code Challenge 8
+Besides stacking one table on top of another, we can also use UNION to quickly make a mini dataset:
+
+#+begin_src
+SELECT '2017-01-01' AS 'month'
+UNION
+SELECT '2017-02-01' AS 'month'
+#+end_src
+
+month
+2017-01-01
+2017-02-01
+
+*** Task 1
+Add a third UNION/SELECT so that the result contains 2017-03-01.
+
+#+begin_src
+  SELECT '2017-01-01' as month
+  UNION
+  SELECT '2017-02-01' as month
+  UNION
+  SELECT '2017-03-01' as month;
+#+end_src
+
+** Code Challenge 9
+
+*** Task 1
+The following query will give us the number of times that each song was played:
+
+#+begin_src
+  SELECT song_id,
+    COUNT(*) AS 'times_played'
+  FROM plays
+  GROUP BY song_id;
+#+end_src
+
+Use a WITH statement to alias this code as ~play_count~ with songs and select (in this order):
+
+    - songs table's title column
+
+    - songs table's artist column
+
+    - ~play_count~'s ~times_played~ column
+
+Remember that ~play_count.song_id~ will match ~songs.id~.
+
+#+begin_src
+  WITH play_count AS (
+    SELECT song_id,
+    COUNT(*) AS 'times_played'
+  FROM plays
+  GROUP BY song_id
+  )
+
+  SELECT songs.title,
+         songs.artist,
+         play_count.times_played
+  FROM play_count
+  JOIN plays
+  ON play_count.song_id = songs.id
+#+end_src
 
 * SQLite
 
