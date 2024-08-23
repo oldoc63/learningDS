@@ -2839,6 +2839,46 @@ Write a query that gives the first and last names of students enrolled in band b
     SELECT id
     FROM drama_students);
 #+end_src
+
+** Exists and Not Exists
+In the previous exercise we discussed the use of IN and NOT IN clauses. We also have the option of EXISTS and NOT EXISTS clauses. While EXISTS / NOT EXISTS are similar to IN / NOT IN clauses, there are some key differences. Let's explore those differences now.
+
+Recall that when a subquery is included, the inner query runs before the external query. When the inner query is included using an IN or NOT IN clause, all rows meeting the inner query's criteria are returned and then compared against the external query's criteria. However, when the inner query is included using an EXISTS or NOT EXISTS clause, we are only checking for the presence of rows meeting the specified criteria, so the inner query only returns a true or false.
+
+If we compare this functionality in terms of efficiency, EXISTS / NOT EXISTS are usually more efficient than IN / NOT IN clauses; this is because the IN / NOT IN has to return all rows meeting the specific criteria whereas the EXISTS / NOT EXISTS only needs to find the presence of one row to determine if a true or false value needs to be returned.
+
+In the previous exercise, we used an example query that pulled students who are enrolled in both statistics and history using IN - the following query pulls the same information using EXISTS instead:
+
+#+begin_src
+  SELECT *
+  FROM statistics_students
+  WHERE EXISTS (
+    SELECT *
+    FROM history_students
+    WHERE id = statistics_students.id
+  );
+#+end_src
+
+Note that with EXISTS, we must include a WHERE clause within the subquery that defines the criteria we are checking. Here, we specify that in order for the subquery to return true, it must locate a row with the same ~id~ value as the outer query.
+
+*** Task 1
+Write a query that produces the first and last names of all the students who are enrolled in both band AND drama.
+
+#+begin_src
+  SELECT first_name, last_name
+  FROM band_students
+  WHERE EXISTS (
+    SELECT *
+    FROM drama_students
+    WHERE id = band_students.id
+  );
+#+end_src
+
+** Review
+In this lesson we introduce SQL subqueries. We talked about why subqueries can be useful and how to use them with SELECT statements. We also reviewed how subqueries can be used in the context of INSERT, UPDATE, and DELETE statements and with comparison operators as well. Finally, we finished the lesson by demonstrating the use of subqueries with IN and NOT IN as well as EXISTS and NOT EXISTS clauses.
+
+There's no doubt subqueries play an essential role in querying a database. Now that you've completed this lesson, you should have a better understanding of how to implement subqueries.
+
 * SQLite
 
 ** Main Features
