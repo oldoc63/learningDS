@@ -2812,7 +2812,33 @@ Use the tables drama_students and band_students to create a subquery that finds 
     WHERE id = 20)
 #+end_src
 
+** In and Not In Clauses
+One of the more common ways to use subqueries is with the use of an IN or NOT IN clause. Recall that the subquery is always executed first followed by the external query.
 
+When an IN clause is used, results retrieved from the external query must appear within the subquery results. Similarly, when a NOT IN clause is used, results retrieved from the external query must not appear within the subquery results.
+
+For example, we could use the below query to find out which students are enrolled in statistics and history:
+
+#+begin_src
+  SELECT *
+  FROM statistics_students
+  WHERE id
+  IN (
+    SELECT id
+    FROM history_students);
+#+end_src
+
+*** Task 1
+Write a query that gives the first and last names of students enrolled in band but not in drama.
+
+#+begin_src
+  SELECT first_name, last_name
+  FROM band_students
+  WHERE id
+  NOT IN (
+    SELECT id
+    FROM drama_students);
+#+end_src
 * SQLite
 
 ** Main Features
