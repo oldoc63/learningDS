@@ -3198,6 +3198,196 @@ Consider utilizing a JOIN, AVG, and GROUP BY to accomplish this, with the subred
   GROUP BY 1
   ORDER BY 2 DESC;
 #+end_src
+
+* VR Startup Company
+Codecademy Virtual Reality (CVR), Inc. is the latest startup on the VR scene. As head of the Projec Completion team, you have been given a list of upcoming projects needing to be delivered. Your main responsability is to analyze our current talent pool to ensure each project can be completed efficiently and effectively.
+
+Each project needs a Project Manager, Team Lead, Designer, Database Administrator (DBA), and at least two Developers.
+
+** Getting familiar with the data
+
+*** Task 1
+Start by familiarizing yourself with the tables. Examine the data from the employees table.
+
+#+begin_src
+  SELECT *
+  FROM employees;
+#+end_src
+
+The columns are:
+
+    employee_id
+    first_name
+    last_name
+    location
+    position
+    personality
+    current_project
+
+*** Task 2
+Examine the data in the projects table.
+
+Do you think there's a way to join the two tables?
+
+#+begin_src
+  SELECT *
+  FROM projects;
+#+end_src
+
+The columns are:
+
+    project_id
+    project_name
+    start_date
+    end_date
+
+projects table’s project_id could be joined with employees table’s current_project.
+
+*** Task 3
+What are the names of the employees who have not chosen a project?
+
+#+begin_src
+  SELECT first_name, last_name
+  FROM employees
+  WHERE current_project IS NULL;
+#+end_src
+
+*** Task 4
+What are the names of projects that were not chosen by any employees?
+
+#+begin_src
+  SELECT project_name
+  FROM projects
+  WHERE project_id NOT IN (
+    SELECT current_project
+    FROM employees
+    WHERE current_project IS
+    NOT NULL);
+#+end_src
+
+** Analizing projects and current staff
+
+*** Task 5
+What is the name of the project chosen by the most employees?
+
+#+begin_src
+  SELECT project_name
+  FROM projects
+  INNER JOIN employees
+    ON projects.project_id =
+    employees.current_project
+  WHERE current_project IS NOT NULL
+  GROUP BY project_name
+  ORDER BY COUNT(employee_id) DESC
+  LIMIT 1;
+#+end_src
+
+*** Task 6
+Which projects were chosen by multiple employees?
+
+#+begin_src
+  SELECT project_name
+  FROM projects
+  INNER JOIN employees
+    ON projects.project_id =
+    employees.current_project
+  WHERE current_project IS NOT NULL
+  GROUP BY current_project
+  HAVING COUNT (current_project) > 1;
+#+end_src
+
+*** Task 7
+Each project needs at least 2 developers. How many available project positions are there for developers? Do we have enough developers to fill the needed positions?
+
+#+begin_src
+SELECT (COUNT(*) * 2) - (
+  SELECT COUNT(*)
+  FROM employees
+  WHERE current_project IS NOT NULL
+  AND position = 'Developer') AS 'Count'
+  FROM projects;
+#+end_src
+
+** Bonus Questions
+
+*** Task 8
+When employees are hired at CVR, they are given the Myers_Briggs personality test. We try to diminish tension among team members by creating teams based on compatible personalities.
+
+The chart shows which personality matches should be avoided. For example, an employee with the ISFP personality type should not be matched with an INFP, ENFP, or an INFJ.
+
+*** Task 9
+Which personality is the most common across our employees?
+
+#+begin_src
+  SELECT personality
+  FROM employees
+  GROUP BY personality
+  ORDER BY COUNT (personality)
+  DESC
+  LIMIT 1;
+#+end_src
+
+*** Task 10
+What are the names of projects chosen by employees with the most common personality type?
+
+#+begin_src
+SELECT project_name
+FROM projects
+INNER JOIN employees
+  ON projects.project_id =
+  employees.current_project
+WHERE personality = (
+  SELECT personality
+  FROM employees
+  GROUP BY personality
+  ORDER BY
+COUNT (personality) DESC
+  LIMIT 1);
+#+end_src
+
+*** Task 11
+Find the personality type most represented by employees with a selected project.
+
+What are names of those employees, the personality type, and the names of the project they've chosen?
+
+#+begin_src
+  SELECT last_name, first_name,
+  personality, project_name
+  FROM employees
+  INNER JOIN projects
+    ON
+  employees.current_project =
+  projects.project_id
+  WHERE personality = (
+    SELECT personality
+    FROM employees
+    WHERE current_project IS NOT NULL
+    GROUP BY personality
+    ORDER BY
+  COUNT(personality) DESC
+    LIMIT 1);
+#+end_src
+
+*** Task 12
+For each employee, provide their name, personality, the names o any projects they've chosen, and the number of incompatible coworkers.
+
+#+begin_src
+SELECT last_name, first_name, personality, project_name,
+CASE
+   WHEN personality = 'INFP'
+   THEN (SELECT COUNT(*)
+      FROM employees
+      WHERE personality IN ('ISFP', 'ESFP', 'ISTP', 'ESTP', 'ISFJ', 'ESFJ', 'ISTJ', 'ESTJ'))
+   WHEN personality = 'ISFP'
+   THEN (SELECT COUNT(*)
+      FROM employees
+      WHERE personality IN ('INFP', 'ENTP', 'INFJ'))
+   -- ... etc.
+   ELSE 0
+END AS 'IMCOMPATS'
+FROM employees
+LEFT JOIN projects on employees.current_project = projects.project_id;
+#+end_src
 * SQLite
 
 ** Main Features
