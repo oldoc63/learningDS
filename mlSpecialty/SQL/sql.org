@@ -3388,6 +3388,81 @@ END AS 'IMCOMPATS'
 FROM employees
 LEFT JOIN projects on employees.current_project = projects.project_id;
 #+end_src
+
+* Artificial Intelligence for SQL
+** Introduction
+Whether you are an experienced SQL user or just starting out with databases, artificial intelligence (AI) models can streamline your approach to SQL queries and data manipulation.
+
+In this lesson, we'll cover how to use AI systems (like ChatGPT or Gemini) to:
+
+    - brainstorm analytics ideas
+
+    - write SQL code
+
+    - debug SQL errors
+
+Along the way, we'll also explore pitfalls of working with AI like:
+
+    - hallucinations
+
+    - data privacy and security
+
+    - legal concerns
+
+    - ethical concerns
+
+By effectively using AI, we can harness the combined power of human expertise and artificial intelligence to streamline database operations and unlock new insights from your data.
+
+Promt: Write a query for returning the column named "student_name" in the table named "class".
+
+Answer: To retrieve the “student_name” column from the “class” table, you can use the following SQL query:
+
+SELECT student_name FROM class;
+
+** What is a prompt?
+AI chat systems (like ChatGPT and Gemini) are called "large language models" (LLMs) because they are trained on massive text datasets.
+
+Through this training process, LLMs "learn" patterns and relationships between words in a language.
+
+Given a starting point, like a question, an LLM can use these learned patterns to generate plausible responses.
+
+That starting point is what we call a prompt.
+
+Prompt engineering is the art of designing prompts that result in the most effective output from an LLM.
+
+For example, suppose we're trying to analyze the sales dataset of a small business. We might ask an LLM for help with a prompt like
+
+#+begin_src
+  Write a SQL query to retrieve sales data for analysis
+#+end_src
+
+We sent this prompt to ChatGPT, and got the following query:
+
+#+begin_src
+  SELECT *
+  FROM sales_data;
+#+end_src
+
+While this is a perfectly fine query, we probably could have written this one ourselves!
+
+In order to get the best results from an LLM, we will need to provide a lot more context about the structure of our dataset and our analytical goals.
+
+In the rest of this lesson, we'll explore interacting with LLMs under the following guidelines:
+
+    - use clear language
+
+    - understand and communicate the purpose of the prompt
+
+    - include important context
+
+    - provide examples to guide the AI's output toward a specific format
+
+*** Task 1
+Run these prompts and read the results. What do you notice?
+
+    - Prompt 1: Retrieve sales data from this month-
+
+    - Prompt 2: Retrieve data from the SQL table ~sales~, limiting the ~date~ to the month of March
 * SQLite
 
 ** Main Features
