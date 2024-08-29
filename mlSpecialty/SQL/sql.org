@@ -3463,6 +3463,109 @@ Run these prompts and read the results. What do you notice?
     - Prompt 1: Retrieve sales data from this month-
 
     - Prompt 2: Retrieve data from the SQL table ~sales~, limiting the ~date~ to the month of March
+
+** Structuring an AI Conversation
+It can be tempting to spend a lot of time crafting the "perfect prompt" to get the exact output we want. But it is often more efficient (and more powerful) to converse back and forth with the AI assistant throughout the analytics process, iterating and improving upon the AI output as we go.
+
+By using a conversational approach, we
+
+    - Avoid repeating the same information in multiple prompts
+
+    - Save time crafting overly detailed prompts
+
+    - Build the habit of reflecting and iterating on the AI output
+
+This last step is crucial. Remember, while AI can provide valuable insights, it's not infallible. We shouldn't use AI output unless we understand how it works!
+
+We recommend the following outline for interacting with AI:
+
+    - Explain the goal (I'm working on an analytics report about electric vehicles)
+
+    - Provide context (I have three tables with the following names)
+
+    - State your request clearly (Write a query to determine the most efficient vehicle)
+
+    - Review and refine (Can you explain this piece of the query you generated:)
+
+    - Continuing the conversation(That's great, what other types of statistics should I look into for this report?)
+
+Alright, buckle up! Let's complete a simple task while having a fun conversation with the AI chatbot.
+
+Important notes:
+
+    - throughout the lesson, we include our sample prompts within each Hint. Feel free to take a look any time you get stuck!
+    - some checkpoints only involve chatting with the AI, to receive the check mark and move to the next checkpoint, select Run under the code editor.
+
+*** Task 1
+We’ll explore techniques for writing individual prompts in later exercises, but for this exercise let’s play around with having a basic conversation with the AI! Don’t worry about getting everything perfect yet, but you may be surprised at how well the AI does even with basic prompts.
+
+Begin by examining the table models. Run the query below to return all the columns present inside the models table:
+
+SELECT * FROM models;
+
+Note that best_mpge contains the mile-per-gallon equivalent under optimal conditions, a number that allows us to compare the efficiency of electric vehicles to gasoline counterparts, and so forth.
+
+*** Task 2
+Write an overview of the models table in the AI chat, providing information on all the column names to the AI.
+
+Note that while this may seem tedious, it will save a lot of time and trouble down the line.
+
+    - First, explain that we have a SQL database with a models table
+
+    - Provide de columns names
+
+    - Explain that we'll be asking for SQL prompts based on this table
+
+A sample prompt for inspiration
+
+#+begin_src
+  My SQL database has a table called models.
+  It has the following columns:
+
+  model_id | model | year | manufacturer_id |
+  fuel_id | best_mpge
+
+  I will ask some questions based on this table,
+  and you will have to provide SQL queries for them.
+#+end_src
+
+*** Task 3
+We'd like to know which manufacturer has produced the most efficient vehicles on average. Write a prompt asking the AI to produce a SQL query returning this information.
+
+Note that in this table, we'll only be able to identify the ~manufacturer_id~, but we'll work on joining multiple tables later in the lesson.
+
+The efficiency of the vehicle is in ~best_mpge~, since MPGe is the miles-per-gallon equivalent for non-gasoline vehicles.
+
+#+begin_src
+  Write a query to identify the manufacturer that the largest average "best_mpge"
+#+end_src
+
+The code received:
+
+#+begin_src
+  SELECT manufacturer_id, AVG(best_mpge) AS avg_best_mpge
+  FROM models
+  GROUP BY manufacturer_id
+  ORDER BY avg_best_mpge DESC
+  LIMIT 1;
+#+end_src
+
+*** Task 4
+Now, let's find the top ten most efficient models. Write a prompt, and run the code the AI returns!
+
+#+begin_src
+  Now, write a SQL query to return the top 10 most efficient models
+#+end_src
+
+The code we received:
+
+#+begin_src
+  SELECT *
+  FROM models
+  ORDER BY best_mpge DESC
+  LIMIT 10;
+#+end_src
+
 * SQLite
 
 ** Main Features
