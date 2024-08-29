@@ -3566,6 +3566,113 @@ The code we received:
   LIMIT 10;
 #+end_src
 
+** Providing context
+Alright, now that we have a bit of practice conversing with AI, let's dig into how to craft the best individual prompts.
+
+AI systems require *context* to produce relevant results.
+
+For example, we sent the prompt ~write a select query~ to both ChatGPT and Gemini. Here are the responses that we got:
+
+    - ChatGPT: Of course! Could you please specify the database schema and the table you'd like to query, as well as any specific conditions or criteria you want to include in the query? This information will help me provide you with an accurate select query.
+
+    - Gemini: SELECT column1, column2, FROM ~table_name~;
+
+These aren't totally unhelpful responses! ChatGPT asked for more details, and Gemini provided a template for a query that we could fill out with our specific database information.
+
+But to get the most helpful responses, we want to provide the kind of context ChatGPT asked for. In this exercise, we'll stick to working with a single table.
+
+For an ideal prompt, we'll want to include:
+
+    - The name and topic of the table
+
+    - The relevant column names
+
+    - The specific output we want
+
+For example, suppose we're analyzing the alternate-fuel vehicle industry. Our database has a models table with data on each alternate fuel model (such as a Tesla).
+
+The ~models~ table includes a column labeled ~best_mpge~, which records the mile-per-gallon equivalent for each vehicle model under optimal conditions. This is a value that lets us compare traditional gasoline vehicles to newer vehicles like electric cars. We've been asked to determine the 5 most fuel-efficient vehicles.
+
+Here's a sample prompt:
+
+#+begin_src
+  The database table "models" has data regarding
+  alternative fuel vehicles. I need a SQL query
+  to extract the top 5 models by column "best_mpge".
+#+end_src
+
+Notice how we've communicated
+
+    - The name of the table
+
+    - The name of the relevant column
+
+    - The output we want
+
+The output we received from ChatGPT is exactly what we wanted:
+
+#+begin_src
+  SELECT * FROM models
+  ORDER BY best_mpge DESC
+  LIMIT 5;
+#+end_src
+
+*** Task 1
+Run the SQL query given below to get familiar with all the columns present in the models table:
+
+#+begin_src
+  SELECT * FROM models LIMIT 5;
+#+end_src
+
+*** Task 2
+Let's explore the ~models~ table.
+
+Our goal is to identify the 10 oldest models in our dataset. Write an AI prompt to produce a query. Once you receive a query, run it in the code editor.
+
+Challenge mode: phrase your prompt carefully so that the query you get back needs as little editing as possible!
+
+What was the oldest model?
+
+When creating the prompt, make sure the context is clear and you correctly mention the table and column names.
+
+#+begin_src
+  Prompt 1: the database table models has data
+  regarding alternative fuel vehicles. I'm going
+  to ask for specific queries. When I do, I'd
+  like you to add sorting statements to make the
+  data easier to analyze. Got it?
+
+  Prompt 2: Write a SQL query to return the ten
+  oldest models based on the column "year"
+#+end_src
+
+#+begin_src
+  SELECT *
+  FROM models
+  ORDER BY year
+  LIMIT 10;
+#+end_src
+
+*** Task 3
+Has the average fuel efficiency improved over the years? Ask the AI for a query that calculates the average miles-per-gallon equivalent for each year in the models table.
+
+When creating the prompt make sure the context is clear and you correctly mention the table and column names.
+
+We'll use the same conversation as before, so we don't need to repeat info.
+
+Prompt 3 in the conversation:
+
+#+begin_src
+  Write a SQL query that returns the average 'best_mpge' by 'year'.
+#+end_src
+
+#+begin_src
+  SELECT year,
+  AVG(best_mpge) AS
+  avg_best_mpge
+  FROM models
+  GROUP BY year;
+#+end_src
 * SQLite
 
 ** Main Features
