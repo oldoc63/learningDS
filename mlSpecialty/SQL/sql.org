@@ -3775,6 +3775,95 @@ ORDER BY num_hybrid_vehicles DESC
 LIMIT 1;
 #+end_src
 
+** Specify Output Structure
+Sometimes it can feel like writing a prompt is basically just writing SQL pseudocode.
+
+For example, here's a prompt to count the number of models for each manufacturer and fuel type:
+
+#+begin_src
+  Write a query that joins the `manufacturers`
+  and `models` tables to the `fuels` table using
+  the `manufacturer_id` and `fuel_id` as the join
+  columns. Then, group by `manufacturer` and `fuel`
+  and count the number of models.
+#+end_src
+
+At this point, we're practically writing the SQL, just in slightly more natural language. Another option is to provide the structure of the query output, an let the AI fill in the details of what we want.
+
+For example, here's a prompt with the same goal, but without specifying as many details:
+
+#+begin_src
+I have three database tables: models, manufacturers, and fuels. they join using the columns fuel_id and manufacturer_id
+I want a SQL query that produces a table structured as follows:
+| manufacturers.manufacturer | fuels.fuel | number_of_models |
+#+end_src
+
+A few important points:
+
+   1. We described the three tables and how they join
+
+   2. We used table.column notation to communicate which colum belongs to which table
+
+   3. We used a descriptive name for the third column (number_of_models) in the hope that the AI would calculate this column appropriately
+
+Here's the output we got from this prompt:
+
+#+begin_src
+SELECT m.manufacturer AS manufacturer,
+       f.fuel AS fuel,
+       COUNT(*) AS number_of_models
+FROM manufacturers m
+JOIN models mo ON m.manufacturer_id = mo.manufacturer_id
+JOIN fuels f ON mo.fuel_id = f.fuel_id
+GROUP BY m.manufacturer, f.fuel;
+#+end_src
+
+Pretty good, right? Recall that if we’re getting confused about which table m is, we can always iterate and ask “please rewrite without table aliases.”
+
+*** Task 1
+Suppose we have been asked to analyze how efficient (in terms of ~best_mpge~) each manufacturer is at using each type of fuel.
+
+Design a target table structure to answer this question, and prompt the AI to produce SQL.
+
+Try running the SQL - did your prompt communicate all the necessary information?
+
+One potential table structure has the columns manufacturer, fuel, and average_best_mpge.
+
+#+begin_src
+  Write a SQL query that transforms the manufacturer
+  and fuel tables into the table below:
+
+  manufacturers.manufacturer |
+  fuels.fuel |
+  average(model_best_mpge)
+
+  using fuel_id as the join column.
+#+end_src
+
+#+begin_src
+SELECT m.manufacturer, f.fuel, AVG(mod.best_mpge) AS average_best_mpge
+FROM manufacturers m
+JOIN models mod ON m.manufacturer_id = mod.manufacturer_id
+JOIN fuels f ON mod.fuel_id = f.fuel_id
+GROUP BY m.manufacturer, f.fuel;
+#+end_src
+
+*** Task 2
+Imagine we've been asked to calculate which manufacturers make the most electric vehicles, the most hybrid vehicles, and so on.
+
+Design a table to capture this information using the data from the models, manufacturers, and fuels tables. Design a prompt communicating this information to the AI, and run the returned query.
+
+*Prompt:* Using the same tables, write a SQL query to produce a table with the following structure:
+
+manufacturer | fuel | count_of_models
+
+#+begin_src
+SELECT m.manufacturer, f.fuel, COUNT(*) AS count_of_models
+FROM manufacturers m
+JOIN models mod ON m.manufacturer_id = mod.manufacturer_id
+JOIN fuels f ON mod.fuel_id = f.fuel_id
+GROUP BY m.manufacturer, f.fuel;
+#+end_src
 
 * SQLite
 
