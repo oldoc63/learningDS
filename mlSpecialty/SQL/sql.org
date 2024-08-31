@@ -3998,6 +3998,64 @@ ORDER BY
 Overall, this SQL query retrieves and counts the number of vehicle models by manufacturer, fuel type, and model year, providing a breakdown of the data for analysis and presentation.
 #+end_src
 
+
+** AI Risks
+Using GPT for analytics can pose the risk of serious pitfalls such as:
+
+    - Hallucinations
+
+    - Confirmation bias
+
+    - Plagiarism
+
+    - Data privacy and security
+
+*** Hallucinations
+AI models use probability to respond to prompts. They don't actually know or urderstand what they are saying, and so it is common for them to "hallucinate" or generate false information. For example, GPT could make up a SQL command that doesn't exist or confidently suggest a analysis strategy that is invalid for the task at hand.
+
+*** Confirmation bias
+As human beings, we are psychologically prone to believing new things that confirm our existing beliefs. If we run code provided by an AI and it produces a result that "makes sense", we are less likely to catch errors in the AI code. We need to be very stringent with ourselves when using AI generated code, double-checking everything the AI has done for validity. Note that we can't use AI to do these checks, as that is using the same flawed system to check itself.
+
+*** Plagiarism
+AI systems may unintentionally produce text or code that closely resembles existing work from published papers or articles without adding proper citations. This is especially likely for extremely detailed prompts.
+
+*** Data Privacy and Security
+The data we feed into an AI model may be used to train future iterations of the model, or stored in some other way, which can result in data leaks where our information becomes part of the publicly available large language model. This poses privacy and security risks if the data is sensitive or confidential.
+
+Mitigating these common pitfalls for analytics requires careful practice and strategic thinking. Here are some tips on how to avoid them:
+
+    - Use human experts to engineer prompts and audit responses for potential errors and biases
+
+    - Make a backup of important data before running AI-generated update queries
+
+    - Ensure that private and sensitive information is anonymized or excluded from the data used by the model
+
+    - Make sure to follow any relevant corporate rules or policies for sharing code and data with third parties
+
+**** Task 1
+    We ran the following prompt
+
+    write a sqlite query to change the data type of a column
+
+    and got the following response (note that if you run this query, you might get a totally different response, since GPT is probabilistic):
+
+        To change the data type of a column in SQLite, you can use the ALTER TABLE statement along with the ALTER COLUMN clause. Here is an example query to change the data type of a column named column_name in a table named table_name to new_data_type:
+
+        ALTER TABLE table_name
+        MODIFY COLUMN column_name new_data_type;
+
+        Make sure to replace table_name, column_name, and new_data_type with your actual table name, column name, and the new data type you want to change to.
+
+    Running this code won’t actually work: SQLite doesn’t have the ability update a column’s datatype using ALTER TABLE. In fact, SQLite’s documentation says
+
+        The only schema altering commands directly supported by SQLite are the “rename table”, “rename column”, “add column”, “drop column” commands
+
+    Which AI pitfall is being exposed here?
+    Our answer
+    This is an example of a hallucination! GPT is using information in its training dataset to produce a query that, while it exists in other database systems, does not exist in SQLite.
+
+    Use the prompt component in this exercise to try to refine our prompt and get a more accurate response from GPT!
+
 * SQLite
 
 ** Main Features
