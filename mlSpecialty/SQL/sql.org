@@ -3865,6 +3865,139 @@ JOIN fuels f ON mod.fuel_id = f.fuel_id
 GROUP BY m.manufacturer, f.fuel;
 #+end_src
 
+** Other uses of AI in SQL
+Up until now, our journey has revolved around creating prompts for SQL queries, exploring problem solving tasks. AI can also be used to help with
+
+    - brainstorming analytics ideas
+
+    - explaining how an existing SQL query works in plain language
+
+    - debugging
+
+*** Brainstorming
+We recommend telling the AI as much as about the dataset as possible, so that the ideas it generates are relevant. For example, instead of
+
+#+begin_src
+  Brainstorm ideas for analyzing the alternate
+  fuel vehicle industry
+#+end_src
+
+It would be more effective to say something like:
+
+#+begin_src
+  I have a database on alternate fuel vehicles
+  including information on:
+  year, make and model, what type of fuel it uses,
+  miles per gallon equivalent. Brainstorm 3-5
+  actionable ideas for analyzing this data.
+#+end_src
+
+*** Explaining Queries
+We can also use the AI to break down difficult queries into generic language. The prompt can look like:
+
+#+begin_src
+  Here's a SQL query, break it down and help me understand how this SQL query works?
+
+"
+SELECT
+    m.manufacturer AS Manufacturer,
+    f.fuel AS Fuel_Type,
+    AVG(md.best_mpge) AS Average_MPGe,
+    MAX(md.best_mpge) AS Highest_MPGe,
+    MIN(md.best_mpge) AS Lowest_MPGe
+FROM
+    models md
+JOIN
+    manufacturers m ON md.manufacturer_id = m.manufacturer_id
+JOIN
+    fuels f ON md.fuel_id = f.fuel_id
+GROUP BY
+    m.manufacturer, f.fuel;
+"
+#+end_src
+
+**** Task 1
+Run our brainstorming prompt, and see what the AI returns. Are all the ideas actionable? Are there any other pieces of information you would add to improve on the brainstorming output?
+
+Pick one of the ideas, and try to generate a query to answer it. Run the query in the code editor.
+
+**** Task 2
+Run the following query. What do you think it is designed to do?
+
+Ask the AI to break it down – was the AI answer helpful?
+
+#+begin_src
+SELECT
+    manufacturers.manufacturer,
+    fuels.fuel,
+    models.year,
+    COUNT(*) AS model_count
+FROM
+    models
+JOIN
+    manufacturers ON models.manufacturer_id = manufacturers.manufacturer_id
+JOIN
+    fuels ON models.fuel_id = fuels.fuel_id
+GROUP BY
+    manufacturers.manufacturer, fuels.fuel, models.year
+ORDER BY
+    manufacturers.manufacturer, fuels.fuel, models.year;
+#+end_src
+
+#+begin_src
+  Explain the logic behind this SQL query and break it down step-by-step. The query is:
+
+SELECT
+    manufacturers.manufacturer,
+    fuels.fuel,
+    models.year,
+    COUNT(*) AS model_count
+FROM
+    models
+JOIN
+    manufacturers ON models.manufacturer_id = manufacturers.manufacturer_id
+JOIN
+    fuels ON models.fuel_id = fuels.fuel_id
+GROUP BY
+    manufacturers.manufacturer, fuels.fuel, models.year
+ORDER BY
+    manufacturers.manufacturer, fuels.fuel, models.year;
+#+end_src
+
+#+begin_src
+  Here is a breakdown of the logic behind the SQL query step-by-step:
+
+1. **SELECT statement**:
+   - The `SELECT` statement lists the columns that will be displayed in the query results.
+   - It selects `manufacturers.manufacturer`, `fuels.fuel`, `models.year`, and `COUNT(*) AS model_count`.
+   - This means the query will return the manufacturer name, fuel type, vehicle model year, and the count of models that match the criteria in the query.
+
+2. **FROM clause**:
+   - The `FROM` clause specifies the tables involved in the query.
+   - The primary table is `models`, which contains information about vehicle models.
+   - Two additional tables are joined with `models`: `manufacturers` and `fuels`.
+
+3. **JOIN statements**:
+   - Two `JOIN` statements connect the `models` table to the `manufacturers` table and the `fuels` table.
+   - The first `JOIN` connects `models` to `manufacturers` based on the `manufacturer_id` columns in each table.
+   - The second `JOIN` links `models` to `fuels` based on the `fuel_id` columns in each table.
+   - These joins allow the query to retrieve information about manufacturers and fuel types for each vehicle model.
+
+4. **GROUP BY clause**:
+   - The `GROUP BY` clause groups the results by `manufacturers.manufacturer`, `fuels.fuel`, and `models.year`.
+   - This means that the query will aggregate the results for each unique combination of manufacturer, fuel type, and model year.
+
+5. **COUNT(*) function**:
+   - The `COUNT(*)` function is used in the `SELECT` statement to count the number of rows that match the specified criteria.
+   - `model_count` is an alias given to this count, which will be displayed in the results column.
+
+6. **ORDER BY clause**:
+   - The `ORDER BY` clause sorts the results in ascending order by `manufacturers.manufacturer`, `fuels.fuel`, and `models.year`.
+   - The query results will be organized alphabetically by manufacturer, then by fuel type, and finally by model year.
+
+Overall, this SQL query retrieves and counts the number of vehicle models by manufacturer, fuel type, and model year, providing a breakdown of the data for analysis and presentation.
+#+end_src
+
 * SQLite
 
 ** Main Features
