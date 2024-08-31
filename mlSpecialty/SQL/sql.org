@@ -3673,6 +3673,109 @@ Prompt 3 in the conversation:
   FROM models
   GROUP BY year;
 #+end_src
+
+** Multiple Tables
+Often, SQL databases have multiple related tables. When working wint AI, you'll need to communicate:
+
+    - What tables are in the database
+
+    - The columns that connect the tables
+
+For example, suppose we want calculate the average MPG-equivalent for each manufacturer.
+
+We might start the AI conversation with
+
+#+begin_src
+  I'm analyzing a database. I'll ask you for SQL
+  queries. Got it?
+#+end_src
+
+Then, we could follow up with our specific ask:
+
+#+begin_src
+  Here are two tables with relevant columns:
+  `models` has columns `manufacturer_id`
+  and `best_mpge`
+  `manufacturers` has columns
+  `manufacturer_id` and `manufacturer`
+
+  create a SQL query that calculates the average `best_mpge` by `manufacturer`
+#+end_src
+
+The resulting query we got:
+
+#+begin_src
+SELECT manufacturers.manufacturer, AVG(models.best_mpge) AS average_best_mpge
+FROM models
+JOIN manufacturers ON models.manufacturer_id = manufacturers.manufacturer_id
+GROUP BY manufacturers.manufacturer;
+#+end_src
+
+A couple important points:
+
+    1. In this case, we only provided the relevant columns to save time. If we're planning on an extended analysis with multiple queries, we might lead with the full table schemas (lists of columns names).
+
+    2. The LLM was able to pick up on manufacturer_id as the join column because of the way it was named! This saved us from having to specify. However, we may run into cases where we'll have to be more explicit.
+
+    3. The LLM assumed we wanted an INNER join. It is always worth noting the assumptions the LLM makes, because there may be cases where we want a different kind of join.
+
+    4. Note that LLMs will often alias tables (giving them shorter names). This is fine, but if we find it hard to track which table is names what, we can always iterate with a prompt like "please rewrite without table aliases."
+
+*** Task 1
+The fuels table contains data on which type of fuel each vehicle uses.
+
+Run the query
+
+#+begin_src
+  SELECT * FROM fuels;
+#+end_src
+
+to learn how this table is structured, and what kinds of fuels are included in the database.
+
+*** Task 2
+We'd like to identify the oldest electric fuel vehicles.
+
+Have a conversation with the AI, with the goal of producing a query that returns the 10 oldest electric fuel models.
+
+Make sure to include the relevant column names, including the column that connects the two tables.
+
+Tip: spelling and capitalization matter for column names and for what is contained in the column. Querying for "Electric" will be different than "electric".
+
+*Prompt:* Here are two tables with relevant columns:
+
+models contains the fuel_id, year, and models fuels contains the fuel_id and the specific fuel.
+
+Write a SQL query returning the 10 oldest vehicles with electric fuel
+
+#+begin_src
+  SELECT models.model, models.year, fuels.fuel
+  FROM models
+  JOIN fuels ON
+  models.fuel_id = fuels.fuel_id
+  WHERE fuels.fuel = 'electric'
+  ORDER BY models.year
+  LIMIT 10;
+#+end_src
+
+*** Task 3
+Now, try to use the AI to identify the manufacturer with the most hybrid electric models.
+
+We'll use the same chat as before, so we don't need to remind the AI of the table structure.
+
+*Prompt:* This time join models, manufacturers, and fuels table to find the manufacturer with the most amount of hybrid vehicles where fuel = hybrid electric.
+
+#+begin_src
+SELECT manufacturers.manufacturer, COUNT(models.model) AS num_hybrid_vehicles
+FROM models
+JOIN manufacturers ON models.manufacturer_id = manufacturers.manufacturer_id
+JOIN fuels ON models.fuel_id = fuels.fuel_id
+WHERE fuels.fuel = 'hybrid electric'
+GROUP BY manufacturers.manufacturer
+ORDER BY num_hybrid_vehicles DESC
+LIMIT 1;
+#+end_src
+
+
 * SQLite
 
 ** Main Features
