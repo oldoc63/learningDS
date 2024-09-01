@@ -4056,6 +4056,236 @@ Mitigating these common pitfalls for analytics requires careful practice and str
 
     Use the prompt component in this exercise to try to refine our prompt and get a more accurate response from GPT!
 
+** Review
+Great work! In this lesson, you learned how to use an AI model as your personal SQL assistant.
+
+Specifically, you learned how to
+
+    - use AI as an assistant for writing SQL code
+    - anticipate and mitigate pitfalls from working with LLMs
+    - use AI as an assistant for developing analytics ideas and strategies
+
+Along the way, you used AI to
+
+    - brainstorm analytics ideas
+    - explain code and more!
+
+Lastly, you learned about potential analytical pitfalls of using GPT like hallucinations, confirmation bias, and data privacy.
+
+* Analyze AI Systems with SQL
+For this project, you are an analyst working in the AI industry. Using a database based on the Epochai dataset, you will be investigating the rise of Generative AI systems, the major players in the space, and the systems themselves.
+
+** Setup
+
+*** Task 1
+Run the command .tables to become familiar with the data contained in the database.
+
+    - In the place of ~table_name~ insert the table names and run the query to see the columns present in the tables.
+
+    - Tables and what they are meant to showcase:
+
+          - *problems*: problem_id, domain, task
+            Contains types of AI tasks like "text generation" associated to domains like "Language"
+
+          - *orgs*: org_id, org_name, org_type
+            Contains organizations working in AI and whether they are academic or industry
+
+          - *systems*: publication_date, system, access, parameters, org_id, problem_id
+            Contains data on the actual AI systems (like GPT4)
+
+*** Task 2
+Write a prompt explaining the overall goal of the project.
+
+Use the objective that was mentioned in the description of the project.
+
+#+begin_src
+  I am an analyst in an AI firm. I aim to
+  investigate the rise of generative AI
+  using the database that I have been given
+  by the organization. I'll be needing some
+  help generating SQL queries and brainstorming
+  analytics ideas. Got it?
+#+end_src
+
+*** Task 3
+Write a prompt explaining the overall database structure to the AI, including any details that apply broadly.
+
+    - explain what each table is, and its columns
+
+    - include any helpful contex if there are columns whose names don't describe what they contain
+
+#+begin_src
+  I'm working with a database that contains three
+  tables: problems, orgs, and systems.
+
+  These tables are linked using the table_id column
+  notation.
+
+  Table descriptions:
+
+    1. problems: problem_id | domain | task
+    Types of AI task like "text generation" associated with domains like "Language"
+
+    2. orgs: org_id | org_name | org_type
+    Organizations working in AI whether they are academic or industry
+
+    3. systems: publication_date | system | access |
+    parameters | org_id | problem_id
+    The actual AI systems (like GPT4)
+#+end_src
+
+#+begin_src
+  Great! Let's start by brainstorming some possible analytics ideas that you could explore using the given database tables:
+
+1. **Identifying Popular AI Tasks**: You can analyze the `problems` table to determine which AI tasks are most commonly associated with specific domains. This could help in understanding the prevalence of certain tasks within different domains.
+
+2. **Organizational Analysis**: Explore the `orgs` table to categorize organizations based on their type (academic or industry). You could analyze the distribution of organizations in the database by type and identify patterns or trends.
+
+3. **System Performance Comparison**: Utilize the `systems` table to compare the performance of different AI systems based on parameters such as access, publication date, and organizational affiliations. This could provide insights into the evolution of AI systems over time.
+
+4. **Collaboration Patterns**: Investigate the relationships between organizations and AI tasks/systems by analyzing the connections between the `orgs`, `problems`, and `systems` tables. This could reveal patterns of collaboration in the AI field.
+
+Do any of these ideas interest you? Let me know which direction you would like to take, and we can move on to generating relevant SQL queries to support your analysis.
+#+end_src
+
+*** Task 4
+Ask the AI to brainstorm some analytical ideas that can be answered using the database for you to work on. Note that it may have already provided some ideas in the response to Task 3!
+
+Feel free to pursue some of the ideas you get! But in the next couple task groups, we'll guide you through some of the ideas we got.
+
+#+begin_src
+  Can you suggest to me some analytical ideas that
+  can be answered using the above database?
+#+end_src
+
+** Finding the influential players
+
+*** Task 5
+When we asked for ideas while developing this project, one of the ideas suggested to us was to identify the most influential players in the AI space. One way to do this would be to count the number of AI Systems created by each organization. Create a prompt asking the AI to produce SQL to answer this question.
+
+#+begin_src
+  I want to find the most influential players in the
+  AI field. We have to find the organizations that
+  have developed the most amount of AI systems. I
+  want the outcome table to look like:
+  organization_name | number_of_ai_systems_developed
+#+end_src
+
+#+begin_src
+  SELECT o.org_name AS organization_name, COUNT(s.system) AS number_of_ai_systems_developed
+  FROM orgs o
+  JOIN systems s ON o.org_id = s.org_id
+  GROUP BY o.org_name
+  ORDER BY number_of_ai_systems_developed DESC;
+#+end_src
+
+*** Task 6
+Time to iterate! Are there any refinements to the query you'd like to explore? Here are some ideas we can implement in the current query to make it more precise:
+
+    - Filtering by AI system: specify the type of AI, such as searching solely for "Image generation" AI.
+
+    - Sorting based on organization type:
+      introduce a new column indicating the type of organization.
+
+Write a prompt that asks the AI to iterate on the last query in one of these ways.
+
+#+begin_src
+  Modify the last prompt to make it return to
+  the organizations that are leading in the
+  field of Image generation and create a new
+  column that shows org_type.
+#+end_src
+
+#+begin_src
+SELECT o.org_name AS organization_name, COUNT(s.system) AS number_of_ai_systems_developed, o.org_type
+FROM orgs o
+JOIN systems s ON o.org_id = s.org_id
+JOIN problems p ON s.problem_id = p.problem_id
+WHERE p.task = 'Image generation'
+GROUP BY o.org_name, o.org_type
+ORDER BY number_of_ai_systems_developed DESC;
+#+end_src
+
+** Analyzing the development over time
+
+*** Task 7
+Let's investigate the growth of AI development over time.
+
+Write a prompt asking the AI for a SQL query that
+
+    - counts the number of AI systems in each year
+
+    - reports the maximum number of parameters
+
+If the code you receive includes the YEAR keyword, as it typically does, no output will appear when you run the code. No worries, we'll debug in the next task!
+
+Give information about the table structure you want to see in the output that will help AI build the context. (Columns can be publication_year and number_of_system)
+
+#+begin_src
+  Using the database structure above, help me
+  analyze the trends in AI development over time.
+  The output table should look like this:
+  pulbication_year | number_of_ai_systems |
+  largest_parameter
+#+end_src
+
+#+begin_src
+SELECT o.org_name AS organization_name, COUNT(s.system) AS number_of_ai_systems_developed, o.org_type
+FROM orgs o
+JOIN systems s ON o.org_id = s.org_id
+JOIN problems p ON s.problem_id = p.problem_id
+WHERE p.task = 'Image generation'
+GROUP BY o.org_name, o.org_type
+ORDER BY number_of_ai_systems_developed DESC;
+#+end_src
+
+*** Task 8
+The query we received for the last task used the YEAR function to extract the year form the publication date.
+
+If we run this query, we'll get no output.
+
+Write a prompt explaining to the AI that we're using SQLite and not receiving output with YEAR. Ask for a revised query.
+
+Give the error message in the prompt which will help the AI to debug the query better.
+
+Explain that you are using the SQLite database which doesn't support the YEAR function.
+
+#+begin_src
+  I'm using SQLite and not getting any output from
+  that query, could you refine?
+#+end_src
+
+#+begin_src
+SELECT strftime('%Y', s.publication_date) AS publication_year,
+       COUNT(s.system) AS number_of_ai_systems,
+       MAX(s.parameters) AS largest_parameter
+FROM systems s
+GROUP BY publication_year
+ORDER BY publication_year;
+#+end_src
+
+*** Task 9
+Lastly, let's find the top 5 AI problems organizations focus on. The resulting table should display the AI problems and the number of organizations working on each problem.
+
+Note that there may be some null values! This is due to missing data in the underlying dataset.
+
+Try giving the AI the output table structure along with a limit of 5.
+
+#+begin_src
+  Find the top 5 AI problems that most
+  organizations are working on. The table
+  should look like:
+  ai_problems | number_of_organization
+#+end_src
+
+#+begin_src
+SELECT p.task AS ai_problems, COUNT(DISTINCT s.org_id) AS number_of_organizations
+FROM problems p
+JOIN systems s ON p.problem_id = s.problem_id
+GROUP BY ai_problems
+ORDER BY number_of_organizations DESC
+LIMIT 5;
+#+end_src
 * SQLite
 
 ** Main Features
