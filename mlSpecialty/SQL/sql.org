@@ -4563,6 +4563,325 @@ We learned how to compare funnels for A/B tests.
 
 Now let’s see how we can create a funnel from multiple tables using LEFT JOIN!
 
+*** Build a Funnel from Multiple Tables 1
+Scenario: Mattresses and More sells bedding essentials from their e-commerce store. Their purchase funnel is:
+
+    1. The user browses products and adds them to their cart
+
+    2. The user proceeds to the checkout page
+
+    3. The user enters credit card information and makes a purchase
+
+Three steps! Simple and easy.
+
+As a sales analyst, you want to examine data from the shopping days before Christmas. As Christmas approaches, you suspect that customers become more likely to purchase items in their cart (i.e., they move from window shopping to buying presents).
+
+The data for Mattresses and More is spread across several tables:
+
+    - ~browse~ - each row in this table represents an item that a user has added to his shopping cart
+
+    - ~checkout~ - each row in this table represents an item in a cart that has been checked out
+
+    - ~purchase~ - each row in this table represents an item that has been purchased
+
+**** Task 1
+Let's examine each table. Note that each user has multiple rows representing the different items that she has placed in her cart.
+
+#+begin_src
+  SELECT *
+  FROM browse
+  LIMIT 5;
+
+  SELECT *
+  FROM checkout
+  LIMIT 5;
+
+  SELECT *
+  FROM purchase
+  LIMIT 5;
+#+end_src
+
+The browse table has the following columns:
+
+    user_id
+    browse_date
+    item_id
+
+The checkout table has the following columns:
+
+    user_id
+    checkout_date
+    item_id
+
+The purchase table has the following columns:
+
+    user_id
+    purchase_date
+    item_id
+
+*** Build a Funnel from Multiple Tables 2
+First, we want to combine the information from the three tables (browse, checkout, purchase) into one table with the followin schema:
+
+| browser_date | user_id | is_checkout | is_purchase |
+
+Each row will represent a single user:
+
+    - If the user has any entries in checkout, the ~is_checkout~ will be True.
+
+    - If the user has any entries in purchase, then ~is_purchase~ will be True.
+
+If we use an INNER JOIN to create this table, we'll lose information from any customer who does not have a row in the checkout or purchase table.
+
+Therefore, we'll need to use a series of LEFT JOIN commands.
+
+**** Task 1
+Start by selecting all rows (*) from the LEFT JOIN of:
+
+    - browse (aliased as b)
+
+    - checkout (aliased as c)
+
+    - purchase (aliased as p)
+
+Be sure to use this order to make sure that we get all of the rows.
+
+LIMIT your results to the first 50 so that it loads quickly.
+
+#+begin_src
+  SELECT *
+  FROM browse AS 'b'
+  LEFT JOIN checkout AS 'c'
+    ON c.user_id = b.user_id
+  LEFT JOIN purchase AS 'p'
+    ON p.user_id = c.user_id
+  LIMIT 50;
+#+end_src
+
+Woah, we just joined three different tables!
+
+This is the first time we joined three tables using multiple LEFT JOIN.
+
+The result will have a bunch of columns:
+
+
+    user_id
+    browse_date
+    item_id
+    user_id
+    checkout_date
+    item_id
+    user_id
+    purchase_date
+    item_id
+
+**** Task 2
+But we don't want all of these columns in the result!
+
+Instead of selecting all columns using *, let's select these four:
+
+    - DISTINCT b.browse_date
+
+    - b.user_id
+
+    - c.user_id IS NOT NULL AS 'is_checkout'
+
+    - p.user_id IS NOT NULL AS 'is_purchase'
+
+Edit your query so that you select these columns.
+
+For review, IS NOT NULL will return:
+
+    - 1 (True) if a non- empty value is found
+
+    - 0 (False) if a NULL value is found
+
+Why do we use this code?
+
+#+begin_src
+  c.user_id IS NOT NULL AS 'is_checkout'
+#+end_src
+
+If a user_id is not in the checkout table (aliased as c), then b.user_id will be filled in, but c.user_id will be NULL because of our LEFT JOIN.
+
+#+begin_src
+  SELECT DISTINCT
+  b.browse_date,
+  b.user_id,
+  c.user_id IS NOT NULL AS 'is_checkout',
+  p.user_id IS NOT NULL AS 'is_purchase'
+  FROM browse AS 'b'
+  LEFT JOIN checkout 'c'
+    ON c.user_id = b.user_id
+  LEFT JOIN purchase 'p'
+    ON p.user_id = c.user_id
+  LIMIT 50;
+#+end_src
+
+*** Build a Funnel from Multiple Tables 3
+We've created a new table that combined all of our data.
+
+Here, 1 represents True and 0 represents False.
+
+Once we have the data in this format, we can analyze it in several ways.
+
+Let's put the whole thing in a WITH statement so that we can continue on building our query.
+
+We will give the temporary table the name funnels:
+
+#+begin_src
+  WITH funnels AS (
+  SELECT DISTINCT b.browse_date,
+     b.user_id,
+     c.user_id IS NOT NULL AS 'is_checkout',
+     p.user_id IS NOT NULL AS 'is_purchase'
+  FROM browse AS 'b'
+  LEFT JOIN checkout AS 'c'
+    ON c.user_id = b.user_id
+  LEFT JOIN purchase AS 'p'
+    ON p.user_id = c.user_id)
+SELECT ______
+_____________
+_____________;
+
+#+end_src
+
+Notice how the whole previous query is put inside the parentheses ( ).
+
+Let's query from this funnels table and calculate overall conversion rates.
+
+**** Task 1
+First, add a column that counts the total number of rows in funnels.
+
+Alias this column as 'num_browse'.
+
+This is the number of users in the "browse" step of the funnel.
+
+**** Task 2
+Second, add another column that sums the is_checkout in funnels.
+
+Alias this column as 'num_checkout'.
+
+This is the number of users in the "checkout" step of the funnel.
+
+**** Task 3
+Third, add another column that sums the is_purchase column in funnels.
+
+Alias this column as ‘num_purchase’.
+
+This is the number of users in the “purchase” step of the funnel.
+
+**** Task 4
+Finally, let’s do add some more calculations to make the results more in depth.
+
+Let’s add these two columns:
+
+    Percentage of users from browse to checkout
+    Percentage of users from checkout to purchase
+
+You can also give these columns aliases for more readability.
+
+We are dividing the sum of is_checkout by the count of user_id. Then, we are multiplying this answer by 1.0.
+
+What does multiplying by 1.0 do to a number?
+
+By default, mathematical operations between integers will round down to the closest integer. In order to avoid a rounded result, it’s a common practice to multiply the result by 1.0. Doing this will result in a decimal number rather than an integer.
+
+Here, we are getting the percentage of users move from “browse” to “checkout”
+
+#+begin_src
+  WITH funnels AS (
+  SELECT DISTINCT b.browse_date,
+     b.user_id,
+     c.user_id IS NOT NULL AS 'is_checkout',
+     p.user_id IS NOT NULL AS 'is_purchase'
+  FROM browse AS 'b'
+  LEFT JOIN checkout AS 'c'
+    ON c.user_id = b.user_id
+  LEFT JOIN purchase AS 'p'
+    ON p.user_id = c.user_id)
+SELECT COUNT (*) AS 'nun_browse',
+  SUM(is_checkout) AS 'num_checkout',
+  SUM(is_purchase) AS 'num_purchase',
+  1.0 * SUM(is_checkout) / COUNT(user_id) AS 'browse to checkout',
+  1.0 * SUM(is_purchase) / SUM(is_checkout) AS 'checkout to purchase'
+FROM funnels;
+#+end_src
+
+*** Build a Funnel from Multiple Tables 4
+So, we've created a funnel for Mattresses and More's purchase process!
+
+The management team suspects that conversion from checkout to purchase changes as the ~browse_date~ gets closer to Christmas Day.
+
+We can make a few edits to this code to calculate the funnel for each browse_date using GROUP BY.
+
+**** Task 1
+Edit the code in test.sqlite so that the first column in the result is browse_date.
+
+Then, use GROUP BY so that we calculate nun_browse, num_checkout, and num_purchase for each browse_date.
+
+Also be sure to ORDER BY browse_date.
+
+You should add browse_date as the first column and add the following to the end of the query:
+
+#+begin_src
+  GROUP BY browse_date
+  ORDER BY browse_date
+#+end_src
+
+Don't add the browse_date column in the funnels subquery!
+
+Add the browse_date column in the final query.
+
+#+begin_src
+  WITH funnels AS (
+  SELECT DISTINCT b.browse_date,
+     b.user_id,
+     c.user_id IS NOT NULL AS 'is_checkout',
+     p.user_id IS NOT NULL AS 'is_purchase'
+  FROM browse AS 'b'
+  LEFT JOIN checkout AS 'c'
+    ON c.user_id = b.user_id
+  LEFT JOIN purchase AS 'p'
+    ON p.user_id = c.user_id)
+SELECT browse_date,
+   COUNT(*) AS 'num_browse',
+   SUM(is_checkout) AS 'num_checkout',
+   SUM(is_purchase) AS 'num_purchase',
+   1.0 * SUM(is_checkout) / COUNT(user_id) AS 'browse_to_checkout',
+   1.0 * SUM(is_purchase) / SUM(is_checkout) AS 'checkout_to_purchase'
+FROM funnels
+GROUP BY browse_date
+ORDER BY browse_date;
+#+end_src
+
+**** Task 2
+Plug these values into a spreadsheet program like Microsoft Excel or Google Sheets.
+
+How has the conversion from checkout to purchase changed over time?
+
+Conversion from checkout to purchase increases from 80% on 12/20 to 94% on 12/23!
+
+| browse_date | num_browse | num_checkout | num_purchase | browse_to_checkout | checkout_to_purchase |
+2017-12-20 	100 	20 	16 	0.2 	0.8
+2017-12-21 	150 	33 	28 	0.22 	0.848484848484849
+2017-12-22 	250 	62 	55 	0.248 	0.887096774193548
+2017-12-23 	275 	68 	64 	0.247272727272727 	0.941176470588235
+
+*** Results
+Overal conversion rates:
+browse 	checkout 	purchase 	browse_to_checkout 	checkout_to_purchase
+775 	183 	163 	0.236 	0.890
+
+How conversion rates change as we get closer to Christmas:
+browse_date 	browse 	checkout 	purchase 	browse_to_checkout 	checkout_to_purchase
+2017-12-20 	100 	20 	16 	0.2 	0.8
+2017-12-21 	150 	33 	28 	0.22 	0.84
+2017-12-22 	250 	62 	55 	0.24 	0.88
+2017-12-23 	275 	68 	64 	0.24       0.94
+
+Oh wow, look at the steady increase in sales (increasing checkout_to_purchase percentage) as we inch closer to Christmas Eve!
+
+In this lesson, we learned how to build a funnel from a single table, compare funnels for A/B tests, and create a funnel from multiple tables using LEFT JOIN.
 * SQLite
 
 ** Main Features
