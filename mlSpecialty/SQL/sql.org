@@ -5072,6 +5072,744 @@ We can also use the original tables to calculate things like:
 
 What are some actionable insights for Warby Parker?
 
+** User Churn
+
+*** What is Churn?
+A common revenue model for SaaS (Software as a service) companies is to charge a monthly subscription fee for acces to their product. Frequently, these companies aim to continually increase the number of users paying for their product. One metric that is helpful for this goal is churn rate.
+
+Churn rate is the percent of subscribers that have canceled within a certain period, usually a month. For a user base to grow, the churn rate must be less than the new subscriber rate for the same period.
+
+To calculate the churn rate, we only will be considering users who are subscribed at the beginning of the month. The churn rate is the number of these users who cancel during the month divided by the total number:
+
+$$
+\frac {cancellations}{total\ subscribers}
+$$
+
+For example, suppose you were analyzing data for a monthly video streaming service called CodeFlix. At the beginning of February, CodeFlix has 1000 customers. In February, 250 of these customers cancel. The churn rate for February would be:
+
+250 / 1000 = 25% churn rate
+
+**** Task 1
+In March, CodeFlix started with 2000 customers. During the month, 100 of these customers cancelled.
+
+What is the March churn rate as a ratio?
+
+Use a SELECT statement to calculate the answer. Be sure to use a decimal in your calculations to force a float answer.
+
+The churn rate is the number of users who cancelled during the period divided by the number of customers at the beginning of the period.
+
+#+begin_src
+  SELECT 100. / 2OOO;
+#+end_src
+
+**** Task 2
+In April, CodeFlix started with 3000 customers. During the month, 450 of these customers canceled.
+
+The service added 500 new customers during the same period.
+
+What is the April churn rate as a ratio?
+
+On a new line, use a SELECT statement to calculate the answer. Be sure to use a decimal in your calculations to force a float answer.
+
+The new customer number is extraneous data. Your calculation should only include customers that were already subscribers at the beginning of the month.
+
+#+begin_src
+  SELECT 450. / 3000;
+#+end_src
+
+*** Single Month 1
+Now that we've gone over  what churn is, let's see how we can calculate it using SQL. In this example, we'll calculate churn for the month of December 2016.
+
+Typically, there will be data in a subscriptions table available in the following format:
+
+    - ~id~ - the customer id
+
+    - ~subscription_start~ - the subscribe date
+
+    - ~subscription_end~ - the cancel date
+
+When customers have a NULL value for their subscription_end, that's a good thing. It means they haven't canceled!
+
+Remember from the previous exercise that churn rate is:
+
+$$
+\frac{cancellations}{total\ subscribers}
+$$
+
+For the *numerator*, we only want the portion of the customers who cancelled during December:
+
+#+begin_src
+  SELECT COUNT(*)
+  FROM subscriptions
+  WHERE subscriptions_start < '2016-12-01'
+  AND (
+    subscription_end
+    BETWEEN '2016-12-01' AND '2016-12-31'
+    );
+#+end_src
+
+For the *denominator*, we only want to be considering customers who were active at the beginning of December:
+
+#+begin_src
+  SELECT COUNT(*)
+  FROM subscriptions
+  WHERE subscription_start < '2016-12-01'
+  AND (
+    (subscription_end >= '2016-12-01')
+    OR (subscription_end IS NULL)
+    );
+#+end_src
+
+You might’ve noticed there are quite a few parentheses in these two queries.
+
+When there are multiple conditions in a WHERE clause using AND and OR, it’s the best practice to always use the parentheses to enforce the order of execution. It reduces confusion and will make the code easier to understand. The condition within the brackets/parenthesis will always be executed first.
+
+Anyways, now that we have the users who canceled during December, and total subscribers, let’s divide the two to get the churn rate.
+
+When dividing, we need to be sure to multiply by 1.0 to cast the result as a float:
+
+#+begin_src
+  SELECT 1.0 *
+(
+  SELECT COUNT(*)
+  FROM subscriptions
+  WHERE subscription_start < '2016-12-01'
+  AND (
+    subscription_end
+    BETWEEN '2016-12-01'
+    AND '2016-12-31'
+  )
+) / (
+  SELECT COUNT(*)
+  FROM subscriptions
+  WHERE subscription_start < '2016-12-01'
+  AND (
+    (subscription_end >= '2016-12-01')
+    OR (subscription_end IS NULL)
+  )
+)
+AS result;
+#+end_src
+
+Here, we have the numerator divided by the denominator, and then multiplying the answer by 1.0. At the very end, we are renaming the final answer to result using AS.
+
+**** Task 1
+We’ve imported 4 months of data for a company from when they began selling subscriptions. This company has a minimum commitment of 1 month, so there are no cancellations in the first month.
+
+The subscriptions table contains:
+
+    id
+    subscription_start
+    subscription_end
+
+Use the methodology provided in the narrative to calculate the churn for January 2017.
+
+The table names should be the same, but the month and year dates need to be adjusted:
+
+    Every 2016 should be 2017
+    Every 12 should be 01
+
+The result is roughly 12.6%
+
+Here, we are using * as an arithmetic operator.
+
+For example:
+
+#+begin_src
+  SELECT 2.0 * 3;
+#+end_src
+
+2.0 × 3 = 6.0
+
+Here is the
+
+#+begin_src
+ SELECT 1.0 *
+(
+   -- customers who canceled
+   -- during January 2017
+) / (
+   -- customers who were active
+   -- at the beginning of Jan 2017
+);
+#+end_src
+
+#+begin_src
+  SELECT 1.0 *
+(
+  SELECT COUNT(*)
+  FROM subscriptions
+  WHERE subscription_start < '2017-01-01'
+  AND (
+    subscription_end
+    BETWEEN '2017-01-01'
+    AND '2017-01-31'
+  )
+) / (
+  SELECT COUNT(*)
+  FROM subscriptions
+  WHERE subscription_start < '2017-01-01'
+  AND (
+    (subscription_end >= '2017-01-01')
+    OR (subscription_end IS NULL)
+  )
+)
+AS result;
+#+end_src
+
+*** Single Month II
+The previous method worked, but you may have noticed we selected the same group of customers twice for the same month and repeated a number of conditional statements.
+
+Companies typically look at churn data over a period of many months. We need to modify the calculation a bit to make it easier  to mold into a multi-month result. This is done by making use of WITH and CASE.
+
+To start, use WITH to create the group of customers that are active going into December:
+
+#+begin_src
+  WITH enrollments AS
+  (SELECT *
+  FROM subscriptions
+  WHERE subscriptions_start <
+  '2016-12-01'
+  AND (
+    (subscription_end >= '2016-12-01')
+    OR (subscription_end IS NULL)
+  )),
+#+end_src
+
+Let's create another temporary table that contains an ~is_cancelled~ status for each of these customers. This will be 1 if they cancel in December and 0 otherwise (their cancellation date is after December or NULL).
+
+#+begin_src
+  status AS
+  (SELECT
+  CASE
+    WHEN (subscritions_end >
+  '2016-12-31')
+      OR (subscription_end IS NULL) THEN
+  0
+      ELSE 1
+    END as is_cancelled,
+  ...
+#+end_src
+
+We could just COUNT() the rows to determine the number of users. However, to support the multiple month calculation, lets add a ~is_active~ column to the status temporary table. This uses the same condition we created enrollments with:
+
+#+begin_src
+  status AS
+  ...
+  CASE
+    WHEN subscription_start < '2016-12-01'
+      AND (
+        (subscription_end >= '2016-12-01')
+        OR (subscription_end IS NULL)
+      ) THEN 1
+    ELSE 0
+  END as is_active
+  FROM enrollments
+  )
+#+end_src
+
+This tells us if someone is active at the beginning of the month.
+
+The last step is to do the math on the status table to calculate the month’s churn:
+
+#+begin_src
+ SELECT 1.0 * SUM(is_canceled) / SUM(is_active)
+FROM status;
+#+end_src
+
+We make sure to multiply by 1.0 to force a float result instead of an integer.
+
+**** Task 1
+Use the methodology provided in the narrative to calculate the churn for January 2017.
+
+The subscriptions table contains:
+
+    id
+    subscription_start
+    subscription_end
+
+The table names are the same, but the month and year dates will need to be adjusted.
+
+#+begin_src
+  WITH enrollments AS
+(
+  ...
+),
+status AS
+(
+  ...
+)
+SELECT 1.0 * SUM(is_canceled) / SUM(is_active)
+FROM status;
+#+end_src
+
+ WITH is capable of creating multiple temporary tables by separating query names with a comma.
+
+Here, we are creating the first temporary table and give it the name enrollments, and then creating the second temporary table and give it the name status.
+
+#+begin_src
+WITH enrollments AS
+(SELECT *
+FROM subscriptions
+WHERE subscription_start < '2017-01-01'
+AND (
+  (subscription_end >= '2017-01-01')
+  OR (subscription_end IS NULL)
+)),
+status AS
+(SELECT
+CASE
+  WHEN (subscription_end > '2017-01-31')
+    OR (subscription_end IS NULL) THEN 0
+  ELSE 1
+  END as is_canceled,
+CASE
+  WHEN (subscription_start < '2017-01-01')
+    AND (
+      (subscription_end >= '2017-01-01')
+        OR (subscription_end IS NULL)
+    ) THEN 1
+    ELSE 0
+  END as is_active
+FROM enrollments
+)
+SELECT 1.0 * SUM(is_canceled)/SUM(is_active) FROM status;
+#+end_src
+
+*** Multiple Month: Create Months Temporary Table
+Our single month calculation is now in a form that we can extend to a multiple month result. But first, we need months!
+
+Some SQL table schemes will contain a prebuilt table of months. Ours doesn't, so we'll need to build it using UNION. We'll need the first and last day of each month.
+
+Our churn calculation uses the first day as a cutoff for subscribers and the last day as a cutoff for cancellations.
+
+This table can be created like:
+
+#+begin_src
+  SELECT
+    '2016-12-01' AS first_day,
+    '2012-12-31' AS last_day
+  UNION
+  SELECT
+    '2017-01-01' AS first_day,
+    '2017-01-31' AS last_day;
+#+end_src
+
+**** Task 1
+We will be using the months as a temporary table (using WITH) in the churn calculation.
+
+Create the months temporary table using WITH and SELECT everything from it so that you can see the structure.
+
+We need a table for January, February, and March of 2017.
+
+#+begin_src
+WITH months as
+(SELECT
+  '2017-01-01' as first_day,
+  '2017-01-31' as last_day
+UNION
+SELECT
+  '2017-02-01' as first_day,
+  '2017-02-28' as last_day
+UNION
+SELECT
+  '2017-03-01' as first_day,
+  '2017-03-31' as last_day
+)
+SELECT *
+FROM months;
+#+end_src
+
+*** Multiple Month: Cross Join Months and Users
+Now that we have a table of months, we will join it to the subscriptions table. This will result in a table containing every combination of month and subscription.
+
+Ultimately, this table will be used to determine the status of each subscription in each month.
+
+**** Task 1
+The workspace contains the months temporary table from the previous exercise.
+
+Create a cross_join temporary table that is a CROSS JOIN of subscriptions and months.
+
+We’ve added:
+
+#+begin_src
+SELECT *
+FROM cross_join
+LIMIT 100;
+#+end_src
+
+at the bottom of this exercise so you can visualize the temporary table you create.
+
+It should SELECT all the columns from the temporary table.
+
+#+begin_src
+ WITH months AS
+(SELECT
+  '2017-01-01' as first_day,
+  '2017-01-31' as last_day
+UNION
+SELECT
+  '2017-02-01' as first_day,
+  '2017-02-28' as last_day
+UNION
+SELECT
+  '2017-03-01' as first_day,
+  '2017-03-31' as last_day
+),
+cross_join AS
+(SELECT *
+FROM subscriptions
+CROSS JOIN months)
+SELECT *
+FROM cross_join
+LIMIT 100;
+#+end_src
+
+*** Multiple Month: Determine Active Status
+
+We now have a cross joined table that looks something like:
+id 	subscription_start 	subscription_end 	month
+1 	2016-12-03 	2017-02-15 	2016-12-01
+1 	2016-12-03 	2017-02-15 	2017-01-01
+1 	2016-12-03 	2017-02-15 	2017-02-01
+1 	2016-12-03 	2017-02-15 	2017-03-01
+
+If you remember our single month example, our ultimate calculation will make use of the status temporary table. The first column of this table was used in the denominator of our churn calculation:
+
+    is_active: if the subscription started before the given month and has not been canceled before the start of the given month
+
+For the example above, this column would look like:
+month 	is_active
+2016-12-01 	0
+2017-01-01 	1
+2017-02-01 	1
+2017-03-01 	0
+
+**** Task 1
+Add a status temporary table. This table should have the following columns:
+
+    id - selected from the cross_join table
+    month - this is an alias of first_day from the cross_join table. We’re using the first day of the month to represent which month this data is for.
+    is_active - 0 or 1, derive this column using a CASE WHEN statement
+
+The is_active column should be 1 if the subscription_start is before the month’s first_day and if the subscription_end is either after the month’s first_day or is NULL.
+
+We’ve added:
+
+SELECT *
+FROM status
+LIMIT 100;
+
+at the bottom of this exercise so you can visualize the temporary table you create.
+
+One version of the required conditional is:
+
+(subscription_start < first_day)
+  AND (
+    subscription_end > first_day
+    OR subscription_end IS NULL
+  ) THEN 1
+ELSE 0
+
+#+begin_src
+ WITH months AS
+(SELECT
+  '2017-01-01' as first_day,
+  '2017-01-31' as last_day
+UNION
+SELECT
+  '2017-02-01' as first_day,
+  '2017-02-28' as last_day
+UNION
+SELECT
+  '2017-03-01' as first_day,
+  '2017-03-31' as last_day
+),
+cross_join AS
+(SELECT *
+FROM subscriptions
+CROSS JOIN months),
+status AS
+(SELECT id, first_day as month,
+CASE
+  WHEN (subscription_start < first_day)
+    AND (
+      subscription_end > first_day
+      OR subscription_end IS NULL
+    ) THEN 1
+  ELSE 0
+END as is_active
+FROM cross_join)
+SELECT *
+FROM status
+LIMIT 100;
+#+end_src
+
+*** Multiple Month: Determine Cancellation Status
+For our calculation, we’ll need one more column on the status temporary table: is_canceled
+
+This column will be 1 only during the month that the user cancels.
+
+From the last exercise, the sample user had a subscription_start on 2016-12-03 and their subscription_end was on 2017-02-15. Their complete status table should look like:
+month 	is_active 	is_canceled
+2016-12-01 	0 	0
+2017-01-01 	1 	0
+2017-02-01 	1 	1
+2017-03-01 	0 	0
+
+In our examples, our company has a minimum subscription duration of one month. This means that the subscription_start always falls before the beginning of the month that contains their subscription_end. Outside of our examples, this is not always the case, and you may need to account for customers canceling within the same month that they subscribe.
+
+**** Task 1
+Add an is_canceled column to the status temporary table. Ensure that it is equal to 1 in months containing the subscription_end and 0 otherwise.
+
+Derive this column using a CASE WHEN statement. You can use the BETWEEN function to check if a date falls between two others.
+
+We’ve added:
+
+SELECT *
+FROM status
+LIMIT 100;
+
+at the bottom of this exercise so you can visualize the status table.
+
+#+begin_src
+ WITH months AS
+(SELECT
+  '2017-01-01' as first_day,
+  '2017-01-31' as last_day
+UNION
+SELECT
+  '2017-02-01' as first_day,
+  '2017-02-28' as last_day
+UNION
+SELECT
+  '2017-03-01' as first_day,
+  '2017-03-31' as last_day
+),
+cross_join AS
+(SELECT *
+FROM subscriptions
+CROSS JOIN months),
+status AS
+(SELECT id, first_day as month,
+CASE
+  WHEN (subscription_start < first_day)
+    AND (
+      subscription_end > first_day
+      OR subscription_end IS NULL
+    ) THEN 1
+  ELSE 0
+END as is_active,
+CASE
+  WHEN subscription_end BETWEEN first_day AND last_day THEN 1
+  ELSE 0
+END as is_canceled
+FROM cross_join)
+SELECT *
+FROM status
+LIMIT 100;
+#+end_src
+
+*** Multiple Month: Sum Active and Canceled Users
+Now that we have an active and canceled status for each subscription for each month, we can aggregate them.
+
+We will GROUP BY month and create a SUM() of the two columns from the status table, is_active and is_canceled.
+
+This provides a list of months, with their corresponding number of active users at the beginning of the month and the number of those users who cancel during the month.
+
+**** Task 1
+Add a status_aggregate temporary table. This table should have the following columns:
+
+    month - selected from the status table
+    active - the SUM() of active users for this month
+    canceled - the SUM() of canceled users for this month
+
+We’ve added:
+
+SELECT *
+FROM status_aggregate;
+
+at the bottom of this exercise so you can visualize the temporary table you create.
+
+Be sure to GROUP BY month to get a result for each month.
+
+#+begin_src
+ WITH months AS
+(SELECT
+  '2017-01-01' as first_day,
+  '2017-01-31' as last_day
+UNION
+SELECT
+  '2017-02-01' as first_day,
+  '2017-02-28' as last_day
+UNION
+SELECT
+  '2017-03-01' as first_day,
+  '2017-03-31' as last_day
+),
+cross_join AS
+(SELECT *
+FROM subscriptions
+CROSS JOIN months),
+status AS
+(SELECT id, first_day as month,
+CASE
+  WHEN (subscription_start < first_day)
+    AND (
+      subscription_end > first_day
+      OR subscription_end IS NULL
+    ) THEN 1
+  ELSE 0
+END as is_active,
+CASE
+  WHEN subscription_end BETWEEN first_day AND last_day THEN 1
+  ELSE 0
+END as is_canceled
+FROM cross_join),
+status_aggregate AS
+(SELECT
+  month,
+  SUM(is_active) as active,
+  SUM(is_canceled) as canceled
+FROM status
+GROUP BY month)
+SELECT *
+FROM status_aggregate;
+#+end_src
+
+*** Multiple Month: Churn Rate Calculation
+Now comes the moment we've been waiting for - the actual churn rate.
+
+We use the number of canceled and active subscriptions to calculate churn for each month:
+
+#+begin_src
+  churn_rate = canceled / active
+#+end_src
+
+**** Task 1
+Add a SELECT statement to calculate the churn rate. The result should contain two columns:
+
+    month - selected from status_aggregate
+    churn_rate - calculated from status_aggregate.canceled and status_aggregate.active.
+
+Remember to cast the result to a float by multiplying by 1.0
+
+#+begin_src
+WITH months AS
+(SELECT
+  '2017-01-01' as first_day,
+  '2017-01-31' as last_day
+UNION
+SELECT
+  '2017-02-01' as first_day,
+  '2017-02-28' as last_day
+UNION
+SELECT
+  '2017-03-01' as first_day,
+  '2017-03-31' as last_day
+),
+cross_join AS
+(SELECT *
+FROM subscriptions
+CROSS JOIN months),
+status AS
+(SELECT id, first_day as month,
+CASE
+  WHEN (subscription_start < first_day)
+    AND (
+      subscription_end > first_day
+      OR subscription_end IS NULL
+    ) THEN 1
+  ELSE 0
+END as is_active,
+CASE
+  WHEN subscription_end BETWEEN first_day AND last_day THEN 1
+  ELSE 0
+END as is_canceled
+FROM cross_join),
+status_aggregate AS
+(SELECT
+  month,
+  SUM(is_active) as active,
+  SUM(is_canceled) as canceled
+FROM status
+GROUP BY month)
+SELECT
+  month,
+  1.0 * canceled/active AS churn_rate
+FROM status_aggregate;
+#+end_src
+
+*** Calculating Churn Review
+You can now calculate a churn rate over time for a company:
+
+month 	churn_rate
+2017-01-01 	0.127
+2017-02-01 	0.125
+2017-03-01 	0.237
+
+It looks like our sample company did something in March that doubled the churn rate. They might want to look into that…
+
+In this lesson you learned:
+
+    - The churn rate is a percent of subscribers at the beginning of a period that cancel within that period. "Monthly churn" is a typical metric and what was used in the examples.
+
+    - How to calculate this metric using SQL for a single month. This used COUNT() and conditions to determine the number of subscribers that were active and how many cancelled.
+
+    - A more complex method to track the subscriber churn rate over many months.
+
+      The complete churn calculation is provided here for you to experiment with.
+
+#+begin_src
+ WITH months AS (
+  SELECT
+    '2017-01-01' AS first_day,
+    '2017-01-31' AS last_day
+  UNION
+  SELECT
+    '2017-02-01' AS first_day,
+    '2017-02-28' AS last_day
+  UNION
+  SELECT
+    '2017-03-01' AS first_day,
+    '2017-03-31' AS last_day
+),
+cross_join AS (
+  SELECT *
+  FROM subscriptions
+  CROSS JOIN months
+),
+status AS (
+  SELECT
+    id,
+    first_day AS month,
+    CASE
+      WHEN (subscription_start < first_day)
+        AND (
+          subscription_end > first_day
+          OR subscription_end IS NULL
+        ) THEN 1
+      ELSE 0
+    END AS is_active,
+    CASE
+      WHEN subscription_end BETWEEN first_day AND last_day THEN 1
+      ELSE 0
+    END AS is_canceled
+  FROM cross_join
+),
+status_aggregate AS (
+  SELECT
+    month,
+    SUM(is_active) AS active,
+    SUM(is_canceled) AS canceled
+  FROM status
+  GROUP BY month
+)
+SELECT
+  month,
+  1.0 * canceled / active AS churn_rate
+FROM status_aggregate;
+#+end_src
 * SQLite
 
 ** Main Features
@@ -5590,6 +6328,260 @@ If you scroll down the output, you will see that NULLs are placed at the end of 
     - Use the NULLS FIRST option to place NULLs before other non-null values.
 
     - Use the NULLS LAST option to place NULL after other non-null values.
+
+*** SQLite Select Distinct
+
+*Summary*: in this tutorial, you will learn how to use the SQLite SELECT DISTINCT clause to remove duplicate rows in the result set.
+
+**** Introduction to SQLite DISTINCT clause
+The DISTINCT clause is an optional clause of the SELECT statement. The DISTINCT clause allows you to remove the duplicate rows in the results set.
+
+The following statement illustrates the syntax of the DISTINCT clause:
+
+#+begin_src
+  SELECT DISTINCT select_list
+  FROM table;
+#+end_src
+
+In this syntax:
+
+    - First, the DISTINCT clause must appear immediately after the SELECT keyword.
+
+    - Second, you place a column or a list of columns after the DISTINCT keyword. If you use one column, SQLite uses values in that column to evaluate the duplicate. In case you use multiple columns, SQLite uses the combination of values in these columns to evaluate the duplicate.
+
+SQLite considers NULL values as duplicates. If you use theDISTINCT clause with a column that has NULL values, SQLite will keep one row of a NULL value.
+
+
+#+begin_comment
+In database theory, if a column contains NULL values, it means that we do not have the information about that column of particular records or the information is not applicable.
+#+end_comment
+
+For example, if a customer has a phone number with a NULL value, it means we don’t have information about the phone number of the customer at the time of recording customer information or the customer may not have a phone number at all.
+
+**** SQLite SELECT DISTINCT examples
+We will use the customers table in the sample database for demonstration.
+
+Suppose you want to know the cities where the customers are located, you can use the SELECT statement to get data from the city column of the customers table as follows:
+
+#+begin_src
+  SELECT city
+  FROM customers
+  ORDER BY city;
+#+end_src
+
+It returns 59 rows. There are a few duplicate rows such as Berlin London, and Mountain View. To remove these duplicate rows, you use the DISTINCT clause as follows:
+
+#+begin_src
+  SELECT DISTINCT city
+  FROM customers
+  ORDER BY city;
+#+end_src
+
+It returns 53 rows because the DISTINCT clause has removed 6 duplicate rows.
+
+**** SQLite SELECT DISTINCT on multiple columns
+The following statement finds cities and countries of all customers.
+
+#+begin_src
+  SELECT
+    city,
+    country
+  FROM
+    customers
+  ORDER BY
+    country;
+#+end_src
+
+The result set contains duplicate cities and countries e.g., Sao Paulo in Brazil as shown in the screenshot above.
+
+To remove duplicate the city and country, you apply the DISTINCT clause to both city and country as shown in the following query:
+
+#+begin_src
+  SELECT DISTINCT
+    city,
+    country
+  FROM
+    customers
+  ORDER BY
+    country;
+#+end_src
+
+**** SQLite SELECT DISTINCT with NULL example
+This statement returns the names of companies of customers from the customers table.
+
+#+begin_src
+  SELECT
+    company
+  FROM
+    customers;
+#+end_src
+
+It returns 59 rows with many NULL values.
+
+Now, if you apply the DISTINCT clause to the statement, it will keep only one row with a NULL value.
+
+See the following statement:
+
+#+begin_src
+  SELECT DISTINCT
+    company
+  FROM
+    customers;
+#+end_src
+
+The statement returns 11 rows with one NULL value.
+
+Note that if you select a list of columns from a table and want to get a unique combination of some columns, you can use the GROUP BY clause.
+
+In this tutorial, you have learned how to remove duplicate rows from a result set using SQLite SELECT DISTINCT clause.
+
+*** SQLite Where
+*Summary*: in this tutorial, you will learn how to use SQLite WHERE clause to specify the search condition for rows returned by the query.
+
+**** Introduction to SQLite WHERE clause
+The WHERE clause is an optional clause od the SELECT statement. It appears after the FROM clause as the following statement:
+
+#+begin_src
+  SELECT
+    column_list
+  FROM
+    TABLE
+  WHERE
+    search_condition;
+#+end_src
+
+In this example, you add a WHERE clause to the SELECT statement to filter rows returned by the query. When evaluating a SELECT statement with a WHERE clause, SQLite uses the following steps:
+
+    1. First, check the table in the FROM clause.
+
+    2. Second, evaluate the conditions in the WHERE clause to get the rows that met these conditions.
+
+    3. Third, make the final result set based on the rows in the previous step with columns in the SELECT clause.
+
+The search condition in the WHERE has the following form:
+
+#+begin_comment
+left_expression COMPARISON_OPERATOR right_expression
+#+end_comment
+
+For example, you can form a search condition as follows:
+
+#+begin_src
+  WHERE column_1 = 100;
+
+  WHERE column_2 IN (1,2,3);
+
+  WHERE column_3 LIKE 'An%';
+
+  WHERE column_4 BETWEEN 10 AND 20;
+#+end_src
+
+Besides the SELECT statement, you can use the WHERE clause in the UPDATE and DELETE statements.
+
+**** SQLite comparison operators
+A comparison operator tests if two expressions are the same. The following table illustrates the comparison operators that you can use to construct expressions:
+
+| *Operator* | *Meaning*                  |
+| =        | Equal to                 |
+| <> or != | Not equal to             |
+| <        | Less than                |
+| >        | Greater than             |
+| <=       | Less than or equal to    |
+| >=       | Greater than or equal to |
+
+**** SQLite logical operators
+Logical operators allow you to test the truth of some expressions. A logical operator returns 1, 0, or a NULL value.
+
+Notice that SQLite does not provide Boolean data type therefore 1 means TRUE, and 0 means FALSE.
+
+The following table illustrates the SQLite logical operators:
+
+| *Operator* | *Meaning*                            |
+| ALL        | returns 1 if all expressions are 1 |
+| AND        | 1 if both are 1, 0 if one is 0     |
+| ANY        | 1 if one of a set is 1             |
+| BETWEEN    | 1 if a value is between a range    |
+| EXIST      | 1 if subquery contains any row     |
+| IN         | 1 if a value is in a list          |
+| LIKE       | 1 if a value matches a pattern     |
+| NOT        | reverses the value: e.g. NOT IN    |
+| OR         | true if either expression is 1     |
+
+**** SQLite WHERE clause examples
+We will use the tracks table in the sample database to illustrate how to use the WHERE clause.
+
+The equality operator (=) is the most commonly used operator. For example, the following query uses the WHERE clause the equality operator to find all the tracks in the id 1:
+
+#+begin_src
+  SELECT
+    name,
+    milliseconds,
+    bytes,
+    albumid
+  FROM
+    tracks
+  WHERE
+    albumid = 1;
+#+end_src
+
+SQLite compares the values stored in the Albumid column with a literal value 1 to test if they are equal. Only the rows that satisfy the condition are returned.
+
+When comparing two values, you need to ensure they are the same data type. You should compare numbers with numbers, string with strings, and so on.
+
+In case you compare values in different data types e.g., a string with a number, SQLite has to perform implicit data type conversions, but in general, you should avoid doing this.
+
+You use the logical operator to combine expressions. For example, to get tracks of the album 1 that have the length greater than 200,000 milliseconds, you use the following statement:
+
+#+begin_src
+  SELECT
+    name,
+    milliseconds,
+    bytes,
+    albumid
+  FROM
+    tracks
+  WHERE
+    albumid = 1
+    AND milliseconds > 250000;
+#+end_src
+
+The statement used two expressions albumid = 1 and milliseconds > 250000. I uses the AND logical operator to combine these expressions.
+
+**** Using WHERE clause with LIKE operator example
+Sometimes, you may not remember exactly the data you want to search. In this case, you perform an inexact search using the LIKE operator.
+
+For example, to find which tracks were composed by Smith, you use the LIKE operator as follows:
+
+#+begin_src
+  SELECT
+    name,
+    albumid,
+    composer
+  FROM
+    tracks
+  WHERE
+    composer LIKE '%Smith%'
+  ORDER BY
+    albumid;
+#+end_src
+
+You get tracks composed by R.A. Smith-Diesel, Adrian Smith, etc.
+
+**** Using SQLite WHERE clause with the IN operator example
+The IN operator allows you to check whether a value is in a list of a comma-separated list of values. For example, to find tracks that have media type id is 2 or 3, you use the IN operator as shown in the following statement:
+
+#+begin_src
+  SELECT
+    name,
+    albumid,
+    mediatypeid
+  FROM
+    tracks
+  WHERE
+    mediatypeid IN (2, 3);
+#+end_src
+
+In this tutorial, you have learned how to use the SQLite WHERE clause to filter rows in the final result set using comparison and logical operators.
 
 * Quiz (For Data Scientist / ML Specialist)
 
