@@ -6080,7 +6080,6 @@ You can now wield SQL to find where, when, and how users are visiting a website.
 
     - To find first- and last-touch attribution, join that table back with the original page_visits table on user_id and timestamp.
 
-
 * Project: Calculating Churn Rates
 Four months into launching Codeflix, management asks you to look into subscription churn rates. It’s early on in the business and people are excited to know how the company is doing.
 
@@ -6237,6 +6236,202 @@ AS 'churn_rate_30'
 FROM status_aggregate;
 #+end_src
 
+* Project: Marketing Attribution
+CoolTShirts, an innovative apparel shop, is running a bunch of marketing campaigns. In this project, you'll be helping them answer these questions about their campaigns:
+
+    1. Get familiar with the company
+
+           - How many campaings and sources does CoolTShirts use and how are they related? Be sure to explain the difference between ~utm_campaign~ and ~utm_source~.
+
+           - What pages are on their website?
+
+    2. What is the user journey?
+
+           - How many first touches is each campaign responsible for?
+
+           - How many last touches is each campaign responsible for?
+
+           - How many visitors make a purchase?
+
+           - How many last touches /on the purchase/ is each campaign responsible for?
+
+           - What is the typical user journey?
+
+    3. Optimize the campaign budget.
+
+           - CoolTShirts can re-invest in 5 campaigns. Which should they pick and why?
+
+Start the following project, which will guide you through the queries you need to write with a series of questions. Make sure to save your queries and results - you'll be using them in your presentation.
+
+Then, create a set of slides using Google Slides, Microsoft PowerPoint, or some other presentation software. Your presentation should answer all o the questions in the project. Each answer should include a text explanation and data to support your claim. The queries used to find that data should be included in a separate .sql file.
+
+    - *[[file:SQL Templates ADwSQL.pptx][Template]]:* We recommend that you use the template linked here. This template contains examples of the types of slides you'll want to use.
+
+    - *[[file:attribution-rubric-for-learners-ADwSQL.pdf][Rubric]]:* You can share your work with your peers on Codecademy, who can give you feedback based on this rubric. Make sure to check your work before submitting!
+
+** Attribution Queries
+CoolTShirts sells shirts of all kinds, as long as they are T-shaped and cool. Recentrly, CTS started a few marketing campaigns to increase website visits and purchases. Using touch attibution, they'd like to map their customers' journey: from initial visit to purchase. They can use that information to optimize their marketing campaigns. This project will guide you through some of that process.
+
+At this point you should have taken the lesson on touch attribution. This project will guide you through a number of queries on CoolTShirts’ user data (see the [[https://content.codecademy.com/courses/sql-intensive/page_visits_schema.pdf][schema]] here).
+
+*** Get familiar with CoolTShirts
+
+**** Task 1
+How many campaigns and sources does CoolTShirts use? Which source is used for each campaign?
+
+Use three queries:
+
+    - one for the number of distinct campaigns
+
+    - one for the number of distinct sources
+
+    - one to find how they are related
+
+The first two queries will use SELECT COUNT (DISTINCT column_name).
+
+The third query will use SELECT DISTINCT column1, column2.
+
+#+begin_src
+  SELECT COUNT (DISTINCT utm_campaign)
+  FROM page_visits;
+
+  SELECT COUNT (DISTINCT utm_source)
+  FROM page_visits;
+
+  SELECT DISTINCT utm_campaign, utm_source
+  FROM page_visits;
+
+#+end_src
+
+**** Task 2
+What pages are on the CoolTShirts website?
+Find the distinct values of the page_name column.
+
+There are four distinct values in page_name.
+
+*** What is the user journey?
+
+**** Task 3
+How many *first touches* is each campaign responsible for?
+
+You'll need to use a firs-touch query. Group by campaign and count the number of first touches for each.
+
+#+begin_src
+  WITH first_touch AS (
+      SELECT user_id,
+         MIN(timestamp) AS first_touch_at
+      FROM page_visits
+      GROUP BY user_id)
+  SELECT ft.user_id,
+         ft.first_touch_at,
+         pv.utm_source,
+         pv.utm_campaign
+  FROM first_touch ft
+  JOIN page_visits pv
+    ON ft.user_id = pv.user_id
+   AND ft.first_touch_at = pv.timestamp;
+#+end_src
+
+Here's the query to count first touches per campaign and source. ~first_touch~ is the set of all first touches. ~ft_attr~ is the same set with source and campaign columns added.
+
+You may group by ~utm_campaign~ or both ~utm_campaign~ and ~utm_source~.
+
+#+begin_src
+  WITH first_touch AS (
+     /* ... */),
+  ft_attr AS (
+    SELECT ft.user_id,
+           ft.first_touch_at,
+           pv.utm_source,
+           pv.utm_campaign
+    FROM first_touch ft
+    JOIN page_visits pv
+      ON ft.user_id = pv.user_id
+     AND ft.first_touch_at = pv.timestamp
+  )
+  SELECT ft_attr.utm_source,
+         ft_attr.utm_campaign,
+         COUNT(*)
+  FROM ft_attr
+  GROUP BY 1, 2
+  ORDER BY 3 DESC;
+#+end_src
+
+**** Task 4
+How many last touches is each campaign responsible for?
+
+Starting with the last-touch query from the lesson, group by campaign and count the number of last touches for each.
+
+#+begin_src
+ WITH last_touch AS (
+  SELECT user_id,
+     MIN(timestamp) AS
+     last_touch_at
+     FROM page_visits
+     GROUP BY user_id),
+lt_attr AS (
+  SELECT lt.user_id,
+         lt.last_touch_at,
+         pv.utm_source,
+         pv.utm_campaign,
+         pv.page_name
+  FROM last_touch lt
+  JOIN page_visits pv
+    ON lt.user_id = pv.user_id
+    AND lt.last_touch_at = pv.timestamp
+)
+SELECT lt_attr.utm_source,
+       lt_attr.utm_campaign,
+       COUNT(*)
+FROM lt_attr
+GROUP BY 1, 2
+ORDER BY 3 DESC;
+#+end_src
+
+**** Task 5
+How many visitors make a purchase?
+
+Count the distinct users who visited the page named 4 - purchase.
+
+This can be done using a GROUP BY clause on page_name or a WHERE clause for page_name = '4 - purchase'.
+
+#+begin_src
+  SELECT COUNT(DISTINCT user_id)
+  FROM page_visits
+  WHERE page_name = '4 - purchase';
+#+end_src
+
+**** Task 6
+How many last touches on the purchase page is each campaign responsible for?
+
+This query will look similar to your last-touch query, but with an additional WHERE clause.
+
+#+begin_src
+ WITH last_touch AS (
+  SELECT user_id,
+     MIN(timestamp) AS
+     last_touch_at
+     FROM page_visits
+     WHERE page_name = '4 - purchase'
+     GROUP BY user_id),
+lt_attr AS (
+  SELECT lt.user_id,
+         lt.last_touch_at,
+         pv.utm_source,
+         pv.utm_campaign,
+         pv.page_name
+  FROM last_touch lt
+  JOIN page_visits pv
+    ON lt.user_id = pv.user_id
+    AND lt.last_touch_at = pv.timestamp
+)
+SELECT lt_attr.utm_source,
+       lt_attr.utm_campaign,
+       COUNT(*)
+FROM lt_attr
+GROUP BY 1, 2
+ORDER BY 3 DESC;
+#+end_src
 * SQLite
 
 ** Main Features
