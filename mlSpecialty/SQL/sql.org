@@ -6432,6 +6432,673 @@ FROM lt_attr
 GROUP BY 1, 2
 ORDER BY 3 DESC;
 #+end_src
+
+* Advance SQL
+
+** Windows Functions: Intro
+So far we've learned how to retrieve information from tables and perform calculations on them. But we've seen that GROUP BY and SUM reduce the number of rows in your query results because they are combining or grouping rows.
+
+/Windows functions/, on the other hand, allow you to maintain the values of your original table while displaying grouped or summative information alongside in another column. This is why many Data Scientists and Data Engineers love to use window functions for complex data analysis.
+
+In this lesson, you will build upon the knowledge you've gained about aggregate functions and other clauses in order to write window functions.
+
+Let's start by looking at data from some of the most followed accounts on Instagram.
+
+*** Task 1
+Run a query to select all the information in our social_media table to see what data we have.
+
+What are the column names?
+
+#+begin_src
+SELECT *
+FROM social_media;
+#+end_src
+
+The table contains changes in followers, following, and posts over an 8 month period.
+
+    username
+    month
+    change_in_followers
+    change_in_following
+    posts
+
+Note: The change_in_followers column is in millions.
+
+*** Task 2
+Delete the query and write a new query to return the username column and the SUM of the total change_in_followers in our social_media table, that are from "instagram".
+
+Don't forget to use WHERE and GROUP BY.
+
+#+begin_src
+  SELECT username,
+     SUM (change_in_followers)
+  FROM social_media
+  WHERE username = 'instagram'
+  GROUP BY username;
+#+end_src
+
+*** Task 3
+Calculate the "running total" of Instagram's change_in_followers for each month.
+
+A running total is the sum of all the previous rows up to the current one.
+
+#+begin_src
+  SELECT
+     month,
+     change_in_followers,
+     SUM(change_in_followers)
+  OVER (
+         ORDER BY month
+       ) AS 'running_total'
+  FROM
+      social_media
+  WHERE
+      username = 'instagram';
+#+end_src
+
+*** Task 4
+How is the running_total column different from the SUM value you found in the previous query?
+
+~SUM~ is only able to return one row of data that represents the sum of all months. ~running_total~ is able to show you what the total is after each month.
+
+** Window Function Syntax
+In the previous exercise, you ran a window function to see a 'running total'.
+
+Let's break down the query into smaller parts:
+
+#+begin_src
+  SELECT
+    month,
+    change_in_followers,
+    SUM(change_in_followers) OVER (
+      ORDER BY month
+    ) AS 'running_total'
+  FROM
+    social_media
+  WHERE
+    username = 'instagram';
+#+end_src
+
+    - SELECT month, change_in_followers: Same as usual, selecting the columns.
+
+    - SUM(change_in_followers): Here is our aggregate function to find the SUM of our chosen column.
+
+    - OVER: This is the clause that designates SUM as a window function.
+
+    - ORDER BY month: Here we declare what we would like our window function to do.
+          - This window function is takeing the sum of followers for each month.
+
+          - So for each month, the window function adds the current month's change_in_followers to our running total.
+
+    - Then name the running total column 'running_total'.
+
+    - And lastly, this is all coming from table social_media where the username is instagram.
+
+*** Task 1
+In the code editor, modify the example window function:
+
+    - Use AVG instead of SUM.
+
+    - Change the name of the window function column to be running_avg instead of running_total.
+
+      #+begin_src
+        SELECT
+          month,
+          change_in_followers,
+          AVG(change_in_followers) OVER (
+             ORDER BY month
+          ) AS 'running_avg'
+        FROM
+          social_media
+        WHERE
+          username = 'instagram';
+      #+end_src
+
+*** Task 2
+Let's now implement a more complex window function that utilizes SUM, COUNT and AVG.
+
+#+begin_src
+  SELECT
+    month,
+    change_in_followers,
+    SUM(change_in_followers)
+  OVER (
+     ORDER BY month
+   ) AS 'running_total',
+    AVG(change_in_followers)
+  OVER (
+     ORDER BY month
+   ) AS 'running_avg',
+    COUNT(change_in_followers)
+  OVER (
+     ORDER BY month
+   ) AS 'running_count'
+  FROM
+    social_media
+  WHERE
+    username = 'instagram';
+#+end_src
+
+How is this query and its results different from what you’re used to seeing with SUM, COUNT, and AVG?
+
+Here we can see how the sum, average and count of followers is changing each month rather than just the total sum, average or count.
+
+** Partition by
+In our last query, we were able to find the running total, average and count on only Instagram's followers using window functions.
+
+A window function performs a calculation over the inputted column and then returns the calculated value for each row. Window functions can be identified by their use of the OVER clause.
+
+In the simplest syntactic example, a function can be performed over a given column as shown below:
+
+#+begin_src
+  SELECT function_name(column_1_name) OVER ()
+  FROM table_name;
+#+end_src
+
+And ORDER BY clause can be used to determine in which direction the function should be calculated.
+
+#+begin_src
+  SELECT function_name(column_1_name) OVER (
+    ORDER BY column_2_name
+  )
+  FROM table_name;
+#+end_src
+
+But what about the other accounts in our social media table? What if we wanted to compare all of our users?
+
+This is where we can use another feature of window functions: PARTITION BY.
+
+PARTITION BY is a subclause of the OVER clause and divides a query's results set into parts. It's very similar to GROUP BY except it /does not/ reduce the number of rows returned.
+
+While using GROUP BY only allows one row to be returned for each group, PARTITION BY allows you to see all of the resultant rows.
+
+*** Task 1
+Run the query below to see the total change in followers for each user.
+
+#+begin_src
+  SELECT
+    username,
+    SUM(change_in_followers) AS 'total_follower_change'
+  FROM social_media
+  GROUP BY username;
+#+end_src
+
+*** Task 2
+If you modify the query to also return the month column, what happens?
+
+#+begin_src
+  SELECT
+    username,
+    month,
+  SUM(change_in_followers) AS
+    'total_change_in_followers'
+  FROM
+    social_media
+  GROUP BY
+    username, month;
+#+end_src
+
+Are you still seeing the total changes for each account?
+
+No, this is no longer showing you a sum because each user has 8 different months of data, therefore 8 different groups.
+
+*** Task 3
+Now run the following query which utilizes PARTITION BY. How does this change our results form the GROUP BY query we ran?
+
+#+begin_src
+SELECT
+  username,
+  month,
+  change_in_followers,
+  SUM(change_in_followers) OVER (
+    PARTITION BY username
+    ORDER BY month
+  ) 'running_total_followers_change'
+FROM
+  social_media;
+#+end_src
+
+*** Task 4
+Utilizing PARTITION BY allowed us to find the local change in followers for each user up to the current month and display it next to the current month.
+
+Modify the query to have it also return the /average change in followers for each month/ and return this as running_avg_followers_change.
+
+#+begin_src
+  SELECT
+    username,
+    month,
+    change_in_followers,
+    SUM(change_in_followers) OVER (
+      PARTITION BY username
+      ORDER BY month
+    ) 'running_total_followers_change',
+    AVG(change_in_followers) OVER (
+      PARTITION BY username
+      ORDER BY month
+    ) 'running_avg_followers_change'
+  FROM
+    social_media;
+#+end_src
+
+*** Task 5
+Looking at the results of your query, which user had the largest/smallest increase in new followers? Which user had the steadiest flow of followers?
+
+The steadiest flow of followers would be the user with the most consistent average.
+
+** FIRST_VALUE and LAST_VALUE
+In the past, when we wanted to get the first or last value of a query, we might use the LIMIT clause, probably in conjunction with ORDER BY, which would return one result showing us the first or last value from our dataset.
+
+With window functions, we can return our first or last values alongside our other data by using the FIRST_VALUE() or LAST_VALUE() functions.
+
+They work exactly as you would imagine:
+
+    - FIRST_VALUE() returns the first value in an ordered set of values.
+
+    - LAST_VALUE() returns the last value in an ordered set of values.
+
+Let's break down a query that is fetching the FIRST_VALUE() from our social media dataset:
+
+#+begin_src
+  SELECT
+    username,
+    posts,
+    FIRST_VALUE (posts) OVER (
+      PARTITION BY username
+      ORDER BY posts
+    ) fewest_posts
+  FROM
+    social_media;
+#+end_src
+
+    - This query should look familiar overall as it follows the starndard window function format, however, we are using FIRST_VALUE now for posts. This means our window function will pull the first value from the posts column.
+
+    - OVER (PARTITION BY username ORDER BY posts) fewest_posts: here we can see that posts is going to be pulled based on username due to the PARTITION BY. We are naming this column fewest_posts because of the ORDER BY which defaults to ascending order.
+
+    - And all of this is coming from our social_media table.
+
+*** Task 1
+Copy the following query into the code editor and run it.
+
+#+begin_src
+  SELECT username,
+    posts,
+    FIRST_VALUE (posts) OVER (
+      PARTITION BY username
+      ORDER BY posts
+    ) AS 'fewest_posts'
+  FROM social_media;
+#+end_src
+
+What is the result?
+
+The result is showing us each of the usernames from the table alongside how many posts they posted each month. Our fewest_posts column is showing the lowest number of posts that user made for any month.
+
+*** Task 2
+If FIRST_VALUE is returning the fewest posts, then LAST_VALUE should return the most posts for each user.
+
+Update the query now to use LAST_VALUE instead of FIRST_VALUE.
+
+Are we seeing the expected result?
+
+Here we can see it is pulling the last value for each row. This is not showing us the last value for any user but instead the current row (which would be the last value!)
+
+*** Task 3
+We saw that LAST_VALUE didn't work as we expected. This is because each row in our results set is the last row at the time it is outputted.
+
+In order to get LAST_VALUE to show us the most posts for a user, we need to specify a frame for our window function.
+
+#+begin_src
+  SELECT
+    username,
+    posts,
+    LAST_VALUE (posts) OVER (
+      PARTITION BY username
+      ORDER BY posts
+      RANGE BETWEEN UNBOUNDED
+  PRECEDING AND UNBOUNDED FOLLOWING
+    ) most_posts
+  FROM
+    social_media;
+#+end_src
+
+RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING specifies the frame for our window function as the current partition and thus returns the highest number of posts in one month for each user.
+
+** LAG
+Now that we understand how to pull the first or last value from our dataset and display it alongside our query results, let's see how to fetch data from other parts of our results.
+
+Windows functions can use LAG or LEAD in order to access information from a row at a specified offset which comes before (LAG) or after (LEAD) the current row.
+
+This means that by using LAG or LEAD you can access any row before or after the current row, which can be very useful in calculating the difference between the current and adjacent row. We will focus on using LAG.
+
+*** Task 1
+Run a query to select all the information in our new data table streams.
+
+What are the column names?
+
+#+begin_src
+  SELECT *
+  FROM streams;
+#+end_src
+
+*** Task 2
+Let's look at a window function that uses LAG. We will look at the artist's current number of streams and their streams from the previous week.
+
+#+begin_src
+  SELECT
+    artist,
+    week,
+    streams_millions,
+    LAG(streams_millions, 1, 0) OVER (
+      ORDER BY week
+    ) previous_week_streams
+  FROM
+    streams
+  WHERE
+    artist = 'Lady Gaga';
+#+end_src
+
+LAG takes up to /three/ arguments:
+
+    - column (required)
+
+    - offset (optional, default 1 row offset)
+
+    - default (optional, what to replace default null values with)
+
+Even though offset and default are optional for LAG and LEAD, we need to pass in both because we would like our default value to be 0 instead of null.
+
+*** Task 3
+Displaying the previous row value in each row can be useful, but for our purposes let's change our LAG function to instead show the change in streams for Lady Gaga per week:
+
+#+begin_src
+  SELECT
+    artist,
+    week,
+    streams_millions,
+    streams_millions - LAG(streams_millions, 1, streams_millions) OVER (
+      ORDER BY week
+    ) streams_millions_change
+  FROM
+    streams
+  WHERE
+    artist = 'Lady Gaga';
+#+end_src
+
+To do this, we just need to subtract the current week's streams_millions by our LAG function value (which is returning the previous week's streams_millions).
+
+*** Task 4
+Build upon our current query to use PARTITION BY to show the change in streams for "Lady Gaga" /as well as the change in chart position./
+
+For calculating the chart position change, remember that a decrease in number on the chart is actually a good thing and considered positive so your subtraction will look a little different:
+
+#+begin_src
+  LAG(chart_position, 1, chart_position) OVER (
+      PARTITION BY artist
+      ORDER BY week
+  ) - chart_position AS 'chart_position_change'
+#+end_src
+
+So the answer should look like:
+
+#+begin_src
+  SELECT
+   artist,
+   week,
+   streams_millions,
+   streams_millions - LAG(streams_millions, 1, streams_millions) OVER (
+      PARTITION BY artist
+      ORDER BY week
+   ) AS 'streams_millions_change',
+   chart_position,
+   LAG(chart_position, 1, chart_position) OVER (
+      PARTITION BY artist
+      ORDER BY week
+) - chart_position AS 'chart_position_change'
+  FROM
+    streams
+  WHERE
+    artist = 'Lady Gaga';
+#+end_src
+
+** LEAD
+In the previous exercise we used LAG to examine how an artist's weekly streams and chart position changed. Your final query should have looked something like this:
+
+#+begin_src
+ SELECT
+   artist,
+   week,
+   streams_millions,
+   streams_millions - LAG(streams_millions, 1, streams_millions) OVER (
+      PARTITION BY artist
+      ORDER BY week
+   ) AS 'streams_millions_change',
+   chart_position,
+   LAG(chart_position, 1, chart_position) OVER (
+      PARTITION BY artist
+      ORDER BY week
+) - chart_position AS 'chart_position_change'
+FROM
+   streams
+WHERE
+   artist = 'Lady Gaga';
+#+end_src
+
+We are going to modify this to use LEAD, which looks to future rows, instead of LAG, which looks to previous rows.
+
+*** Task 1
+Because LEAD looks to future rows, we need to flip how we subtract in order to find the streams_millions_change:
+
+#+begin_src
+  SELECT
+   artist,
+   week,
+   streams_millions,
+   LEAD(streams_millions, 1) OVER (
+      PARTITION BY artist
+      ORDER BY week
+   ) - streams_millions AS 'streams_millions_change'
+FROM
+   streams;
+#+end_src
+
+We will subtract the current row's streams_millions from the next row's streams_millions in order to see an accurate reflection of how the number of streams has changed.
+
+Positive means they increased streams while negative means they decreased. If we did not flip our subtraction here, we would get negative values for an increase in streams which is not what we want.
+
+*** Task 2
+Now modify your query to make it return the chart_position and chart_position_change as well, like we did for LAG.
+
+Remember to flip your subtraction! You want to now subtract the current chart position from the next row’s chart position. The chart_position_change is the opposite of streams_millions_change because a decrease in chart position (going from number 10 to 1) is considering moving up the charts.
+
+#+begin_src
+  SELECT
+   artist,
+   week,
+   streams_millions,
+   LEAD(streams_millions, 1) OVER (
+      PARTITION BY artist
+      ORDER BY week
+   ) - streams_millions AS 'streams_millions_change',
+   chart_position,
+   chart_position - LEAD(chart_position, 1) OVER (
+      PARTITION BY artist
+      ORDER BY week
+) AS 'chart_position_change'
+FROM
+   streams;
+#+end_src
+
+** ROW_NUMBER
+Now that we have a good understanding of how to fetch data from different rows, let's explore how we can use windows functions to order and rank our results.
+
+The most straight-forward way to order our results is by using the ROW_NUMBER function which adds a sequential integer number to each row.
+
+Adding a ROW_NUMBER to each row can be useful for seeing where in your result set the row falls.
+
+*** Task 1
+Here is a query that uses the ROW_NUMBER function, which is quite easy!
+
+All we need is to write ROW_NUMBER() OVER and then
+
+#+begin_src
+  SELECT
+    ROW_NUMBER() OVER (
+      ORDER BY streams_millions
+    ) AS 'row_num',
+    artist,
+    week,
+    streams_millions
+  FROM
+    streams;
+#+end_src
+
+*** Task 2
+What happens for the row_num when the streams_millions are equal?
+
+The rows continue to increase even when the values are equal because it is solely based on the number of the row in our results set.
+
+An example of this is when 'row_num' is 7 and 8 and the streams_million is 26.3 for both.
+
+*** Task 3
+Modify our query to return the results with row_num = 1 being the most streams.
+
+#+begin_src
+SELECT
+    ROW_NUMBER() OVER (
+      ORDER BY DESC streams_millions
+    ) AS 'row_num',
+    artist,
+    week,
+    streams_millions
+  FROM
+    streams;
+#+end_src
+
+** RANK
+Now that we understand how to use ROW_NUMBER, there is another function that is similar but provides an actual ranking: RANK.
+
+If you were to modify your ROW_NUMBER query to use RANK instead, it might appear to be exactly the same at first glance. But if you look more closely, you can see that RANK will follow standard ranking rules so that when two values are the same, they will have the same rank whereas with ROW_NUMBER they would not.
+
+*** Task 1
+Run the following query:
+
+#+begin_src
+SELECT
+   RANK() OVER (
+      ORDER BY streams_millions
+   ) AS 'rank',
+   artist,
+   week,
+   streams_millions
+FROM
+   streams;
+#+end_src
+
+What happened to our first 3 results?
+
+Because we are using RANK now and the 7th and 8th spot have the same value (26.3), they are both ranked as 7. Then, in standard ranking fashion, the next value is ranked as 9.
+
+*** Task 2
+Now modify your query to return the results so that the streams are ranked with 1 being the most streams in our dataset.
+
+Like before, we just need to add DESC after our ORDER BY clause because then it will return our millions_streams with the highest value first and the lowest last.
+
+#+begin_src
+SELECT
+   RANK() OVER (
+      ORDER BY streams_millions DESC
+   ) AS 'rank',
+   artist,
+   week,
+   streams_millions
+FROM
+   streams;
+#+end_src
+
+*** Task 3
+Lastly, modify the query that it is partitioning our results by week so we can see the most streamed artist of each week.
+
+#+begin_src
+SELECT
+   RANK() OVER (
+      PARTITION BY week
+      ORDER BY streams_millions DESC
+   ) AS 'rank',
+   artist,
+   week,
+   streams_millions
+FROM
+   streams;
+#+end_src
+
+We need to add PARTITION BY week before our ORDER BY clause in our window function. This will group each week together and return rankings 1-8 for each week (because we have 8 artists).
+
+** NTILE
+The last window function we are going to learn is called NTILE and this can be used to find quartiles, quintiles or whatever ntile your data-driven heart desires.
+
+NTILE allows you to break your data into roughly equal groups, based on what ntile you’d like: so if you were using quartile, it would divide the data into four groups (quarters).
+
+When using NTILE you are required to provide a bucket, which represents the number of groups you’d like your data broken down into: NTILE(4) would be four “buckets” which would represent quartiles.
+
+*** Task 1
+Run the following query:
+
+#+begin_src
+SELECT
+   NTILE(5) OVER (
+      ORDER BY streams_millions DESC
+   ) AS 'weekly_streams_group',
+   artist,
+   week,
+   streams_millions
+FROM
+   streams;
+#+end_src
+
+Think about the following:
+
+    What does each NTILE represent?
+    If you’re in weekly_streams_group 1, are you the most or least streamed artist?
+    What artists make up the most streamed grouping?
+
+Because we have 5 buckets, this NTILE would represent quintiles or fifths. The top quintile is made almost entirely of Drake. The Weeknd and Bad Bunny also had enough weekly streams to land them a few spots in the top quintile.
+
+*** Task 2
+Change our NTILE query to be a quartile, name the column quartile and run the query. How does this change our resultant data? What artists are now in the top quartile?
+
+#+begin_src
+SELECT
+   NTILE(4) OVER (
+     ORDER BY streams_millions DESC
+   ) AS 'quartile',
+   artist,
+   week,
+   streams_millions
+FROM
+   streams;
+#+end_src
+
+With quartiles, each group is now larger and contains more weekly streams. Our top quartile is still mostly Drake and The Weeknd, with one week from Bad Bunny and one week from Lady Gaga (who was not in the previous top quintile).
+
+*** Task 3
+Now change our query to also PARTITION BY week.
+
+How does this change our data?
+
+#+begin_src
+ SELECT
+   NTILE(4) OVER (
+      PARTITION BY week
+      ORDER BY streams_millions DESC
+   ) AS 'quartile',
+   artist,
+   week,
+   streams_millions
+FROM
+   streams;
+#+end_src
+
+We now have quartiles for each week. Each quartile contains two artists because we have eight artists total for each week in our dataset.
 * SQLite
 
 ** Main Features
