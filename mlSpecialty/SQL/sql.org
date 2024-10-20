@@ -7099,6 +7099,109 @@ FROM
 #+end_src
 
 We now have quartiles for each week. Each quartile contains two artists because we have eight artists total for each week in our dataset.
+
+** Quiz
+
+*** Question 1
+True or False: LAG compares with the previous row while LEAD compares with the next row.
+
+    - True
+
+*** Question 2
+Below we have a query for our artist streaming data. Fill in the blanks so that our window function will return the ~quartiles~ of our ~weekly_streams~.
+
+#+begin_src
+  SELECT
+    NTILE(4) OVER (
+      ORDER BY streams_millions DESC
+    ) weekly_streams_quantile,
+    artist,
+    week,
+    streams_millions
+  FROM
+    artist_streams;
+#+end_src
+
+*** Question 3
+The following code snippet is attempting to display the average salary for each department but is incorrect. Which statement will correct the window function to show salary by department?
+
+#+begin_src
+  SELECT employee_name,
+    department,
+    AVG(salary) OVER (
+      PARTITION BY department
+    ) AS 'avg_department_salary'
+  FROM employees;
+#+end_src
+
+Correct! This will group our averages based on department.
+
+*** Question 4
+Finish the query below so that it is showing you a running total of the ~duration_seconds~ for a bike race ordered by the racer's ~start_time~.
+
+#+begin_src
+  SELECT
+    duration_seconds,
+    start_time,
+    SUM(duration_seconds) OVER (
+      ORDER BY start_time
+    ) AS running_total
+  FROM
+    bike_race_data;
+#+end_src
+
+*** Question 5
+From our social media dataset showing how many posts each user posted every month, what should the name of the column ~how_many_posts~ be changed to?
+
+#+begin_src
+  SELECT
+    username,
+    monthly_posts,
+    FIRST_VALUE (monthly_posts) OVER (
+      PARTITION BY username
+      ORDER BY monthly_posts
+    ) fewest_posts
+#+end_src
+
+Correct! FIRST_VALUE will return the fewest monthly posts for each user.
+
+*** Question 6
+We want to see how weekly streams have changed from the previous week for Bad Bunny. What is wrong with the query we are running to get that information?
+
+#+begin_src
+  SELECT
+    artist,
+    week,
+    stream_millions,
+    stream_millions - LAG (stream_millions, 1,
+    stream_millions) OVER (
+      ORDER BY week
+    ) streams_millions_change
+  FROM
+    artist_streams
+  WHERE
+    artist = 'Bad Bunny';
+#+end_src
+
+Correct! LAG will compare our current row with the previous row
+
+*** Question 7
+Which of the following statements is *false* about ROW and RANK window functions?
+
+    - RANK will show equal resultant values as tied
+
+    - ROW adds a sequential integer to each row
+
+    - *ROW and RANK are interchangeably and display results in the same way*
+
+    - Like other window functions, ROW and RANK use the OVER clause.
+
+      Correct! ROW is always sequential while RANK can display equal results as tied.
+
+*** Question 8
+*True or False:* Window functions are different from aggregate functions because they do not cause rows to become grouped into a single result row.
+
+   - True
 * SQLite
 
 ** Main Features
