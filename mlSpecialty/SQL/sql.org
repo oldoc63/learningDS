@@ -7202,6 +7202,401 @@ Which of the following statements is *false* about ROW and RANK window functions
 *True or False:* Window functions are different from aggregate functions because they do not cause rows to become grouped into a single result row.
 
    - True
+
+* MATH and DATE Functions
+** Introducion
+In this lesson, we will introduce some math operators and functions to perform calculations on and convert values, along with a few date functions to transform, format, and extract information from dates.
+
+Throughout the lesson, you will be working with the following tables containing mock data:
+
+    - ~bakery~: table storing information about orders made at a local bakery
+
+    - ~guesses~: table storing the values of a guessing game where the guessed value closest to a number wins
+
+Here's a quick preview of the concepts that will be covered in these next six exercises:
+
+Math operators:
+
+    ~+~ addition
+    - subtraction
+    / division
+    ~*~ multiplication
+    % modulo (returns the remainder)
+
+Math functions:
+
+    ~ABS():~ returns the absolute value of the input expression
+
+    ~CAST():~ converts an expression into another data type
+
+Date and time functions:
+
+   ~DATETIME():~ returns the date and time of a time string
+    ~DATE():~ returns the date portion of a time string
+    ~TIME():~ returns the time portion of a time string
+    ~Preview:~ Docs Loading link description
+    ~STRFTIME():~ returns a formatted date
+
+*** Task 1
+Before moving on, take a look at the data in the bakery table.
+
+In the code editor, write the query to select the first 5 rows.
+
+What are the column names?
+
+#+begin_src
+  SELECT *
+  FROM bakery
+  LIMIT 5;
+#+end_src
+
+*** Task 2
+And now take a look at the data in the guesses table.
+
+Delete the old query and write a new query to select the first 5 rows of guesses.
+
+What are the column names?
+
+#+begin_src
+  SELECT *
+  FROM guesses
+  LIMIT 5;
+#+end_src
+
+** Math Operators
+SQL supports math operators to perform calculations.
+
+    - The + operator is for addition and returns the sum of two values.
+
+    - The - operator is for subtraction and returns the difference between two values.
+
+    - The / operator is for division and returns the quotient after dividing one value by another value. Ig the two values are of type INTEGER, then the result will also be an INTEGER rounded down. If one or more of the values are of type REAL, then the result will be a REAL.
+
+    - The * operator is for multiplication and returns the product of two numbers.
+
+    - The % operator, or modulo, returns the remainder after division.
+
+      #+begin_src
+        SELECT (1 + 5);
+        SELECT (10 - 6);
+        SELECT (4 / 2);
+        SELECT (15 * 3);
+        SELECT (10 % 3);
+      #+end_src
+
+*** Task 1
+From the bakery table, compute the total cost (price times quantity) of each order.
+
+#+begin_src
+  SELECT price * quantity
+  FROM bakery;
+#+end_src
+
+** ABS
+The ABS() function returns the absolute value of the input expression.
+
+The absolute value of a number is the distance of than number from zero, taken as positive value. It can also be understood as the value of the number if we ignore its sign, such that negative values become positive, and positive values remain the same.
+
+For example,
+
+#+begin_src
+  SELECT ABS(-3); -- 3
+  SELECT ABS(5);  -- 5
+#+end_src
+
+Here, the absolute value of -3 is equal to 3, because it is 3 away from 0, and because ignoring the negative sign leaves 3. And, because 5 is a positive value, its absolute value remains 5.
+
+*** Task 1
+A school holds an event every month where a glass jar is filled with jelly beans, and students can guess how many jelly beans are contained in the jar. Students who make the closest guess win a pack of new notebooks.
+
+Using the guesses table with the ABS() function, write a query to find out how close each student's guess is to the actual number of jelly beans in a jar, which is 804.
+
+#+begin_src
+  SELECT first_name, ABS(guess - 804)
+  FROM guesses;
+#+end_src
+
+*** Task 2
+Find out the absolute value of the difference between the average guess of all students from the actually jelly bean count, which is 804.
+
+Is the average guess close to the actual count?
+
+#+begin_src
+  SELECT ABS(AVG(guess) - 804)
+  FROM guesses;
+#+end_src
+
+** CAST
+The CAST() function is used to convert the value of an expression into another data type.
+
+It has the following syntax:
+
+#+begin_src
+  SELECT CAST(expr AS type-name);
+#+end_src
+
+Here, ~expr~ is any expression that evaluates to a value, and type-name is the data type to convert that value into.
+
+This function can be useful when performing calculations on values but we need to change their data types. For example, say that we want to divide two INTEGER numbers.
+
+#+begin_src
+  SELECT 3 / 2; -- 1
+#+end_src
+
+In the query above, the result would be rounded down to the nearest INTEGER number, 1, because 3 and 2 are both INTEGER values. Using CAST(), *one of the values* could be converted to a REAL so that the result is also of type REAL:
+
+#+begin_src
+  SELECT CAST(3 AS REAL) / 2; -- 1.5
+#+end_src
+
+In this query, CAST(3 AS REAL) will convert 3 to the REAL value 3.0. Then it will calculate 3.0 / 2 which equals to 1.5.
+
+CAST() can also be used to convert TEXT values into a numerical value like REAL or INTEGER. When doing so, it will only consider any valid prefix at the beginning of the string that represents a numerical value.
+
+#+begin_src
+  SELECT CAST('3.14 is pi' AS REAL);
+#+end_src
+
+This query will convert the TEXT value '3.14 is pi' into type REAL, considering only the prefix '3.14' and ignoring ' is pi', resulting in 3.14.
+
+*** Task 1
+From the bakery table, we want to determine the final price of each order after the discount is applied. However, the value of each discount is currently stored as TEXT, like '1.00 off', so you will need to convert them into numerical values.
+
+Utilize CAST() to convert the values of the discount column into REAL values. Select the item_name column and the total cost of each order, after applying the discount for each item.
+
+#+begin_src
+  SELECT item_name,
+    (price - CAST(discount AS REAL)) * quantity
+  FROM bakery;
+#+end_src
+
+** Date and Time Functions I
+SQL provides functions to work with dates.
+
+In SQL, dates are typically written in one of the following formats:
+
+    - Date: YYYY-MM-DD
+
+    - Datetime or Timestamp: YYYY-MM-DD hh:mm:ss
+
+These strings that represent dates are also known as time strings.
+
+The DATETIME() function will return the entire time string which includes the date and time portions.
+
+#+begin_src
+  SELECT DATETIME('2020-09-01 17:38:22');
+#+end_src
+
+To obtain the current date and time, you can provide the string 'now' to the function, which returns the date and time in UTC.
+
+#+begin_src
+  SELECT DATETIME('now');
+#+end_src
+
+To obtain the date and time converted to your local timezone, you can provide a modifier 'localtime'.
+
+#+begin_src
+  SELECT DATETIME('now', 'localtime');
+#+end_src
+
+The DATE() function allows us to extract just the date portion of a time string, which consist of the year, month and day.
+
+#+begin_src
+  SELECT DATE('2020-09-01 17:38:22'); -- 2020-09-01
+#+end_src
+
+The TIME() function allows us to extract just the time portion of a time string, which consist of the hour, minute and second.
+
+#+begin_src
+  SELECT TIME('2020-09-01 17:38:22'); --17:38:22
+#+end_src
+
+*** Task 1
+Write a query to select just the dates for each order's ~order_date~ column from the bakery table.
+
+#+begin_src
+  SELECT DATE(order_date)
+  FROM bakery;
+#+end_src
+
+** Date and Time Functions II
+We can provide additional arguments, called modifiers, to date functions in addition to the time string. Modifiers are applied from left to right as they are listed in the function, so order matters.
+
+The syntax is as follows:
+
+#+begin_src
+  SELECT DATETIME(timestring, modifier1, modifier2, ...);
+#+end_src
+
+In the previous exercise, you were introduced to the modifier 'localtime', which converts the time string from UTC (Coordinated Universal Time) to the local time zone.
+
+The following modifiers can be used to shift the date backwards to a specified part of the date.
+
+    - ~start of year~: shifts the date to the beginning of the current year.
+
+    - ~start of month~: shifts the date to the beginning of the current month.
+
+    - ~start of day~: shifts the date to the beginning of the current day.
+
+For example, the following returns the beginning of September 2005.
+
+#+begin_src
+  SELECT DATE('2005-09-15', 'start of month');
+#+end_src
+
+The following modifiers add a specified amount to the date and time of the time string.
+
+    - ~'+-N years'~: offsets the year
+
+    - ~'+-N months'~: offsets the month
+
+    - ~'+-N days'~: offsets the day
+
+    - ~'+-N hours'~: offsets the hour
+
+    - ~'+-N minutes'~: offsets the minute
+
+    - ~'+-N seconds'~: offsets the second
+
+After each offset is applied, the result date and time is normalized so that it will always be valid.
+
+For example, we can have the following statement.
+
+#+begin_src
+  SELECT DATETIME('2020-02-10', 'start of month', '-1 day', '+7 hours');
+#+end_src
+
+First, it will apply the modifier 'start of month' which will shift to the beginning of the month, '2020-02-01 00:00:00'. It will include the time portion because we are using the DATETIME() function.
+
+Then, it will apply the modifier '-1 day' which will offset the day by -1, resulting in '2020-01-31 00:00:00'.
+
+Finally, it will apply the modifier '+7 hours', which will add 7 hours to the time, giving the final result of '2020-01-31 07:00:00'.
+
+*** Task 1
+For each order in the bakery table, the order will be ready for pick up 2 days after the order is made, at 7:00AM, 7 days a week. The order will always be ready 2 days after the order, no matter what time of day the order was made.
+
+Utilizing the date and time functions and some modifiers, find out when each order can be picked up.
+
+#+begin_src
+  SELECT DATETIME(order_date, 'start of day', '+2 days', '+7 hours')
+  FROM bakery;
+#+end_src
+
+** Date and Time Functions III
+The STRFTIME() function allows you to return a formatted date, as specified in a format string.
+
+It has the following syntax:
+
+#+begin_src
+  STRFTIME(format, timestring, modifier1, modifier2, ...)
+#+end_src
+
+The first argument, ~format~, is the format string.
+
+The second argument is the ~timestring~.
+
+The remaining arguments are 0 or more optional ~modifier~ s to transform the time string.
+
+Let's go into some more detail about the format string. The format string allows you to extract specific parts of the date and time. Recall the time string format of YYYY-MM-DD HH:MM:SS. Each part of this time string can be extracted utilizing what are known as substitutions inside the format string.
+
+The substitutions to extract each part of the date and time are the following:
+
+    - %Y returns the year (YYYY)
+
+    - %m returns the month (01-12)
+
+    - %d returns the day of month (01-31)
+
+    - %H returns the hour (00-23)
+
+    - %M returns the minute (00-59)
+
+    - %S returns the second (00-59)
+
+For example, to extract the month and year of the current date,
+
+#+begin_src
+  SELECT STRFTIME('%m %Y, 'now');
+#+end_src
+
+And to extract just the current day,
+
+#+begin_src
+  SELECT STRFTIME('%d', 'now');
+#+end_src
+
+*** Task 1
+The owners of the bakery want to find out what day most people placed orders.
+
+Use STRFTIME() with the COUNT() function to find out how many orders were made on each day. Show the results in descending order based on the daily number of orders.
+
+#+begin_src
+  SELECT strftime('%d', order_date) AS 'order_day',
+    COUNT(*)
+  FROM bakery
+  GROUP BY 1
+  ORDER BY 2 DESC;
+#+end_src
+
+** Review
+Let’s review everything you’ve gone over so far.
+
+Math operators:
+
+    + Addition
+    - Subtraction
+    / Division
+    * Multiplication
+    % Modulo
+
+Math functions:
+
+    Preview: Docs Loading link description
+    ABS()
+    : Gives us the absolute value of the input expression
+
+    CAST(): Converts the value of an expression into another data type
+
+Date functions:
+
+    Preview: Docs Loading link description
+    DATETIME()
+    : Obtains the date and time of a time string
+
+    DATE(): Obtains the date portion of a time string
+
+    Preview: Docs Loading link description
+    TIME()
+    : Obtains the time portion of a time string
+
+    Preview: Docs Loading link description
+    STRFTIME()
+    : Returns a formatted date
+
+Date function modifiers:
+
+    Modifiers to shift the date backwards to a specified part:
+        'start of year'
+        'start of month'
+        'start of day'
+    Modifiers to add a specified amount to the date and time of a time string:
+
+        - +- N years
+        - +- N months
+        - +- N days
+        - +- N hours
+        - +- N minutes
+        - +- N seconds
+
+Format string substitutions:
+
+    %Y returns the year (YYYY)
+    %m returns the month (01-12)
+    %d returns the day of month (01-31)
+    %H returns the hour (00-23)
+    %M returns the minute (00-59)
+    %S returns the second (00-59)
+
 * SQLite
 
 ** Main Features
