@@ -1,0 +1,40 @@
+
+* Welcome to Soffware Engineering for Data Scientist
+
+*Get a sneak peek of the engineering skills you will learn!*
+
+Basic software engineering skills are essential to working on engineering teams, and data scientists who have those skills are in high demand. As you will see in this Skill Path, the tools are a little different (i.e., bash scripting, unit testing, and git), but the goals are the same: solve problems with data. By the end of this Skill Path, you will be ready to bridge the gap between data science and software engineering to work with engineering teams.
+
+** What will you learn?
+In this Skill Path, you will develop knowledge of and proficiency with the tools that engineers use to do their work.
+
+After this course, you will be able to:
+
+    - apply object-oriented programming, functional programming, and concurrent programming to make your code more efficient
+
+    - use unit testing and looging to make your code more resilient
+
+    - keep your code up to date and work collaboratively on the same code with git and Github
+
+    - use version control and branching
+
+    - deploy code with Flask and launch websites with Github
+
+    - become proficient in markdown, and invaluable formatting tool
+
+** Why did we make this?
+We built this Skill Path to guide you through everything you need to know to turn your local code into production-ready code. We have studied the data and worked with data scientists, data engineers, software developers, and managers to identify which engineering skills data scientists really need. We’ve pinpointed what skills that are essential, and what skills are a little more niche. This Skill Path covers those essential skills.
+
+** What should you know before starting this Skill Path?
+This Skill Path assumes that you have experience programming in Python. If you do not, we highly recommend starting with Learn Python 3 Course and then coming back here.
+
+Though this Skill Path says that it is “for data science”, you don’t have to be a data scientist to get a lot out of it.
+
+** What will you create?
+Here’s a preview of the Portfolio Projects featured in this Path:
+
+    - Lingua Franca: An offline project where you will help a translation service set up its file system and configure its environment.
+    - ASCII Portfolio: Practice git commits by making some art with the characters found on your keyboard. Curious what ASCII Art is? Learn More! ô¿ô
+    - Excursion: Publish a webpage that advertises a product called “Excursion”
+
+You will also practice your new skills with Challenge Projects while building a portfolio of projects to demonstrate your new skills. You can complete the Portfolio Projects either in parallel with or after taking the prerequisite content—it’s up to you!
