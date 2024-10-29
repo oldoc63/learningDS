@@ -7782,6 +7782,520 @@ For this, we need to use the NTILE() function for quintiles (5). Because we are 
   state, year, tempc
   FROM state_climate;
 #+end_src
+
+* Interview Preparation
+
+** Coding Challenge 1
+The books table has the following columns:
+
+    - id - the book id
+
+    - title - the book title
+
+    - author - the book author
+
+    - average_rating - the average rating
+
+    - num_pages - the number of pages
+
+*** Task 1
+Select the title, author, and average_rating of each book with an average_rating between 3.5 and 4.5.
+
+#+begin_src
+  SELECT
+    title,
+    author,
+    average_rating
+  FROM books
+  WHERE average_rating
+  BETWEEN 3.5 AND 4.5;
+#+end_src
+
+*** Task 2
+Select all the unique ~author~ s from the table.
+
+#+begin_src
+  SELECT DISTINCT author
+  FROM books;
+#+end_src
+
+** Code Challenge 2
+The ~nba_matches~ table has the following columns:
+
+    - ~id~ - the match id
+
+    - ~date~ - the date of the match
+
+    - ~home_team~ - the home team
+
+    - ~away_team~ - the away team
+
+    - ~home_points~ - the home team points
+
+    - ~away_points~ - the away team points
+
+*** Task 1
+Given the final scores of several NBA games, use CASE to return the results for each game:
+
+    - If home team won, return 'HOME WIN'.
+
+    - If away team won, return 'AWAY WIN'.
+
+Select the id column and the CASE result.
+
+#+begin_src
+  SELECT id,
+    CASE
+      WHEN home_points > away_points
+        THEN 'HOME WIN'
+      ELSE 'AWAY WIN'
+    END
+  FROM nba_maches;
+#+end_src
+
+** Code Challenge 3
+The apps table has the following columns:
+
+    - ~id~ - the app id
+
+    - ~name~ - the app name
+
+    - ~genre~ - the genre of the app
+
+    - ~rating~ - the app rating
+
+    - ~reviews~ - the number of reviews
+
+*** Task 1
+Find the number of apps by ~genre~.
+
+#+begin_src
+  SELECT genre, COUNT(id)
+  FROM apps
+  GROUP BY genre;
+#+end_src
+
+*** Task 2
+Get the total number of reviews of all apps by genre.
+
+Limit the results for genres where the total number of app reviews is over 30 million.
+
+#+begin_src
+  SELECT genre, COUNT(id)
+  FROM apps,
+  GROUP BY genre
+  HAVING SUM(reviews) > 30000000;
+#+end_src
+
+** Code Challenge 4
+The apps table has the following columns:
+
+    - id - the app id
+
+    - name - the app name
+
+    - genre - the genre of the app
+
+    - rating - the app rating
+
+    - reviews - the number of reviews
+
+*** Task 1
+Select the name, genre, and rating of apps in descending order of their rating, and limit the result to 20 rows.
+
+#+begin_src
+  SELECT name,
+         genre,
+         rating
+  FROM apps
+  ORDER BY rating DESC
+  LIMIT 20;
+#+end_src
+
+** Code Challenge 5
+The apps table has the following columns:
+
+    - id - the app id
+
+    - name - the app name
+
+    - genre - the genre of the app
+
+    - rating - the app rating
+
+    - reviews - the number of reviews
+
+*** Task 1
+Find the lowest and highest rating for all apps using two different queries.
+
+#+begin_src
+  SELECT MIN(rating)
+  FROM apps;
+#+end_src
+
+#+begin_src
+  SELECT MAX(rating)
+  FROM apps;
+#+end_src
+
+** Code Challenge 6
+The projects table has the following columns:
+
+    - ~id~ - the project id
+
+    - ~employee_id~ - the id of the employee assigned to this project
+
+The employees table has the following columns:
+
+    - ~id~ - the id of the employee
+
+    - ~first_name~ - the first name of the employee
+
+    - ~last_name~ - the last name of the employee
+
+*** Task 1
+The ~projects~ table stores the ~employee_id~ for the employee assigned to each project.
+
+Perform an inner join on the two tables, matching on the primary key and foreing key described above, and select all columns.
+
+#+begin_src
+ SELECT *
+ FROM projects
+ JOIN employees
+   ON projects.employee_id = employees.id;
+#+end_src
+*** Task 2
+Perform a join between the two tables, such that it selects all projects even if there is no employee assigned to it.
+
+#+begin_src
+  SELECT *
+  FROM projects
+  LEFT JOIN employees
+    ON projects.employee_id = employees.id;
+#+end_src
+
+** Code Challenge 7
+The ~math_students~ and ~english_students~ tables have the following columns:
+
+    - ~student_id~ - the student id
+
+    - ~grade~ - the grade level of the student
+
+    - ~first_name~ - the student's first name
+
+    - ~last_name~ - the student's last name
+
+*** Task 1
+Using a subquery, get all students in math who are also enrolled in english.
+
+#+begin_src
+  SELECT *
+  FROM math_students
+  WHERE student_id IN (
+    SELECT student_id
+    FROM english_students
+  );
+#+end_src
+
+*** Task 2
+Using a subquery, find out which students in math are in the same grade level as the strudent with id 7.
+
+#+begin_src
+  SELECT *
+  FROM math_students
+  WHERE grade IN (
+    SELECT grade
+    FROM math_students
+    WHERE student_id = 7
+  );
+#+end_src
+
+** Code Challenge 8
+The ~math_students~ and ~english_students~ tables have the following columns:
+
+    - student_id - the student id
+
+    - grade - the grade level of the student
+
+    - first_name - the student's first name
+
+    - last_name - the student's last name
+
+*** Task 1
+Using a subquery, find all students enrolled in english class who are not also enrolled in math class.
+
+#+begin_src
+  SELECT *
+  FROM english_students
+  WHERE student_id
+  NOT IN (
+    SELECT student_id
+    FROM math_students
+  );
+#+end_src
+
+*** Task 2
+Using a subquery, find out what grade levels are represented in both the math and english classes.
+
+#+begin_src
+  SELECT grade
+  FROM math_students
+  WHERE EXISTS (
+    SELECT grade
+    FROM english_students
+  );
+#+end_src
+
+** Code Challenge 9
+The ~box_office~ table has the following columns:
+
+    - ~id~ - the id of each row
+
+    - ~title~ - the title of the movie
+
+    - ~week~ - the week following the film's release
+
+    - ~gross~ - the gross for that week
+
+    - ~to_date_gross~ - the total gross of the movie up to each week
+
+*** Task 1
+Using a window function with PARTITION BY, get the running total in gross for each movie up to the current week and display it next to the current week along with the title, week, and gross columns.
+
+#+begin_src
+  SELECT title, week, gross,
+    SUM(gross) OVER (
+      PARTITION BY title
+      ORDER BY week
+    ) AS 'running_total_gross'
+  FROM box_office;
+#+end_src
+
+** Code Challenge 10
+The ~box_office~ table has the following columns:
+
+  - ~id~ - the id of each row
+
+    - ~title~ - the title of the movie
+
+    - ~week~ - the week following the film's release
+
+    - ~gross~ - the gross for that week
+
+    - ~to_date_gross~ - the total gross of the movie up to each week
+
+*** Task 1
+Write a query using a window function with ROW_NUMBER and ORDER BY to see where each row falls in the amount of ~gross~.
+
+#+begin_src
+  SELECT ROW_NUMBER()
+  OVER (
+    ORDER BY gross
+  ) AS 'row_num', title, week, gross
+  FROM box_office;
+#+end_src
+
+** Code Challenge 11
+The ~orders~ table has the following columns:
+
+    - ~id~ - the order id
+
+    - ~product_id~ - the product id
+
+    - ~price~ - the price of the individual product item
+
+    - ~quantity~ - the quantity of items in the order
+
+*** Task 1
+Given an ~orders~ table, calculate the ~price~ times ~quantity~ of each order. Include the ~id~ and ~product_id~ columns in the result.
+
+#+begin_src
+  SELECT id, product_id, price * quantity
+  FROM orders;
+#+end_src
+
+** Code Challenge 12
+The weather table has the following columns:
+
+    - ~id~ - the id of each entry
+
+    - ~date~ - the date of each entry
+
+    - ~high~ - the high temperature of the date, in Fahrenheit
+
+    - ~low~ - the low temperature of the date, in Fahrenheit
+
+*** Task 1
+Utilize CAST to calculate the average of the low and high temperatures for each date such that the result is of type REAL.
+
+#+begin_src
+  SELECT date, (CAST(high AS 'REAL') +
+    CAST(low AS 'REAL')) / 2.0 AS 'average'
+  FROM weather;
+#+end_src
+
+** Code Challenge 13
+The purchase table has the following columns:
+
+    - ~purchase_id~ - the id of the purchase
+
+    - ~purchase_date~ - the date of the purchase
+
+*** Task 1
+After a purchase is created, it can be returned within 7 days for a full refund.
+
+Using modifiers, get the date of each purchase offset by 7 days in the future.
+
+#+begin_src
+  SELECT purchase_id, DATE(purchase_date, '+7 days')
+  FROM purchases;
+#+end_src
+
+*** Task 2
+Get the hour that each purchase was made.
+
+Which hour had the most purchases made?
+
+#+begin_src
+  SELEC STRFTIME('%H', purchase_date) FROM purchases;
+#+end_src
+
+** Code Challenge 14
+The purchase table has the following columns:
+
+    - ~purchase_id~ - the id of the purchase
+
+    - ~purchase_date~ - the date of the purchase
+
+*** Task 1
+Using string formatting and substitutions, get the month and day for each purchase in the form 'mm-dd'.
+
+Give this new column a name of 'reformatted'.
+
+#+begin_src
+ SELECT STRFTIME('%m-%d', purchase_date) AS 'reformatted'
+ FROM purchases;
+#+end_src
+
+* Common SQL Interview Questions
+*Practice with some common SQL interview questions.*
+
+You’ve learned about many different concepts in SQL that can be applied in a data analyst role so now it’s time to put your knowledge to the test!
+
+This article will provide a list of some common SQL interview questions that you may encounter in a real interview, along with answers.
+
+** What is SQL?
+SQL, which stands for Structured Query Language, is a programming language to communicate with data stored in a relational database management system.
+
+Its syntax is similar to English, making it easy to write, read, and interpret. It allows you to write queries which define the subset of data you are seeking. You can save these queries, refine them, share them, and run them on different databases.
+
+** What is a database?
+A database is a set of data stored in a computer, where the data is structured in a way that makes it easily accesible.
+
+** What is a relational database?
+A relational database is a type of database. It uses a structure that allows us to identify and access data in relation to other pieces of data in the database.
+
+Data in a relational database is often organized as tables.
+
+** What is a RDBMS?
+A relational database management system (RDBMS) is a program that allows you to create, update, and administer a relational database.
+
+Most relational database management systems use SQL language to access the databases.
+
+The most popular RDBMS is MySQL. Others include PostgreSQL, Oracle DB, SQL Server, and SQLite.
+
+** What is a table?
+A table is a collection od data organized into rows and columns. They are sometimes referred to as "relations".
+
+They can have hundreds, thousands, and sometimes even millions of rows of data.
+
+** What is a row and column in a table?
+A row is a *single record* of data in a table.
+
+A *column* is a set of data values of a particular type.
+
+** What is a data type?
+A data type is an attribute that specifies the type of data a column holds.
+
+Every column of a database has a data type.
+
+Some common data types are INTEGER, TEXT, DATE, REAL.
+
+** What is primary key and foreign key?
+A *primary key* is a column that uniquely indentifies each row of a table.
+
+Primary keys must satisfy the following requirements: No value can be NULL, each value must be unique, and a table cannot have more than one primary key.
+
+For example, in a customers table, the primary key would be customer_id.
+
+A foreign key is the primary key for one table that appears in a different table. For example if there was also an orders table, each order can store the customer, such that the customer_id column would be the foreign key.
+
+** What is the difference between ALTER and UPDATE?
+The ALTER statement is used to add a new column to a table. It changes the table structure.
+
+The UPDATE statement is used to edit a row in the table. It changes existing records in the table.
+
+** What is a query?
+A query is a SQL statement used to retrieve information stored in a database.
+
+They allow us to communicate with the database by asking questions and returning a result set with data relevant to the question.
+
+** What is a subquery?
+A subquery is an internal query nested inside of an external query.
+
+They can nested inside of SELECT, INSERT, UPDATE, or DELETE statements.
+
+When a subquery is present, it will be executed before the external statement is run.
+
+** What are constrains?
+Constrains are a set of rules used to tell the database to limit the type of data that can be stored for the columns. They tell the database to reject inserted data that dies not adhere to the restriction.
+
+They add information about how a column can be used, and are invoked after the data type for a column.
+
+Some examples of constraints are:
+
+PRIMARY KEY, which uniquely identifies each row and requires each value to be unique. UNIQUE, which requires every value in the column to be different. NOT NULL, which requires columns to have a value. DEFAULT, which takes an additional argument which will be the assumed value for an inserted row if the new row does not specify a value for that column.
+
+** What is a statement?
+A statement is text that the database recognizes as a valid command.
+
+They can be used to perform tasks like altering the structure of a table, updating data, or retrieving data from a database.
+
+The structure of a statement can vary, but each must end with a semi-colon ~;~. The number of lines used for a statement does not matter, and it can be written as a single line or split into multiple lines to make it easier to read.
+
+** How do you check if a field does not have a value or has a value?
+When a field has no value, it is indicated with a NULL value.
+
+To check if a field does not have a value, you can use IS NULL as the condition: WHERE col IS NULL.
+
+To check if a field has a value, you can use IS NOT NULL as the condition: WHERE col IS NOT NULL.
+
+** What is the difference between DISTINTC and UNIQUE?
+DISTINCT is a keyword used when we want to return unique values in the output. It filters out all duplicate values in the specified column.
+
+UNIQUE is a constrain used to ensure that all values of a column are different. It is similar to PRIMARY KEY, except that a table can have many different UNIQUE columns.
+
+** What are aggregate functions used for?
+Aggregate functions are used to perform a calculation on one or more values, and returns a single value of more meaningful information.
+
+Some aggregate functions are COUNT(), SUM(), MAX(), MIN(), AVG(), and ROUND().
+
+** What is a join?
+A join is a way to combine rows from two or more tables, based on a related column between them.
+
+** What is the difference between an INNER JOIN and LEFT JOIN?
+An INNER JOIN is used to included combined rows from two tables that match the ON condition. The final result does not include rows with no match for the ON condition.
+
+A LEFT JOIN is used to keep all rows from the first table, regardless of whether there is a matching row in the second table for the ON condition.
+
+** What is the purpose of windows functions?
+Windows functions are used when you want to maintain the values of your original table while displaying grouped or summative information alongside. It is similar to aggregate functions, but does not reduce the number of rows in the result by combining or grouping them into a few result.
+
+** What are indexes and why are they needed?
+Indexes are a powerful tool used in the background of a database to speed up querying, by acting as a lookup table for data.
+
+They are needed to efficiently store data for quicker retrieval, which can be paramount to the success of large tech companies which need to process on the scale of petabytes of data each day.
+
 * SQLite
 
 ** Main Features
